@@ -1,0 +1,6 @@
+
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/metrics.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "TODO: add metrics schema"
+}

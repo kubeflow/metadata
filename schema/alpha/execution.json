@@ -1,0 +1,43 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/execution.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "a run of an executable",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"
+        },
+        {
+            "properties": {
+                "category": {
+                    "constant": "execution"
+                },
+                "executable_id": {
+                    "type": "string",
+                    "description": "the id of the executable"
+                },
+                "configuration": {
+                    "type": "object",
+                    "description": "runtime configuration for the execution"
+                },
+                "kind": {
+                    "constant": "execution"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                },
+                "apiversion": {
+                    "constant": "alpha"
+                }
+            }
+        }
+    ],
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "category",
+        "name"
+    ],
+    "type": "object"
+}

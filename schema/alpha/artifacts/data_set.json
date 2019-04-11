@@ -1,0 +1,55 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/data_set.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json"
+        },
+        {
+            "properties": {
+                "kind": {
+                    "constant": "data_set"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                },
+                "query": {
+                    "description": "query to get the data",
+                    "type": "string"
+                },
+                "apiversion": {
+                    "constant": "alpha"
+                }
+            }
+        }
+    ],
+    "description": "alpha schema for a data set in Kubeflow",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category",
+        "uri"
+    ],
+    "examples": [{
+            "annotations": {
+                "mylabel": "l1",
+                "tag": "data-set"
+            },
+            "apiversion": "v1",
+            "category": "artifact",
+            "create_time": "2018-11-13T20:20:39+00:00",
+            "description": "a example data",
+            "id": "123",
+            "kind": "data_set",
+            "name": "mytable-dump",
+            "namespace": "kubeflow.org",
+            "owner": "owner@my-company.org",
+            "uri": "file://path/to/dataset",
+            "version": "v1.0.0",
+            "query": "SELECT * FROM mytable"
+    }],
+    "type": "object"
+}
