@@ -67,5 +67,6 @@ func main() {
 	}
 
 	httpEndpoint := fmt.Sprintf("%s:%d", *host, *httpPort)
+	glog.Infof("HTTP server listening on %s", httpEndpoint)
 	http.ListenAndServe(httpEndpoint, mux)
 }

@@ -18,3 +18,13 @@ To build and test everything using the `go` command:
 go build ./...
 go test ./...
 ```
+
+To run the server, run the following command:
+```
+go run server/main.go --logtostderr
+```
+
+Or to run with `bazel`:
+```
+bazel run //server -- --logtostderr
+```
