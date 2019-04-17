@@ -1,0 +1,5 @@
+# Bazel output artifacts
+bazel-*
+
+# VSCode settings.
+.vscode
