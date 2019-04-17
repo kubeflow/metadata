@@ -26,5 +26,5 @@ This directory contains versions of predefined metadata schemas, which are loade
     - field `example` is a JSON of metadata example.
 - `schema_test.go` validates all schemas in sub-directories and examples in `/examples`.
 
-# Customize Metadata
+# Customized Metadata
 Customized metadata is defined in the same schema format as predefined metadata. The only difference between them is that customized metadata schemas are loaded by sending requests to the schema registration endpoint. (TODO: add link) 
