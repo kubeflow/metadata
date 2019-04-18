@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/golang/glog"
 	pb "github.com/kubeflow/metadata/api"
 )
 
@@ -34,4 +35,16 @@ func (s *Service) GetResource(ctx context.Context, in *pb.GetResourceRequest) (*
 	}
 
 	return &pb.Resource{Name: in.Name}, nil
+}
+func (s *Service) CreateType(ctx context.Context, in *pb.CreateTypeRequest) (*pb.Type, error) {
+	glog.Infof("request: %s", in)
+	return &pb.Type{
+		Id:     "1",
+		Name:   in.Name,
+		Schema: string(in.Schema.Value),
+	}, nil
+}
+
+func (s *Service) GetType(ctx context.Context, in *pb.GetTypeRequest) (*pb.Type, error) {
+	return nil, nil
 }

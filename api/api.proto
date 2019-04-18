@@ -19,6 +19,7 @@ syntax = "proto3";
 package api;
 
 import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
 
 // Dummy placeholder resource.
 message Resource {
@@ -30,9 +31,69 @@ message GetResourceRequest {
 }
 
 service MetadataService {
+  // Create a new entity type, e.g.
+  //
+  // Request path /v1/type/namespaces/my-company/kinds/tf-model/versions/v1
+  // body in OpenAPI schema format
+  // {
+  //    "type": "object",
+  //    "required": ["name", "version"],
+  //    "property": {
+  //      "name": {
+  //          "type": "string"
+  //      }
+  //      "version": {
+  //          "type": "string"
+  //      }
+  //      "layers": {
+  //          "type": "double"
+  //      }
+  //    }
+  // }
+  rpc CreateType(CreateTypeRequest) returns (Type) {
+    option (google.api.http) = {
+      // bind the relative resource name to Type.name field.
+      post: "/v1/type/{name=namespaces/*/kinds/*/versions/*}"
+      body: "schema" // bind the HTTP body to Type.schema field.
+    };
+  }
+
+  rpc GetType(GetTypeRequest) returns (Type) {
+    option (google.api.http) = {
+      get: "/v1/type/{name=namespaces/*/kinds/*/versions/*}"
+    };
+  }
+
   rpc GetResource(GetResourceRequest) returns (Resource) {
     option (google.api.http) = {
       get: "/api/v1/resource/{name}"
     };
   }
+}
+
+// Entity Type.
+message Type {
+  // UUID of this type in the system.
+  string id = 1;
+  // name uniquely identify a type.
+  // Following the convention of K8s cutomized resource, it consists of three parts:
+  //   1. "namespace" of the this type, e.g. "my-company.com";
+  //   2. "kind" is the actual type name, e.g. "my_text_file"; and
+  //   3. "version" of the type, e.g. "v1".
+  string name = 2;
+  // type specification as a JSON string of an OpenAPI schema object.
+  // https://swagger.io/specification/#schemaObject
+  string schema = 3;
+}
+
+message CreateTypeRequest {
+  // name is a relative resouce name, which uniquely identify a type.
+  string name = 1;
+  // type specification via a JSON string of a OpenAPI schema object.
+  google.protobuf.Any schema = 2;
+}
+
+message GetTypeRequest {
+  // name is a relative resouce name, which uniquely identify a type.
+  string name = 1;
 }

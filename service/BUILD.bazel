@@ -5,7 +5,10 @@ go_library(
     srcs = ["service.go"],
     importpath = "github.com/kubeflow/metadata/service",
     visibility = ["//visibility:public"],
-    deps = ["//api:go_default_library"],
+    deps = [
+        "//api:go_default_library",
+        "@com_github_golang_glog//:go_default_library",
+    ],
 )
 
 go_test(
