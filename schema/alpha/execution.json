@@ -1,0 +1,63 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/execution.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"
+        },
+        {
+            "properties": {
+                "apiversion": {
+                    "constant": "alpha"
+                },
+                "category": {
+                    "constant": "execution"
+                },
+                "configuration": {
+                    "description": "runtime configuration for the execution",
+                    "properties": {
+                        "contentEncoding": {
+                            "description": "configuration encoding",
+                            "examples": [
+                                "base64"
+                            ],
+                            "type": "string"
+                        },
+                        "contentMediaType": {
+                            "description": "configuration media type",
+                            "examples": [
+                                "image/png"
+                            ],
+                            "type": "string"
+                        },
+                        "value": {
+                            "description": "configuration serizalized in string",
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                },
+                "executable_id": {
+                    "description": "the id of the executable",
+                    "type": "string"
+                },
+                "kind": {
+                    "constant": "execution"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                }
+            }
+        }
+    ],
+    "description": "a run of an executable",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "category",
+        "name"
+    ],
+    "type": "object"
+}

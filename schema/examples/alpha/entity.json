@@ -1,0 +1,12 @@
+{
+    "example": {
+        "category": "artifact",
+        "id": "123",
+        "kind": "model",
+        "namespace": "my-company.org",
+        "apiversion": "v1",
+        "uri": "file://path/to/artifact",
+        "name": "model-1"
+    },
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"
+}

@@ -1,0 +1,44 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"
+        },
+        {
+            "properties": {
+                "category": {
+                    "constant": "artifact"
+                },
+                "uri": {
+                    "description": "unique resource identifier to the artifact",
+                    "examples": [
+                        "file://path/to/a/local/file",
+                        "gcs://path/to/a/gcs/file",
+                        "http://github.com/my-project/path/to/a/file"
+                    ],
+                    "type": "string"
+                },
+                "version": {
+                    "description": "entity version assigned by an external system",
+                    "examples": [
+                        "v1.3.2",
+                        "e5a89c1eb6a836ecff76437ed955144b04227ad0"
+                    ],
+                    "type": "string"
+                }
+            }
+        }
+    ],
+    "description": "schema for an artifact, an extension of entity",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "category",
+        "name",
+        "uri"
+    ],
+    "type": "object"
+}

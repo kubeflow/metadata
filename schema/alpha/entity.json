@@ -1,0 +1,89 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schema/alpha/entity.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "Schema for any entity. (namespace, kind, apiversion) uniquely identifies the entity type.",
+    "examples": [
+        {
+            "annotations": {
+                "mylabel": "l1",
+                "tag": "tag-abc"
+            },
+            "apiversion": "v1",
+            "category": "artifact",
+            "create_time": "2018-11-13T20:20:39+00:00",
+            "description": "a example model",
+            "id": "123",
+            "kind": "model",
+            "name": "model-1",
+            "namespace": "my-company.org",
+            "owner": "owner@my-company.org",
+            "uri": "file://path/to/artifact",
+            "version": "v1.0.0"
+        }
+    ],
+    "properties": {
+        "annotations": {
+            "description": "arbitrary string key/value pairs",
+            "patternProperties": {
+                "^.*$": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "apiversion": {
+            "description": "version of the entity type",
+            "type": "string"
+        },
+        "category": {
+            "description": "three categories of entities",
+            "enum": [
+                "artifact",
+                "execution",
+                "container"
+            ],
+            "type": "string"
+        },
+        "create_time": {
+            "description": "time when entity is created in the format of RFC3339",
+            "examples": [
+                "2018-11-13T20:20:39+00:00"
+            ],
+            "format": "date-time",
+            "type": "string"
+        },
+        "description": {
+            "description": "description of this entity",
+            "type": "string"
+        },
+        "id": {
+            "description": "unique identifier for this entity",
+            "type": "string"
+        },
+        "kind": {
+            "description": "type of this entity",
+            "type": "string"
+        },
+        "name": {
+            "description": "name of this entity",
+            "type": "string"
+        },
+        "namespace": {
+            "description": "namepace of the entity type",
+            "type": "string"
+        },
+        "owner": {
+            "description": "owner of this entity",
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category"
+    ],
+    "type": "object"
+}
