@@ -1,4 +1,4 @@
-package schemaparser_test
+package schemaparser
 
 import (
 	"path/filepath"
@@ -7,7 +7,6 @@ import (
 	"github.com/bmatcuk/doublestar"
 	_ "github.com/davecgh/go-spew/spew"
 	"github.com/google/go-cmp/cmp"
-	"github.com/kubeflow/metadata/schemaparser"
 )
 
 var (
@@ -19,14 +18,14 @@ func TestNewSchemaSetFromAlphaFiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to find schema in directory %s: %s", schemaDir, err)
 	}
-	_, err = schemaparser.NewSchemaSetFromFiles(files)
+	_, err = NewSchemaSetFromFiles(files)
 	if err != nil {
 		t.Fatalf("failed to parse schemas from files: %s", err)
 	}
 }
 
 func TestSimpleProperitesInSelfContainedSchema(t *testing.T) {
-	ss, err := schemaparser.NewSchemaSetFromFiles([]string{"testdata/base.json"})
+	ss, err := NewSchemaSetFromFiles([]string{"testdata/base.json"})
 	if err != nil {
 		t.Fatalf("failed to parse schemas from files: %s", err)
 	}
@@ -53,7 +52,7 @@ func TestSimpleProperitesInSelfContainedSchema(t *testing.T) {
 }
 
 func TestSimplePropertiesInExtendedSchema(t *testing.T) {
-	ss, err := schemaparser.NewSchemaSetFromFiles([]string{"testdata/base.json", "testdata/ext.json"})
+	ss, err := NewSchemaSetFromFiles([]string{"testdata/base.json", "testdata/ext.json"})
 	if err != nil {
 		t.Fatalf("failed to parse schemas from files: %s", err)
 	}
