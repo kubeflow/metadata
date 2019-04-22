@@ -1,0 +1,54 @@
+{
+    "$id": "http://github.com/kubeflow/metada/schemaparser/testdata/base.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "a JSON schema, which is referred by ext.json",
+    "properties": {
+        "annotations": {
+            "description": "arbitrary string key/value pairs",
+            "patternProperties": {
+                "^.*$": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "apiversion": {
+            "description": "version of the type",
+            "type": "string"
+        },
+        "category": {
+            "description": "three categories of entities",
+            "enum": [
+                "artifact",
+                "execution",
+                "container"
+            ],
+            "type": "string"
+        },
+        "id": {
+            "description": "unique identifier for this entity",
+            "type": "string"
+        },
+        "kind": {
+            "description": "type of this entity",
+            "type": "string"
+        },
+        "name": {
+            "description": "name of this entity",
+            "type": "string"
+        },
+        "namespace": {
+            "description": "namepace of the entity type",
+            "type": "string"
+        }
+    },
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category"
+    ],
+    "type": "object"
+}

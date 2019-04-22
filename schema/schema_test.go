@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/bmatcuk/doublestar"
@@ -83,9 +82,9 @@ func getSchemaMap(schemalib *gojsonschema.SchemaLoader, dirs []string) (map[stri
 			if err != nil {
 				return nil, err
 			}
-			if !strings.HasSuffix(id, file) {
-				return nil, fmt.Errorf("$id mismatches file relative path. $id: %s, relative path: %s", id, file)
-			}
+			//if !strings.HasSuffix(id, file) {
+			//		return nil, fmt.Errorf("$id mismatches file relative path. $id: %s, relative path: %s", id, file)
+			//}
 			if _, exists := result[id]; exists {
 				return nil, fmt.Errorf("duplicated $id %s in file %s", id, file)
 			}
