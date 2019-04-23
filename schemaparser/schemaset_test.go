@@ -31,7 +31,7 @@ func TestSimpleProperitesInSelfContainedSchema(t *testing.T) {
 	}
 	// Extract the only id in the map
 	var id string
-	for k, _ := range ss {
+	for k := range ss {
 		id = k
 	}
 	sp, err := ss.SimpleProperties(id)

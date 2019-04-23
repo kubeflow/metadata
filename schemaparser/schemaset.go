@@ -12,14 +12,18 @@ import (
 // SimpleProperties are properties of type integer, double and string. The map is from property name to its type.
 type SimpleProperties map[string]string
 
+// Schema represent a JSON schema.
 type Schema struct {
-	JSON      *SchemaJSON
+	// JSON is the Go struct representation of the schema itself.
+	JSON *SchemaJSON
+	// Validator is a compiled schema for validating JSON data.
 	Validator *gojsonschema.Schema
 }
 
-// SchemaSet maps schema $id to its Schema. SchemaSet is inclusive, i.e. all references of schemas in the set must also be included in the set.
+// SchemaSet maps schema $id to its Schema. SchemaSet is inclusive, i.e. all references of schemas in this schema set must also be included in the set.
 type SchemaSet map[string]*Schema
 
+// NewSchemaSetFromFiles create a SchemaSet from an arry of files. These files can refer each other in their definitions.
 func NewSchemaSetFromFiles(files []string) (SchemaSet, error) {
 	result := make(SchemaSet)
 	sl, err := loadSchemas(files)
@@ -50,6 +54,7 @@ func NewSchemaSetFromFiles(files []string) (SchemaSet, error) {
 	return result, nil
 }
 
+// SimpleProperties returns a map of simple properties for a schema with given id.
 func (ss SchemaSet) SimpleProperties(id string) (SimpleProperties, error) {
 	result := make(SimpleProperties)
 	schema, exists := ss[id]
@@ -77,7 +82,7 @@ func addSimpleProperties(properties map[string]*SchemaJSON, output SimplePropert
 		return
 	}
 	for p, schema := range properties {
-		if schema.isSimpleType() {
+		if schema.IsSimpleType() {
 			output[p] = schema.GetType()
 		}
 	}

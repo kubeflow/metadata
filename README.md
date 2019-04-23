@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/metadata)](https://goreportcard.com/report/github.com/kubeflow/metadata)
+
 # Metadata
 Repository for assets related to Metadata.
 

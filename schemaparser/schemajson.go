@@ -1,18 +1,24 @@
 package schemaparser
 
 const (
+	// IntegerType represents JSON schema integer type
 	IntegerType = "integer"
-	StringType  = "string"
-	NumberType  = "number"
+	// StringType represents JSON schema string type
+	StringType = "string"
+	// NumberType represents JSON schema number type
+	NumberType = "number"
+	// BooleanType represents JSON schema boolean type
 	BooleanType = "boolean"
-	ArrayType   = "array"
-	ObjectType  = "object"
+	// ArrayType represents JSON schema array type
+	ArrayType = "array"
+	// ObjectType represents JSON schema object type
+	ObjectType = "object"
 )
 
-// Reference represents a JSON Reference.
+// Reference represents a JSON schema pointer.
 type Reference string
 
-// SchemaJSON represents a JSON SchemaJSON.
+// SchemaJSON is a Go struct representation of a JSON schema.
 type SchemaJSON struct {
 	ID          string `json:"$id,omitempty"`
 	Title       string `json:"title,omitempty"`
@@ -93,6 +99,7 @@ type HRef struct {
 	Schemas map[string]*SchemaJSON
 }
 
+// GetType return the type defined in this schema
 func (sj *SchemaJSON) GetType() string {
 	if sj.Type == nil {
 		return ObjectType
@@ -103,7 +110,8 @@ func (sj *SchemaJSON) GetType() string {
 	return ObjectType
 }
 
-func (sj *SchemaJSON) isSimpleType() bool {
+// IsSimpleType returns if a type is of a simple type, i.e. string, integer or number.
+func (sj *SchemaJSON) IsSimpleType() bool {
 	t := sj.GetType()
 	return t == StringType || t == IntegerType || t == NumberType
 }
