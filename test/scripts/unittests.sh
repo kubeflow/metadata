@@ -22,6 +22,7 @@ set -o nounset
 set -o pipefail
 
 export GO111MODULE=on
+export PATH="$PATH:$HOME/bin"
 
 go build ./...
 go test ./...
