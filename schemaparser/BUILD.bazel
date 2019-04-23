@@ -8,7 +8,10 @@ go_library(
     ],
     importpath = "github.com/kubeflow/metadata/schemaparser",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_xeipuuv_gojsonschema//:go_default_library"],
+    deps = [
+        "@com_github_bmatcuk_doublestar//:go_default_library",
+        "@com_github_xeipuuv_gojsonschema//:go_default_library",
+    ],
 )
 
 go_test(
@@ -20,8 +23,6 @@ go_test(
     data = glob(["testdata/**"]),
     embed = [":go_default_library"],
     deps = [
-        "@com_github_bmatcuk_doublestar//:go_default_library",
-        "@com_github_davecgh_go_spew//spew:go_default_library",
         "@com_github_google_go_cmp//cmp:go_default_library",
         "@com_github_stretchr_testify//assert:go_default_library",
     ],

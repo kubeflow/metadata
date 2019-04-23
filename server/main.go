@@ -31,9 +31,10 @@ import (
 )
 
 var (
-	host     = flag.String("host", "localhost", "Hostname to listen on.")
-	rpcPort  = flag.Int("rpc_port", 9090, "RPC serving port.")
-	httpPort = flag.Int("http_port", 8080, "HTTP serving port.")
+	host          = flag.String("host", "localhost", "Hostname to listen on.")
+	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
+	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
+	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 )
 
 func main() {
@@ -44,8 +45,12 @@ func main() {
 
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 
+	service, err := service.NewService(*schemaRootDir)
+	if err != nil {
+		glog.Fatal(err)
+	}
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, &service.Service{})
+	pb.RegisterMetadataServiceServer(rpcServer, service)
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
@@ -61,7 +66,7 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
+	err = pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
 	if err != nil {
 		glog.Fatal(err)
 	}

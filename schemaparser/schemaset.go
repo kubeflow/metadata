@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
+	"github.com/bmatcuk/doublestar"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -22,6 +23,15 @@ type Schema struct {
 
 // SchemaSet maps schema $id to its Schema. SchemaSet is inclusive, i.e. all references of schemas in this schema set must also be included in the set.
 type SchemaSet map[string]*Schema
+
+// NewSchemaSetFromADir create a SchemaSet from all schema files under a directory and its descendant directories.
+func NewSchemaSetFromADir(dir string) (SchemaSet, error) {
+	files, err := doublestar.Glob(filepath.Join(dir, "**/*.json"))
+	if err != nil {
+		return nil, fmt.Errorf("failed to find schema in directory %s: %s", dir, err)
+	}
+	return NewSchemaSetFromFiles(files)
+}
 
 // NewSchemaSetFromFiles create a SchemaSet from an arry of files. These files can refer each other in their definitions.
 func NewSchemaSetFromFiles(files []string) (SchemaSet, error) {

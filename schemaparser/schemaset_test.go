@@ -1,11 +1,8 @@
 package schemaparser
 
 import (
-	"path/filepath"
 	"testing"
 
-	"github.com/bmatcuk/doublestar"
-	_ "github.com/davecgh/go-spew/spew"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -13,14 +10,9 @@ var (
 	schemaDir = "../schema/alpha"
 )
 
-func TestNewSchemaSetFromAlphaFiles(t *testing.T) {
-	files, err := doublestar.Glob(filepath.Join(schemaDir, "**/*.json"))
-	if err != nil {
-		t.Fatalf("failed to find schema in directory %s: %s", schemaDir, err)
-	}
-	_, err = NewSchemaSetFromFiles(files)
-	if err != nil {
-		t.Fatalf("failed to parse schemas from files: %s", err)
+func TestNewSchemaSetFromDirForAlphaSchemas(t *testing.T) {
+	if _, err := NewSchemaSetFromADir(schemaDir); err != nil {
+		t.Fatalf("failed to parse schemas from a directory: %s", err)
 	}
 }
 

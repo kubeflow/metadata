@@ -12,7 +12,7 @@ bazel test -c opt //...
 
 To update BUILD file rules, run:
 ```
-bazel run //:gazelle
+bazel run //:gazelle -- update-repos -from_file=go.mod
 ```
 
 To build and test everything using the `go` command:

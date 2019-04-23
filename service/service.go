@@ -21,11 +21,25 @@ import (
 	"errors"
 
 	pb "github.com/kubeflow/metadata/api"
+	"github.com/kubeflow/metadata/schemaparser"
 )
 
 // Service implements the gRPC service MetadataService defined in the metadata
 // API spec.
-type Service struct{}
+type Service struct {
+	schemaset schemaparser.SchemaSet
+}
+
+// NewService returns a metadata server
+func NewService(schemaRootDir string) (*Service, error) {
+	ss, err := schemaparser.NewSchemaSetFromADir(schemaRootDir)
+	if err != nil {
+		return nil, err
+	}
+	return &Service{
+		schemaset: ss,
+	}, nil
+}
 
 // GetResource returns the specified resource in the request.
 func (s *Service) GetResource(ctx context.Context, in *pb.GetResourceRequest) (*pb.Resource, error) {
