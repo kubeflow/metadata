@@ -21,15 +21,6 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-export PATH=${GOPATH}/bin:/usr/local/go/bin:${PATH}
-REGISTRY="${GCP_REGISTRY}"
-CLUSTER_NAME="${CLUSTER_NAME}"
-ZONE="${GCP_ZONE}"
-PROJECT="${GCP_PROJECT}"
-GO_DIR=${GOPATH}/src/github.com/${REPO_OWNER}/${REPO_NAME}
-VERSION=$(git describe --tags --always --dirty)
-
 export GO111MODULE=on
 echo "Run unit test cases"
-cd ${GO_DIR}
 go test ./...
