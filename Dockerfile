@@ -18,8 +18,6 @@ WORKDIR /go/src/github.com/kubeflow/metadata
 
 COPY . .
 
-RUN /bin/bash api/generate_proto.sh
-
 RUN cd server && go build ./...
 
 CMD ["./server/server"]
