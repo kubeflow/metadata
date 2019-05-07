@@ -25,6 +25,7 @@ import (
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kubeflow/metadata/api"
+	mlmd "github.com/kubeflow/metadata/ml_metadata"
 	"github.com/kubeflow/metadata/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -34,6 +35,7 @@ var (
 	host     = flag.String("host", "localhost", "Hostname to listen on.")
 	rpcPort  = flag.Int("rpc_port", 9090, "RPC serving port.")
 	httpPort = flag.Int("http_port", 8080, "HTTP serving port.")
+	mlmdAddr = flag.String("mlmd_address", "127.0.0.1:9090", "the server address of ml_metadata in the format of host:port")
 )
 
 func main() {
@@ -42,10 +44,16 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
+	conn, err := grpc.Dial(*mlmdAddr)
+	if err != nil {
+		glog.Fatalf("fail to dial to MLMD server: %v", err)
+	}
+	defer conn.Close()
+	mlmdClient := mlmd.NewMetadataStoreServiceClient(conn)
 
+	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, &service.Service{})
+	pb.RegisterMetadataServiceServer(rpcServer, service.NewService(mlmdClient))
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
@@ -61,7 +69,7 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
+	err = pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
 	if err != nil {
 		glog.Fatal(err)
 	}
