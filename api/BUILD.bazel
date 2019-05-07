@@ -7,9 +7,16 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 
 proto_library(
     name = "api_proto",
-    srcs = ["api.proto"],
+    srcs = [
+        "api.proto",
+        "service.proto",
+    ],
     visibility = ["//visibility:public"],
-    deps = ["@go_googleapis//google/api:annotations_proto"],
+    deps = [
+        "@com_google_protobuf//:empty_proto",
+        "@com_google_protobuf//:timestamp_proto",
+        "@go_googleapis//google/api:annotations_proto",
+    ],
 )
 
 go_proto_library(
