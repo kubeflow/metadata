@@ -1,3 +1,9 @@
+build:
+	go build ./...
+
+test:
+	go test ./...
+
 hello:
 	curl localhost:8080/api/v1/resource/my-resource
 
@@ -15,10 +21,3 @@ mlmd-docker-image:
 
 metadata-docker-image:
 	docker build -t gcr.io/kubeflow-images-public/metadata .
-
-
-build:
-	go build ./...
-
-test:
-	go test ./...

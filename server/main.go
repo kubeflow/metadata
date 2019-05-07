@@ -44,7 +44,7 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := grpc.Dial(*mlmdAddr)
+	conn, err := grpc.Dial(*mlmdAddr, grpc.WithInsecure())
 	if err != nil {
 		glog.Fatalf("fail to dial to MLMD server: %v", err)
 	}
