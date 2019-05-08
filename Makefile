@@ -10,6 +10,7 @@ test:
 hello:
 	curl localhost:8080/api/v1/resource/my-resource
 
+# TODO: use bazel to compile the protos instead of local protoc.
 mlmd-proto:
 	rm -rf /tmp/ml-metadata && \
 	git clone --branch $(TAG) https://github.com/google/ml-metadata.git /tmp/ml-metadata && \

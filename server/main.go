@@ -35,7 +35,7 @@ var (
 	host     = flag.String("host", "localhost", "Hostname to listen on.")
 	rpcPort  = flag.Int("rpc_port", 9090, "RPC serving port.")
 	httpPort = flag.Int("http_port", 8080, "HTTP serving port.")
-	mlmdAddr = flag.String("mlmd_address", "127.0.0.1:9090", "the server address of ml_metadata in the format of host:port")
+	mlmdAddr = flag.String("mlmd_address", "127.0.0.1:9090", "The server address of ml_metadata in the format of host:port")
 )
 
 func main() {
@@ -46,7 +46,7 @@ func main() {
 
 	conn, err := grpc.Dial(*mlmdAddr, grpc.WithInsecure())
 	if err != nil {
-		glog.Fatalf("fail to dial to MLMD server: %v", err)
+		glog.Fatalf("Fail to dial to MLMD server: %v.", err)
 	}
 	defer conn.Close()
 	mlmdClient := mlmd.NewMetadataStoreServiceClient(conn)
