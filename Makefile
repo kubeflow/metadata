@@ -3,8 +3,9 @@ TAG ?= master
 build:
 	go build ./...
 
+.PHONY: test
 test:
-	go test ./...
+	bash test/scripts/unittests.sh
 
 hello:
 	curl localhost:8080/api/v1/resource/my-resource
