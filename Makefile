@@ -1,3 +1,5 @@
+TAG ?= master
+
 build:
 	go build ./...
 
@@ -9,7 +11,7 @@ hello:
 
 mlmd-proto:
 	rm -rf /tmp/ml-metadata && \
-	git clone https://github.com/google/ml-metadata.git /tmp/ml-metadata && \
+	git clone --branch $(TAG) https://github.com/google/ml-metadata.git /tmp/ml-metadata && \
 	rm -rf ml_metadata/proto && \
 	mkdir ml_metadata/proto && \
 	cp /tmp/ml-metadata/ml_metadata/proto/*.proto ml_metadata/proto && \
