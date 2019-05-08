@@ -1,7 +1,57 @@
-
 {
-
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/model.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "TODO: Define the metadata about a model."
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json"
+        },
+        {
+            "properties": {
+                "apiversion": {
+                    "constant": "alpha"
+                },
+                "hyperparameters": {
+                    "description": "map from param name to its value",
+                    "type": "object"
+                },
+                "kind": {
+                    "constant": "model"
+                },
+                "model_type": {
+                    "description": "the type of the model",
+                    "examples": [
+                        "liner regression",
+                        "neural network"
+                    ],
+                    "type": "string"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                },
+                "training_framework": {
+                    "examples": [
+                        {
+                            "name": "tensorflow",
+                            "version": "v1.0"
+                        }
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "version": {"type": "string"}
+                    }
+                }
+            }
+        }
+    ],
+    "description": "schema for an machine learning model",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category",
+        "uri"
+    ]
 }

@@ -2,5 +2,53 @@
 {
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/metrics.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "TODO: add metrics schema"
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json"
+        },
+        {
+            "properties": {
+                "apiversion": {
+                    "constant": "alpha"
+                },
+                "kind": {
+                    "constant": "metrics"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                },
+                "model_id": {
+                    "description": "ID of the model being evaluated",
+                    "type": "string"
+                },
+                "data_set_id": {
+                    "description": "ID of the data set used for evaluation",
+                    "type": "string"
+                },
+                "metrics_type": {
+                    "type": "string",
+                    "enum": ["training", "validation", "testing", "production"]
+                },
+                "values": {
+                    "description": "map from metric name to its value",
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "number"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "description": "metadata schema for an machine learning model",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category",
+        "uri"
+    ]
 }

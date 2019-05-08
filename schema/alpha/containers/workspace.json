@@ -1,5 +1,36 @@
 {
 
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/containers/workspace.json",
-    "$schema": "http://json-schema.org/draft-07/schema#"
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "description": "schema for workspace, which is used to group artifacts and exectuion for solving a machine learning problem",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"
+        },
+        {
+            "properties": {
+                "category": {
+                    "constant": "container"
+                },
+                "apiversion": {
+                    "constant": "alpha"
+                },
+                "kind": {
+                    "constant": "workspace"
+                },
+                "namespace": {
+                    "constant": "kubeflow.org"
+                }
+            }
+        }
+    ],
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "category",
+        "name"
+    ],
+    "type": "object"
 }
