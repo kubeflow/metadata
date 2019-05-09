@@ -22,9 +22,6 @@ This directory contains versions of predefined metadata schemas, which are loade
 
 - Different versions of metadata schema should be organized as `<version>/<relative path>`.
 - Markdown documentaion of schemas are at `<version>/docs`.
-- `/examples` folder containers the example metadata as JSON files. In each file,
-    - field `$id` points to the its schema,
-    - field `example` is a JSON of metadata example.
 - `schema_test.go` validates all schemas in sub-directories and examples in `/examples`.
 
 # Customized Metadata

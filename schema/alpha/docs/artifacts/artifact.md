@@ -16,6 +16,27 @@ schema for an artifact, an extension of entity
   * [entity](../entity.md) `http://github.com/kubeflow/metadata/schema/alpha/entity.json`
 
 
+##  Example
+```json
+{
+  "category": "artifact",
+  "id": "123",
+  "kind": "model",
+  "namespace": "my-company.org",
+  "apiversion": "v1",
+  "uri": "file://path/to/artifact",
+  "name": "model-1",
+  "description": "a example model",
+  "owner": "owner@my-company.org",
+  "version": "v1.0.0",
+  "create_time": "2018-11-13T20:20:39+00:00",
+  "annotations": {
+    "tag": "tag-abc",
+    "mylabel": "l1"
+  }
+}
+```
+
 #  Properties
 
 | Property | Type | Required | Nullable | Defined by |

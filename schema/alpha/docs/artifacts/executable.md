@@ -16,6 +16,35 @@ schema for an executable, extension of an artifact
   * [entity](../entity.md) `http://github.com/kubeflow/metadata/schema/alpha/entity.json`
 
 
+##  Example
+```json
+{
+  "category": "artifact",
+  "id": "1234",
+  "input_type": [
+    {
+      "apiversion": "v1",
+      "category": "artifact",
+      "kind": "data_set",
+      "namespace": "my-company.org"
+    }
+  ],
+  "kind": "my-traning-code",
+  "namespace": "my-company.org",
+  "output_type": [
+    {
+      "apiversion": "v1",
+      "category": "artifact",
+      "kind": "model",
+      "namespace": "my-company.org"
+    }
+  ],
+  "apiversion": "v1",
+  "uri": "file://local_file.py",
+  "name": "my-processor"
+}
+```
+
 #  Properties
 
 | Property | Type | Required | Nullable | Defined by |

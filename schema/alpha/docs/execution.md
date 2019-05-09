@@ -16,6 +16,51 @@ a run of an executable
   * [entity](entity.md) `http://github.com/kubeflow/metadata/schema/alpha/entity.json`
 
 
+##  Example
+```json
+{
+  "apiversion": "alpha",
+  "category": "execution",
+  "configuration": {
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "labels": {
+        "app": "web"
+      },
+      "name": "rss-site"
+    },
+    "spec": {
+      "containers": [
+        {
+          "image": "nginx",
+          "name": "front-end",
+          "ports": [
+            {
+              "containerPort": "80"
+            }
+          ]
+        },
+        {
+          "image": "nickchase/rss-php-nginx:v1",
+          "name": "rss-reader",
+          "ports": [
+            {
+              "containerPort": "88"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "executable_id": "1234",
+  "id": "abcd1234",
+  "kind": "execution",
+  "name": "my-run",
+  "namespace": "kubeflow.org"
+}
+```
+
 #  Properties
 
 | Property | Type | Required | Nullable | Defined by |
