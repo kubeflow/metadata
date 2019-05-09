@@ -34,6 +34,7 @@
         {
             "properties": {
                 "apiversion": {
+                    "type": "string",
                     "constant": "alpha"
                 },
                 "hyperparameters": {
@@ -41,6 +42,7 @@
                     "type": "object"
                 },
                 "kind": {
+                    "type": "string",
                     "constant": "model"
                 },
                 "model_type": {
@@ -52,6 +54,7 @@
                     "type": "string"
                 },
                 "namespace": {
+                    "type": "string",
                     "constant": "kubeflow.org"
                 },
                 "training_framework": {

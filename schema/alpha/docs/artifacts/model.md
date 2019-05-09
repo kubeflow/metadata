@@ -54,12 +54,12 @@ schema for an machine learning model
 
 | Property | Type | Required | Nullable | Defined by |
 |----------|------|----------|----------|------------|
-| [apiversion](#apiversion) | complex | **Required**  | No |  (this schema) |
+| [apiversion](#apiversion) | `string` | **Required**  | No |  (this schema) |
 | [category](#category) | complex | **Required**  | No | [artifact](artifact.md#category) |
 | [hyperparameters](#hyperparameters) | `object` | Optional  | No |  (this schema) |
-| [kind](#kind) | complex | **Required**  | No |  (this schema) |
+| [kind](#kind) | `string` | **Required**  | No |  (this schema) |
 | [model_type](#model_type) | `string` | Optional  | No |  (this schema) |
-| [namespace](#namespace) | complex | **Required**  | No |  (this schema) |
+| [namespace](#namespace) | `string` | **Required**  | No |  (this schema) |
 | [training_framework](#training_framework) | `object` | Optional  | No |  (this schema) |
 | [uri](#uri) | `string` | **Required**  | No | [artifact](artifact.md#uri) |
 | [version](#version) | `string` | Optional  | No | [artifact](artifact.md#version) |
@@ -71,20 +71,15 @@ schema for an machine learning model
 `apiversion`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### apiversion Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "alpha",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 
@@ -149,20 +144,15 @@ map from param name to its value
 `kind`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### kind Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "model",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 
@@ -206,20 +196,15 @@ the type of the model
 `namespace`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### namespace Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "kubeflow.org",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 

@@ -45,13 +45,13 @@ metadata schema for an machine learning model
 
 | Property | Type | Required | Nullable | Defined by |
 |----------|------|----------|----------|------------|
-| [apiversion](#apiversion) | complex | **Required**  | No |  (this schema) |
+| [apiversion](#apiversion) | `string` | **Required**  | No |  (this schema) |
 | [category](#category) | complex | **Required**  | No | [artifact](artifact.md#category) |
 | [data_set_id](#data_set_id) | `string` | Optional  | No |  (this schema) |
-| [kind](#kind) | complex | **Required**  | No |  (this schema) |
+| [kind](#kind) | `string` | **Required**  | No |  (this schema) |
 | [metrics_type](#metrics_type) | `enum` | Optional  | No |  (this schema) |
 | [model_id](#model_id) | `string` | Optional  | No |  (this schema) |
-| [namespace](#namespace) | complex | **Required**  | No |  (this schema) |
+| [namespace](#namespace) | `string` | **Required**  | No |  (this schema) |
 | [uri](#uri) | `string` | **Required**  | No | [artifact](artifact.md#uri) |
 | [values](#values) | `object` | Optional  | No |  (this schema) |
 | [version](#version) | `string` | Optional  | No | [artifact](artifact.md#version) |
@@ -63,20 +63,15 @@ metadata schema for an machine learning model
 `apiversion`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### apiversion Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "alpha",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 
@@ -138,20 +133,15 @@ ID of the data set used for evaluation
 `kind`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### kind Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "metrics",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 
@@ -206,20 +196,15 @@ ID of the model being evaluated
 `namespace`
 
 * is **required**
-* type: complex
+* type: `string`
 * defined in this schema
 
 ### namespace Type
 
-Unknown type ``.
 
-```json
-{
-  "constant": "kubeflow.org",
-  "isrequired": true,
-  "simpletype": "complex"
-}
-```
+`string`
+
+
 
 
 

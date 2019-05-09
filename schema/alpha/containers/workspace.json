@@ -24,15 +24,19 @@
         {
             "properties": {
                 "category": {
+                    "type": "string",
                     "constant": "container"
                 },
                 "apiversion": {
+                    "type": "string",
                     "constant": "alpha"
                 },
                 "kind": {
+                    "type": "string",
                     "constant": "workspace"
                 },
                 "namespace": {
+                    "type": "string",
                     "constant": "kubeflow.org"
                 }
             }

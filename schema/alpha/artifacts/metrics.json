@@ -30,12 +30,15 @@
         {
             "properties": {
                 "apiversion": {
+                    "type": "string",
                     "constant": "alpha"
                 },
                 "kind": {
+                    "type": "string",
                     "constant": "metrics"
                 },
                 "namespace": {
+                    "type": "string",
                     "constant": "kubeflow.org"
                 },
                 "model_id": {
