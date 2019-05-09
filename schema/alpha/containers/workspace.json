@@ -2,7 +2,21 @@
 
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/containers/workspace.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "schema for workspace, which is used to group artifacts and exectuion for solving a machine learning problem",
+    "description": "schema for workspace, which is used to group artifacts and exectuions for solving a machine learning problem",
+    "examples": [{
+        "id": "4c2e8652-7286-11e9-a923-1681be663d3e",
+        "kind": "workspace",
+        "category": "container",
+        "namespace": "kubeflow.org",
+        "apiversion": "alpha",
+        "name": "MNIST",
+        "description": "workspace for MNIST problem",
+        "owner": "someone@kubeflow.org",
+        "create_time": "2018-12-13T20:20:39+00:00",
+        "annotations": {
+            "mylabel": "l1"
+        }
+    }],
     "allOf": [
         {
             "$ref": "http://github.com/kubeflow/metadata/schema/alpha/entity.json"

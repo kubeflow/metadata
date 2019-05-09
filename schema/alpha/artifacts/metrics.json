@@ -2,6 +2,27 @@
 {
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/metrics.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
+    "examples": [{
+        "id": "784efef2-7285-11e9-a923-1681be663d3e",
+        "kind": "metrics",
+        "category": "artifact",
+        "namespace": "kubeflow.org",
+        "apiversion": "alpha",
+        "name": "MNIST-evaluation",
+        "description": "validating the MNIST model to recognize handwritten digits",
+        "owner": "someone@kubeflow.org",
+        "uri": "gcs://my-bucket/mnist-eval.csv",
+        "data_set_id": "123",
+        "model_id": "12345",
+        "metrics_type": "validation",
+        "values": {
+            "accuracy": 0.95
+        },
+        "create_time": "2018-11-15T20:20:39+00:00",
+        "annotations": {
+            "mylabel": "l1"
+        }
+    }],
     "allOf": [
         {
             "$ref": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json"
