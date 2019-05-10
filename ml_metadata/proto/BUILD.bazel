@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
+
+proto_library(
+    name = "ml_metadata_proto",
+    srcs = [
+        "metadata_source.proto",
+        "metadata_store.proto",
+        "metadata_store_service.proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+go_proto_library(
+    name = "ml_metadata_go_proto",
+    compilers = ["@io_bazel_rules_go//proto:go_grpc"],
+    importpath = "github.com/kubeflow/metadata/ml_metadata/proto",
+    proto = ":ml_metadata_proto",
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":ml_metadata_go_proto"],
+    importpath = "github.com/kubeflow/metadata/ml_metadata/proto",
+    visibility = ["//visibility:public"],
+)

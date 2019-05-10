@@ -21,11 +21,21 @@ import (
 	"errors"
 
 	pb "github.com/kubeflow/metadata/api"
+	mlmd "github.com/kubeflow/metadata/ml_metadata"
 )
 
 // Service implements the gRPC service MetadataService defined in the metadata
 // API spec.
-type Service struct{}
+type Service struct {
+	mlmdClient mlmd.MetadataStoreServiceClient
+}
+
+// NewService returns a new MetadataService.
+func NewService(mlmdClient mlmd.MetadataStoreServiceClient) *Service {
+	return &Service{
+		mlmdClient: mlmdClient,
+	}
+}
 
 // GetResource returns the specified resource in the request.
 func (s *Service) GetResource(ctx context.Context, in *pb.GetResourceRequest) (*pb.Resource, error) {
