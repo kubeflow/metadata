@@ -1,4 +1,5 @@
 load("@bazel_gazelle//:def.bzl", "gazelle")
 
 # gazelle:prefix github.com/kubeflow/metadata
+# gazelle:exclude schema
 gazelle(name = "gazelle")

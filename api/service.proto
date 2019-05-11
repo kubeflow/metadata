@@ -1,0 +1,91 @@
+// Copyright 2019 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Placeholder for Core API definitions.
+
+syntax = "proto3";
+
+option go_package = "github.com/kubeflow/metadata/api";
+
+package api;
+
+import "api/api.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message CreateArtifactTypeRequest {
+  ArtifactType artifact_type = 1;
+}
+
+message CreateArtifactTypeResponse {
+  // Newly created artifact type.
+  ArtifactType artifact_type = 1;
+}
+
+message GetArtifactTypeRequest {
+  int64 id = 1;
+}
+
+message GetArtifactTypeResponse {
+  ArtifactType artifact_type = 1;
+}
+
+message DeleteArtifactTypeRequest {
+  int64 id = 1;
+}
+
+message ListArtifactTypesRequest {}
+
+message ListArtifactTypesResponse {
+  repeated ArtifactType artifact_types = 1;
+}
+
+service Metadata {
+  rpc CreateArtifactType(CreateArtifactTypeRequest)
+      returns (CreateArtifactTypeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/artifact_types"
+      body: "artifact_type"
+    };
+  }
+
+  rpc GetArtifactType(GetArtifactTypeRequest)
+      returns (GetArtifactTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{id}"
+    };
+  }
+
+  rpc ListArtifactTypes(ListArtifactTypesRequest)
+      returns (ListArtifactTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/artifact_types"
+    };
+  }
+
+  rpc DeleteArtifactType(DeleteArtifactTypeRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/artifact_types/{id}"
+    };
+  }
+
+  // TODO(neuromage): Flesh out CRUD methods on the following resources:
+  // - Workspaces
+  // - Namespaces
+  // - Artifacts
+  // - Executions
+  // - ExecutionTypes
+}
