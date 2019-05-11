@@ -4,6 +4,7 @@ load("@io_bazel_rules_go//proto:def.bzl", "go_proto_library")
 # Tell Gazelle to ignore grpc-gateway generated proto files when generating
 # BUILD rules.
 # gazelle:exclude api.pb.gw.go
+# gazelle:exclude service.pb.gw.go
 
 proto_library(
     name = "api_proto",
@@ -31,26 +32,16 @@ go_proto_library(
     deps = ["@go_googleapis//google/api:annotations_go_proto"],
 )
 
-go_library(
-    name = "go_default_library",
-    srcs = ["service.pb.gw.go"],
-    embed = [":api_go_proto"],
-    importpath = "github.com/kubeflow/metadata/api",
-    visibility = ["//visibility:public"],
-    deps = [
-        "@com_github_golang_protobuf//proto:go_default_library",
-        "@com_github_grpc_ecosystem_grpc_gateway//runtime:go_default_library",
-        "@com_github_grpc_ecosystem_grpc_gateway//utilities:go_default_library",
-        "@org_golang_google_grpc//:go_default_library",
-        "@org_golang_google_grpc//codes:go_default_library",
-        "@org_golang_google_grpc//grpclog:go_default_library",
-        "@org_golang_google_grpc//status:go_default_library",
-    ],
-)
-
 go_path(
     name = "api_generated_go_sources",
     deps = [
         ":api_go_proto",
     ],
+)
+
+go_library(
+    name = "go_default_library",
+    embed = [":api_go_proto"],
+    importpath = "github.com/kubeflow/metadata/api",
+    visibility = ["//visibility:public"],
 )
