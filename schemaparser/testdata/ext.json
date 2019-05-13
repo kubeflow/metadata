@@ -1,0 +1,58 @@
+{
+    "$id": "http://github.com/kubeflow/metadata/schemaparser/testdata/ext.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metada/schemaparser/testdata/base.json"
+        },
+        {
+            "properties": {
+                "array-field": {
+                    "description": "a field of type array",
+                    "type": "array"
+                },
+                "boolean-field": {
+                    "description": "a field of type boolean",
+                    "type": "boolean"
+                },
+                "category": {
+                    "constant": "str-contant",
+                    "type": "string"
+                },
+                "object-field": {
+                    "description": "a field of type object",
+                    "type": "object"
+                },
+                "string-field": {
+                    "description": "a field of type string",
+                    "type": "string"
+                }
+            }
+        }
+    ],
+    "description": "a extended schema with new fields from base.json",
+    "properties": {
+        "array-field": {
+            "description": "a field of type array",
+            "type": "array"
+        },
+        "integer-field": {
+            "description": "a field of type integer",
+            "type": "integer"
+        },
+        "number-field": {
+            "description": "a field of type number",
+            "type": "number"
+        }
+    },
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "category",
+        "name",
+        "uri"
+    ],
+    "type": "object"
+}

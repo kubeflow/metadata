@@ -32,10 +32,11 @@ import (
 )
 
 var (
-	host     = flag.String("host", "localhost", "Hostname to listen on.")
-	rpcPort  = flag.Int("rpc_port", 9090, "RPC serving port.")
-	httpPort = flag.Int("http_port", 8080, "HTTP serving port.")
-	mlmdAddr = flag.String("mlmd_address", "127.0.0.1:9090", "The server address of ml_metadata in the format of host:port")
+	host          = flag.String("host", "localhost", "Hostname to listen on.")
+	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
+	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
+	mlmdAddr      = flag.String("mlmd_address", "127.0.0.1:9090", "The server address of ml_metadata in the format of host:port")
+	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 )
 
 func main() {
@@ -53,7 +54,11 @@ func main() {
 
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.NewService(mlmdClient))
+	metadataService, err := service.NewService(mlmdClient, *schemaRootDir)
+	if err != nil {
+		glog.Fatalf("Failed to create metadata server: %v", err)
+	}
+	pb.RegisterMetadataServiceServer(rpcServer, metadataService)
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
