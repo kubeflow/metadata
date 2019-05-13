@@ -1,7 +1,86 @@
-
 {
-
     "$id": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/model.json",
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "description": "TODO: Define the metadata about a model."
+    "examples": [{
+        "id": "12345",
+        "kind": "model",
+        "category": "artifact",
+        "namespace": "kubeflow.org",
+        "apiversion": "alpha",
+        "name": "MNIST",
+        "description": "model to recognize handwritten digits",
+        "owner": "someone@kubeflow.org",
+        "uri": "gcs://my-bucket/mnist",
+        "model_type": "neural network",
+        "training_framework": {
+            "name": "tensorflow",
+            "vesrion": "v1.0"
+        },
+        "hyperparameters": {
+            "learning_rate": 0.5,
+            "layers": [10, 3, 1],
+            "early_stop": true
+        },
+        "version": "v0.0.1",
+        "create_time": "2018-11-13T20:20:39+00:00",
+        "annotations": {
+            "mylabel": "l1"
+        }
+    }],
+    "allOf": [
+        {
+            "$ref": "http://github.com/kubeflow/metadata/schema/alpha/artifacts/artifact.json"
+        },
+        {
+            "properties": {
+                "apiversion": {
+                    "type": "string",
+                    "constant": "alpha"
+                },
+                "hyperparameters": {
+                    "description": "map from param name to its value",
+                    "type": "object"
+                },
+                "kind": {
+                    "type": "string",
+                    "constant": "model"
+                },
+                "model_type": {
+                    "description": "the type of the model",
+                    "examples": [
+                        "liner regression",
+                        "neural network"
+                    ],
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string",
+                    "constant": "kubeflow.org"
+                },
+                "training_framework": {
+                    "examples": [
+                        {
+                            "name": "tensorflow",
+                            "version": "v1.0"
+                        }
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "version": {"type": "string"}
+                    }
+                }
+            }
+        }
+    ],
+    "description": "schema for an machine learning model",
+    "required": [
+        "id",
+        "kind",
+        "namespace",
+        "apiversion",
+        "name",
+        "category",
+        "uri"
+    ]
 }

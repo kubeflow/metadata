@@ -12,18 +12,16 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-const (
-	schemaIDKey       = "$id"
-	exampleIDKey      = "$id"
-	examplePayloadKey = "example"
-)
+const schemaIDKey = "$id"
 
-var (
-	exampleDir = "examples"
-	schemaDirs = []string{
-		"alpha",
-	}
-)
+var schemaDirs = []string{
+	"alpha",
+}
+
+type jsonSchema struct {
+	ID       string        `json:"$id,omitempty"`
+	Examples []interface{} `json:"examples,omitempty"`
+}
 
 func TestExamples(t *testing.T) {
 	sl, err := loadSchemaLib(schemaDirs)
@@ -34,13 +32,15 @@ func TestExamples(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to load schema, error: %s", err)
 	}
-	examples, err := doublestar.Glob(filepath.Join(exampleDir, "**/*.json"))
-	if err != nil {
-		t.Errorf("failed to find JSON examples in directory %s: %s", exampleDir, err)
-	}
-	for _, file := range examples {
-		if err := validateExample(file, schemaMap); err != nil {
-			t.Errorf("failed to validate example: %s\n", err)
+	for _, dir := range schemaDirs {
+		examples, err := doublestar.Glob(filepath.Join(dir, "**/*.json"))
+		if err != nil {
+			t.Errorf("failed to find JSON examples in directory %s: %s", dir, err)
+		}
+		for _, file := range examples {
+			if err := validateExample(file, schemaMap); err != nil {
+				t.Errorf("failed to validate example: %s\n", err)
+			}
 		}
 	}
 }
@@ -102,29 +102,22 @@ func getSchemaMap(schemalib *gojsonschema.SchemaLoader, dirs []string) (map[stri
 
 func validateExample(file string, schemaMap map[string]*gojsonschema.Schema) error {
 	b, _ := ioutil.ReadFile(file)
-	var data map[string]interface{}
+	var data jsonSchema
 	if err := json.Unmarshal(b, &data); err != nil {
 		return err
 	}
-	if _, exists := data[exampleIDKey]; !exists {
-		return fmt.Errorf("no %s key found in %s", exampleIDKey, file)
+	id := data.ID
+	if data.Examples == nil {
+		return fmt.Errorf("no examples found in %s. please add examples.", file)
 	}
-	if _, exists := data[examplePayloadKey]; !exists {
-		return fmt.Errorf("no %s key found in %s", examplePayloadKey, file)
-	}
-	id, ok := data[exampleIDKey].(string)
-	if !ok {
-		return fmt.Errorf("%s key must be string", exampleIDKey)
-	}
-	if _, exists := schemaMap[id]; !exists {
-		return fmt.Errorf("failed to find schema id %s defined in %s", id, file)
-	}
-	result, err := schemaMap[id].Validate(gojsonschema.NewGoLoader(data[examplePayloadKey]))
-	if err != nil {
-		return fmt.Errorf("failed to validate example: %s", err)
-	}
-	if !result.Valid() {
-		return fmt.Errorf("invalide example in file %s: %s", file, result.Errors())
+	for _, example := range data.Examples {
+		result, err := schemaMap[id].Validate(gojsonschema.NewGoLoader(example))
+		if err != nil {
+			return fmt.Errorf("failed to validate example: %s", err)
+		}
+		if !result.Valid() {
+			return fmt.Errorf("invalide example in file %s: %s", file, result.Errors())
+		}
 	}
 	return nil
 }
