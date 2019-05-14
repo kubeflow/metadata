@@ -14,8 +14,6 @@ require (
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v1.1.0
 	golang.org/x/net v0.0.0-20190311183353-d8887717615a
-	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20190415143225-d1146b9035b9
 	google.golang.org/grpc v1.19.1
-	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
