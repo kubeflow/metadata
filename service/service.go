@@ -58,7 +58,8 @@ func NewService(mlmdClient mlmd.MetadataStoreServiceClient, schemaRootDir string
 	for id := range ss.Schemas {
 		tn, err := ss.TypeName(id)
 		if err != nil {
-			return nil, fmt.Errorf("schema misses 'kind', 'apiversion', or 'namespace'. schema $id = %s", id)
+			glog.Warningf("schema misses 'kind', 'apiversion', or 'namespace'. schema $id = %s", id)
+			continue
 		}
 		category, err := ss.ConstantStringType(id, categoryPropertyName)
 		if err != nil {
