@@ -20,7 +20,7 @@ go_test(
         "schemajson_test.go",
         "schemaset_test.go",
     ],
-    data = glob(["testdata/**"]),
+    data = glob(["testdata/**", "../schema/**"]),
     embed = [":go_default_library"],
     deps = [
         "@com_github_google_go_cmp//cmp:go_default_library",
