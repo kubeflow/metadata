@@ -16,8 +16,6 @@ package schemaparser
 
 import (
 	"testing"
-
-	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -26,14 +24,38 @@ var (
 
 func TestLoadSchemaJSON(t *testing.T) {
 	sj, err := schemaJSON(testSchemaFile)
-	assert.Nil(t, err, "Failed to load schema into SchemaJSON struct.")
-	assert.Equal(t, "object", sj.GetType(), "Expect the type to be object.")
-	assert.Equal(t, false, sj.IsSimpleType(), "Expect the type is not a simple type.")
-	assert.Equal(t, 3, len(sj.Properties), "Expect 3 field are defined as properties.")
-	assert.Equal(t, "array", sj.Properties["array-field"].GetType(), "Expect the type to be array.")
-	assert.Equal(t, false, sj.Properties["array-field"].IsSimpleType(), "Expect the type is not a simple type.")
-	assert.Equal(t, "integer", sj.Properties["integer-field"].GetType(), "Expect the type to be integer.")
-	assert.Equal(t, true, sj.Properties["integer-field"].IsSimpleType(), "Expect the type is a simple type.")
-	assert.Equal(t, "number", sj.Properties["number-field"].GetType(), "Expect the type to be number.")
-	assert.Equal(t, true, sj.Properties["number-field"].IsSimpleType(), "Expect the type is a simple type.")
+	if err != nil {
+		t.Fatal("Failed to load schema into SchemaJSON struct.")
+	}
+	if len(sj.Properties) != 3 {
+		t.Fatal("Expect 3 field are defined as properties.")
+	}
+	typeTests := []struct {
+		exp    string
+		actual string
+	}{
+		{"object", sj.GetType()},
+		{"array", sj.Properties["array-field"].GetType()},
+		{"integer", sj.Properties["integer-field"].GetType()},
+		{"number", sj.Properties["number-field"].GetType()},
+	}
+	for i, tt := range typeTests {
+		if tt.exp != tt.actual {
+			t.Errorf("wrong property type in typeTests[%d], got %v, expect %v", i, tt.actual, tt.exp)
+		}
+	}
+	isSimpleTypeTests := []struct {
+		exp    bool
+		actual bool
+	}{
+		{false, sj.IsSimpleType()},
+		{false, sj.Properties["array-field"].IsSimpleType()},
+		{true, sj.Properties["integer-field"].IsSimpleType()},
+		{true, sj.Properties["number-field"].IsSimpleType()},
+	}
+	for i, tt := range isSimpleTypeTests {
+		if tt.exp != tt.actual {
+			t.Errorf("wrong result fo IsSimpleTypeTests[%d] in , got %v, expect %v", i, tt.actual, tt.exp)
+		}
+	}
 }
