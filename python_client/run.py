@@ -1,3 +1,8 @@
+import dataset
+import model
+import metrics
+import workspace
+
 class Run:
   """
   Captures a run of pipeline or notebooks in a workspace and provides logging
@@ -16,6 +21,12 @@ class Run:
     self.description = description
 
   def log_data_set(self, data_set):
+    # TODO(zhenghuiwang): dedup the data set based the uri and version set by
+    # the user: Retrieve the id of previous insertion instead of create it
+    # again.
+    if data_set.workspace == None:
+      data_set.workspace = self.workspace.name
+
     pass
 
   def log_metrics(self, metrics):

@@ -1,4 +1,8 @@
 class Metrics:
+  TRAINING = "training"
+  VALIDATION = "validation"
+  TESTING = "testing"
+  PRODUCTION = "production"
   """
   Captures model evaluation metrics in a machine learning workflow.
 
@@ -26,7 +30,7 @@ class Metrics:
                metrics_type = None,
                values = None,
                annotations = None):
-    # TODO(zhenghuiwang): check each field's type and whether set.
+    # TODO(zhenghuiwang): check each field's type and whether it is set.
     self.workspace = workspace
     self.name = name
     self.description = description
@@ -37,3 +41,5 @@ class Metrics:
     self.metrics_type = metrics_type
     self.values = values
     self.annotations = annotations
+    self._id = ""
+    self._create_time = ""

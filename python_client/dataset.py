@@ -13,7 +13,6 @@ class DataSet:
                     a data source.
     annotations {object} -- Optional string key value pairs for annotations.
   """
-
   def __init__(self,
                workspace= None,
                name = None,
@@ -32,3 +31,5 @@ class DataSet:
     self.version = version
     self.query = query
     self.annotations = annotations
+    self._id = ""
+    self._create_time = ""

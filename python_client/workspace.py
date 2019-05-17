@@ -1,3 +1,5 @@
+import run
+
 class Workspace:
   """
   Groups a set of runs of pipelines, notebooks and their related artifacts
@@ -14,15 +16,12 @@ class Workspace:
                backend_url_prefix = None,
                name = None,
                description = None,
-               label = None):
+               annotations = None):
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.backend_url_prefix = backend_url_prefix
     self.name = name
     self.description = description
-    self.label = label
+    self.annotations = annotations
+    self._user = ""
+    self._id = ""
 
-  def NewRun(self,
-             workspace = None,
-             name = None,
-             description = None):
-    return Run(self, workspace, name, description)

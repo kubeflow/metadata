@@ -18,6 +18,7 @@ vendor/
 *.dll
 *.so
 *.dylib
+*.pyc
 
 ## Test binary, built with `go test -c`
 *.test
