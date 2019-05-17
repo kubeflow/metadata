@@ -18,9 +18,7 @@ import (
 	"testing"
 )
 
-var (
-	testSchemaFile = "testdata/ext.json"
-)
+const testSchemaFile = "testdata/ext.json"
 
 func TestLoadSchemaJSON(t *testing.T) {
 	sj, err := schemaJSON(testSchemaFile)

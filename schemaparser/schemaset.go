@@ -168,7 +168,7 @@ func (ss *SchemaSet) PropertyType(id, name string) (*SchemaJSON, error) {
 			}
 		}
 	}
-	return nil, fmt.Errorf("faield to find property %q in %q", name, id)
+	return nil, fmt.Errorf("failed to find property %q in %q", name, id)
 }
 
 // SimpleProperties returns a map of simple properties for a schema with given id.

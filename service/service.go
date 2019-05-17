@@ -43,6 +43,7 @@ type Service struct {
 	typeNameToMLMDID map[string]int64
 
 	// TODO: Once MLMD type system supports schema annotations, the following two fields can be obtained by quering MLMD types.
+	// map from type name to the schema id, which is used to verify the incoming data.
 	typeNameToID map[string]string
 	schemaset    *schemaparser.SchemaSet
 }
@@ -72,7 +73,7 @@ func NewService(mlmdClient mlmd.MetadataStoreServiceClient, schemaRootDir string
 				return nil, err
 			}
 			typeNameToID[tn] = id
-			typeNameToMLMDID[tn] = *mlmdID
+			typeNameToMLMDID[tn] = mlmdID
 			// TODO: add cases for execution and other categories.
 		default:
 			glog.Errorf("Ignored unknown type %q in %q", tn, id)
@@ -87,16 +88,19 @@ func NewService(mlmdClient mlmd.MetadataStoreServiceClient, schemaRootDir string
 	}, nil
 }
 
-func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schemaparser.SchemaSet, id string, name string) (*int64, error) {
+func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schemaparser.SchemaSet, id string, name string) (int64, error) {
 	properties, err := ss.SimpleProperties(id)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	artifactType := &mlmd.ArtifactType{
 		Name:       &name,
 		Properties: make(map[string]mlmd.PropertyType),
 	}
 	for pname, ptype := range properties {
+		if pname == categoryPropertyName {
+			continue
+		}
 		switch ptype {
 		case schemaparser.StringType:
 			artifactType.Properties[pname] = mlmd.PropertyType_STRING
@@ -105,7 +109,7 @@ func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schema
 		case schemaparser.NumberType:
 			artifactType.Properties[pname] = mlmd.PropertyType_DOUBLE
 		default:
-			return nil, fmt.Errorf("internal error: unknown simple property type %q for property %q", ptype, pname)
+			return 0, fmt.Errorf("internal error: unknown simple property type %q for property %q", ptype, pname)
 		}
 	}
 	artifactType.Properties[wholeMetaPropertyName] = mlmd.PropertyType_STRING
@@ -116,9 +120,9 @@ func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schema
 		AllFieldsMatch: proto.Bool(true),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error response from MLMD server: %s", err)
+		return 0, fmt.Errorf("error response from MLMD server: %s", err)
 	}
-	return response.TypeId, nil
+	return *response.TypeId, nil
 }
 
 // GetResource returns the specified resource in the request.
