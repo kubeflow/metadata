@@ -18,9 +18,43 @@ import (
 	"context"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/google/go-cmp/cmp"
 	pb "github.com/kubeflow/metadata/api"
+	mlmd "github.com/kubeflow/metadata/ml_metadata"
+	"github.com/kubeflow/metadata/mocks"
 )
+
+const schemaDir = "../schema/alpha"
+
+func TestNewService(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	mockMLMDClient := mocks.NewMockMetadataStoreServiceClient(ctrl)
+	var mlmdTypeID int64 = 1
+	mockMLMDClient.EXPECT().PutArtifactType(gomock.Any(), gomock.Any()).DoAndReturn(
+		func(context.Context, *mlmd.PutArtifactTypeRequest) (*mlmd.PutArtifactTypeResponse, error) {
+			id := mlmdTypeID
+			mlmdTypeID++
+			return &mlmd.PutArtifactTypeResponse{
+				TypeId: &id,
+			}, nil
+		}).AnyTimes()
+	s, err := NewService(mockMLMDClient, schemaDir)
+	if err != nil {
+		t.Fatalf("Failed to create a new service: %v", err)
+	}
+	mustInclude := []string{
+		"namespaces/kubeflow.org/kinds/data_set/versions/alpha",
+		"namespaces/kubeflow.org/kinds/metrics/versions/alpha",
+		"namespaces/kubeflow.org/kinds/model/versions/alpha",
+	}
+	for _, typeName := range mustInclude {
+		if _, exists := s.typeNameToMLMDID[typeName]; !exists {
+			t.Fatalf("Expect to parse predefined %q, but not found", typeName)
+		}
+	}
+}
 
 func TestGetResourceWithName(t *testing.T) {
 	in := &pb.GetResourceRequest{Name: "some-resource"}

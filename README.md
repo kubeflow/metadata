@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/metadata)](https://goreportcard.com/report/github.com/kubeflow/metadata)
+
 # Metadata
 Repository for assets related to Metadata.
 
@@ -10,7 +12,7 @@ bazel test -c opt //...
 
 To update BUILD file rules, run:
 ```
-bazel run //:gazelle
+bazel run //:gazelle -- update-repos -from_file=go.mod
 ```
 
 To build and test everything using the `go` command:

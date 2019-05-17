@@ -7,6 +7,10 @@ build:
 test:
 	bash test/scripts/unittests.sh
 
+.PHONY: mocks
+mocks:
+	mockgen -package=mocks -destination=mocks/metadata_store_service_client_mock.go github.com/kubeflow/metadata/ml_metadata MetadataStoreServiceClient
+
 hello:
 	curl localhost:8080/api/v1/resource/my-resource
 
