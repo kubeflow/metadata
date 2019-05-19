@@ -2,6 +2,8 @@ module github.com/kubeflow/metadata
 
 go 1.12
 
+replace ml_metadata => ./third_party/ml_metadata
+
 require (
 	github.com/bmatcuk/doublestar v1.1.1
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
@@ -15,4 +17,5 @@ require (
 	google.golang.org/genproto v0.0.0-20190415143225-d1146b9035b9
 	google.golang.org/grpc v1.19.1
 	gopkg.in/yaml.v2 v2.2.2 // indirect
+	ml_metadata v0.0.0-00010101000000-000000000000
 )

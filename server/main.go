@@ -25,7 +25,6 @@ import (
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kubeflow/metadata/api"
-	mlmd "github.com/kubeflow/metadata/ml_metadata"
 	"github.com/kubeflow/metadata/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -44,16 +43,9 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := grpc.Dial(*mlmdAddr, grpc.WithInsecure())
-	if err != nil {
-		glog.Fatalf("Fail to dial to MLMD server: %v.", err)
-	}
-	defer conn.Close()
-	mlmdClient := mlmd.NewMetadataStoreServiceClient(conn)
-
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.NewService(mlmdClient))
+	pb.RegisterMetadataServiceServer(rpcServer, service.NewService())
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)

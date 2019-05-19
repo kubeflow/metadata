@@ -30,8 +30,8 @@ message CreateArtifactTypeRequest {
 }
 
 message CreateArtifactTypeResponse {
-  // Newly created artifact type.
-  ArtifactType artifact_type = 1;
+  // Newly created artifact type id.
+  int64 id = 1;
 }
 
 message GetArtifactTypeRequest {
@@ -64,7 +64,7 @@ service Metadata {
   rpc GetArtifactType(GetArtifactTypeRequest)
       returns (GetArtifactTypeResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{id}"
+      get: "/api/v1alpha1/artifact_type/{id}"
     };
   }
 
