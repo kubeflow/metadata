@@ -1,7 +1,22 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 This module conatins Python API for logging metadata of machine learning
 workflows to Kubeflow Metadata service.
 """
+
 class Workspace(object):
   """
   Groups a set of runs of pipelines, notebooks and their related artifacts
@@ -12,21 +27,21 @@ class Workspace(object):
                backend_url_prefix=None,
                name=None,
                description=None,
-               annotations=None):
+               labels=None):
     """
     Args:
       backend_url_prefix {str} -- Required URL prefix pointing to the metadata
                                   backend, e.g. "127.0.0.1:8080".
       name {str} -- Required name for the workspace.
       description {str} -- Optional string for description of the workspace.
-      label {object} Optional key/value string pairs to label the workspace.
+      labels {object} Optional key/value string pairs to label the workspace.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.backend_url_prefix = backend_url_prefix
     self.name = name
     self.description = description
-    self.annotations = annotations
-    self._user = ""
+    self.labels = labels
+    self._user = "" #TODO: get user from env
     self._id = ""
 
 class Run(object):
@@ -87,7 +102,8 @@ class DataSet(object):
                uri=None,
                version=None,
                query=None,
-               annotations=None):
+               labels=None,
+               **kwargs):
     """
     Args:
       workspace {str} -- Optional name of the workspace.
@@ -98,7 +114,9 @@ class DataSet(object):
       version {str} -- Optional version tagged by the user.
       query {str} -- Optioan query string for how to fetch this data set from
                       a data source.
-      annotations {object} -- Optional string key value pairs for annotations.
+      labels {object} -- Optional string key value pairs for labels.
+    Addtional keyword arguments are saved as addtional properties of this
+    dataset.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.workspace = workspace
@@ -108,7 +126,7 @@ class DataSet(object):
     self.uri = uri
     self.version = version
     self.query = query
-    self.annotations = annotations
+    self.labels = labels
     self._id = ""
     self._create_time = ""
 
@@ -128,7 +146,8 @@ class Model(object):
                training_framework=None,
                hyperparameters=None,
                query=None,
-               annotations=None):
+               labels=None,
+               **kwargs):
     """
     Args:
       workspace {str} -- Optional name of the workspace.
@@ -139,7 +158,8 @@ class Model(object):
       model_type {str} -- Optional type of the model.
       training_framework {object} -- Optional framework used to train the model.
       hyperparameters {object}-- Optional map from hyper param name to its value.
-      annotations {object} -- Optional string key value pairs for annotations.
+      labels {object} -- Optional string key value pairs for labels.
+    Addtional keyword arguments are saved as addtional properties of this model.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.workspace = workspace
@@ -152,7 +172,7 @@ class Model(object):
     self.training_framework = training_framework
     self.hyperparameters = hyperparameters
     self.query = query
-    self.annotations = annotations
+    self.labels = labels
     self._id = ""
     self._create_time = ""
 
@@ -174,7 +194,8 @@ class Metrics(object):
                model_id=None,
                metrics_type=None,
                values=None,
-               annotations=None):
+               labels=None,
+               **kwargs):
     """
     Args:
       workspace {str} -- Optional name of the workspace.
@@ -186,7 +207,9 @@ class Metrics(object):
       model_id {str} -- Optional id of a evluated model.
       metrics_type {str}-- Optional type of the evaluation.
       values {object} -- Optional map from metrics name to its value.
-      annotations {object} -- Optional string key value pairs for annotations.
+      labels {object} -- Optional string key value pairs for labels.
+    Addtional keyword arguments are saved as addtional properties of this
+    metrics.
     """
     # TODO(zhenghuiwang): check each field's type and whether it is set.
     self.workspace = workspace
@@ -198,6 +221,6 @@ class Metrics(object):
     self.model_id = model_id
     self.metrics_type = metrics_type
     self.values = values
-    self.annotations = annotations
+    self.labels = labels
     self._id = ""
     self._create_time = ""

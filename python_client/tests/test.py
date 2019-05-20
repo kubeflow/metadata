@@ -7,7 +7,7 @@ class TestMetedata(unittest.TestCase):
     ws1 = metadata.Workspace(backend_url_prefix="127.0.0.1:8080",
                             name="ws_1",
                             description="a workspace for testing",
-                            annotations={"n1": "v1"})
+                            labels={"n1": "v1"})
     r = metadata.Run(
         workspace=ws1,
         name="first run",
@@ -34,7 +34,7 @@ class TestMetedata(unittest.TestCase):
             metrics_type=metadata.Metrics.VALIDATION,
             values={
                 "accuracy": 0.95},
-            annotations={
+            labels={
                 "mylabel": "l1"}))
 
     r.log_model(metadata.Model(
@@ -57,7 +57,7 @@ class TestMetedata(unittest.TestCase):
                     "early_stop": True
                 },
                 version="v0.0.1",
-                annotations={
+                labels={
                     "mylabel": "l1"
                 }
                 ))
