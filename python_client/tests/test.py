@@ -1,30 +1,20 @@
-import workspace
-import run
-import metrics
-import model
-import dataset
-import os
-import sys
-sys.path.insert(
-    0,
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            '..')))
+import metadata
+import unittest
 
+class TestMetedata(unittest.TestCase):
 
-def test_workspace():
-    ws = workspace.Workspace(backend_url_prefix="127.0.0.1:8080",
-                             name="ws_1",
-                             description="a workspace for testing",
-                             annotations={"n1": "v1"})
-    r = run.Run(
-        workspace=ws,
+  def test_log_metadata(self):
+    ws1 = metadata.Workspace(backend_url_prefix="127.0.0.1:8080",
+                            name="ws_1",
+                            description="a workspace for testing",
+                            annotations={"n1": "v1"})
+    r = metadata.Run(
+        workspace=ws1,
         name="first run",
         description="first run in ws_1",
     )
 
-    r.log_data_set(dataset.DataSet(
+    r.log_data_set(metadata.DataSet(
         description="an example data",
         name="mytable-dump",
         owner="owner@my-company.org",
@@ -34,20 +24,20 @@ def test_workspace():
     ))
 
     r.log_metrics(
-        metrics.Metrics(
+        metadata.Metrics(
             name="MNIST-evaluation",
             description="validating the MNIST model to recognize handwritten digits",
             owner="someone@kubeflow.org",
             uri="gcs://my-bucket/mnist-eval.csv",
             data_set_id="123",
             model_id="12345",
-            metrics_type=metrics.Metrics.VALIDATION,
+            metrics_type=metadata.Metrics.VALIDATION,
             values={
                 "accuracy": 0.95},
             annotations={
                 "mylabel": "l1"}))
 
-    r.log_model(model.Model(
+    r.log_model(metadata.Model(
                 name="MNIST",
                 description="model to recognize handwritten digits",
                 owner="someone@kubeflow.org",
@@ -71,3 +61,6 @@ def test_workspace():
                     "mylabel": "l1"
                 }
                 ))
+
+if __name__ == '__main__':
+    unittest.main()

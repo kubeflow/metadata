@@ -1,12 +1,11 @@
-#!/bin/bash
-
-# Copyright 2018 The Kubernetes Authors.
+#!/bin/bash -e
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,18 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This shell script is used to build a cluster and create a namespace from our
-# argo workflow
-
-set -o errexit
-set -o nounset
-set -o pipefail
-
-export GO111MODULE=on
-export PATH="$PATH:$HOME/bin"
-
-go build ./...
-go test ./...
-bazel build -c opt //...
-bazel test -c opt //...
-sh python_client/tests/run_tests.sh
+cd $(dirname $0)
+python3 -m unittest discover --verbose --start-dir tests --top-level-directory=..
