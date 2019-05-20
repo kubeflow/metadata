@@ -8,7 +8,7 @@ This directory conatins Python API for logging metadata of machine learning work
 - _Execution_ describes an execution of a single step of a run with its running parameters.
 - _Workspace_ groups a set of runs and related artifacts and executions.
 
-![Concepts](concepts.png)
+![Alt text](concepts.jpg?raw=true "Concepts")
 
 ## Sample Usage
 See `tests/test.py`.
