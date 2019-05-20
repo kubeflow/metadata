@@ -3,7 +3,7 @@ import model
 import metrics
 import workspace
 
-class Run:
+class Run(object):
   """
   Captures a run of pipeline or notebooks in a workspace and provides logging
   methods for artifacts.
@@ -11,10 +11,8 @@ class Run:
   Args:
 
   """
-  def __init__(self,
-               workspace = None,
-               name = None,
-               description = None):
+
+  def __init__(self, workspace=None, name=None, description=None):
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.workspace = workspace
     self.name = name
@@ -26,7 +24,6 @@ class Run:
     # again.
     if data_set.workspace == None:
       data_set.workspace = self.workspace.name
-
     pass
 
   def log_metrics(self, metrics):

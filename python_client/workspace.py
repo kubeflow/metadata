@@ -12,11 +12,12 @@ class Workspace:
     description {str} -- Optional string for description of the workspace.
     label {object} Optional key/value string pairs to label the workspace.
   """
+
   def __init__(self,
-               backend_url_prefix = None,
-               name = None,
-               description = None,
-               annotations = None):
+               backend_url_prefix=None,
+               name=None,
+               description=None,
+               annotations=None):
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.backend_url_prefix = backend_url_prefix
     self.name = name
@@ -24,4 +25,3 @@ class Workspace:
     self.annotations = annotations
     self._user = ""
     self._id = ""
-
