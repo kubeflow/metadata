@@ -52,7 +52,7 @@ message ListArtifactTypesResponse {
   repeated ArtifactType artifact_types = 1;
 }
 
-service Metadata {
+service MetadataService {
   rpc CreateArtifactType(CreateArtifactTypeRequest)
       returns (CreateArtifactTypeResponse) {
     option (google.api.http) = {

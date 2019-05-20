@@ -31,10 +31,10 @@ import (
 )
 
 var (
-	host     = flag.String("host", "localhost", "Hostname to listen on.")
-	rpcPort  = flag.Int("rpc_port", 9090, "RPC serving port.")
-	httpPort = flag.Int("http_port", 8080, "HTTP serving port.")
-	mlmdAddr = flag.String("mlmd_address", "127.0.0.1:9090", "The server address of ml_metadata in the format of host:port")
+	host          = flag.String("host", "localhost", "Hostname to listen on.")
+	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
+	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
+	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.NewService())
+	pb.RegisterMetadataServiceServer(rpcServer, service.New())
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
@@ -61,15 +61,13 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err = pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
-	if err != nil {
+	if err := pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts); err != nil {
 		glog.Fatal(err)
 	}
 
 	httpEndpoint := fmt.Sprintf("%s:%d", *host, *httpPort)
 	glog.Infof("HTTP server listening on %s", httpEndpoint)
-	err = http.ListenAndServe(httpEndpoint, mux)
-	if err != nil {
+	if err := http.ListenAndServe(httpEndpoint, mux); err != nil {
 		glog.Fatal(err)
 	}
 }

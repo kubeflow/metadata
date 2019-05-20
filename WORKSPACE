@@ -158,7 +158,7 @@ go_repository(
 go_repository(
     name = "com_github_golang_mock",
     importpath = "github.com/golang/mock",
-    tag = "v1.1.1",
+    tag = "v1.3.1",
 )
 
 go_repository(
@@ -277,7 +277,7 @@ go_repository(
 
 go_repository(
     name = "org_golang_x_sync",
-    commit = "e225da77a7e6",
+    commit = "112230192c58",
     importpath = "golang.org/x/sync",
 )
 
@@ -295,6 +295,30 @@ go_repository(
 
 go_repository(
     name = "org_golang_x_tools",
-    commit = "f727befe758c",
+    commit = "36563e24a262",
     importpath = "golang.org/x/tools",
+)
+
+go_repository(
+    name = "com_github_davecgh_go_spew",
+    importpath = "github.com/davecgh/go-spew",
+    tag = "v1.1.0",
+)
+
+go_repository(
+    name = "com_github_pmezard_go_difflib",
+    importpath = "github.com/pmezard/go-difflib",
+    tag = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_stretchr_objx",
+    importpath = "github.com/stretchr/objx",
+    tag = "v0.1.0",
+)
+
+go_repository(
+    name = "com_github_stretchr_testify",
+    importpath = "github.com/stretchr/testify",
+    tag = "v1.3.0",
 )

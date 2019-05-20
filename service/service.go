@@ -18,7 +18,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -32,23 +31,13 @@ import (
 // Service implements the gRPC service MetadataService defined in the metadata
 // API spec.
 type Service struct {
-	// mlmdClient mlmd.MetadataStoreServiceClient
 	client *mlmetadata.Store
 }
 
-// NewService returns a new MetadataService.
-func NewService() *Service {
-	client := mlmetadata.NewStore()
+// New returns a new instance of Service.
+func New() *Service {
+	// client := mlmetadata.NewStore()
 	return &Service{}
-}
-
-// GetResource returns the specified resource in the request.
-func (s *Service) GetResource(ctx context.Context, in *pb.GetResourceRequest) (*pb.Resource, error) {
-	if in.Name == "" {
-		return nil, errors.New("must specify name")
-	}
-
-	return &pb.Resource{Name: in.Name}, nil
 }
 
 const (

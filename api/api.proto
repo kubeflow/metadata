@@ -173,20 +173,3 @@ message Value {
     DoubleValue double_value = 3;
   }
 }
-
-// Dummy placeholder resource.
-message Resource {
-  string name = 1;
-}
-
-message GetResourceRequest {
-  string name = 1;
-}
-
-service MetadataService {
-  rpc GetResource(GetResourceRequest) returns (Resource) {
-    option (google.api.http) = {
-      get: "/api/v1/resource/{name}"
-    };
-  }
-}
