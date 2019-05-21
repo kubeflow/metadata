@@ -15,7 +15,11 @@ To update BUILD file rules, run:
 bazel run //:gazelle -- update-repos -from_file=go.mod
 ```
 
-To build and test everything using the `go` command:
+To build and test everything using the `go` command, you must first build the
+project using Bazel above. This will generate the necessary object libraries
+that can be used by `cgo` when linking with Metadata's C++ dependencies. Once
+Bazel has completed the build, you can build and test everything using `go`
+as usual:
 ```
 go build ./...
 go test ./...

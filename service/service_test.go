@@ -16,12 +16,15 @@ package service
 
 import (
 	"context"
+	"errors"
 	"ml_metadata/metadata_store/mlmetadata"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
+	"reflect"
 	"testing"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	pb "github.com/kubeflow/metadata/api"
 )
 
@@ -95,6 +98,31 @@ func TestInvalidNamespaces(t *testing.T) {
 	}
 }
 
+func TestGetNamespacedName(t *testing.T) {
+	tests := []struct {
+		in            string
+		wantNamespace string
+		wantName      string
+		wantErr       error
+	}{
+		{"kubeflow.org/v1", "kubeflow.org", "v1", nil},
+		{"kubeflow.org/v1/Model", "kubeflow.org/v1", "Model", nil},
+		{"kubeflow.org/v1/Model1/Model", "kubeflow.org/v1/Model1", "Model", nil},
+		{"kubeflow.org/v1/a/b/c/d", "kubeflow.org/v1/a/b/c", "d", nil},
+		{"kubeflow.org/v1/", "", "", errors.New("malformed type name: \"kubeflow.org/v1/\"")},
+		{"kubeflow.org", "", "", errors.New("malformed type name: \"kubeflow.org\"")},
+	}
+
+	for _, test := range tests {
+		namespace, name, err := getNamespacedName(test.in)
+
+		if !reflect.DeepEqual(err, test.wantErr) || namespace != test.wantNamespace || name != test.wantName {
+			t.Errorf("getNamespacedName(%q) = %q, %q, %v\nWant %q, %q, %v",
+				test.in, namespace, name, err, test.wantNamespace, test.wantName, test.wantErr)
+		}
+	}
+}
+
 func testMLMDStore(t *testing.T) *mlmetadata.Store {
 	cfg := &mlpb.ConnectionConfig{
 		Config: &mlpb.ConnectionConfig_FakeDatabase{
@@ -115,49 +143,64 @@ func TestArtifactTypeCreation(t *testing.T) {
 	svc := New(store)
 
 	tests := []struct {
-		req  string
-		want string
+		request    string
+		wantStored string
 	}{
 		{
-			req: ` artifact_type {
+			request: ` artifact_type {
 				name:      "Model"
 				namespace: { name: "my_namespace"}
-				type_properties {
-					key: "string_field"
-					value { string_type {} }
-				} }
-			`,
-			want: `
+				type_properties { key: "string_field" value { string_type {} } }
+				type_properties { key: "int_field" value { int_type {} } }
+				type_properties { key: "double_field" value { double_type {} } }
+			}`,
+			wantStored: `
 				name:      "my_namespace/Model"
-				properties {
-					key: "string_field"
-					value: STRING
-				}
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }
 			`,
 		},
+		// TODO(neuromage): Add more test cases.
 	}
 
 	for i, test := range tests {
 		req := &pb.CreateArtifactTypeRequest{}
-		if err := proto.UnmarshalText(test.req, req); err != nil {
+		if err := proto.UnmarshalText(test.request, req); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			continue
+		}
+		want := req.GetArtifactType()
+
+		ctx := context.Background()
+		response, err := svc.CreateArtifactType(ctx, req)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot error:\n%v\nWant nil error\n", i, req, err)
+			continue
+		}
+
+		got := response.GetArtifactType()
+
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(pb.ArtifactType{}, "Id")) {
+			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
+				i, req, got, err, want, cmp.Diff(want, got))
+		}
+
+		wantStored := &mlpb.ArtifactType{}
+		if err := proto.UnmarshalText(test.wantStored, wantStored); err != nil {
 			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
 			continue
 		}
 
-		// want := &pb.ArtifactType{}
-		// if err := proto.UnmarshalText(test.want, want); err != nil {
-		// 	t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
-		// 	continue
-		// }
+		gotStored, err := store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(got.GetId())})
+		if err != nil || len(gotStored) != 1 {
+			t.Errorf("Test case %d\nstore.GetArtifactType:\n%v, %v\nWant single artifact type and nil error\n", i, gotStored, err)
+			continue
+		}
 
-		ctx := context.Background()
-		res, err := svc.CreateArtifactType(ctx, req)
-		want := req.GetArtifactType()
-		want.Id = res.GetArtifactType().GetId()
-
-		if err != nil || !cmp.Equal(want, res.GetArtifactType()) {
-			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
-				i, req, res.GetArtifactType(), err, want, cmp.Diff(want, res.GetArtifactType()))
+		if !cmp.Equal(gotStored[0], wantStored, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+			t.Errorf("Test case %d\nStored ArtifactType:\n%v\nWant:\n%v\nDiff:\n%s",
+				i, gotStored, wantStored, cmp.Diff(wantStored, gotStored[0]))
 		}
 	}
 }

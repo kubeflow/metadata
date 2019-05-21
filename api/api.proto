@@ -159,7 +159,7 @@ message DoubleValue {
 message Type {
   oneof type {
     StringType string_type = 1;
-    IntType integer_type = 2;
+    IntType int_type = 2;
     DoubleType double_type = 3;
     // TODO(neuromage): Add types to capture nested/complex object types.
   }

@@ -87,7 +87,7 @@ func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 		}
 
 		switch x := v.Type.(type) {
-		case *pb.Type_IntegerType:
+		case *pb.Type_IntType:
 			res.Properties[k] = mlpb.PropertyType_INT
 		case *pb.Type_DoubleType:
 			res.Properties[k] = mlpb.PropertyType_DOUBLE
@@ -124,7 +124,11 @@ func getNamespacedName(n string) (string, string, error) {
 	}
 
 	name := ns[len(ns)-1]
-	namespace := strings.Join(ns[0:len(ns)-2], "/")
+	if len(name) == 0 {
+		return "", "", fmt.Errorf("malformed type name: %q", n)
+	}
+
+	namespace := strings.Join(ns[0:len(ns)-1], "/")
 	return namespace, name, nil
 }
 
@@ -137,11 +141,11 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	for k, v := range in.Properties {
 		switch v {
 		case mlpb.PropertyType_INT:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_IntegerType{}}
+			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_IntType{&pb.IntType{}}}
 		case mlpb.PropertyType_DOUBLE:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_DoubleType{}}
+			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_DoubleType{&pb.DoubleType{}}}
 		case mlpb.PropertyType_STRING:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_StringType{}}
+			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_StringType{&pb.StringType{}}}
 		}
 	}
 
