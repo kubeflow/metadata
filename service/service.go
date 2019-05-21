@@ -48,14 +48,17 @@ func (s *Service) Close() {
 }
 
 const (
-	kfWorkspace   = "kf_workspace"
-	kfNamespace   = "kf_namespace"
-	kfDescription = "kf_description"
+	kfWorkspace   = "__kf_workspace"
+	kfNamespace   = "__kf_namespace"
+	kfDescription = "__kf_description"
 
 	kfDefaultNamespace = "types.kubeflow.org/default"
 )
 
-var validTypeNameRE = regexp.MustCompile(`^[A-Za-z][^ /]*$`)
+var (
+	validTypeNameRE  = regexp.MustCompile(`^[A-Za-z][^ /]*$`)
+	validNamespaceRE = regexp.MustCompile(`^[A-Za-z][^ ]*[^/]$`)
+)
 
 func validTypeName(n string) error {
 	if validTypeNameRE.MatchString(n) {
@@ -64,8 +67,6 @@ func validTypeName(n string) error {
 
 	return fmt.Errorf("invalid type name %q: type names must begin with an alphabet and not contain spaces or slashes", n)
 }
-
-var validNamespaceRE = regexp.MustCompile(`^[A-Za-z][^ ]*[^/]$`)
 
 func validNamespace(n string) error {
 	if validNamespaceRE.MatchString(n) {
@@ -83,7 +84,7 @@ func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 
 	for k, v := range in.TypeProperties {
 		if strings.HasPrefix(k, "kf_") {
-			return nil, fmt.Errorf("type property %q uses system-reserved prefix 'kf_'", k)
+			return nil, fmt.Errorf("type property %q uses system-reserved prefix '__kf_'", k)
 		}
 
 		switch x := v.Type.(type) {
@@ -160,6 +161,18 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	return res, nil
 }
 
+func (s *Service) getArtifactTypeByID(id int64) (*pb.ArtifactType, error) {
+	storedTypes, err := s.store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(id)})
+	if err != nil {
+		return nil, err
+	}
+	if len(storedTypes) != 1 {
+		return nil, fmt.Errorf("failed to get artifact type with id %d", id)
+	}
+
+	return toArtifactType(storedTypes[0])
+}
+
 // CreateArtifactType creates a new artifact type.
 func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifactTypeRequest) (*pb.CreateArtifactTypeResponse, error) {
 	storedType, err := toMLMDArtifactType(req.GetArtifactType())
@@ -175,34 +188,19 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifact
 		return nil, err
 	}
 
-	storedTypes, err := s.store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(id)})
-	if err != nil {
-		return nil, err
-	}
-	if len(storedTypes) != 1 {
-		return nil, fmt.Errorf("failed to get artifact type with id %d", id)
-	}
-
-	aType, err := toArtifactType(storedTypes[0])
+	aType, err := s.getArtifactTypeByID(int64(id))
 	if err != nil {
 		return nil, err
 	}
 
-	res := &pb.CreateArtifactTypeResponse{
+	return &pb.CreateArtifactTypeResponse{
 		ArtifactType: aType,
-	}
-
-	return res, nil
+	}, nil
 }
 
 // GetArtifactType returns the requested artifact type.
 func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRequest) (*pb.GetArtifactTypeResponse, error) {
-	storedType, err := s.store.GetArtifactType(req.Id)
-	if err != nil {
-		return nil, err
-	}
-
-	aType, err := toArtifactType(storedType)
+	aType, err := s.getArtifactTypeByID(req.GetId())
 	if err != nil {
 		return nil, err
 	}

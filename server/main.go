@@ -35,26 +35,25 @@ import (
 )
 
 var (
-	host             = flag.String("host", "localhost", "Hostname to listen on.")
-	rpcPort          = flag.Int("rpc_port", 9090, "RPC serving port.")
-	httpPort         = flag.Int("http_port", 8080, "HTTP serving port.")
+	host          = flag.String("host", "localhost", "Hostname to listen on.")
+	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
+	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
+	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
+
+	mlmdDBName       = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost = flag.String("mysql_service_host", "", "MySQL Service Hostname.")
-	mySQLServicePort = flag.Int("mysql_service_port", 3000, "MySQL Service Port.")
-	schemaRootDir    = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
+	mySQLServicePort = flag.Uint("mysql_service_port", 3000, "MySQL Service Port.")
+	mySQLServiceUser = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 )
 
-const (
-	mlmdDBName = "mlmetadata"
-)
-
-func mlmdStore() *mlmetadata.Store {
+func mlmdStoreOrDie() *mlmetadata.Store {
 	cfg := &mlpb.ConnectionConfig{
 		Config: &mlpb.ConnectionConfig_Mysql{
 			&mlpb.MySQLDatabaseConfig{
 				Host:     mySQLServiceHost,
 				Port:     proto.Uint32(uint32(*mySQLServicePort)),
-				Database: proto.String(mlmdDBName),
-				User:     proto.String("root"),
+				Database: mlmdDBName,
+				User:     mySQLServiceUser,
 			},
 		},
 	}
@@ -74,7 +73,7 @@ func main() {
 
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.New(mlmdStore()))
+	pb.RegisterMetadataServiceServer(rpcServer, service.New(mlmdStoreOrDie()))
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
