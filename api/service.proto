@@ -30,12 +30,12 @@ message CreateArtifactTypeRequest {
 }
 
 message CreateArtifactTypeResponse {
-  // Newly created artifact type id.
-  int64 id = 1;
+  // Newly created artifact type with id.
+  ArtifactType artifact_type = 1;
 }
 
 message GetArtifactTypeRequest {
-  int64 id = 1;
+  string id = 1;
 }
 
 message GetArtifactTypeResponse {
@@ -43,7 +43,7 @@ message GetArtifactTypeResponse {
 }
 
 message DeleteArtifactTypeRequest {
-  int64 id = 1;
+  string id = 1;
 }
 
 message ListArtifactTypesRequest {}

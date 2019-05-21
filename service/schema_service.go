@@ -19,9 +19,11 @@ import (
 	"fmt"
 	"time"
 
+	mlmd "ml_metadata/proto/metadata_store_go_proto"
+	mlmds "ml_metadata/proto/metadata_store_service_go_proto"
+
 	"github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
-	mlmd "github.com/kubeflow/metadata/ml_metadata"
 	"github.com/kubeflow/metadata/schemaparser"
 )
 
@@ -36,7 +38,7 @@ const (
 // on JSON schemas.
 // TODO(zhenghuiwang): Use Service endpoints to register these schemas.
 type SchemaService struct {
-	mlmdClient       mlmd.MetadataStoreServiceClient
+	mlmdClient       mlmds.MetadataStoreServiceClient
 	typeNameToMLMDID map[string]int64
 
 	// TODO: Once MLMD type system supports schema annotations, the following two
@@ -47,7 +49,7 @@ type SchemaService struct {
 }
 
 // NewSchemaService returns a new SchemaService.
-func NewSchemaService(mlmdClient mlmd.MetadataStoreServiceClient, schemaRootDir string) (*SchemaService, error) {
+func NewSchemaService(mlmdClient mlmds.MetadataStoreServiceClient, schemaRootDir string) (*SchemaService, error) {
 	ss, err := schemaparser.NewSchemaSetFromADir(schemaRootDir)
 	if err != nil {
 		return nil, err
@@ -86,7 +88,7 @@ func NewSchemaService(mlmdClient mlmd.MetadataStoreServiceClient, schemaRootDir 
 	}, nil
 }
 
-func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schemaparser.SchemaSet, id string, name string) (int64, error) {
+func registerArtifactType(mlmdClient mlmds.MetadataStoreServiceClient, ss *schemaparser.SchemaSet, id string, name string) (int64, error) {
 	properties, err := ss.SimpleProperties(id)
 	if err != nil {
 		return 0, err
@@ -113,7 +115,7 @@ func registerArtifactType(mlmdClient mlmd.MetadataStoreServiceClient, ss *schema
 	artifactType.Properties[wholeMetaPropertyName] = mlmd.PropertyType_STRING
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
-	response, err := mlmdClient.PutArtifactType(ctx, &mlmd.PutArtifactTypeRequest{
+	response, err := mlmdClient.PutArtifactType(ctx, &mlmds.PutArtifactTypeRequest{
 		ArtifactType:   artifactType,
 		AllFieldsMatch: proto.Bool(true),
 	})

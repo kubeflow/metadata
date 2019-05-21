@@ -18,8 +18,9 @@ import (
 	"context"
 	"testing"
 
+	mlmd "ml_metadata/proto/metadata_store_service_go_proto"
+
 	"github.com/golang/mock/gomock"
-	mlmd "github.com/kubeflow/metadata/ml_metadata"
 	"github.com/kubeflow/metadata/mocks"
 )
 

@@ -22,7 +22,11 @@ import (
 	"net"
 	"net/http"
 
+	"ml_metadata/metadata_store/mlmetadata"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+
 	"github.com/golang/glog"
+	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kubeflow/metadata/api"
 	"github.com/kubeflow/metadata/service"
@@ -31,11 +35,36 @@ import (
 )
 
 var (
-	host          = flag.String("host", "localhost", "Hostname to listen on.")
-	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
-	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
-	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
+	host             = flag.String("host", "localhost", "Hostname to listen on.")
+	rpcPort          = flag.Int("rpc_port", 9090, "RPC serving port.")
+	httpPort         = flag.Int("http_port", 8080, "HTTP serving port.")
+	mySQLServiceHost = flag.String("mysql_service_host", "", "MySQL Service Hostname.")
+	mySQLServicePort = flag.Int("mysql_service_port", 3000, "MySQL Service Port.")
+	schemaRootDir    = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 )
+
+const (
+	mlmdDBName = "mlmetadata"
+)
+
+func mlmdStore() *mlmetadata.Store {
+	cfg := &mlpb.ConnectionConfig{
+		Config: &mlpb.ConnectionConfig_Mysql{
+			&mlpb.MySQLDatabaseConfig{
+				Host:     mySQLServiceHost,
+				Port:     proto.Uint32(uint32(*mySQLServicePort)),
+				Database: proto.String(mlmdDBName),
+				User:     proto.String("root"),
+			},
+		},
+	}
+
+	store, err := mlmetadata.NewStore(cfg)
+	if err != nil {
+		glog.Fatalf("Failed to create ML Metadata Store: %v", err)
+	}
+	return store
+}
 
 func main() {
 	flag.Parse()
@@ -45,7 +74,7 @@ func main() {
 
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.New())
+	pb.RegisterMetadataServiceServer(rpcServer, service.New(mlmdStore()))
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)

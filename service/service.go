@@ -18,26 +18,33 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"ml_metadata/metadata_store/mlmetadata"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes/empty"
 	pb "github.com/kubeflow/metadata/api"
 )
 
 // Service implements the gRPC service MetadataService defined in the metadata
 // API spec.
 type Service struct {
-	client *mlmetadata.Store
+	store MetadataStore
 }
 
 // New returns a new instance of Service.
-func New() *Service {
-	// client := mlmetadata.NewStore()
-	return &Service{}
+func New(store MetadataStore) *Service {
+	return &Service{store: store}
+}
+
+// Close cleans up and frees resources held by Service.
+func (s *Service) Close() {
+	s.Close()
 }
 
 const (
@@ -48,9 +55,30 @@ const (
 	kfDefaultNamespace = "types.kubeflow.org/default"
 )
 
+var validTypeNameRE = regexp.MustCompile(`^[A-Za-z][^ /]*$`)
+
+func validTypeName(n string) error {
+	if validTypeNameRE.MatchString(n) {
+		return nil
+	}
+
+	return fmt.Errorf("invalid type name %q: type names must begin with an alphabet and not contain spaces or slashes", n)
+}
+
+var validNamespaceRE = regexp.MustCompile(`^[A-Za-z][^ ]*[^/]$`)
+
+func validNamespace(n string) error {
+	if validNamespaceRE.MatchString(n) {
+		return nil
+	}
+
+	return fmt.Errorf("invalid namespace %q: namespaces must begin with an alphabet, should not contain spaces, or end with a trailing /", n)
+}
+
 func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 	res := &mlpb.ArtifactType{
-		Id: proto.Int64(in.Id),
+		Id:         proto.Int64(in.Id),
+		Properties: make(map[string]mlpb.PropertyType),
 	}
 
 	for k, v := range in.TypeProperties {
@@ -70,23 +98,40 @@ func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 		}
 	}
 
-	// TODO(neuromage): Check and remove trailing / in namespaces.
-	// TODO(neuromage): Check type names.
 	namespace := kfDefaultNamespace
 	if in.Namespace != nil && in.Namespace.Name != "" {
 		namespace = in.Namespace.Name
 	}
-	name := namespace + "/" + in.Name
-	res.Name = proto.String(name)
 
-	// res.Properties[kfNamespace] = namespace
+	if err := validNamespace(namespace); err != nil {
+		return nil, err
+	}
+
+	if err := validTypeName(in.Name); err != nil {
+		return nil, err
+	}
+
+	storedName := namespace + "/" + in.Name
+	res.Name = proto.String(storedName)
 
 	return res, nil
 }
 
+func getNamespacedName(n string) (string, string, error) {
+	ns := strings.Split(n, "/")
+	if len(ns) < 2 {
+		return "", "", fmt.Errorf("malformed type name: %q", n)
+	}
+
+	name := ns[len(ns)-1]
+	namespace := strings.Join(ns[0:len(ns)-2], "/")
+	return namespace, name, nil
+}
+
 func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	res := &pb.ArtifactType{
-		Id: in.GetId(),
+		Id:             in.GetId(),
+		TypeProperties: make(map[string]*pb.Type),
 	}
 
 	for k, v := range in.Properties {
@@ -100,11 +145,10 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 		}
 	}
 
-	// Sanity check!!!!!!!!!!!!
-	ns := strings.Split(in.GetName(), "/")
-
-	name := ns[len(ns)-1]
-	namespace := strings.Join(ns[0:len(ns)-2], "/")
+	namespace, name, err := getNamespacedName(in.GetName())
+	if err != nil {
+		return nil, err
+	}
 
 	res.Namespace = &pb.Namespace{Name: namespace}
 	res.Name = name
@@ -112,19 +156,78 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	return res, nil
 }
 
-func (s *Service) CreateArtifactTypeRequest(ctx context.Context, req *pb.CreateArtifactTypeRequest) (*pb.CreateArtifactTypeResponse, error) {
-
+// CreateArtifactType creates a new artifact type.
+func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifactTypeRequest) (*pb.CreateArtifactTypeResponse, error) {
 	storedType, err := toMLMDArtifactType(req.GetArtifactType())
 	if err != nil {
 		return nil, err
 	}
+	// Clear id for creation.
+	storedType.Id = nil
 
-	id, err := s.client.PutArtifactType(storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+	id, err := s.store.PutArtifactType(
+		storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
 	if err != nil {
 		return nil, err
 	}
 
-	res := &pb.CreateArtifactTypeResponse{Id: int64(id)}
+	storedTypes, err := s.store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(id)})
+	if err != nil {
+		return nil, err
+	}
+	if len(storedTypes) != 1 {
+		return nil, fmt.Errorf("failed to get artifact type with id %d", id)
+	}
+
+	aType, err := toArtifactType(storedTypes[0])
+	if err != nil {
+		return nil, err
+	}
+
+	res := &pb.CreateArtifactTypeResponse{
+		ArtifactType: aType,
+	}
 
 	return res, nil
+}
+
+// GetArtifactType returns the requested artifact type.
+func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRequest) (*pb.GetArtifactTypeResponse, error) {
+	storedType, err := s.store.GetArtifactType(req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	aType, err := toArtifactType(storedType)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetArtifactTypeResponse{
+		ArtifactType: aType,
+	}, nil
+}
+
+// ListArtifactTypes lists all artifact types.
+func (s *Service) ListArtifactTypes(ctx context.Context, req *pb.ListArtifactTypesRequest) (*pb.ListArtifactTypesResponse, error) {
+	storedTypes, err := s.store.GetArtifactTypesByID(nil)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &pb.ListArtifactTypesResponse{}
+
+	for _, storedType := range storedTypes {
+		aType, err := toArtifactType(storedType)
+		if err != nil {
+			return nil, err
+		}
+		res.ArtifactTypes = append(res.ArtifactTypes, aType)
+	}
+	return res, nil
+}
+
+// DeleteArtifactType deletes the specified artifact type.
+func (s *Service) DeleteArtifactType(ctx context.Context, req *pb.DeleteArtifactTypeRequest) (*empty.Empty, error) {
+	return nil, errors.New("not implemented error: DeleteArtifactType")
 }
