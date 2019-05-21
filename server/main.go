@@ -22,10 +22,13 @@ import (
 	"net"
 	"net/http"
 
+	"ml_metadata/metadata_store/mlmetadata"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+
 	"github.com/golang/glog"
+	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kubeflow/metadata/api"
-	mlmd "github.com/kubeflow/metadata/ml_metadata"
 	"github.com/kubeflow/metadata/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -35,9 +38,32 @@ var (
 	host          = flag.String("host", "localhost", "Hostname to listen on.")
 	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
-	mlmdAddr      = flag.String("mlmd_address", "127.0.0.1:9090", "The server address of ml_metadata in the format of host:port")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
+
+	mlmdDBName       = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
+	mySQLServiceHost = flag.String("mysql_service_host", "", "MySQL Service Hostname.")
+	mySQLServicePort = flag.Uint("mysql_service_port", 3000, "MySQL Service Port.")
+	mySQLServiceUser = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 )
+
+func mlmdStoreOrDie() *mlmetadata.Store {
+	cfg := &mlpb.ConnectionConfig{
+		Config: &mlpb.ConnectionConfig_Mysql{
+			&mlpb.MySQLDatabaseConfig{
+				Host:     mySQLServiceHost,
+				Port:     proto.Uint32(uint32(*mySQLServicePort)),
+				Database: mlmdDBName,
+				User:     mySQLServiceUser,
+			},
+		},
+	}
+
+	store, err := mlmetadata.NewStore(cfg)
+	if err != nil {
+		glog.Fatalf("Failed to create ML Metadata Store: %v", err)
+	}
+	return store
+}
 
 func main() {
 	flag.Parse()
@@ -45,20 +71,9 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	conn, err := grpc.Dial(*mlmdAddr, grpc.WithInsecure())
-	if err != nil {
-		glog.Fatalf("Fail to dial to MLMD server: %v.", err)
-	}
-	defer conn.Close()
-	mlmdClient := mlmd.NewMetadataStoreServiceClient(conn)
-
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	metadataService, err := service.NewService(mlmdClient, *schemaRootDir)
-	if err != nil {
-		glog.Fatalf("Failed to create metadata server: %v", err)
-	}
-	pb.RegisterMetadataServiceServer(rpcServer, metadataService)
+	pb.RegisterMetadataServiceServer(rpcServer, service.New(mlmdStoreOrDie()))
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)
@@ -74,15 +89,13 @@ func main() {
 	mux := runtime.NewServeMux()
 
 	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err = pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts)
-	if err != nil {
+	if err := pb.RegisterMetadataServiceHandlerFromEndpoint(ctx, mux, rpcEndpoint, opts); err != nil {
 		glog.Fatal(err)
 	}
 
 	httpEndpoint := fmt.Sprintf("%s:%d", *host, *httpPort)
 	glog.Infof("HTTP server listening on %s", httpEndpoint)
-	err = http.ListenAndServe(httpEndpoint, mux)
-	if err != nil {
+	if err := http.ListenAndServe(httpEndpoint, mux); err != nil {
 		glog.Fatal(err)
 	}
 }
