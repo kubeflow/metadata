@@ -4,40 +4,30 @@ go_library(
     name = "go_default_library",
     srcs = [
         "metadata_store.go",
-        "schema_service.go",
         "service.go",
     ],
     importpath = "github.com/kubeflow/metadata/service",
     visibility = ["//visibility:public"],
     deps = [
         "//api:go_default_library",
-        "//schemaparser:go_default_library",
-        "@com_github_golang_glog//:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@google_ml_metadata//ml_metadata/metadata_store:metadata_store_go",
         "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
-        "@google_ml_metadata//ml_metadata/proto:metadata_store_service_go_proto",
         "@io_bazel_rules_go//proto/wkt:empty_go_proto",
     ],
 )
 
 go_test(
     name = "go_default_test",
-    srcs = [
-        "schema_service_test.go",
-        "service_test.go",
-    ],
+    srcs = ["service_test.go"],
     data = ["//schema:schemas"],
     embed = [":go_default_library"],
     deps = [
         "//api:go_default_library",
-        "//mocks:go_default_library",
-        "@com_github_golang_mock//gomock:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@com_github_google_go_cmp//cmp:go_default_library",
         "@com_github_google_go_cmp//cmp/cmpopts:go_default_library",
         "@google_ml_metadata//ml_metadata/metadata_store:metadata_store_go",
         "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
-        "@google_ml_metadata//ml_metadata/proto:metadata_store_service_go_proto",
     ],
 )

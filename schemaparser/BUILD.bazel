@@ -3,13 +3,17 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "go_default_library",
     srcs = [
+        "register.go",
         "schemajson.go",
         "schemaset.go",
     ],
     importpath = "github.com/kubeflow/metadata/schemaparser",
     visibility = ["//visibility:public"],
     deps = [
+        "//api:go_default_library",
+        "//service:go_default_library",
         "@com_github_bmatcuk_doublestar//:go_default_library",
+        "@com_github_golang_glog//:go_default_library",
         "@com_github_xeipuuv_gojsonschema//:go_default_library",
     ],
 )
@@ -19,8 +23,13 @@ go_test(
     srcs = [
         "schemajson_test.go",
         "schemaset_test.go",
+        "register_test.go",
     ],
     data = glob(["testdata/**"]) + ["//schema:schemas"],
     embed = [":go_default_library"],
-    deps = ["@com_github_google_go_cmp//cmp:go_default_library"],
+    deps = [
+        "@com_github_google_go_cmp//cmp:go_default_library",
+        "@google_ml_metadata//ml_metadata/metadata_store:metadata_store_go",
+        "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
+    ],
 )
