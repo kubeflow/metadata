@@ -29,3 +29,11 @@ mlmd-docker-image:
 
 metadata-docker-image:
 	docker build -t gcr.io/kubeflow-images-public/metadata .
+
+swagger-py-client:
+	wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar -O swagger-codegen-cli.jar && \
+	java -jar /bin/swagger-codegen-cli.jar generate \
+    -i api/service.swagger.json \
+    -l python \
+    -o swagger_clients/python && \
+	rm swagger-codegen-cli.jar

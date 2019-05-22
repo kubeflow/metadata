@@ -1,0 +1,224 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/service.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/v1alpha1/artifact_type/{id}": {
+      "get": {
+        "operationId": "GetArtifactType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetArtifactTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/artifact_types": {
+      "get": {
+        "operationId": "ListArtifactTypes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListArtifactTypesResponse"
+            }
+          }
+        },
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "post": {
+        "operationId": "CreateArtifactType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateArtifactTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiArtifactType"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/artifact_types/{id}": {
+      "delete": {
+        "operationId": "DeleteArtifactType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiArtifactType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "name": {
+          "type": "string",
+          "description": "Required. Represents the name of a type. Must be unique within a\nnamespace."
+        },
+        "namespace": {
+          "$ref": "#/definitions/apiNamespace",
+          "description": "Represents the namespace under which to store this type. Empty defaults\nto the default, system-defined namespace."
+        },
+        "type_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiType"
+          },
+          "description": "Schema representing the fields and their types for this artifact."
+        },
+        "description": {
+          "type": "string",
+          "description": "An optional human-readable description of this type."
+        }
+      },
+      "description": "ArtifactType represents the type of an ML artifact. It is used to define the\nschema of a named type."
+    },
+    "apiCreateArtifactTypeResponse": {
+      "type": "object",
+      "properties": {
+        "artifact_type": {
+          "$ref": "#/definitions/apiArtifactType",
+          "description": "Newly created artifact type with id."
+        }
+      }
+    },
+    "apiDoubleType": {
+      "type": "object",
+      "properties": {
+        "validator": {
+          "type": "string",
+          "description": "An optional OpenAPI-compatible field-validation schema for this field."
+        }
+      },
+      "description": "Represents double types."
+    },
+    "apiGetArtifactTypeResponse": {
+      "type": "object",
+      "properties": {
+        "artifact_type": {
+          "$ref": "#/definitions/apiArtifactType"
+        }
+      }
+    },
+    "apiIntType": {
+      "type": "object",
+      "properties": {
+        "validator": {
+          "type": "string",
+          "description": "An optional OpenAPI-compatible field-validation schema for this field."
+        }
+      },
+      "description": "Represents integer types."
+    },
+    "apiListArtifactTypesResponse": {
+      "type": "object",
+      "properties": {
+        "artifact_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiArtifactType"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiNamespace": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "E.g. 'kubeflow.org/pipelines/v1' or 'myorganization.com/ml/v1'."
+        }
+      },
+      "description": "Namespaces represent a named collection of ArtifactTypes and ExecutionTypes.\nThis ensures multiple organizations can define ML schemas without type name\ncollision."
+    },
+    "apiStringType": {
+      "type": "object",
+      "properties": {
+        "validator": {
+          "type": "string",
+          "description": "An optional OpenAPI-compatible field-validation schema for this field."
+        }
+      },
+      "description": "Represents string types."
+    },
+    "apiType": {
+      "type": "object",
+      "properties": {
+        "string_type": {
+          "$ref": "#/definitions/apiStringType"
+        },
+        "int_type": {
+          "$ref": "#/definitions/apiIntType"
+        },
+        "double_type": {
+          "$ref": "#/definitions/apiDoubleType"
+        }
+      },
+      "description": "Type is the type of a field."
+    }
+  }
+}
