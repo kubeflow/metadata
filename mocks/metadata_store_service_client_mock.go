@@ -6,10 +6,11 @@ package mocks
 
 import (
 	context "context"
-	gomock "github.com/golang/mock/gomock"
-	ml_metadata "github.com/kubeflow/metadata/ml_metadata"
-	grpc "google.golang.org/grpc"
+	ml_metadata "ml_metadata/proto/metadata_store_service_go_proto"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
+	grpc "google.golang.org/grpc"
 )
 
 // MockMetadataStoreServiceClient is a mock of MetadataStoreServiceClient interface

@@ -62,6 +62,45 @@ load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_depen
 
 buildifier_dependencies()
 
+http_archive(
+    name = "org_tensorflow",
+    # sha256 = "24570d860d87dcfb936f53fb8dd30302452d0aa6b8b8537e4555c1bf839121a6",
+    strip_prefix = "tensorflow-1.13.1",
+    urls = [
+        "https://github.com/tensorflow/tensorflow/archive/v1.13.1.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "io_bazel_rules_closure",
+    sha256 = "43c9b882fa921923bcba764453f4058d102bece35a37c9f6383c713004aacff1",
+    strip_prefix = "rules_closure-9889e2348259a5aad7e805547c1a0cf311cfcd91",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_closure/archive/9889e2348259a5aad7e805547c1a0cf311cfcd91.tar.gz",
+        "https://github.com/bazelbuild/rules_closure/archive/9889e2348259a5aad7e805547c1a0cf311cfcd91.tar.gz",  # 2018-12-21
+    ],
+)
+
+load("@org_tensorflow//tensorflow:workspace.bzl", "tf_workspace")
+
+tf_workspace()
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
+
+go_repository(
+    name = "google_ml_metadata",
+    commit = "47e5cbe102dc2bb7065ac5638a2f614382766d9f",
+    importpath = "github.com/google/ml-metadata",
+)
+
+new_git_repository(
+    name = "libmysqlclient",
+    build_file = "@google_ml_metadata//ml_metadata:libmysqlclient.BUILD",
+    remote = "https://github.com/MariaDB/mariadb-connector-c.git",
+    tag = "v3.0.8-release",
+    workspace_file = "@google_ml_metadata//ml_metadata:libmysqlclient.WORKSPACE",
+)
+
 go_repository(
     name = "com_github_google_go_cmp",
     importpath = "github.com/google/go-cmp",

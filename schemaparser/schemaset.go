@@ -25,9 +25,11 @@ import (
 )
 
 const (
-	typeNamespace = "namespace"
-	typeKind      = "kind"
-	typeVersion   = "apiversion"
+	namespacePropertyName = "namespace"
+	kindPropertyName      = "kind"
+	versionPropertyName   = "apiversion"
+	idPropertyName        = "id"
+	namePropertyName      = "name"
 )
 
 // SimpleProperties are properties of type integer, double and string. The map is from property name to its type.
@@ -111,22 +113,22 @@ func (ss *SchemaSet) AddSchema(b []byte) (string, error) {
 	return sj.ID, nil
 }
 
-// TypeName extract the type definiton in the form of "namespaces/{namespce}/kinds/{kind}/{versions}/{version}",
-// where {namespace}, {kinde}, and {version} are from constant string properties defined in JSON schema.
-func (ss *SchemaSet) TypeName(id string) (string, error) {
-	namespace, err := ss.ConstantStringType(id, typeNamespace)
+// TypeName extract the {namespace}/{version} as type namepace and {kind} as type name,
+// where {namespace}, {kind}, and {version} are from constant string properties defined in JSON schema.
+func (ss *SchemaSet) TypeName(id string) (namespace string, name string, err error) {
+	namespace, err = ss.ConstantStringType(id, namespacePropertyName)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	kind, err := ss.ConstantStringType(id, typeKind)
+	kind, err := ss.ConstantStringType(id, kindPropertyName)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	version, err := ss.ConstantStringType(id, typeVersion)
+	version, err := ss.ConstantStringType(id, versionPropertyName)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return fmt.Sprintf("namespaces/%s/kinds/%s/versions/%s", namespace, kind, version), nil
+	return fmt.Sprintf("%s/%s", namespace, version), kind, nil
 }
 
 // ConstantStringType returns the constant value of a string type.

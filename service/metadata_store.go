@@ -12,6 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// +build ignore
+package service
 
-package ignore
+import (
+	"ml_metadata/metadata_store/mlmetadata"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+)
+
+// MetadataStore defines the interface of methods exported by mlmetadata.Store.
+type MetadataStore interface {
+	Close()
+	PutArtifactType(atype *mlpb.ArtifactType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ArtifactTypeID, error)
+	GetArtifactType(name string) (*mlpb.ArtifactType, error)
+	GetArtifactTypesByID(tids []mlmetadata.ArtifactTypeID) ([]*mlpb.ArtifactType, error)
+}

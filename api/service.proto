@@ -30,7 +30,7 @@ message CreateArtifactTypeRequest {
 }
 
 message CreateArtifactTypeResponse {
-  // Newly created artifact type.
+  // Newly created artifact type with id.
   ArtifactType artifact_type = 1;
 }
 
@@ -43,7 +43,7 @@ message GetArtifactTypeResponse {
 }
 
 message DeleteArtifactTypeRequest {
-  int64 id = 1;
+  string id = 1;
 }
 
 message ListArtifactTypesRequest {}
@@ -52,7 +52,7 @@ message ListArtifactTypesResponse {
   repeated ArtifactType artifact_types = 1;
 }
 
-service Metadata {
+service MetadataService {
   rpc CreateArtifactType(CreateArtifactTypeRequest)
       returns (CreateArtifactTypeResponse) {
     option (google.api.http) = {
@@ -64,7 +64,7 @@ service Metadata {
   rpc GetArtifactType(GetArtifactTypeRequest)
       returns (GetArtifactTypeResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{id}"
+      get: "/api/v1alpha1/artifact_type/{id}"
     };
   }
 

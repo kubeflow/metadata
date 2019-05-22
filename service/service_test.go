@@ -16,61 +16,191 @@ package service
 
 import (
 	"context"
+	"errors"
+	"ml_metadata/metadata_store/mlmetadata"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+	"reflect"
 	"testing"
 
-	"github.com/golang/mock/gomock"
+	"github.com/golang/protobuf/proto"
 	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	pb "github.com/kubeflow/metadata/api"
-	mlmd "github.com/kubeflow/metadata/ml_metadata"
-	"github.com/kubeflow/metadata/mocks"
 )
 
-const schemaDir = "../schema/alpha"
+func TestValidTypeNames(t *testing.T) {
+	names := []string{
+		"Model",
+		"MyModel123",
+		"MyModel123_-123lkj",
+		"myModel12-lkj*0972)-",
+	}
 
-func TestNewService(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockMLMDClient := mocks.NewMockMetadataStoreServiceClient(ctrl)
-	var mlmdTypeID int64 = 1
-	mockMLMDClient.EXPECT().PutArtifactType(gomock.Any(), gomock.Any()).DoAndReturn(
-		func(context.Context, *mlmd.PutArtifactTypeRequest) (*mlmd.PutArtifactTypeResponse, error) {
-			id := mlmdTypeID
-			mlmdTypeID++
-			return &mlmd.PutArtifactTypeResponse{
-				TypeId: &id,
-			}, nil
-		}).AnyTimes()
-	s, err := NewService(mockMLMDClient, schemaDir)
-	if err != nil {
-		t.Fatalf("Failed to create a new service: %v", err)
-	}
-	mustInclude := []string{
-		"namespaces/kubeflow.org/kinds/data_set/versions/alpha",
-		"namespaces/kubeflow.org/kinds/metrics/versions/alpha",
-		"namespaces/kubeflow.org/kinds/model/versions/alpha",
-	}
-	for _, typeName := range mustInclude {
-		if _, exists := s.typeNameToMLMDID[typeName]; !exists {
-			t.Fatalf("Expect to parse predefined %q, but not found", typeName)
+	for _, n := range names {
+		if err := validTypeName(n); err != nil {
+			t.Errorf("validTypeName(%q) = %v\nWant nil error", n, err)
 		}
 	}
 }
 
-func TestGetResourceWithName(t *testing.T) {
-	in := &pb.GetResourceRequest{Name: "some-resource"}
-	want := &pb.Resource{Name: "some-resource"}
-	svc := &Service{}
-	got, err := svc.GetResource(context.Background(), in)
-	if !cmp.Equal(got, want) || err != nil {
-		t.Errorf("GetResource(%+v) = %+v, %v\nWant %+v, nil", in, got, err, want)
+func TestInvalidTypeNames(t *testing.T) {
+	names := []string{
+		"1Model",
+		"1 Model",
+		" 1Model",
+		"/1Model",
+		"Model/",
+		"Model//",
+		"A1 Model",
+		"A 1Model",
+		"A/1Model",
+		"A ",
+	}
+
+	for _, n := range names {
+		if err := validTypeName(n); err == nil {
+			t.Errorf("validTypeName(%q) = nil\nWant non-nil error", n)
+		}
 	}
 }
 
-func TestGetResourceWithoutName(t *testing.T) {
-	in := &pb.GetResourceRequest{}
-	svc := &Service{}
-	got, err := svc.GetResource(context.Background(), in)
-	if err == nil {
-		t.Errorf("GetResource(%+v) = %+v, %v\nWant _, non-nil error", in, got, err)
+func TestValidNamespaces(t *testing.T) {
+	names := []string{
+		"kubeflow.org",
+		"kubeflow.org/v1",
+		"Kubeflow.org/v1",
+		"www.kubeflow.org/v1",
+		"aa",
+	}
+
+	for _, n := range names {
+		if err := validNamespace(n); err != nil {
+			t.Errorf("validNamespace(%q) = %v\nWant nil error", n, err)
+		}
+	}
+}
+
+func TestInvalidNamespaces(t *testing.T) {
+	names := []string{
+		"kube flow.org",
+		"123kubeflow.org",
+		"kubeflow.org/v1/",
+		"Kubeflow.org/v1//",
+		"/kubeflow.org",
+		"a",
+		"/",
+	}
+
+	for _, n := range names {
+		if err := validNamespace(n); err == nil {
+			t.Errorf("validNamespace(%q) = nil\nWant non-nil error", n)
+		}
+	}
+}
+
+func TestGetNamespacedName(t *testing.T) {
+	tests := []struct {
+		in            string
+		wantNamespace string
+		wantName      string
+		wantErr       error
+	}{
+		{"kubeflow.org/v1", "kubeflow.org", "v1", nil},
+		{"kubeflow.org/v1/Model", "kubeflow.org/v1", "Model", nil},
+		{"kubeflow.org/v1/Model1/Model", "kubeflow.org/v1/Model1", "Model", nil},
+		{"kubeflow.org/v1/a/b/c/d", "kubeflow.org/v1/a/b/c", "d", nil},
+		{"kubeflow.org/v1/", "", "", errors.New("malformed type name: \"kubeflow.org/v1/\"")},
+		{"kubeflow.org", "", "", errors.New("malformed type name: \"kubeflow.org\"")},
+	}
+
+	for _, test := range tests {
+		namespace, name, err := getNamespacedName(test.in)
+
+		if !reflect.DeepEqual(err, test.wantErr) || namespace != test.wantNamespace || name != test.wantName {
+			t.Errorf("getNamespacedName(%q) = %q, %q, %v\nWant %q, %q, %v",
+				test.in, namespace, name, err, test.wantNamespace, test.wantName, test.wantErr)
+		}
+	}
+}
+
+func testMLMDStore(t *testing.T) *mlmetadata.Store {
+	cfg := &mlpb.ConnectionConfig{
+		Config: &mlpb.ConnectionConfig_FakeDatabase{
+			&mlpb.FakeDatabaseConfig{},
+		},
+	}
+
+	store, err := mlmetadata.NewStore(cfg)
+	if err != nil {
+		t.Fatalf("Failed to create ML Metadata Store: %v", err)
+	}
+
+	return store
+}
+
+func TestArtifactTypeCreation(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	tests := []struct {
+		request    string
+		wantStored string
+	}{
+		{
+			request: ` artifact_type {
+				name:      "Model"
+				namespace: { name: "my_namespace"}
+				type_properties { key: "string_field" value { string_type {} } }
+				type_properties { key: "int_field" value { int_type {} } }
+				type_properties { key: "double_field" value { double_type {} } }
+			}`,
+			wantStored: `
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }
+			`,
+		},
+		// TODO(neuromage): Add more test cases.
+	}
+
+	for i, test := range tests {
+		req := &pb.CreateArtifactTypeRequest{}
+		if err := proto.UnmarshalText(test.request, req); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			continue
+		}
+		want := req.GetArtifactType()
+
+		ctx := context.Background()
+		response, err := svc.CreateArtifactType(ctx, req)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot error:\n%v\nWant nil error\n", i, req, err)
+			continue
+		}
+
+		got := response.GetArtifactType()
+
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(pb.ArtifactType{}, "Id")) {
+			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
+				i, req, got, err, want, cmp.Diff(want, got))
+		}
+
+		wantStored := &mlpb.ArtifactType{}
+		if err := proto.UnmarshalText(test.wantStored, wantStored); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			continue
+		}
+
+		gotStored, err := store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(got.GetId())})
+		if err != nil || len(gotStored) != 1 {
+			t.Errorf("Test case %d\nstore.GetArtifactType:\n%v, %v\nWant single artifact type and nil error\n", i, gotStored, err)
+			continue
+		}
+
+		if !cmp.Equal(gotStored[0], wantStored, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+			t.Errorf("Test case %d\nStored ArtifactType:\n%v\nWant:\n%v\nDiff:\n%s",
+				i, gotStored, wantStored, cmp.Diff(wantStored, gotStored[0]))
+		}
 	}
 }

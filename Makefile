@@ -1,11 +1,19 @@
 TAG ?= master
 
 build:
-	go build ./...
-
+	bazel build -c opt --define=grpc_no_ares=true //...
+run:
+	bazel run --define=grpc_no_ares=true //server -- --logtostderr --mysql_service_port=3306 --mysql_service_user=guest --mlmd_db_name=metadb
 .PHONY: test
 test:
+	bazel test -c opt --define=grpc_no_ares=true //...
+
+.PHONY: unittest
+unittest:
 	bash test/scripts/unittests.sh
+
+update:
+	bazel run //:gazelle -- update-repos -from_file=go.mod
 
 .PHONY: mocks
 mocks:

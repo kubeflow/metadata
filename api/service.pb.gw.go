@@ -42,7 +42,7 @@ var _ status.Status
 var _ = runtime.String
 var _ = utilities.NewDoubleArray
 
-func request_Metadata_CreateArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MetadataService_CreateArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CreateArtifactTypeRequest
 	var metadata runtime.ServerMetadata
 
@@ -59,7 +59,7 @@ func request_Metadata_CreateArtifactType_0(ctx context.Context, marshaler runtim
 
 }
 
-func request_Metadata_GetArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MetadataService_GetArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetArtifactTypeRequest
 	var metadata runtime.ServerMetadata
 
@@ -86,7 +86,7 @@ func request_Metadata_GetArtifactType_0(ctx context.Context, marshaler runtime.M
 
 }
 
-func request_Metadata_ListArtifactTypes_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MetadataService_ListArtifactTypes_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq ListArtifactTypesRequest
 	var metadata runtime.ServerMetadata
 
@@ -95,7 +95,7 @@ func request_Metadata_ListArtifactTypes_0(ctx context.Context, marshaler runtime
 
 }
 
-func request_Metadata_DeleteArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_MetadataService_DeleteArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq DeleteArtifactTypeRequest
 	var metadata runtime.ServerMetadata
 
@@ -111,7 +111,7 @@ func request_Metadata_DeleteArtifactType_0(ctx context.Context, marshaler runtim
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.Id, err = runtime.Int64(val)
+	protoReq.Id, err = runtime.String(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
@@ -122,9 +122,9 @@ func request_Metadata_DeleteArtifactType_0(ctx context.Context, marshaler runtim
 
 }
 
-// RegisterMetadataHandlerFromEndpoint is same as RegisterMetadataHandler but
+// RegisterMetadataServiceHandlerFromEndpoint is same as RegisterMetadataServiceHandler but
 // automatically dials to "endpoint" and closes the connection when "ctx" gets done.
-func RegisterMetadataHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
+func RegisterMetadataServiceHandlerFromEndpoint(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) (err error) {
 	conn, err := grpc.Dial(endpoint, opts...)
 	if err != nil {
 		return err
@@ -144,23 +144,23 @@ func RegisterMetadataHandlerFromEndpoint(ctx context.Context, mux *runtime.Serve
 		}()
 	}()
 
-	return RegisterMetadataHandler(ctx, mux, conn)
+	return RegisterMetadataServiceHandler(ctx, mux, conn)
 }
 
-// RegisterMetadataHandler registers the http handlers for service Metadata to "mux".
+// RegisterMetadataServiceHandler registers the http handlers for service MetadataService to "mux".
 // The handlers forward requests to the grpc endpoint over "conn".
-func RegisterMetadataHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-	return RegisterMetadataHandlerClient(ctx, mux, NewMetadataClient(conn))
+func RegisterMetadataServiceHandler(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+	return RegisterMetadataServiceHandlerClient(ctx, mux, NewMetadataServiceClient(conn))
 }
 
-// RegisterMetadataHandlerClient registers the http handlers for service Metadata
-// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MetadataClient".
-// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MetadataClient"
+// RegisterMetadataServiceHandlerClient registers the http handlers for service MetadataService
+// to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "MetadataServiceClient".
+// Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "MetadataServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "MetadataClient" to call the correct interceptors.
-func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MetadataClient) error {
+// "MetadataServiceClient" to call the correct interceptors.
+func RegisterMetadataServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client MetadataServiceClient) error {
 
-	mux.Handle("POST", pattern_Metadata_CreateArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("POST", pattern_MetadataService_CreateArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -169,18 +169,18 @@ func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Metadata_CreateArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MetadataService_CreateArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Metadata_CreateArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MetadataService_CreateArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Metadata_GetArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_MetadataService_GetArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -189,18 +189,18 @@ func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Metadata_GetArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MetadataService_GetArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Metadata_GetArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MetadataService_GetArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("GET", pattern_Metadata_ListArtifactTypes_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("GET", pattern_MetadataService_ListArtifactTypes_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -209,18 +209,18 @@ func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Metadata_ListArtifactTypes_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MetadataService_ListArtifactTypes_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Metadata_ListArtifactTypes_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MetadataService_ListArtifactTypes_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
-	mux.Handle("DELETE", pattern_Metadata_DeleteArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle("DELETE", pattern_MetadataService_DeleteArtifactType_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
@@ -229,14 +229,14 @@ func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_Metadata_DeleteArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_MetadataService_DeleteArtifactType_0(rctx, inboundMarshaler, client, req, pathParams)
 		ctx = runtime.NewServerMetadataContext(ctx, md)
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
 
-		forward_Metadata_DeleteArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_MetadataService_DeleteArtifactType_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -244,21 +244,21 @@ func RegisterMetadataHandlerClient(ctx context.Context, mux *runtime.ServeMux, c
 }
 
 var (
-	pattern_Metadata_CreateArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1alpha1", "artifact_types"}, ""))
+	pattern_MetadataService_CreateArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1alpha1", "artifact_types"}, ""))
 
-	pattern_Metadata_GetArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "v1alpha1", "id"}, ""))
+	pattern_MetadataService_GetArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1alpha1", "artifact_type", "id"}, ""))
 
-	pattern_Metadata_ListArtifactTypes_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1alpha1", "artifact_types"}, ""))
+	pattern_MetadataService_ListArtifactTypes_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1alpha1", "artifact_types"}, ""))
 
-	pattern_Metadata_DeleteArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1alpha1", "artifact_types", "id"}, ""))
+	pattern_MetadataService_DeleteArtifactType_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1alpha1", "artifact_types", "id"}, ""))
 )
 
 var (
-	forward_Metadata_CreateArtifactType_0 = runtime.ForwardResponseMessage
+	forward_MetadataService_CreateArtifactType_0 = runtime.ForwardResponseMessage
 
-	forward_Metadata_GetArtifactType_0 = runtime.ForwardResponseMessage
+	forward_MetadataService_GetArtifactType_0 = runtime.ForwardResponseMessage
 
-	forward_Metadata_ListArtifactTypes_0 = runtime.ForwardResponseMessage
+	forward_MetadataService_ListArtifactTypes_0 = runtime.ForwardResponseMessage
 
-	forward_Metadata_DeleteArtifactType_0 = runtime.ForwardResponseMessage
+	forward_MetadataService_DeleteArtifactType_0 = runtime.ForwardResponseMessage
 )

@@ -159,7 +159,7 @@ message DoubleValue {
 message Type {
   oneof type {
     StringType string_type = 1;
-    IntType integer_type = 2;
+    IntType int_type = 2;
     DoubleType double_type = 3;
     // TODO(neuromage): Add types to capture nested/complex object types.
   }
@@ -171,22 +171,5 @@ message Value {
     StringValue string_value = 1;
     IntValue int_value = 2;
     DoubleValue double_value = 3;
-  }
-}
-
-// Dummy placeholder resource.
-message Resource {
-  string name = 1;
-}
-
-message GetResourceRequest {
-  string name = 1;
-}
-
-service MetadataService {
-  rpc GetResource(GetResourceRequest) returns (Resource) {
-    option (google.api.http) = {
-      get: "/api/v1/resource/{name}"
-    };
   }
 }
