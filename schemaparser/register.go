@@ -42,7 +42,7 @@ func RegisterSchemas(service *service.Service, schemaRootDir string) ([]string, 
 	for id := range ss.Schemas {
 		namespace, typename, err := ss.TypeName(id)
 		if err != nil {
-			glog.Warningf("schema misses 'kind', 'apiversion', or 'namespace'. schema $id = %s", id)
+			glog.Warningf("schema misses 'kind', 'apiversion', or 'namespace'. schema $id = %s: %v", id, err)
 			continue
 		}
 		category, err := ss.ConstantStringType(id, categoryPropertyName)
@@ -103,5 +103,6 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 }
 
 func isPropertyBuiltIn(pname string) bool {
-	return pname == categoryPropertyName || pname == typeNamespace || pname == typeKind || pname == typeVersion || pname == typeId
+	return pname == categoryPropertyName || pname == namespacePropertyName ||
+		pname == kindPropertyName || pname == versionPropertyName || pname == idPropertyName || pname == namePropertyName
 }

@@ -25,10 +25,11 @@ import (
 )
 
 const (
-	typeNamespace = "namespace"
-	typeKind      = "kind"
-	typeVersion   = "apiversion"
-	typeId        = "id"
+	namespacePropertyName = "namespace"
+	kindPropertyName      = "kind"
+	versionPropertyName   = "apiversion"
+	idPropertyName        = "id"
+	namePropertyName      = "name"
 )
 
 // SimpleProperties are properties of type integer, double and string. The map is from property name to its type.
@@ -115,15 +116,15 @@ func (ss *SchemaSet) AddSchema(b []byte) (string, error) {
 // TypeName extract the {namespace}/{version} as type namepace and {kind} as type name,
 // where {namespace}, {kind}, and {version} are from constant string properties defined in JSON schema.
 func (ss *SchemaSet) TypeName(id string) (namespace string, name string, err error) {
-	namespace, err = ss.ConstantStringType(id, typeNamespace)
+	namespace, err = ss.ConstantStringType(id, namespacePropertyName)
 	if err != nil {
 		return "", "", err
 	}
-	kind, err := ss.ConstantStringType(id, typeKind)
+	kind, err := ss.ConstantStringType(id, kindPropertyName)
 	if err != nil {
 		return "", "", err
 	}
-	version, err := ss.ConstantStringType(id, typeVersion)
+	version, err := ss.ConstantStringType(id, versionPropertyName)
 	if err != nil {
 		return "", "", err
 	}
