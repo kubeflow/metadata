@@ -23,6 +23,7 @@ set -x
 BAZEL_BINDIR=$(bazel info bazel-bin)
 AUTOGEN_CMD="${BAZEL_BINDIR}/external/com_github_mbrukman_autogen/autogen_tool"
 GENERATED_GO_PROTO_FILES="${BAZEL_BINDIR}/api/api_generated_go_sources/src/github.com/kubeflow/metadata/api/*.go"
+GENERATED_SWAGGER_FILES="${BAZEL_BINDIR}/api/*.swagger.json"
 
 WORKING_DIRECTORY="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd )"
 cd "${WORKING_DIRECTORY}"
@@ -36,12 +37,22 @@ bazel build @com_github_mbrukman_autogen//:autogen_tool
 # Build .pb.go and .gw.pb.go files from the proto sources.
 bazel build //api:api_generated_go_sources
 
+# Generate Swagger for REST API
+bazel build //api:api_proto_gen_swagger
+
 # Copy the generated files into the source tree and add license.
 for GENERATED_FILE in $GENERATED_GO_PROTO_FILES; do
   TARGET=$(basename "${GENERATED_FILE}")
   cp "${GENERATED_FILE}" "${TARGET}"
   chmod 644 "${TARGET}"
   "${AUTOGEN_CMD}" -i --no-tlc -c "Google LLC" -l apache "${TARGET}"
+done
+
+# Copy the generated files into source tree. JSON can't have comments on
+# license.
+for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
+  TARGET=$(basename "${GENERATED_FILE}")
+  cp "${GENERATED_FILE}" "${TARGET}"
 done
 
 # Finally, run gazelle to add BUILD files for the generated code.
