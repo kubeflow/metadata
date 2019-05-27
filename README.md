@@ -6,8 +6,8 @@ Repository for assets related to Metadata.
 ## Building & Testing
 To build and test everything under the project using `Bazel`, run:
 ```
-bazel build -c opt //...
-bazel test -c opt //...
+make build
+make test
 ```
 
 To update BUILD file rules, run:
@@ -32,5 +32,5 @@ go run server/main.go --logtostderr
 
 Or to run with `bazel`:
 ```
-bazel run //server -- --logtostderr
+bazel run --define=grpc_no_ares=true //server -- --logtostderr
 ```

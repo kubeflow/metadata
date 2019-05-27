@@ -25,7 +25,7 @@ const (
 	schemaDir       = "../schema/alpha"
 	extID           = "http://github.com/kubeflow/metadata/schemaparser/testdata/ext.json"
 	dataSetID       = "http://github.com/kubeflow/metadata/schema/alpha/artifacts/data_set.json"
-	dataSetTypeName = "namespaces/kubeflow.org/kinds/data_set/versions/alpha"
+	dataSetTypeName = "kubeflow.org/alpha/data_set"
 )
 
 func TestNewSchemaSetFromDirForAlphaSchemas(t *testing.T) {
@@ -40,12 +40,12 @@ func TestSchemaTypeName(t *testing.T) {
 	}
 	typeNameMap := make(map[string]string)
 	for id := range ss.Schemas {
-		tn, err := ss.TypeName(id)
+		namespace, typename, err := ss.TypeName(id)
 		if err != nil {
 			t.Logf("failed to get type name: %s", err)
 			continue
 		}
-		typeNameMap[id] = tn
+		typeNameMap[id] = namespace + "/" + typename
 	}
 	if typeNameMap[dataSetID] != dataSetTypeName {
 		t.Fatalf("Expect to get data_set type name %s, but got %s", dataSetTypeName, typeNameMap[dataSetID])

@@ -29,6 +29,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	pb "github.com/kubeflow/metadata/api"
+	"github.com/kubeflow/metadata/schemaparser"
 	"github.com/kubeflow/metadata/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -41,8 +42,8 @@ var (
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
 	mlmdDBName       = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
-	mySQLServiceHost = flag.String("mysql_service_host", "", "MySQL Service Hostname.")
-	mySQLServicePort = flag.Uint("mysql_service_port", 3000, "MySQL Service Port.")
+	mySQLServiceHost = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
+	mySQLServicePort = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
 	mySQLServiceUser = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 )
 
@@ -60,7 +61,7 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 
 	store, err := mlmetadata.NewStore(cfg)
 	if err != nil {
-		glog.Fatalf("Failed to create ML Metadata Store: %v", err)
+		glog.Fatalf("Failed to create ML Metadata Store with config %v: %v.\n", cfg, err)
 	}
 	return store
 }
@@ -71,9 +72,17 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
+	service := service.New(mlmdStoreOrDie())
+
+	predefinedTypes, err := schemaparser.RegisterSchemas(service, *schemaRootDir)
+	if err != nil {
+		glog.Fatalf("Failed to load predefined types: %v\n", err)
+	}
+	glog.Infof("Loaded predefined types: %v\n", predefinedTypes)
+
 	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
 	rpcServer := grpc.NewServer()
-	pb.RegisterMetadataServiceServer(rpcServer, service.New(mlmdStoreOrDie()))
+	pb.RegisterMetadataServiceServer(rpcServer, service)
 
 	go func() {
 		listen, err := net.Listen("tcp", rpcEndpoint)

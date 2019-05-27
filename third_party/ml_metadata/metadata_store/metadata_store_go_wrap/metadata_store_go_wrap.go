@@ -120,29 +120,30 @@ extern void _wrap_delete_Status_metadata_store_go_wrap_79669df856d5e5b8(uintptr_
 #cgo CXXFLAGS: -I${SRCDIR}/../../../../bazel-genfiles/external/google_ml_metadata
 #cgo CXXFLAGS: -I${SRCDIR}/../../../../bazel-metadata/external/protobuf_archive/src
 
+#cgo linux LDFLAGS: -ldl
+#cgo darwin LDFLAGS: -liconv
+
+#cgo LDFLAGS: -lmetadata_store_factory -lmetadata_access_object
+#cgo LDFLAGS: -lsqlite_metadata_source -lmysql_metadata_source
+#cgo LDFLAGS: -lmetadata_source_query_config
+#cgo LDFLAGS: -lmetadata_store -lmetadata_source -lmetadata_access_object
+#cgo LDFLAGS: -lmetadata_source_proto -lmetadata_store_service_proto -lmetadata_store_proto
+#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/org_sqlite -lorg_sqlite
+#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/libmysqlclient -llibmysqlclient
+#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/zlib_archive -lzlib
+#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/boringssl -lssl -lcrypto
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/google_ml_metadata/ml_metadata/metadata_store
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/google_ml_metadata/ml_metadata/proto
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/google_ml_metadata/ml_metadata/util
-#cgo LDFLAGS: -lmetadata_store -lmetadata_source -lmetadata_access_object
-#cgo LDFLAGS: -lsqlite_metadata_source -lmysql_metadata_source
-#cgo LDFLAGS: -lmetadata_source_query_config
-#cgo LDFLAGS: -lmetadata_source_proto -lmetadata_store_service_proto -lmetadata_store_proto
-#cgo LDFLAGS:-lmetadata_store_factory -lmetadata_access_object
 
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/protobuf_archive -lprotobuf -lprotobuf_lite
-#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/libmysqlclient -llibmysqlclient
-#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/org_sqlite -lorg_sqlite
-#cgo LDFLAGS: -liconv
-
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/org_tensorflow/tensorflow/core -llib_internal_impl -lplatform_base
-#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/base -lbase -lspinlock_wait -lthrow_delegate
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/strings -lstrings
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/time -ltime
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/time/internal/cctz/ -lcivil_time -ltime_zone
+#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/base -lbase -lspinlock_wait -lthrow_delegate -ldynamic_annotations
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/com_google_absl/absl/numeric -lint128
 #cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/double_conversion -ldouble-conversion
-#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/boringssl -lcrypto -lssl
-#cgo LDFLAGS: -L${SRCDIR}/../../../../bazel-bin/external/zlib_archive -lzlib
 
 */
 import "C"
