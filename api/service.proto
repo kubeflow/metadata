@@ -42,15 +42,43 @@ message GetArtifactTypeResponse {
   ArtifactType artifact_type = 1;
 }
 
-message DeleteArtifactTypeRequest {
-  string id = 1;
-}
-
 message ListArtifactTypesRequest {}
 
 message ListArtifactTypesResponse {
   repeated ArtifactType artifact_types = 1;
 }
+
+message DeleteArtifactTypeRequest {
+  int64 id = 1;
+}
+
+message CreateArtifactRequest {
+  Artifact artifact = 1;
+}
+
+message CreateArtifactResponse {
+  // Newly created artifact with id.
+  Artifact artifact = 1;
+}
+
+message GetArtifactRequest {
+  int64 id = 1;
+}
+
+message GetArtifactResponse {
+  Artifact artifact = 1;
+}
+
+message ListArtifactsRequest {}
+
+message ListArtifactsResponse {
+  repeated Artifact artifacts = 1;
+}
+
+message DeleteArtifactRequest {
+  int64 id = 1;
+}
+
 
 service MetadataService {
   rpc CreateArtifactType(CreateArtifactTypeRequest)
@@ -79,6 +107,35 @@ service MetadataService {
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/api/v1alpha1/artifact_types/{id}"
+    };
+  }
+
+  rpc CreateArtifact(CreateArtifactRequest)
+      returns (CreateArtifactResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/artifacts"
+      body: "artifact"
+    };
+  }
+
+  rpc GetArtifact(GetArtifactRequest)
+      returns (GetArtifactResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/artifact/{id}"
+    };
+  }
+
+  rpc ListArtifacts(ListArtifactsRequest)
+      returns (ListArtifactsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/artifacts"
+    };
+  }
+
+  rpc DeleteArtifact(DeleteArtifactRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/artifacts/{id}"
     };
   }
 

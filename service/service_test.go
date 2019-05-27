@@ -21,6 +21,7 @@ import (
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/golang/protobuf/proto"
 	"github.com/google/go-cmp/cmp"
@@ -126,7 +127,7 @@ func TestGetNamespacedName(t *testing.T) {
 func testMLMDStore(t *testing.T) *mlmetadata.Store {
 	cfg := &mlpb.ConnectionConfig{
 		Config: &mlpb.ConnectionConfig_FakeDatabase{
-			&mlpb.FakeDatabaseConfig{},
+			FakeDatabase: &mlpb.FakeDatabaseConfig{},
 		},
 	}
 
@@ -150,15 +151,19 @@ func TestArtifactTypeCreation(t *testing.T) {
 			request: ` artifact_type {
 				name:      "Model"
 				namespace: { name: "my_namespace"}
-				type_properties { key: "string_field" value { string_type {} } }
-				type_properties { key: "int_field" value { int_type {} } }
-				type_properties { key: "double_field" value { double_type {} } }
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }
 			}`,
 			wantStored: `
 				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
 				properties { key: "double_field" value: DOUBLE }
+				properties { key: "__kf_artifact_name" value: STRING }
+				properties { key: "__kf_workspace" value: STRING }
+				properties { key: "__kf_create_time" value: INT }
+				properties { key: "__kf_update_time" value: INT }
 			`,
 		},
 		// TODO(neuromage): Add more test cases.
@@ -201,6 +206,107 @@ func TestArtifactTypeCreation(t *testing.T) {
 		if !cmp.Equal(gotStored[0], wantStored, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
 			t.Errorf("Test case %d\nStored ArtifactType:\n%v\nWant:\n%v\nDiff:\n%s",
 				i, gotStored, wantStored, cmp.Diff(wantStored, gotStored[0]))
+		}
+	}
+}
+
+func TestArtifactCreation(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	timeNowFn = func() time.Time {
+		return time.Unix(123, 0)
+	}
+
+	ctx := context.Background()
+	req := &pb.CreateArtifactTypeRequest{
+		ArtifactType: &pb.ArtifactType{
+			Name:      "Model",
+			Namespace: &pb.Namespace{Name: "kubeflow.org/v1"},
+			Properties: map[string]pb.PropertyType{
+				"string_field": pb.PropertyType_STRING,
+				"int_field":    pb.PropertyType_INT,
+				"double_field": pb.PropertyType_DOUBLE,
+			},
+		},
+	}
+	res, err := svc.CreateArtifactType(ctx, req)
+	if err != nil {
+		t.Fatalf("Failed to create ArtifactType with request %v: %v", req, err)
+	}
+
+	typeID := res.ArtifactType.Id
+
+	tests := []struct {
+		request    string
+		wantStored string
+	}{
+		{
+			request: ` artifact {
+				uri: "gs://some-uri"
+				name: "My Model"
+				workspace: { name: "my workspace" }
+				properties { key: "string_field" value { string_value: "string value" }}
+				properties { key: "int_field" value { int_value: 100 }}
+				properties { key: "double_field" value { double_value: 1.1 }}
+				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
+				custom_properties { key: "custom_int_field" value { int_value: 200 }}
+				custom_properties { key: "custom_double_field" value { double_value: 2.2 }}
+			}`,
+			wantStored: `
+				uri: "gs://some-uri"
+				properties { key: "__kf_workspace" value { string_value: "my workspace" }}
+				properties { key: "__kf_artifact_name" value { string_value: "My Model" }}
+				properties { key: "__kf_create_time" value { int_value: 123 }}
+				properties { key: "__kf_update_time" value { int_value: 123 }}
+				properties { key: "string_field" value { string_value: "string value" }}
+				properties { key: "int_field" value { int_value: 100 }}
+				properties { key: "double_field" value { double_value: 1.1 }}
+				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
+				custom_properties { key: "custom_int_field" value { int_value: 200 }}
+				custom_properties { key: "custom_double_field" value { double_value: 2.2 }}
+			`,
+		},
+		// TODO(neuromage): Add more test cases.
+	}
+
+	for i, test := range tests {
+		req := &pb.CreateArtifactRequest{}
+		if err := proto.UnmarshalText(test.request, req); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			continue
+		}
+		req.Artifact.TypeId = typeID
+		want := req.Artifact
+
+		response, err := svc.CreateArtifact(ctx, req)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateArtifact\nRequest:\n%v\nGot error:\n%v\nWant nil error\n", i, req, err)
+			continue
+		}
+
+		got := response.Artifact
+
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(pb.Artifact{}, "Id")) {
+			t.Errorf("Test case %d\nCreateArtifact\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
+				i, req, got, err, want, cmp.Diff(want, got))
+		}
+
+		wantStored := &mlpb.Artifact{}
+		if err := proto.UnmarshalText(test.wantStored, wantStored); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			continue
+		}
+
+		gotStored, err := store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(got.GetId())})
+		if err != nil || len(gotStored) != 1 {
+			t.Errorf("Test case %d\nstore.GetArtifact:\n%v, %v\nWant single Artifact and nil error\n", i, gotStored, err)
+			continue
+		}
+
+		if !cmp.Equal(gotStored[0], wantStored, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id", "TypeId")) {
+			t.Errorf("Test case %d\nStored ArtifactType:\n%v\nWant:\n%v\nDiff:\n%s",
+				i, gotStored[0], wantStored, cmp.Diff(wantStored, gotStored[0]))
 		}
 	}
 }

@@ -25,4 +25,10 @@ type MetadataStore interface {
 	PutArtifactType(atype *mlpb.ArtifactType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ArtifactTypeID, error)
 	GetArtifactType(name string) (*mlpb.ArtifactType, error)
 	GetArtifactTypesByID(tids []mlmetadata.ArtifactTypeID) ([]*mlpb.ArtifactType, error)
+
+	PutArtifacts(artifacts []*mlpb.Artifact) ([]mlmetadata.ArtifactID, error)
+	GetArtifactsByID(aids []mlmetadata.ArtifactID) ([]*mlpb.Artifact, error)
+	GetArtifacts() ([]*mlpb.Artifact, error)
+	GetArtifactsByType(typeName string) ([]*mlpb.Artifact, error)
+	GetArtifactsByURI(uri string) ([]*mlpb.Artifact, error)
 }
