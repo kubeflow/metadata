@@ -55,6 +55,186 @@
         ]
       }
     },
+    "/api/v1alpha1/execution/{id}": {
+      "get": {
+        "operationId": "GetExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/execution_type/{id}": {
+      "get": {
+        "operationId": "GetExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/execution_types": {
+      "get": {
+        "operationId": "ListExecutionTypes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionTypesResponse"
+            }
+          }
+        },
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "post": {
+        "operationId": "CreateExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiExecutionType"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/execution_types/{id}": {
+      "delete": {
+        "operationId": "DeleteExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/executions": {
+      "get": {
+        "operationId": "ListExecutions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionsResponse"
+            }
+          }
+        },
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "post": {
+        "operationId": "CreateExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiExecution"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/executions/{id}": {
+      "delete": {
+        "operationId": "DeleteExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/{name=artifact_types/*/artifacts/*}": {
       "get": {
         "operationId": "GetArtifact",
@@ -209,6 +389,18 @@
     }
   },
   "definitions": {
+    "ExecutionState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NEW",
+        "RUNNING",
+        "COMPLETE",
+        "FAILED"
+      ],
+      "default": "UNKNOWN",
+      "description": "State captures the state of the execution."
+    },
     "apiArtifact": {
       "type": "object",
       "properties": {
@@ -312,6 +504,119 @@
         }
       }
     },
+    "apiCreateExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "execution": {
+          "$ref": "#/definitions/apiExecution",
+          "description": "Newly created execution with id."
+        }
+      }
+    },
+    "apiCreateExecutionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "execution_type": {
+          "$ref": "#/definitions/apiExecutionType",
+          "description": "Newly created execution type with id."
+        }
+      }
+    },
+    "apiExecution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "type_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The type of the execution."
+        },
+        "last_known_state": {
+          "$ref": "#/definitions/ExecutionState",
+          "description": "The last known state of an execution."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Properties must be specified in ExecutionType."
+        },
+        "custom_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Arbitrary user-provided properties that do not correspond to fields in the\nschema for the execution type."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional. Human-readable name of the execution."
+        },
+        "workspace": {
+          "$ref": "#/definitions/apiWorkspace",
+          "description": "Required. The workspace that the execution belongs to. Empty defaults to\nthe 'default' workspace."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Arbitrary key-value pairs for labeling."
+        },
+        "create_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was created. System-provided."
+        },
+        "update_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was last updated. System-provided."
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was started."
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution ended."
+        }
+      },
+      "description": "Execution represents metadata about a machine-learning workflow execution\nstep."
+    },
+    "apiExecutionType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "name": {
+          "type": "string",
+          "description": "Required. Represents the name of the type. Must be unique within a\nnamespace."
+        },
+        "type_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiPropertyType"
+          },
+          "description": "Schema representing the fields and their types for this type."
+        },
+        "description": {
+          "type": "string",
+          "description": "An optional human-readable description of this type."
+        }
+      },
+      "description": "ExecutionType represents the type of an ML execution step."
+    },
     "apiGetArtifactResponse": {
       "type": "object",
       "properties": {
@@ -325,6 +630,22 @@
       "properties": {
         "artifact_type": {
           "$ref": "#/definitions/apiArtifactType"
+        }
+      }
+    },
+    "apiGetExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "execution": {
+          "$ref": "#/definitions/apiExecution"
+        }
+      }
+    },
+    "apiGetExecutionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "execution_type": {
+          "$ref": "#/definitions/apiExecutionType"
         }
       }
     },
@@ -347,6 +668,30 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/apiArtifact"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiListExecutionTypesResponse": {
+      "type": "object",
+      "properties": {
+        "execution_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiExecutionType"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiListExecutionsResponse": {
+      "type": "object",
+      "properties": {
+        "executions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiExecution"
           },
           "collectionFormat": "multi"
         }

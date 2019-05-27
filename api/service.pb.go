@@ -585,6 +585,536 @@ func (m *DeleteArtifactRequest) GetName() string {
 	return ""
 }
 
+type CreateExecutionTypeRequest struct {
+	ExecutionType        *ExecutionType `protobuf:"bytes,1,opt,name=execution_type,json=executionType,proto3" json:"execution_type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *CreateExecutionTypeRequest) Reset()         { *m = CreateExecutionTypeRequest{} }
+func (m *CreateExecutionTypeRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateExecutionTypeRequest) ProtoMessage()    {}
+func (*CreateExecutionTypeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{14}
+}
+
+func (m *CreateExecutionTypeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateExecutionTypeRequest.Unmarshal(m, b)
+}
+func (m *CreateExecutionTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateExecutionTypeRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateExecutionTypeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateExecutionTypeRequest.Merge(m, src)
+}
+func (m *CreateExecutionTypeRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateExecutionTypeRequest.Size(m)
+}
+func (m *CreateExecutionTypeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateExecutionTypeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateExecutionTypeRequest proto.InternalMessageInfo
+
+func (m *CreateExecutionTypeRequest) GetExecutionType() *ExecutionType {
+	if m != nil {
+		return m.ExecutionType
+	}
+	return nil
+}
+
+type CreateExecutionTypeResponse struct {
+	ExecutionType        *ExecutionType `protobuf:"bytes,1,opt,name=execution_type,json=executionType,proto3" json:"execution_type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *CreateExecutionTypeResponse) Reset()         { *m = CreateExecutionTypeResponse{} }
+func (m *CreateExecutionTypeResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateExecutionTypeResponse) ProtoMessage()    {}
+func (*CreateExecutionTypeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{15}
+}
+
+func (m *CreateExecutionTypeResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateExecutionTypeResponse.Unmarshal(m, b)
+}
+func (m *CreateExecutionTypeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateExecutionTypeResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateExecutionTypeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateExecutionTypeResponse.Merge(m, src)
+}
+func (m *CreateExecutionTypeResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateExecutionTypeResponse.Size(m)
+}
+func (m *CreateExecutionTypeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateExecutionTypeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateExecutionTypeResponse proto.InternalMessageInfo
+
+func (m *CreateExecutionTypeResponse) GetExecutionType() *ExecutionType {
+	if m != nil {
+		return m.ExecutionType
+	}
+	return nil
+}
+
+type GetExecutionTypeRequest struct {
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetExecutionTypeRequest) Reset()         { *m = GetExecutionTypeRequest{} }
+func (m *GetExecutionTypeRequest) String() string { return proto.CompactTextString(m) }
+func (*GetExecutionTypeRequest) ProtoMessage()    {}
+func (*GetExecutionTypeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{16}
+}
+
+func (m *GetExecutionTypeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetExecutionTypeRequest.Unmarshal(m, b)
+}
+func (m *GetExecutionTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetExecutionTypeRequest.Marshal(b, m, deterministic)
+}
+func (m *GetExecutionTypeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetExecutionTypeRequest.Merge(m, src)
+}
+func (m *GetExecutionTypeRequest) XXX_Size() int {
+	return xxx_messageInfo_GetExecutionTypeRequest.Size(m)
+}
+func (m *GetExecutionTypeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetExecutionTypeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetExecutionTypeRequest proto.InternalMessageInfo
+
+func (m *GetExecutionTypeRequest) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+type GetExecutionTypeResponse struct {
+	ExecutionType        *ExecutionType `protobuf:"bytes,1,opt,name=execution_type,json=executionType,proto3" json:"execution_type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *GetExecutionTypeResponse) Reset()         { *m = GetExecutionTypeResponse{} }
+func (m *GetExecutionTypeResponse) String() string { return proto.CompactTextString(m) }
+func (*GetExecutionTypeResponse) ProtoMessage()    {}
+func (*GetExecutionTypeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{17}
+}
+
+func (m *GetExecutionTypeResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetExecutionTypeResponse.Unmarshal(m, b)
+}
+func (m *GetExecutionTypeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetExecutionTypeResponse.Marshal(b, m, deterministic)
+}
+func (m *GetExecutionTypeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetExecutionTypeResponse.Merge(m, src)
+}
+func (m *GetExecutionTypeResponse) XXX_Size() int {
+	return xxx_messageInfo_GetExecutionTypeResponse.Size(m)
+}
+func (m *GetExecutionTypeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetExecutionTypeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetExecutionTypeResponse proto.InternalMessageInfo
+
+func (m *GetExecutionTypeResponse) GetExecutionType() *ExecutionType {
+	if m != nil {
+		return m.ExecutionType
+	}
+	return nil
+}
+
+type ListExecutionTypesRequest struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListExecutionTypesRequest) Reset()         { *m = ListExecutionTypesRequest{} }
+func (m *ListExecutionTypesRequest) String() string { return proto.CompactTextString(m) }
+func (*ListExecutionTypesRequest) ProtoMessage()    {}
+func (*ListExecutionTypesRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{18}
+}
+
+func (m *ListExecutionTypesRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListExecutionTypesRequest.Unmarshal(m, b)
+}
+func (m *ListExecutionTypesRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListExecutionTypesRequest.Marshal(b, m, deterministic)
+}
+func (m *ListExecutionTypesRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListExecutionTypesRequest.Merge(m, src)
+}
+func (m *ListExecutionTypesRequest) XXX_Size() int {
+	return xxx_messageInfo_ListExecutionTypesRequest.Size(m)
+}
+func (m *ListExecutionTypesRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListExecutionTypesRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListExecutionTypesRequest proto.InternalMessageInfo
+
+type ListExecutionTypesResponse struct {
+	ExecutionTypes       []*ExecutionType `protobuf:"bytes,1,rep,name=execution_types,json=executionTypes,proto3" json:"execution_types,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *ListExecutionTypesResponse) Reset()         { *m = ListExecutionTypesResponse{} }
+func (m *ListExecutionTypesResponse) String() string { return proto.CompactTextString(m) }
+func (*ListExecutionTypesResponse) ProtoMessage()    {}
+func (*ListExecutionTypesResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{19}
+}
+
+func (m *ListExecutionTypesResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListExecutionTypesResponse.Unmarshal(m, b)
+}
+func (m *ListExecutionTypesResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListExecutionTypesResponse.Marshal(b, m, deterministic)
+}
+func (m *ListExecutionTypesResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListExecutionTypesResponse.Merge(m, src)
+}
+func (m *ListExecutionTypesResponse) XXX_Size() int {
+	return xxx_messageInfo_ListExecutionTypesResponse.Size(m)
+}
+func (m *ListExecutionTypesResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListExecutionTypesResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListExecutionTypesResponse proto.InternalMessageInfo
+
+func (m *ListExecutionTypesResponse) GetExecutionTypes() []*ExecutionType {
+	if m != nil {
+		return m.ExecutionTypes
+	}
+	return nil
+}
+
+type DeleteExecutionTypeRequest struct {
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteExecutionTypeRequest) Reset()         { *m = DeleteExecutionTypeRequest{} }
+func (m *DeleteExecutionTypeRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteExecutionTypeRequest) ProtoMessage()    {}
+func (*DeleteExecutionTypeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{20}
+}
+
+func (m *DeleteExecutionTypeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteExecutionTypeRequest.Unmarshal(m, b)
+}
+func (m *DeleteExecutionTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteExecutionTypeRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteExecutionTypeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteExecutionTypeRequest.Merge(m, src)
+}
+func (m *DeleteExecutionTypeRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteExecutionTypeRequest.Size(m)
+}
+func (m *DeleteExecutionTypeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteExecutionTypeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteExecutionTypeRequest proto.InternalMessageInfo
+
+func (m *DeleteExecutionTypeRequest) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+type CreateExecutionRequest struct {
+	Execution            *Execution `protobuf:"bytes,1,opt,name=execution,proto3" json:"execution,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *CreateExecutionRequest) Reset()         { *m = CreateExecutionRequest{} }
+func (m *CreateExecutionRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateExecutionRequest) ProtoMessage()    {}
+func (*CreateExecutionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{21}
+}
+
+func (m *CreateExecutionRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateExecutionRequest.Unmarshal(m, b)
+}
+func (m *CreateExecutionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateExecutionRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateExecutionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateExecutionRequest.Merge(m, src)
+}
+func (m *CreateExecutionRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateExecutionRequest.Size(m)
+}
+func (m *CreateExecutionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateExecutionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateExecutionRequest proto.InternalMessageInfo
+
+func (m *CreateExecutionRequest) GetExecution() *Execution {
+	if m != nil {
+		return m.Execution
+	}
+	return nil
+}
+
+type CreateExecutionResponse struct {
+	Execution            *Execution `protobuf:"bytes,1,opt,name=execution,proto3" json:"execution,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *CreateExecutionResponse) Reset()         { *m = CreateExecutionResponse{} }
+func (m *CreateExecutionResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateExecutionResponse) ProtoMessage()    {}
+func (*CreateExecutionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{22}
+}
+
+func (m *CreateExecutionResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateExecutionResponse.Unmarshal(m, b)
+}
+func (m *CreateExecutionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateExecutionResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateExecutionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateExecutionResponse.Merge(m, src)
+}
+func (m *CreateExecutionResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateExecutionResponse.Size(m)
+}
+func (m *CreateExecutionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateExecutionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateExecutionResponse proto.InternalMessageInfo
+
+func (m *CreateExecutionResponse) GetExecution() *Execution {
+	if m != nil {
+		return m.Execution
+	}
+	return nil
+}
+
+type GetExecutionRequest struct {
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetExecutionRequest) Reset()         { *m = GetExecutionRequest{} }
+func (m *GetExecutionRequest) String() string { return proto.CompactTextString(m) }
+func (*GetExecutionRequest) ProtoMessage()    {}
+func (*GetExecutionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{23}
+}
+
+func (m *GetExecutionRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetExecutionRequest.Unmarshal(m, b)
+}
+func (m *GetExecutionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetExecutionRequest.Marshal(b, m, deterministic)
+}
+func (m *GetExecutionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetExecutionRequest.Merge(m, src)
+}
+func (m *GetExecutionRequest) XXX_Size() int {
+	return xxx_messageInfo_GetExecutionRequest.Size(m)
+}
+func (m *GetExecutionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetExecutionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetExecutionRequest proto.InternalMessageInfo
+
+func (m *GetExecutionRequest) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
+type GetExecutionResponse struct {
+	Execution            *Execution `protobuf:"bytes,1,opt,name=execution,proto3" json:"execution,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}   `json:"-"`
+	XXX_unrecognized     []byte     `json:"-"`
+	XXX_sizecache        int32      `json:"-"`
+}
+
+func (m *GetExecutionResponse) Reset()         { *m = GetExecutionResponse{} }
+func (m *GetExecutionResponse) String() string { return proto.CompactTextString(m) }
+func (*GetExecutionResponse) ProtoMessage()    {}
+func (*GetExecutionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{24}
+}
+
+func (m *GetExecutionResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetExecutionResponse.Unmarshal(m, b)
+}
+func (m *GetExecutionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetExecutionResponse.Marshal(b, m, deterministic)
+}
+func (m *GetExecutionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetExecutionResponse.Merge(m, src)
+}
+func (m *GetExecutionResponse) XXX_Size() int {
+	return xxx_messageInfo_GetExecutionResponse.Size(m)
+}
+func (m *GetExecutionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetExecutionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetExecutionResponse proto.InternalMessageInfo
+
+func (m *GetExecutionResponse) GetExecution() *Execution {
+	if m != nil {
+		return m.Execution
+	}
+	return nil
+}
+
+type ListExecutionsRequest struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListExecutionsRequest) Reset()         { *m = ListExecutionsRequest{} }
+func (m *ListExecutionsRequest) String() string { return proto.CompactTextString(m) }
+func (*ListExecutionsRequest) ProtoMessage()    {}
+func (*ListExecutionsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{25}
+}
+
+func (m *ListExecutionsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListExecutionsRequest.Unmarshal(m, b)
+}
+func (m *ListExecutionsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListExecutionsRequest.Marshal(b, m, deterministic)
+}
+func (m *ListExecutionsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListExecutionsRequest.Merge(m, src)
+}
+func (m *ListExecutionsRequest) XXX_Size() int {
+	return xxx_messageInfo_ListExecutionsRequest.Size(m)
+}
+func (m *ListExecutionsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListExecutionsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListExecutionsRequest proto.InternalMessageInfo
+
+type ListExecutionsResponse struct {
+	Executions           []*Execution `protobuf:"bytes,1,rep,name=executions,proto3" json:"executions,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *ListExecutionsResponse) Reset()         { *m = ListExecutionsResponse{} }
+func (m *ListExecutionsResponse) String() string { return proto.CompactTextString(m) }
+func (*ListExecutionsResponse) ProtoMessage()    {}
+func (*ListExecutionsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{26}
+}
+
+func (m *ListExecutionsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListExecutionsResponse.Unmarshal(m, b)
+}
+func (m *ListExecutionsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListExecutionsResponse.Marshal(b, m, deterministic)
+}
+func (m *ListExecutionsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListExecutionsResponse.Merge(m, src)
+}
+func (m *ListExecutionsResponse) XXX_Size() int {
+	return xxx_messageInfo_ListExecutionsResponse.Size(m)
+}
+func (m *ListExecutionsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListExecutionsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListExecutionsResponse proto.InternalMessageInfo
+
+func (m *ListExecutionsResponse) GetExecutions() []*Execution {
+	if m != nil {
+		return m.Executions
+	}
+	return nil
+}
+
+type DeleteExecutionRequest struct {
+	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteExecutionRequest) Reset()         { *m = DeleteExecutionRequest{} }
+func (m *DeleteExecutionRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteExecutionRequest) ProtoMessage()    {}
+func (*DeleteExecutionRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{27}
+}
+
+func (m *DeleteExecutionRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteExecutionRequest.Unmarshal(m, b)
+}
+func (m *DeleteExecutionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteExecutionRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteExecutionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteExecutionRequest.Merge(m, src)
+}
+func (m *DeleteExecutionRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteExecutionRequest.Size(m)
+}
+func (m *DeleteExecutionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteExecutionRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteExecutionRequest proto.InternalMessageInfo
+
+func (m *DeleteExecutionRequest) GetId() int64 {
+	if m != nil {
+		return m.Id
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterType((*CreateArtifactTypeRequest)(nil), "api.CreateArtifactTypeRequest")
 	proto.RegisterType((*CreateArtifactTypeResponse)(nil), "api.CreateArtifactTypeResponse")
@@ -600,53 +1130,90 @@ func init() {
 	proto.RegisterType((*ListArtifactsRequest)(nil), "api.ListArtifactsRequest")
 	proto.RegisterType((*ListArtifactsResponse)(nil), "api.ListArtifactsResponse")
 	proto.RegisterType((*DeleteArtifactRequest)(nil), "api.DeleteArtifactRequest")
+	proto.RegisterType((*CreateExecutionTypeRequest)(nil), "api.CreateExecutionTypeRequest")
+	proto.RegisterType((*CreateExecutionTypeResponse)(nil), "api.CreateExecutionTypeResponse")
+	proto.RegisterType((*GetExecutionTypeRequest)(nil), "api.GetExecutionTypeRequest")
+	proto.RegisterType((*GetExecutionTypeResponse)(nil), "api.GetExecutionTypeResponse")
+	proto.RegisterType((*ListExecutionTypesRequest)(nil), "api.ListExecutionTypesRequest")
+	proto.RegisterType((*ListExecutionTypesResponse)(nil), "api.ListExecutionTypesResponse")
+	proto.RegisterType((*DeleteExecutionTypeRequest)(nil), "api.DeleteExecutionTypeRequest")
+	proto.RegisterType((*CreateExecutionRequest)(nil), "api.CreateExecutionRequest")
+	proto.RegisterType((*CreateExecutionResponse)(nil), "api.CreateExecutionResponse")
+	proto.RegisterType((*GetExecutionRequest)(nil), "api.GetExecutionRequest")
+	proto.RegisterType((*GetExecutionResponse)(nil), "api.GetExecutionResponse")
+	proto.RegisterType((*ListExecutionsRequest)(nil), "api.ListExecutionsRequest")
+	proto.RegisterType((*ListExecutionsResponse)(nil), "api.ListExecutionsResponse")
+	proto.RegisterType((*DeleteExecutionRequest)(nil), "api.DeleteExecutionRequest")
 }
 
 func init() { proto.RegisterFile("api/service.proto", fileDescriptor_42c32aec9010f89c) }
 
 var fileDescriptor_42c32aec9010f89c = []byte{
-	// 645 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0x5d, 0x6f, 0x12, 0x41,
-	0x14, 0xcd, 0xb6, 0xa6, 0x69, 0x6f, 0xa5, 0x0d, 0xa3, 0x50, 0x58, 0x90, 0x92, 0x8d, 0xc6, 0x4a,
-	0xed, 0x6e, 0x28, 0x89, 0x1f, 0x4d, 0x9a, 0xa8, 0xd4, 0xf8, 0xa2, 0x0f, 0xd2, 0xfa, 0xd2, 0x17,
-	0x33, 0xe0, 0x40, 0x37, 0xb2, 0x1f, 0x32, 0x43, 0x95, 0x10, 0xd3, 0xc4, 0x47, 0x1f, 0x7c, 0xf1,
-	0x1f, 0xf8, 0x97, 0xfc, 0x0b, 0xfe, 0x10, 0xb3, 0xb3, 0xb3, 0xb0, 0xb3, 0x3b, 0x4b, 0xa8, 0xbe,
-	0x31, 0x73, 0x86, 0x7b, 0xce, 0xbd, 0x67, 0xcf, 0x85, 0x3c, 0xf6, 0x6d, 0x8b, 0x92, 0xd1, 0xa5,
-	0xdd, 0x23, 0xa6, 0x3f, 0xf2, 0x98, 0x87, 0x56, 0xb1, 0x6f, 0xeb, 0xb9, 0xe0, 0x1e, 0xfb, 0x76,
-	0x78, 0xa7, 0x57, 0x07, 0x9e, 0x37, 0x18, 0x12, 0x8b, 0xdf, 0xba, 0xae, 0xc7, 0x30, 0xb3, 0x3d,
-	0x97, 0x0a, 0xb4, 0x22, 0x50, 0x7e, 0xea, 0x8e, 0xfb, 0x16, 0x71, 0x7c, 0x36, 0x11, 0xe0, 0x6e,
-	0x12, 0x64, 0xb6, 0x43, 0x28, 0xc3, 0x8e, 0x1f, 0x3e, 0x30, 0x4e, 0xa1, 0xdc, 0x1e, 0x11, 0xcc,
-	0xc8, 0xf3, 0x11, 0xb3, 0xfb, 0xb8, 0xc7, 0xce, 0x26, 0x3e, 0xe9, 0x90, 0x4f, 0x63, 0x42, 0x19,
-	0x7a, 0x04, 0x39, 0x2c, 0xae, 0xdf, 0xb3, 0x89, 0x4f, 0x4a, 0x5a, 0x5d, 0xdb, 0xdb, 0x3c, 0xcc,
-	0x9b, 0x81, 0x36, 0xe9, 0x0f, 0x37, 0x71, 0xec, 0x64, 0x9c, 0x81, 0xae, 0x2a, 0x4a, 0x7d, 0xcf,
-	0xa5, 0xe4, 0x9f, 0xab, 0x3e, 0x84, 0xe2, 0x2b, 0xc2, 0x54, 0x3a, 0x11, 0xdc, 0x70, 0xb1, 0x13,
-	0x16, 0xda, 0xe8, 0xf0, 0xdf, 0xc6, 0x5b, 0xd8, 0x49, 0xbd, 0xfe, 0x4f, 0x01, 0x3a, 0x94, 0x5e,
-	0xdb, 0x54, 0xaa, 0x49, 0x85, 0x04, 0xe3, 0x1d, 0x94, 0x15, 0x98, 0x20, 0x7c, 0x02, 0x5b, 0x12,
-	0x21, 0x2d, 0x69, 0xf5, 0x55, 0x35, 0x63, 0x2e, 0xce, 0x48, 0x0d, 0x0b, 0xca, 0x27, 0x64, 0x48,
-	0xd4, 0xf6, 0xa8, 0xda, 0x3e, 0x87, 0x82, 0x3c, 0xfa, 0xe8, 0x71, 0x11, 0xd6, 0x7c, 0x3c, 0x22,
-	0x2e, 0x13, 0xcf, 0xc5, 0x09, 0x3d, 0x80, 0xf5, 0x88, 0xb2, 0xb4, 0xc2, 0xe7, 0x90, 0x93, 0x54,
-	0x75, 0x66, 0xb0, 0xd1, 0x86, 0x62, 0xb2, 0xb6, 0x68, 0x30, 0x5e, 0x44, 0x5b, 0x5c, 0x64, 0x0f,
-	0x50, 0xcc, 0x97, 0x45, 0xad, 0x3c, 0x83, 0x5b, 0xd2, 0xcb, 0xeb, 0x73, 0x35, 0xe0, 0x76, 0xdc,
-	0x14, 0xba, 0x88, 0xed, 0x04, 0x0a, 0x89, 0xb7, 0x82, 0x6f, 0x1f, 0x36, 0xa2, 0x82, 0x91, 0x6f,
-	0x09, 0xc2, 0x39, 0x6e, 0xec, 0x43, 0x41, 0xf6, 0x6b, 0x01, 0xe5, 0xe1, 0xaf, 0x75, 0xd8, 0x7e,
-	0x43, 0x18, 0xfe, 0x80, 0x19, 0x3e, 0x0d, 0xb7, 0x00, 0xfa, 0xae, 0x01, 0x4a, 0x67, 0x07, 0xd5,
-	0x38, 0x63, 0x66, 0x52, 0xf5, 0xdd, 0x4c, 0x3c, 0xec, 0xc2, 0x68, 0x7d, 0xfb, 0xfd, 0xe7, 0xe7,
-	0xca, 0x81, 0x51, 0xe5, 0x5b, 0xe4, 0xb2, 0x89, 0x87, 0xfe, 0x05, 0x6e, 0x5a, 0xf2, 0x67, 0x79,
-	0x24, 0xe7, 0x02, 0x4d, 0x61, 0x3b, 0x91, 0x21, 0x54, 0xe1, 0x44, 0xea, 0x1c, 0xea, 0x55, 0x35,
-	0x28, 0x24, 0x1c, 0x70, 0x09, 0xf7, 0xd1, 0x3d, 0x59, 0xc2, 0x34, 0x98, 0xc5, 0xb1, 0x2c, 0xc4,
-	0x6a, 0x7c, 0x45, 0x5f, 0x20, 0x9f, 0x4a, 0x14, 0xba, 0xc3, 0x19, 0xb2, 0x52, 0xa8, 0xd7, 0xb2,
-	0x60, 0x21, 0xe1, 0x2e, 0x97, 0x50, 0x43, 0x0b, 0xa7, 0x80, 0xa6, 0x80, 0xd2, 0xa1, 0x13, 0x16,
-	0x64, 0xa6, 0x51, 0x2f, 0x9a, 0xe1, 0xae, 0x35, 0xa3, 0x5d, 0x6b, 0xbe, 0x0c, 0x16, 0x71, 0xd4,
-	0x76, 0x63, 0xc9, 0xb6, 0x7f, 0x68, 0xb0, 0x25, 0xfb, 0x88, 0x74, 0x85, 0xb9, 0x11, 0x6b, 0x45,
-	0x89, 0x89, 0x76, 0xdb, 0x9c, 0xfa, 0xd8, 0x68, 0x26, 0xa8, 0xc3, 0xe8, 0xa7, 0xc9, 0x67, 0x83,
-	0xa0, 0x47, 0xb3, 0x10, 0xa1, 0x29, 0x6c, 0xc6, 0x1c, 0x45, 0x3b, 0x49, 0x8f, 0x23, 0x25, 0xa5,
-	0x34, 0x20, 0x64, 0x3c, 0xe5, 0x32, 0x5a, 0xa8, 0xb9, 0xcc, 0x04, 0xe6, 0x1a, 0x82, 0x69, 0x5c,
-	0x41, 0x4e, 0x4a, 0x25, 0x2a, 0xa7, 0x1c, 0x9e, 0x99, 0xaf, 0xab, 0x20, 0x21, 0xe1, 0x31, 0x97,
-	0xd0, 0x44, 0xd6, 0x52, 0x26, 0xcc, 0x35, 0xa0, 0x2b, 0xd8, 0x92, 0x2d, 0x17, 0x6e, 0x28, 0x53,
-	0x9e, 0xf9, 0x0d, 0x88, 0x09, 0x34, 0xae, 0x3f, 0x81, 0x17, 0xc6, 0x79, 0x7d, 0x60, 0xb3, 0x8b,
-	0x71, 0xd7, 0xec, 0x79, 0x8e, 0xf5, 0x71, 0xdc, 0x25, 0xfd, 0xa1, 0xf7, 0xd9, 0x72, 0xc4, 0xde,
-	0x08, 0x0a, 0x76, 0xd7, 0x38, 0x5d, 0xeb, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x92, 0xeb, 0xb5,
-	0x63, 0x50, 0x08, 0x00, 0x00,
+	// 1009 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x56, 0x4d, 0x6f, 0xdb, 0x46,
+	0x10, 0x85, 0xec, 0x22, 0xa8, 0x27, 0x11, 0x55, 0x8f, 0x63, 0x99, 0xa2, 0xfc, 0xa1, 0x6e, 0x63,
+	0xd4, 0x96, 0x1d, 0x11, 0x8a, 0xd1, 0x8f, 0xb8, 0x08, 0xd0, 0xd6, 0x4e, 0xd3, 0x43, 0x7b, 0xa8,
+	0x92, 0xa0, 0x6d, 0x2e, 0xc5, 0xda, 0x5e, 0x3b, 0x44, 0x2c, 0x91, 0x15, 0x57, 0x69, 0x1c, 0x35,
+	0x08, 0xd0, 0x63, 0x0f, 0xed, 0xa1, 0x3f, 0xad, 0x7f, 0xa1, 0xc7, 0xfe, 0x88, 0x40, 0xcb, 0x25,
+	0xc5, 0x5d, 0xee, 0x12, 0xb2, 0x7d, 0x93, 0x38, 0xc3, 0x79, 0x6f, 0xe6, 0xed, 0xec, 0x23, 0x2c,
+	0xd2, 0x28, 0xf0, 0x63, 0x36, 0x7c, 0x19, 0x1c, 0xb3, 0x4e, 0x34, 0x0c, 0x79, 0x88, 0xf3, 0x34,
+	0x0a, 0xbc, 0xea, 0xe4, 0x39, 0x8d, 0x82, 0xe4, 0x99, 0xb7, 0x7a, 0x16, 0x86, 0x67, 0xe7, 0xcc,
+	0x17, 0x4f, 0x07, 0x83, 0x90, 0x53, 0x1e, 0x84, 0x83, 0x58, 0x46, 0x9b, 0x32, 0x2a, 0xfe, 0x1d,
+	0x8d, 0x4e, 0x7d, 0xd6, 0x8f, 0xf8, 0x85, 0x0c, 0x6e, 0xe8, 0x41, 0x1e, 0xf4, 0x59, 0xcc, 0x69,
+	0x3f, 0x4a, 0x12, 0xc8, 0x63, 0x68, 0x1c, 0x0c, 0x19, 0xe5, 0xec, 0xab, 0x21, 0x0f, 0x4e, 0xe9,
+	0x31, 0x7f, 0x72, 0x11, 0xb1, 0x1e, 0xfb, 0x75, 0xc4, 0x62, 0x8e, 0x9f, 0x42, 0x95, 0xca, 0xc7,
+	0xbf, 0xf0, 0x8b, 0x88, 0xb9, 0x95, 0x56, 0x65, 0xeb, 0xe6, 0xbd, 0xc5, 0xce, 0x84, 0x9b, 0xf2,
+	0xc2, 0x2d, 0x9a, 0xfb, 0x47, 0x9e, 0x80, 0x67, 0x2a, 0x1a, 0x47, 0xe1, 0x20, 0x66, 0x57, 0xae,
+	0xba, 0x0b, 0xf5, 0x47, 0x8c, 0x9b, 0x78, 0x22, 0xbc, 0x37, 0xa0, 0xfd, 0xa4, 0xd0, 0x42, 0x4f,
+	0xfc, 0x26, 0x3f, 0xc0, 0x4a, 0x21, 0xfb, 0x9a, 0x04, 0x3c, 0x70, 0xbf, 0x0b, 0x62, 0xa5, 0x66,
+	0x2c, 0x29, 0x90, 0xa7, 0xd0, 0x30, 0xc4, 0x24, 0xe0, 0xe7, 0xe0, 0x28, 0x80, 0xb1, 0x5b, 0x69,
+	0xcd, 0x9b, 0x11, 0xab, 0x79, 0xc4, 0x98, 0xf8, 0xd0, 0x38, 0x64, 0xe7, 0xcc, 0x2c, 0x8f, 0xa9,
+	0xed, 0x67, 0xb0, 0xac, 0x8e, 0x3e, 0x4d, 0xae, 0xc3, 0x8d, 0x88, 0x0e, 0xd9, 0x80, 0xcb, 0x74,
+	0xf9, 0x0f, 0xb7, 0xe1, 0xfd, 0x14, 0xd2, 0x9d, 0x13, 0x73, 0xa8, 0x2a, 0xac, 0x7a, 0x59, 0x98,
+	0x1c, 0x40, 0x5d, 0xaf, 0x2d, 0x1b, 0xcc, 0x17, 0xa9, 0x94, 0x17, 0xd9, 0x02, 0xcc, 0xe9, 0x52,
+	0xd6, 0xca, 0x97, 0xb0, 0xa4, 0x64, 0x5e, 0x1e, 0xab, 0x0d, 0xb7, 0xf3, 0xa2, 0xc4, 0x65, 0x68,
+	0x87, 0xb0, 0xac, 0xe5, 0x4a, 0xbc, 0x1d, 0x58, 0x48, 0x0b, 0xa6, 0xba, 0x69, 0x80, 0xd3, 0x38,
+	0xd9, 0x81, 0x65, 0x55, 0xaf, 0x32, 0xc8, 0x1f, 0xd3, 0x35, 0x79, 0xf8, 0x8a, 0x1d, 0x8f, 0x26,
+	0x3b, 0x9d, 0x57, 0xf7, 0x3e, 0x38, 0x2c, 0x7d, 0x9e, 0x3f, 0xa6, 0x28, 0xc0, 0xd5, 0x57, 0xaa,
+	0x2c, 0xff, 0x97, 0xfc, 0x04, 0x4d, 0x63, 0x61, 0xd9, 0xd1, 0x35, 0x2a, 0x6f, 0x8b, 0xad, 0x32,
+	0xf2, 0x75, 0x60, 0x2e, 0x38, 0x11, 0x95, 0xe6, 0x7b, 0x73, 0xc1, 0x09, 0x79, 0x0a, 0x6e, 0x31,
+	0xf5, 0xfa, 0x0c, 0x9a, 0xc9, 0xa2, 0x29, 0x39, 0xd9, 0x16, 0xfe, 0x0c, 0x9e, 0x29, 0x28, 0x51,
+	0xbf, 0x80, 0x9a, 0x8a, 0x9a, 0xea, 0x69, 0x82, 0x75, 0x14, 0xd8, 0x98, 0xec, 0x82, 0x97, 0x28,
+	0x3b, 0x53, 0xf3, 0xdf, 0xa4, 0xab, 0x92, 0x65, 0xa7, 0x99, 0xbb, 0xb0, 0x90, 0x55, 0x96, 0x5d,
+	0x3b, 0x2a, 0x7c, 0x6f, 0x9a, 0x40, 0x1e, 0xc1, 0x4a, 0xa1, 0x8e, 0xec, 0xe6, 0x72, 0x85, 0x36,
+	0xc5, 0x32, 0x15, 0xd8, 0xe8, 0xbc, 0x0f, 0xe1, 0xb6, 0x9a, 0x76, 0x25, 0xb0, 0x95, 0x64, 0x97,
+	0xb2, 0x58, 0xa6, 0xcf, 0xb7, 0x50, 0xd7, 0x03, 0x12, 0xa0, 0x03, 0x90, 0xbd, 0x9f, 0xca, 0xa2,
+	0x23, 0xe4, 0x32, 0xc8, 0x16, 0xd4, 0x35, 0x39, 0x2c, 0x2d, 0xdd, 0xfb, 0xbf, 0x06, 0xb5, 0xef,
+	0x19, 0xa7, 0x27, 0x94, 0xd3, 0xc7, 0x89, 0xd7, 0xe2, 0x9f, 0x15, 0xc0, 0xa2, 0x43, 0xe1, 0xba,
+	0x00, 0xb4, 0xfa, 0xa1, 0xb7, 0x61, 0x8d, 0x27, 0x5d, 0x90, 0xbd, 0x3f, 0xfe, 0xfd, 0xef, 0x9f,
+	0xb9, 0xbb, 0x64, 0x55, 0x78, 0xf5, 0xcb, 0x2e, 0x3d, 0x8f, 0x9e, 0xd3, 0xae, 0xaf, 0x5e, 0xfe,
+	0xfb, 0xaa, 0xfb, 0xe0, 0x18, 0x6a, 0x9a, 0x53, 0x61, 0x53, 0x00, 0x99, 0xdd, 0xce, 0x5b, 0x35,
+	0x07, 0x25, 0x85, 0xbb, 0x82, 0xc2, 0xc7, 0xb8, 0xa9, 0x52, 0x18, 0x4f, 0x6e, 0x9c, 0x07, 0x2a,
+	0x11, 0xbf, 0xfd, 0x06, 0x5f, 0xc1, 0x62, 0xc1, 0xb7, 0x70, 0x4d, 0x20, 0xd8, 0xbc, 0xce, 0x5b,
+	0xb7, 0x85, 0x25, 0x85, 0x3b, 0x82, 0xc2, 0x3a, 0x96, 0x4e, 0x01, 0xc7, 0x80, 0x45, 0x6b, 0x93,
+	0x12, 0x58, 0x3d, 0xcf, 0xab, 0x77, 0x92, 0x2f, 0x9a, 0x4e, 0xfa, 0x45, 0xd3, 0x79, 0x38, 0xf9,
+	0xdc, 0x49, 0xdb, 0x6e, 0xcf, 0xd8, 0xf6, 0x5f, 0x15, 0x70, 0x54, 0x1d, 0xd1, 0x33, 0x88, 0x9b,
+	0xa2, 0x36, 0x8d, 0x31, 0xd9, 0xee, 0x81, 0x80, 0x7e, 0x40, 0xba, 0x1a, 0x74, 0x62, 0xb0, 0x45,
+	0xf0, 0x6c, 0x10, 0xf1, 0x7e, 0x66, 0x55, 0x38, 0x86, 0x9b, 0x39, 0x45, 0x71, 0x45, 0xd7, 0x38,
+	0x65, 0xe2, 0x16, 0x03, 0x92, 0xc6, 0x7d, 0x41, 0x63, 0x0f, 0xbb, 0xb3, 0x4c, 0x60, 0xca, 0x61,
+	0x32, 0x8d, 0xb7, 0x50, 0x55, 0xbc, 0x0f, 0x1b, 0x05, 0x85, 0x33, 0xf1, 0x3d, 0x53, 0x48, 0x52,
+	0xf8, 0x4c, 0x50, 0xe8, 0xa2, 0x3f, 0x93, 0x08, 0x53, 0x0e, 0xf8, 0x16, 0x1c, 0x55, 0x72, 0xa9,
+	0x86, 0xd1, 0x4b, 0xad, 0x67, 0x40, 0x4e, 0xa0, 0x7d, 0x85, 0x09, 0xfc, 0x5d, 0x81, 0x25, 0x83,
+	0x65, 0x62, 0x7e, 0xe3, 0x4d, 0x17, 0xbf, 0xd7, 0xb2, 0x27, 0xc8, 0xa1, 0x7c, 0x22, 0x58, 0xf9,
+	0x64, 0x4d, 0x65, 0xa5, 0x39, 0xd1, 0xbe, 0x66, 0x88, 0xf8, 0x1a, 0x3e, 0xd0, 0xed, 0x13, 0xb3,
+	0xcd, 0x37, 0x52, 0x59, 0xb3, 0x44, 0x25, 0x8f, 0x6d, 0xc1, 0xe3, 0x23, 0xfc, 0xb0, 0x8c, 0x87,
+	0x3f, 0x0e, 0x4e, 0xde, 0xe0, 0xef, 0x80, 0x45, 0x1b, 0xc5, 0xe9, 0xda, 0x1b, 0xcd, 0x57, 0xde,
+	0x8e, 0x76, 0xff, 0x25, 0x9b, 0x82, 0xc1, 0x06, 0x96, 0x4f, 0x02, 0x5f, 0xc3, 0x92, 0xc1, 0x69,
+	0xa5, 0x14, 0x76, 0x0f, 0xb6, 0x1e, 0x8b, 0xb6, 0x80, 0xbd, 0xd3, 0x26, 0xa5, 0xb0, 0x49, 0xe7,
+	0x17, 0x50, 0xd3, 0xb4, 0xc4, 0xa6, 0x49, 0x61, 0xf5, 0x2e, 0xb6, 0x58, 0x34, 0xd9, 0x11, 0xc8,
+	0x9b, 0xc4, 0xb5, 0x20, 0xc7, 0xfb, 0x53, 0xd3, 0xc4, 0x00, 0x6e, 0xe5, 0xb5, 0x43, 0xb7, 0x20,
+	0x67, 0x0a, 0xda, 0x30, 0x44, 0xca, 0xaf, 0xde, 0x0c, 0x25, 0xe9, 0xf2, 0x05, 0x38, 0xaa, 0x0d,
+	0xa3, 0x57, 0xd4, 0x2e, 0x56, 0x2f, 0x3f, 0xb3, 0x6f, 0x93, 0x96, 0x00, 0xf4, 0xd0, 0xda, 0x22,
+	0xf6, 0xa1, 0xa6, 0x89, 0x26, 0x47, 0x6a, 0xf6, 0x6f, 0xab, 0x8c, 0xf2, 0xf4, 0xb4, 0x6d, 0xa7,
+	0x27, 0x51, 0xf0, 0x6b, 0xf2, 0xac, 0x75, 0x16, 0xf0, 0xe7, 0xa3, 0xa3, 0xce, 0x71, 0xd8, 0xf7,
+	0x5f, 0x8c, 0x8e, 0xd8, 0xe9, 0x79, 0xf8, 0x9b, 0xdf, 0x97, 0x5f, 0x00, 0x93, 0x97, 0x8f, 0x6e,
+	0x88, 0xd2, 0x7b, 0xef, 0x02, 0x00, 0x00, 0xff, 0xff, 0xd9, 0x5f, 0x32, 0xe3, 0x80, 0x0f, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -669,6 +1236,14 @@ type MetadataServiceClient interface {
 	GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*GetArtifactResponse, error)
 	ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*ListArtifactsResponse, error)
 	DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	CreateExecutionType(ctx context.Context, in *CreateExecutionTypeRequest, opts ...grpc.CallOption) (*CreateExecutionTypeResponse, error)
+	GetExecutionType(ctx context.Context, in *GetExecutionTypeRequest, opts ...grpc.CallOption) (*GetExecutionTypeResponse, error)
+	ListExecutionTypes(ctx context.Context, in *ListExecutionTypesRequest, opts ...grpc.CallOption) (*ListExecutionTypesResponse, error)
+	DeleteExecutionType(ctx context.Context, in *DeleteExecutionTypeRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	CreateExecution(ctx context.Context, in *CreateExecutionRequest, opts ...grpc.CallOption) (*CreateExecutionResponse, error)
+	GetExecution(ctx context.Context, in *GetExecutionRequest, opts ...grpc.CallOption) (*GetExecutionResponse, error)
+	ListExecutions(ctx context.Context, in *ListExecutionsRequest, opts ...grpc.CallOption) (*ListExecutionsResponse, error)
+	DeleteExecution(ctx context.Context, in *DeleteExecutionRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type metadataServiceClient struct {
@@ -751,6 +1326,78 @@ func (c *metadataServiceClient) DeleteArtifact(ctx context.Context, in *DeleteAr
 	return out, nil
 }
 
+func (c *metadataServiceClient) CreateExecutionType(ctx context.Context, in *CreateExecutionTypeRequest, opts ...grpc.CallOption) (*CreateExecutionTypeResponse, error) {
+	out := new(CreateExecutionTypeResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/CreateExecutionType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) GetExecutionType(ctx context.Context, in *GetExecutionTypeRequest, opts ...grpc.CallOption) (*GetExecutionTypeResponse, error) {
+	out := new(GetExecutionTypeResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/GetExecutionType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) ListExecutionTypes(ctx context.Context, in *ListExecutionTypesRequest, opts ...grpc.CallOption) (*ListExecutionTypesResponse, error) {
+	out := new(ListExecutionTypesResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/ListExecutionTypes", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) DeleteExecutionType(ctx context.Context, in *DeleteExecutionTypeRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/DeleteExecutionType", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) CreateExecution(ctx context.Context, in *CreateExecutionRequest, opts ...grpc.CallOption) (*CreateExecutionResponse, error) {
+	out := new(CreateExecutionResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/CreateExecution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) GetExecution(ctx context.Context, in *GetExecutionRequest, opts ...grpc.CallOption) (*GetExecutionResponse, error) {
+	out := new(GetExecutionResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/GetExecution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) ListExecutions(ctx context.Context, in *ListExecutionsRequest, opts ...grpc.CallOption) (*ListExecutionsResponse, error) {
+	out := new(ListExecutionsResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/ListExecutions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) DeleteExecution(ctx context.Context, in *DeleteExecutionRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/DeleteExecution", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MetadataServiceServer is the server API for MetadataService service.
 type MetadataServiceServer interface {
 	CreateArtifactType(context.Context, *CreateArtifactTypeRequest) (*CreateArtifactTypeResponse, error)
@@ -761,6 +1408,14 @@ type MetadataServiceServer interface {
 	GetArtifact(context.Context, *GetArtifactRequest) (*GetArtifactResponse, error)
 	ListArtifacts(context.Context, *ListArtifactsRequest) (*ListArtifactsResponse, error)
 	DeleteArtifact(context.Context, *DeleteArtifactRequest) (*empty.Empty, error)
+	CreateExecutionType(context.Context, *CreateExecutionTypeRequest) (*CreateExecutionTypeResponse, error)
+	GetExecutionType(context.Context, *GetExecutionTypeRequest) (*GetExecutionTypeResponse, error)
+	ListExecutionTypes(context.Context, *ListExecutionTypesRequest) (*ListExecutionTypesResponse, error)
+	DeleteExecutionType(context.Context, *DeleteExecutionTypeRequest) (*empty.Empty, error)
+	CreateExecution(context.Context, *CreateExecutionRequest) (*CreateExecutionResponse, error)
+	GetExecution(context.Context, *GetExecutionRequest) (*GetExecutionResponse, error)
+	ListExecutions(context.Context, *ListExecutionsRequest) (*ListExecutionsResponse, error)
+	DeleteExecution(context.Context, *DeleteExecutionRequest) (*empty.Empty, error)
 }
 
 func RegisterMetadataServiceServer(s *grpc.Server, srv MetadataServiceServer) {
@@ -911,6 +1566,150 @@ func _MetadataService_DeleteArtifact_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MetadataService_CreateExecutionType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateExecutionTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).CreateExecutionType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/CreateExecutionType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).CreateExecutionType(ctx, req.(*CreateExecutionTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_GetExecutionType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExecutionTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).GetExecutionType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/GetExecutionType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).GetExecutionType(ctx, req.(*GetExecutionTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_ListExecutionTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListExecutionTypesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).ListExecutionTypes(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/ListExecutionTypes",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).ListExecutionTypes(ctx, req.(*ListExecutionTypesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_DeleteExecutionType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteExecutionTypeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).DeleteExecutionType(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/DeleteExecutionType",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).DeleteExecutionType(ctx, req.(*DeleteExecutionTypeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_CreateExecution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateExecutionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).CreateExecution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/CreateExecution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).CreateExecution(ctx, req.(*CreateExecutionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_GetExecution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetExecutionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).GetExecution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/GetExecution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).GetExecution(ctx, req.(*GetExecutionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_ListExecutions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListExecutionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).ListExecutions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/ListExecutions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).ListExecutions(ctx, req.(*ListExecutionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_DeleteExecution_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteExecutionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).DeleteExecution(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/DeleteExecution",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).DeleteExecution(ctx, req.(*DeleteExecutionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _MetadataService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "api.MetadataService",
 	HandlerType: (*MetadataServiceServer)(nil),
@@ -946,6 +1745,38 @@ var _MetadataService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteArtifact",
 			Handler:    _MetadataService_DeleteArtifact_Handler,
+		},
+		{
+			MethodName: "CreateExecutionType",
+			Handler:    _MetadataService_CreateExecutionType_Handler,
+		},
+		{
+			MethodName: "GetExecutionType",
+			Handler:    _MetadataService_GetExecutionType_Handler,
+		},
+		{
+			MethodName: "ListExecutionTypes",
+			Handler:    _MetadataService_ListExecutionTypes_Handler,
+		},
+		{
+			MethodName: "DeleteExecutionType",
+			Handler:    _MetadataService_DeleteExecutionType_Handler,
+		},
+		{
+			MethodName: "CreateExecution",
+			Handler:    _MetadataService_CreateExecution_Handler,
+		},
+		{
+			MethodName: "GetExecution",
+			Handler:    _MetadataService_GetExecution_Handler,
+		},
+		{
+			MethodName: "ListExecutions",
+			Handler:    _MetadataService_ListExecutions_Handler,
+		},
+		{
+			MethodName: "DeleteExecution",
+			Handler:    _MetadataService_DeleteExecution_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -89,6 +89,60 @@ message DeleteArtifactRequest {
   string name = 1;
 }
 
+message CreateExecutionTypeRequest {
+  ExecutionType execution_type = 1;
+}
+
+message CreateExecutionTypeResponse {
+  // Newly created execution type with id.
+  ExecutionType execution_type = 1;
+}
+
+message GetExecutionTypeRequest {
+  int64 id = 1;
+}
+
+message GetExecutionTypeResponse {
+  ExecutionType execution_type = 1;
+}
+
+message ListExecutionTypesRequest {}
+
+message ListExecutionTypesResponse {
+  repeated ExecutionType execution_types = 1;
+}
+
+message DeleteExecutionTypeRequest {
+  int64 id = 1;
+}
+
+message CreateExecutionRequest {
+  Execution execution = 1;
+}
+
+message CreateExecutionResponse {
+  // Newly created execution with id.
+  Execution execution = 1;
+}
+
+message GetExecutionRequest {
+  int64 id = 1;
+}
+
+message GetExecutionResponse {
+  Execution execution = 1;
+}
+
+message ListExecutionsRequest {}
+
+message ListExecutionsResponse {
+  repeated Execution executions = 1;
+}
+
+message DeleteExecutionRequest {
+  int64 id = 1;
+}
+
 
 service MetadataService {
   rpc CreateArtifactType(CreateArtifactTypeRequest)
@@ -149,10 +203,67 @@ service MetadataService {
     };
   }
 
+  rpc CreateExecutionType(CreateExecutionTypeRequest)
+      returns (CreateExecutionTypeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/execution_types"
+      body: "execution_type"
+    };
+  }
+
+  rpc GetExecutionType(GetExecutionTypeRequest)
+      returns (GetExecutionTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/execution_type/{id}"
+    };
+  }
+
+  rpc ListExecutionTypes(ListExecutionTypesRequest)
+      returns (ListExecutionTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/execution_types"
+    };
+  }
+
+  rpc DeleteExecutionType(DeleteExecutionTypeRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/execution_types/{id}"
+    };
+  }
+
+  rpc CreateExecution(CreateExecutionRequest)
+      returns (CreateExecutionResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/executions"
+      body: "execution"
+    };
+  }
+
+  rpc GetExecution(GetExecutionRequest)
+      returns (GetExecutionResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/execution/{id}"
+    };
+  }
+
+  rpc ListExecutions(ListExecutionsRequest)
+      returns (ListExecutionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/executions"
+    };
+  }
+
+  rpc DeleteExecution(DeleteExecutionRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/executions/{id}"
+    };
+  }
+
   // TODO(neuromage): Flesh out CRUD methods on the following resources:
   // - Workspaces
   // - Namespaces
-  // - Artifacts
   // - Executions
   // - ExecutionTypes
 }

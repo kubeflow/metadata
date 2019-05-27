@@ -96,7 +96,7 @@ func validNamespace(n string) error {
 	return fmt.Errorf("invalid namespace %q: namespaces must begin with an alphabet, should not contain spaces, or end with a trailing /", n)
 }
 
-func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
+func toStoredArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 	res := &mlpb.ArtifactType{
 		Id: proto.Int64(in.Id),
 		Properties: map[string]mlpb.PropertyType{
@@ -204,7 +204,7 @@ func (s *Service) getArtifactType(name string) (*pb.ArtifactType, error) {
 
 // CreateArtifactType creates a new artifact type.
 func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifactTypeRequest) (*pb.CreateArtifactTypeResponse, error) {
-	storedType, err := toMLMDArtifactType(req.GetArtifactType())
+	storedType, err := toStoredArtifactType(req.GetArtifactType())
 	if err != nil {
 		return nil, err
 	}
@@ -571,4 +571,44 @@ func (s *Service) ListArtifacts(ctx context.Context, req *pb.ListArtifactsReques
 // DeleteArtifact deletes the specified artifact.
 func (s *Service) DeleteArtifact(ctx context.Context, req *pb.DeleteArtifactRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteArtifact")
+}
+
+// CreateExecutionType creates the specified execution type.
+func (s *Service) CreateExecutionType(ctx context.Context, req *pb.CreateExecutionTypeRequest) (*pb.CreateExecutionTypeResponse, error) {
+	return nil, nil
+}
+
+// GetExecutionType return the specified execution type.
+func (s *Service) GetExecutionType(ctx context.Context, req *pb.GetExecutionTypeRequest) (*pb.GetExecutionTypeResponse, error) {
+	return nil, nil
+}
+
+// ListExecutionTypes lists all execution types.
+func (s *Service) ListExecutionTypes(ctx context.Context, req *pb.ListExecutionTypesRequest) (*pb.ListExecutionTypesResponse, error) {
+	return nil, nil
+}
+
+// DeleteExecutionType deletes the specified execution.
+func (s *Service) DeleteExecutionType(ctx context.Context, req *pb.DeleteExecutionTypeRequest) (*empty.Empty, error) {
+	return nil, errors.New("not implemented error: DeleteExecutionType")
+}
+
+// CreateExecution creates the specified execution.
+func (s *Service) CreateExecution(ctx context.Context, req *pb.CreateExecutionRequest) (*pb.CreateExecutionResponse, error) {
+	return nil, nil
+}
+
+// GetExecution returns the specified execution.
+func (s *Service) GetExecution(ctx context.Context, req *pb.GetExecutionRequest) (*pb.GetExecutionResponse, error) {
+	return nil, nil
+}
+
+// ListExecutions returns all executions.
+func (s *Service) ListExecutions(ctx context.Context, req *pb.ListExecutionsRequest) (*pb.ListExecutionsResponse, error) {
+	return nil, nil
+}
+
+// DeleteExecution deletes the specified execution.
+func (s *Service) DeleteExecution(ctx context.Context, req *pb.DeleteExecutionRequest) (*empty.Empty, error) {
+	return nil, errors.New("not implemented error: DeleteExecution")
 }
