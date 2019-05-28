@@ -29,9 +29,12 @@ metadata-docker-image:
 	docker build -t gcr.io/kubeflow-images-public/metadata .
 
 swagger-py-client:
-	wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/3.0.0-rc1/swagger-codegen-cli-3.0.0-rc1.jar -O swagger-codegen-cli.jar && \
-	java -jar /bin/swagger-codegen-cli.jar generate \
+	mkdir -p /tmp/swagger
+	wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.5/swagger-codegen-cli-2.4.5.jar -O /tmp/swagger/swagger-codegen-cli.jar && \
+        java -jar /tmp/swagger/swagger-codegen-cli.jar generate \
     -i api/service.swagger.json \
     -l python \
-    -o swagger_clients/python && \
-	rm swagger-codegen-cli.jar
+    -o /tmp/swagger && \
+        rm -rf python_client/swagger_client && \
+        cp -r /tmp/swagger/swagger_client python_client/ && \
+        rm -rf /tmp/swagger
