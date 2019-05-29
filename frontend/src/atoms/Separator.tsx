@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-import './CSSReset';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import Router from './components/Router';
-import { cssRule } from 'typestyle';
-import { theme, fonts } from './Css';
 
-// TODO: license headers
+type Orientation = 'horizontal' | 'vertical';
+interface SeparatorProps {
+  orientation?: Orientation;
+  units?: number;
+}
 
-cssRule('html, body, #root', {
-  background: 'white',
-  color: 'rgba(0, 0, 0, .66)',
-  display: 'flex',
-  fontFamily: fonts.main,
-  fontSize: 13,
-  height: '100%',
-  width: '100%',
-});
+const style = (orientation: Orientation, units: number) => {
+  return orientation === 'horizontal' ? {
+    display: 'inline-block',
+    minWidth: units,
+    width: units,
+  } : {
+      display: 'block',
+      flexShrink: 0,
+      height: units,
+      minHeight: units,
+    };
+};
 
-ReactDOM.render(
-  <MuiThemeProvider theme={theme}>
-    <Router />
-  </MuiThemeProvider>,
-  document.getElementById('root')
-);
+export default (props: SeparatorProps) => <span style={
+  style(props.orientation || 'horizontal', props.units || 10)
+} />;
