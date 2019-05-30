@@ -3,7 +3,7 @@ TAG ?= master
 build:
 	bazel build -c opt --define=grpc_no_ares=true //...
 run:
-	bazel run --define=grpc_no_ares=true //server -- --logtostderr --mysql_service_port=3306 --mysql_service_user=guest --mlmd_db_name=metadb
+	bazel run --define=grpc_no_ares=true //server -- --logtostderr --mysql_service_port=3306 --mysql_service_user=root --mlmd_db_name=metadb --mysql_service_password=%password%
 .PHONY: test
 test:
 	bazel test -c opt --define=grpc_no_ares=true //...
