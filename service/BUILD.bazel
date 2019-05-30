@@ -11,6 +11,7 @@ go_library(
     deps = [
         "//api:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
         "@google_ml_metadata//ml_metadata/metadata_store:metadata_store_go",
         "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
         "@io_bazel_rules_go//proto/wkt:empty_go_proto",
@@ -24,9 +25,11 @@ go_test(
     deps = [
         "//api:go_default_library",
         "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_golang_protobuf//ptypes:go_default_library_gen",
         "@com_github_google_go_cmp//cmp:go_default_library",
         "@com_github_google_go_cmp//cmp/cmpopts:go_default_library",
         "@google_ml_metadata//ml_metadata/metadata_store:metadata_store_go",
         "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
+        "@io_bazel_rules_go//proto/wkt:timestamp_go_proto",
     ],
 )

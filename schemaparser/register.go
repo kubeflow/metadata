@@ -69,11 +69,8 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 		return err
 	}
 	artifactType := &pb.ArtifactType{
-		Name: typename,
-		Namespace: &pb.Namespace{
-			Name: namespace,
-		},
-		TypeProperties: make(map[string]*pb.Type),
+		Name:       namespace + "/" + typename,
+		Properties: make(map[string]pb.PropertyType),
 	}
 	for pname, ptype := range properties {
 		if isPropertyBuiltIn(pname) {
@@ -81,16 +78,16 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 		}
 		switch ptype {
 		case StringType:
-			artifactType.TypeProperties[pname] = &pb.Type{Type: &pb.Type_StringType{}}
+			artifactType.Properties[pname] = pb.PropertyType_STRING
 		case IntegerType:
-			artifactType.TypeProperties[pname] = &pb.Type{Type: &pb.Type_IntType{}}
+			artifactType.Properties[pname] = pb.PropertyType_INT
 		case NumberType:
-			artifactType.TypeProperties[pname] = &pb.Type{Type: &pb.Type_DoubleType{}}
+			artifactType.Properties[pname] = pb.PropertyType_DOUBLE
 		default:
 			return fmt.Errorf("internal error: unknown simple property type %q for property %q", ptype, pname)
 		}
 	}
-	artifactType.TypeProperties[wholeMetaPropertyName] = &pb.Type{Type: &pb.Type_StringType{}}
+	artifactType.Properties[wholeMetaPropertyName] = pb.PropertyType_STRING
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
 	_, err = service.CreateArtifactType(ctx, &pb.CreateArtifactTypeRequest{

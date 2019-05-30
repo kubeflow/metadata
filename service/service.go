@@ -21,12 +21,15 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 
 	"ml_metadata/metadata_store/mlmetadata"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/empty"
 	pb "github.com/kubeflow/metadata/api"
 )
@@ -38,6 +41,9 @@ type Service struct {
 }
 
 // New returns a new instance of Service.
+// TODO(neuromage): All the handlers work synchronously. If DB lookups result in
+// problems later down the road, consider plumbing context through to the
+// underlying MLMD store and handling timeouts and cancelation gracefully.
 func New(store MetadataStore) *Service {
 	return &Service{store: store}
 }
@@ -47,12 +53,26 @@ func (s *Service) Close() {
 	s.Close()
 }
 
+var (
+	timeNowFn      = time.Now
+	artifactNameRE = regexp.MustCompile(`artifact_types/.*/artifacts/([0-9]+)`)
+)
+
 const (
-	kfWorkspace   = "__kf_workspace"
-	kfNamespace   = "__kf_namespace"
-	kfDescription = "__kf_description"
+	kfReservedPrefix = "__kf_"
+	kfWorkspace      = "__kf_workspace"
+	kfNamespace      = "__kf_namespace"
+	kfDescription    = "__kf_description"
+
+	kfCreateTime   = "__kf_create_time"
+	kfUpdateTime   = "__kf_update_time"
+	kfArtifactName = "__kf_artifact_name"
 
 	kfDefaultNamespace = "types.kubeflow.org/default"
+	kfDefaultWorkspace = "__kf_default_workspace"
+
+	artifactTypesCollection = "artifact_types/"
+	artifactCollection      = "artifacts/"
 )
 
 var (
@@ -78,99 +98,108 @@ func validNamespace(n string) error {
 
 func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 	res := &mlpb.ArtifactType{
-		Id:         proto.Int64(in.Id),
-		Properties: make(map[string]mlpb.PropertyType),
+		Id: proto.Int64(in.Id),
+		Properties: map[string]mlpb.PropertyType{
+			kfArtifactName: mlpb.PropertyType_STRING,
+			kfWorkspace:    mlpb.PropertyType_STRING,
+			kfCreateTime:   mlpb.PropertyType_INT,
+			kfUpdateTime:   mlpb.PropertyType_INT,
+		},
 	}
 
-	for k, v := range in.TypeProperties {
-		if strings.HasPrefix(k, "kf_") {
-			return nil, fmt.Errorf("type property %q uses system-reserved prefix '__kf_'", k)
+	for k, v := range in.Properties {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			return nil, fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
 		}
 
-		switch x := v.Type.(type) {
-		case *pb.Type_IntType:
+		switch v {
+		case pb.PropertyType_INT:
 			res.Properties[k] = mlpb.PropertyType_INT
-		case *pb.Type_DoubleType:
+		case pb.PropertyType_DOUBLE:
 			res.Properties[k] = mlpb.PropertyType_DOUBLE
-		case *pb.Type_StringType:
+		case pb.PropertyType_STRING:
 			res.Properties[k] = mlpb.PropertyType_STRING
 		default:
-			return nil, fmt.Errorf("Property %q has invalid type %T", k, x)
+			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
 		}
 	}
 
-	namespace := kfDefaultNamespace
-	if in.Namespace != nil && in.Namespace.Name != "" {
-		namespace = in.Namespace.Name
-	}
-
-	if err := validNamespace(namespace); err != nil {
+	name, err := getNamespacedName(in.Name)
+	if err != nil {
 		return nil, err
 	}
 
-	if err := validTypeName(in.Name); err != nil {
-		return nil, err
-	}
-
-	storedName := namespace + "/" + in.Name
-	res.Name = proto.String(storedName)
+	res.Name = proto.String(name)
 
 	return res, nil
 }
 
-func getNamespacedName(n string) (string, string, error) {
+// getNamespacedName checks that n is a valid name of the type
+// `{namespace}/{name}`. If {namespace} is empty, the default one
+// (kfDefaultNamespace) is used instead. Both {namespace} and {name} should
+// start with an alphabet and not contain spaces. Returns the (possibly
+// modified) fully-qualified name, or an error if n is malformed or empty.
+func getNamespacedName(n string) (string, error) {
 	ns := strings.Split(n, "/")
-	if len(ns) < 2 {
-		return "", "", fmt.Errorf("malformed type name: %q", n)
+	if len(ns) == 0 {
+		return "", fmt.Errorf("malformed type name: %q", n)
 	}
 
 	name := ns[len(ns)-1]
 	if len(name) == 0 {
-		return "", "", fmt.Errorf("malformed type name: %q", n)
+		return "", fmt.Errorf("empty type name: %q", n)
 	}
 
-	namespace := strings.Join(ns[0:len(ns)-1], "/")
-	return namespace, name, nil
+	namespace := kfDefaultNamespace
+	if len(ns) > 1 {
+		namespace = strings.Join(ns[0:len(ns)-1], "/")
+	}
+
+	if err := validNamespace(namespace); err != nil {
+		return "", err
+	}
+
+	if err := validTypeName(name); err != nil {
+		return "", err
+	}
+
+	return namespace + "/" + name, nil
 }
 
 func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	res := &pb.ArtifactType{
-		Id:             in.GetId(),
-		TypeProperties: make(map[string]*pb.Type),
+		Id:         in.GetId(),
+		Name:       in.GetName(),
+		Properties: make(map[string]pb.PropertyType),
 	}
 
 	for k, v := range in.Properties {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			continue
+		}
+
 		switch v {
 		case mlpb.PropertyType_INT:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_IntType{&pb.IntType{}}}
+			res.Properties[k] = pb.PropertyType_INT
 		case mlpb.PropertyType_DOUBLE:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_DoubleType{&pb.DoubleType{}}}
+			res.Properties[k] = pb.PropertyType_DOUBLE
 		case mlpb.PropertyType_STRING:
-			res.TypeProperties[k] = &pb.Type{Type: &pb.Type_StringType{&pb.StringType{}}}
+			res.Properties[k] = pb.PropertyType_STRING
+		default:
+			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
 		}
 	}
-
-	namespace, name, err := getNamespacedName(in.GetName())
-	if err != nil {
-		return nil, err
-	}
-
-	res.Namespace = &pb.Namespace{Name: namespace}
-	res.Name = name
 
 	return res, nil
 }
 
-func (s *Service) getArtifactTypeByID(id int64) (*pb.ArtifactType, error) {
-	storedTypes, err := s.store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(id)})
+func (s *Service) getArtifactType(name string) (*pb.ArtifactType, error) {
+	name = strings.TrimPrefix(name, artifactTypesCollection)
+	storedTypes, err := s.store.GetArtifactType(name)
 	if err != nil {
 		return nil, err
 	}
-	if len(storedTypes) != 1 {
-		return nil, fmt.Errorf("failed to get artifact type with id %d", id)
-	}
-
-	return toArtifactType(storedTypes[0])
+	return toArtifactType(storedTypes)
 }
 
 // CreateArtifactType creates a new artifact type.
@@ -182,13 +211,13 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifact
 	// Clear id for creation.
 	storedType.Id = nil
 
-	id, err := s.store.PutArtifactType(
+	_, err = s.store.PutArtifactType(
 		storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
 	if err != nil {
 		return nil, err
 	}
 
-	aType, err := s.getArtifactTypeByID(int64(id))
+	aType, err := s.getArtifactType(storedType.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -200,7 +229,7 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifact
 
 // GetArtifactType returns the requested artifact type.
 func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRequest) (*pb.GetArtifactTypeResponse, error) {
-	aType, err := s.getArtifactTypeByID(req.GetId())
+	aType, err := s.getArtifactType(req.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -232,4 +261,314 @@ func (s *Service) ListArtifactTypes(ctx context.Context, req *pb.ListArtifactTyp
 // DeleteArtifactType deletes the specified artifact type.
 func (s *Service) DeleteArtifactType(ctx context.Context, req *pb.DeleteArtifactTypeRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteArtifactType")
+}
+
+func setStoredProperty(props map[string]*mlpb.Value, k string, v interface{}) error {
+	switch x := v.(type) {
+	case int, int32, int64:
+		vv := v.(int64)
+		props[k] = &mlpb.Value{
+			Value: &mlpb.Value_IntValue{
+				IntValue: vv,
+			},
+		}
+
+	case float32, float64:
+		vv := v.(float64)
+		props[k] = &mlpb.Value{
+			Value: &mlpb.Value_DoubleValue{
+				DoubleValue: vv,
+			},
+		}
+
+	case string:
+		vv := v.(string)
+		props[k] = &mlpb.Value{
+			Value: &mlpb.Value_StringValue{
+				StringValue: vv,
+			},
+		}
+
+	default:
+		return fmt.Errorf("property %q has invalid type %T", k, x)
+	}
+
+	return nil
+}
+
+func setProperty(props map[string]*pb.Value, k string, v interface{}) error {
+	switch x := v.(type) {
+	case int, int32, int64:
+		vv := v.(int64)
+		props[k] = &pb.Value{
+			Value: &pb.Value_IntValue{
+				IntValue: vv,
+			},
+		}
+
+	case float32, float64:
+		vv := v.(float64)
+		props[k] = &pb.Value{
+			Value: &pb.Value_DoubleValue{
+				DoubleValue: vv,
+			},
+		}
+
+	case string:
+		vv := v.(string)
+		props[k] = &pb.Value{
+			Value: &pb.Value_StringValue{
+				StringValue: vv,
+			},
+		}
+
+	default:
+		return fmt.Errorf("property %q has invalid type %T", k, x)
+	}
+
+	return nil
+}
+
+func setStoredPropertyMap(in map[string]*pb.Value, stored map[string]*mlpb.Value) error {
+	for k, v := range in {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			return fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
+		}
+
+		var err error
+		switch x := v.Value.(type) {
+		case *pb.Value_IntValue:
+			err = setStoredProperty(stored, k, v.GetIntValue())
+
+		case *pb.Value_DoubleValue:
+			err = setStoredProperty(stored, k, v.GetDoubleValue())
+
+		case *pb.Value_StringValue:
+			err = setStoredProperty(stored, k, v.GetStringValue())
+
+		default:
+			err = fmt.Errorf("property %q has invalid type %T", k, x)
+		}
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func toStoredArtifact(in *pb.Artifact) (*mlpb.Artifact, error) {
+	stored := &mlpb.Artifact{
+		TypeId:           proto.Int64(in.GetTypeId()),
+		Uri:              proto.String(in.GetUri()),
+		Properties:       make(map[string]*mlpb.Value),
+		CustomProperties: make(map[string]*mlpb.Value),
+	}
+	if in.GetId() > 0 {
+		stored.Id = proto.Int64(in.GetId())
+	}
+
+	if err := setStoredPropertyMap(in.Properties, stored.Properties); err != nil {
+		return nil, err
+	}
+
+	if err := setStoredPropertyMap(in.CustomProperties, stored.CustomProperties); err != nil {
+		return nil, err
+	}
+
+	if in.GetName() != "" {
+		setStoredProperty(stored.Properties, kfArtifactName, in.GetName())
+	}
+
+	workspace := kfDefaultWorkspace
+	if in.GetWorkspace().GetName() != "" {
+		workspace = in.GetWorkspace().GetName()
+	}
+	if err := setStoredProperty(stored.Properties, kfWorkspace, workspace); err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.Timestamp(in.GetCreateTime())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: invalid create time: %v", err)
+	}
+	if err := setStoredProperty(stored.Properties, kfCreateTime, createTime.Unix()); err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.Timestamp(in.GetUpdateTime())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: invalid update time: %v", err)
+	}
+	if err := setStoredProperty(stored.Properties, kfUpdateTime, updateTime.Unix()); err != nil {
+		return nil, err
+	}
+
+	return stored, nil
+}
+
+func setPropertyMapFromStored(stored map[string]*mlpb.Value, out map[string]*pb.Value) error {
+	for k, v := range stored {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			continue
+		}
+
+		var err error
+		switch x := v.Value.(type) {
+		case *mlpb.Value_IntValue:
+			err = setProperty(out, k, v.GetIntValue())
+
+		case *mlpb.Value_DoubleValue:
+			err = setProperty(out, k, v.GetDoubleValue())
+
+		case *mlpb.Value_StringValue:
+			err = setProperty(out, k, v.GetStringValue())
+
+		default:
+			err = fmt.Errorf("property %q has invalid type %T", k, x)
+		}
+
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func toArtifact(in *mlpb.Artifact) (*pb.Artifact, error) {
+	out := &pb.Artifact{
+		Id:               in.GetId(),
+		TypeId:           in.GetTypeId(),
+		Uri:              in.GetUri(),
+		Properties:       make(map[string]*pb.Value),
+		CustomProperties: make(map[string]*pb.Value),
+	}
+
+	var err error
+	createTime := in.Properties[kfCreateTime].GetIntValue()
+	out.CreateTime, err = ptypes.TimestampProto(time.Unix(createTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime := in.Properties[kfUpdateTime].GetIntValue()
+	out.UpdateTime, err = ptypes.TimestampProto(time.Unix(updateTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	out.Name = in.Properties[kfArtifactName].GetStringValue()
+	out.Workspace = &pb.Workspace{Name: in.Properties[kfWorkspace].GetStringValue()}
+
+	if err := setPropertyMapFromStored(in.Properties, out.Properties); err != nil {
+		return nil, err
+	}
+
+	if err := setPropertyMapFromStored(in.CustomProperties, out.CustomProperties); err != nil {
+		return nil, err
+	}
+
+	return out, nil
+}
+
+func (s *Service) getStoredArtifact(name string) (*pb.Artifact, error) {
+	tokens := artifactNameRE.FindStringSubmatch(name)
+	if len(tokens) != 2 {
+		return nil, fmt.Errorf("malformed Artifact name %q. Must match pattern %q", name, artifactNameRE)
+	}
+
+	id, err := strconv.ParseInt(tokens[1], 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse Artifact id from %q: %v", tokens[1], err)
+	}
+	ids, err := s.store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", ids)
+	}
+
+	return toArtifact(ids[0])
+}
+
+// CreateArtifact creates a new artifact.
+func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequest) (*pb.CreateArtifactResponse, error) {
+	if req.Artifact == nil {
+		return nil, errors.New("unspecified Artifact")
+	}
+
+	if req.Artifact.Id > 0 {
+		return nil, errors.New("id should remain unspecified when creating Artifact")
+	}
+
+	now, err := ptypes.TimestampProto(timeNowFn())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: failed to generate valid timestamp: %v", err)
+	}
+	req.Artifact.CreateTime = now
+	req.Artifact.UpdateTime = now
+
+	aType, err := s.getArtifactType(req.Parent)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve ArtifactType under %q: %v", req.Parent, err)
+	}
+
+	req.Artifact.TypeId = aType.GetId()
+	stored, err := toStoredArtifact(req.Artifact)
+	if err != nil {
+		return nil, err
+	}
+
+	ids, err := s.store.PutArtifacts([]*mlpb.Artifact{stored})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", ids)
+	}
+
+	artifactName := fmt.Sprintf("%s/artifacts/%d", req.Parent, ids[0])
+	artifact, err := s.getStoredArtifact(artifactName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateArtifactResponse{Artifact: artifact}, nil
+}
+
+// GetArtifact returns the requested artifact.
+func (s *Service) GetArtifact(ctx context.Context, req *pb.GetArtifactRequest) (*pb.GetArtifactResponse, error) {
+	artifact, err := s.getStoredArtifact(req.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetArtifactResponse{Artifact: artifact}, nil
+}
+
+// ListArtifacts lists all known artifacts.
+func (s *Service) ListArtifacts(ctx context.Context, req *pb.ListArtifactsRequest) (*pb.ListArtifactsResponse, error) {
+	storedArtifacts, err := s.store.GetArtifacts()
+	if err != nil {
+		return nil, err
+	}
+
+	var artifacts []*pb.Artifact
+	for _, stored := range storedArtifacts {
+		artifact, err := toArtifact(stored)
+		if err != nil {
+			return nil, err
+		}
+		artifacts = append(artifacts, artifact)
+	}
+
+	return &pb.ListArtifactsResponse{Artifacts: artifacts}, nil
+}
+
+// DeleteArtifact deletes the specified artifact.
+func (s *Service) DeleteArtifact(ctx context.Context, req *pb.DeleteArtifactRequest) (*empty.Empty, error) {
+	return nil, errors.New("not implemented error: DeleteArtifact")
 }

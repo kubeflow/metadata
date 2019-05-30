@@ -118,7 +118,7 @@ func (m *CreateArtifactTypeResponse) GetArtifactType() *ArtifactType {
 }
 
 type GetArtifactTypeRequest struct {
-	Id                   int64    `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -149,11 +149,11 @@ func (m *GetArtifactTypeRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetArtifactTypeRequest proto.InternalMessageInfo
 
-func (m *GetArtifactTypeRequest) GetId() int64 {
+func (m *GetArtifactTypeRequest) GetName() string {
 	if m != nil {
-		return m.Id
+		return m.Name
 	}
-	return 0
+	return ""
 }
 
 type GetArtifactTypeResponse struct {
@@ -195,45 +195,6 @@ func (m *GetArtifactTypeResponse) GetArtifactType() *ArtifactType {
 	return nil
 }
 
-type DeleteArtifactTypeRequest struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *DeleteArtifactTypeRequest) Reset()         { *m = DeleteArtifactTypeRequest{} }
-func (m *DeleteArtifactTypeRequest) String() string { return proto.CompactTextString(m) }
-func (*DeleteArtifactTypeRequest) ProtoMessage()    {}
-func (*DeleteArtifactTypeRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_42c32aec9010f89c, []int{4}
-}
-
-func (m *DeleteArtifactTypeRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_DeleteArtifactTypeRequest.Unmarshal(m, b)
-}
-func (m *DeleteArtifactTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_DeleteArtifactTypeRequest.Marshal(b, m, deterministic)
-}
-func (m *DeleteArtifactTypeRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_DeleteArtifactTypeRequest.Merge(m, src)
-}
-func (m *DeleteArtifactTypeRequest) XXX_Size() int {
-	return xxx_messageInfo_DeleteArtifactTypeRequest.Size(m)
-}
-func (m *DeleteArtifactTypeRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_DeleteArtifactTypeRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_DeleteArtifactTypeRequest proto.InternalMessageInfo
-
-func (m *DeleteArtifactTypeRequest) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
 type ListArtifactTypesRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -244,7 +205,7 @@ func (m *ListArtifactTypesRequest) Reset()         { *m = ListArtifactTypesReque
 func (m *ListArtifactTypesRequest) String() string { return proto.CompactTextString(m) }
 func (*ListArtifactTypesRequest) ProtoMessage()    {}
 func (*ListArtifactTypesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_42c32aec9010f89c, []int{5}
+	return fileDescriptor_42c32aec9010f89c, []int{4}
 }
 
 func (m *ListArtifactTypesRequest) XXX_Unmarshal(b []byte) error {
@@ -276,7 +237,7 @@ func (m *ListArtifactTypesResponse) Reset()         { *m = ListArtifactTypesResp
 func (m *ListArtifactTypesResponse) String() string { return proto.CompactTextString(m) }
 func (*ListArtifactTypesResponse) ProtoMessage()    {}
 func (*ListArtifactTypesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_42c32aec9010f89c, []int{6}
+	return fileDescriptor_42c32aec9010f89c, []int{5}
 }
 
 func (m *ListArtifactTypesResponse) XXX_Unmarshal(b []byte) error {
@@ -304,48 +265,388 @@ func (m *ListArtifactTypesResponse) GetArtifactTypes() []*ArtifactType {
 	return nil
 }
 
+type DeleteArtifactTypeRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteArtifactTypeRequest) Reset()         { *m = DeleteArtifactTypeRequest{} }
+func (m *DeleteArtifactTypeRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteArtifactTypeRequest) ProtoMessage()    {}
+func (*DeleteArtifactTypeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{6}
+}
+
+func (m *DeleteArtifactTypeRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteArtifactTypeRequest.Unmarshal(m, b)
+}
+func (m *DeleteArtifactTypeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteArtifactTypeRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteArtifactTypeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteArtifactTypeRequest.Merge(m, src)
+}
+func (m *DeleteArtifactTypeRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteArtifactTypeRequest.Size(m)
+}
+func (m *DeleteArtifactTypeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteArtifactTypeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteArtifactTypeRequest proto.InternalMessageInfo
+
+func (m *DeleteArtifactTypeRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type CreateArtifactRequest struct {
+	Parent               string    `protobuf:"bytes,1,opt,name=parent,proto3" json:"parent,omitempty"`
+	Artifact             *Artifact `protobuf:"bytes,2,opt,name=artifact,proto3" json:"artifact,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *CreateArtifactRequest) Reset()         { *m = CreateArtifactRequest{} }
+func (m *CreateArtifactRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateArtifactRequest) ProtoMessage()    {}
+func (*CreateArtifactRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{7}
+}
+
+func (m *CreateArtifactRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateArtifactRequest.Unmarshal(m, b)
+}
+func (m *CreateArtifactRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateArtifactRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateArtifactRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateArtifactRequest.Merge(m, src)
+}
+func (m *CreateArtifactRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateArtifactRequest.Size(m)
+}
+func (m *CreateArtifactRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateArtifactRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateArtifactRequest proto.InternalMessageInfo
+
+func (m *CreateArtifactRequest) GetParent() string {
+	if m != nil {
+		return m.Parent
+	}
+	return ""
+}
+
+func (m *CreateArtifactRequest) GetArtifact() *Artifact {
+	if m != nil {
+		return m.Artifact
+	}
+	return nil
+}
+
+type CreateArtifactResponse struct {
+	Artifact             *Artifact `protobuf:"bytes,1,opt,name=artifact,proto3" json:"artifact,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *CreateArtifactResponse) Reset()         { *m = CreateArtifactResponse{} }
+func (m *CreateArtifactResponse) String() string { return proto.CompactTextString(m) }
+func (*CreateArtifactResponse) ProtoMessage()    {}
+func (*CreateArtifactResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{8}
+}
+
+func (m *CreateArtifactResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateArtifactResponse.Unmarshal(m, b)
+}
+func (m *CreateArtifactResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateArtifactResponse.Marshal(b, m, deterministic)
+}
+func (m *CreateArtifactResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateArtifactResponse.Merge(m, src)
+}
+func (m *CreateArtifactResponse) XXX_Size() int {
+	return xxx_messageInfo_CreateArtifactResponse.Size(m)
+}
+func (m *CreateArtifactResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateArtifactResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateArtifactResponse proto.InternalMessageInfo
+
+func (m *CreateArtifactResponse) GetArtifact() *Artifact {
+	if m != nil {
+		return m.Artifact
+	}
+	return nil
+}
+
+type GetArtifactRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetArtifactRequest) Reset()         { *m = GetArtifactRequest{} }
+func (m *GetArtifactRequest) String() string { return proto.CompactTextString(m) }
+func (*GetArtifactRequest) ProtoMessage()    {}
+func (*GetArtifactRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{9}
+}
+
+func (m *GetArtifactRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetArtifactRequest.Unmarshal(m, b)
+}
+func (m *GetArtifactRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetArtifactRequest.Marshal(b, m, deterministic)
+}
+func (m *GetArtifactRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetArtifactRequest.Merge(m, src)
+}
+func (m *GetArtifactRequest) XXX_Size() int {
+	return xxx_messageInfo_GetArtifactRequest.Size(m)
+}
+func (m *GetArtifactRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetArtifactRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetArtifactRequest proto.InternalMessageInfo
+
+func (m *GetArtifactRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type GetArtifactResponse struct {
+	Artifact             *Artifact `protobuf:"bytes,1,opt,name=artifact,proto3" json:"artifact,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *GetArtifactResponse) Reset()         { *m = GetArtifactResponse{} }
+func (m *GetArtifactResponse) String() string { return proto.CompactTextString(m) }
+func (*GetArtifactResponse) ProtoMessage()    {}
+func (*GetArtifactResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{10}
+}
+
+func (m *GetArtifactResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetArtifactResponse.Unmarshal(m, b)
+}
+func (m *GetArtifactResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetArtifactResponse.Marshal(b, m, deterministic)
+}
+func (m *GetArtifactResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetArtifactResponse.Merge(m, src)
+}
+func (m *GetArtifactResponse) XXX_Size() int {
+	return xxx_messageInfo_GetArtifactResponse.Size(m)
+}
+func (m *GetArtifactResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetArtifactResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetArtifactResponse proto.InternalMessageInfo
+
+func (m *GetArtifactResponse) GetArtifact() *Artifact {
+	if m != nil {
+		return m.Artifact
+	}
+	return nil
+}
+
+type ListArtifactsRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ListArtifactsRequest) Reset()         { *m = ListArtifactsRequest{} }
+func (m *ListArtifactsRequest) String() string { return proto.CompactTextString(m) }
+func (*ListArtifactsRequest) ProtoMessage()    {}
+func (*ListArtifactsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{11}
+}
+
+func (m *ListArtifactsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListArtifactsRequest.Unmarshal(m, b)
+}
+func (m *ListArtifactsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListArtifactsRequest.Marshal(b, m, deterministic)
+}
+func (m *ListArtifactsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListArtifactsRequest.Merge(m, src)
+}
+func (m *ListArtifactsRequest) XXX_Size() int {
+	return xxx_messageInfo_ListArtifactsRequest.Size(m)
+}
+func (m *ListArtifactsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListArtifactsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListArtifactsRequest proto.InternalMessageInfo
+
+func (m *ListArtifactsRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+type ListArtifactsResponse struct {
+	Artifacts            []*Artifact `protobuf:"bytes,1,rep,name=artifacts,proto3" json:"artifacts,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *ListArtifactsResponse) Reset()         { *m = ListArtifactsResponse{} }
+func (m *ListArtifactsResponse) String() string { return proto.CompactTextString(m) }
+func (*ListArtifactsResponse) ProtoMessage()    {}
+func (*ListArtifactsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{12}
+}
+
+func (m *ListArtifactsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ListArtifactsResponse.Unmarshal(m, b)
+}
+func (m *ListArtifactsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ListArtifactsResponse.Marshal(b, m, deterministic)
+}
+func (m *ListArtifactsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ListArtifactsResponse.Merge(m, src)
+}
+func (m *ListArtifactsResponse) XXX_Size() int {
+	return xxx_messageInfo_ListArtifactsResponse.Size(m)
+}
+func (m *ListArtifactsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_ListArtifactsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ListArtifactsResponse proto.InternalMessageInfo
+
+func (m *ListArtifactsResponse) GetArtifacts() []*Artifact {
+	if m != nil {
+		return m.Artifacts
+	}
+	return nil
+}
+
+type DeleteArtifactRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteArtifactRequest) Reset()         { *m = DeleteArtifactRequest{} }
+func (m *DeleteArtifactRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteArtifactRequest) ProtoMessage()    {}
+func (*DeleteArtifactRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_42c32aec9010f89c, []int{13}
+}
+
+func (m *DeleteArtifactRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteArtifactRequest.Unmarshal(m, b)
+}
+func (m *DeleteArtifactRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteArtifactRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteArtifactRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteArtifactRequest.Merge(m, src)
+}
+func (m *DeleteArtifactRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteArtifactRequest.Size(m)
+}
+func (m *DeleteArtifactRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteArtifactRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteArtifactRequest proto.InternalMessageInfo
+
+func (m *DeleteArtifactRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*CreateArtifactTypeRequest)(nil), "api.CreateArtifactTypeRequest")
 	proto.RegisterType((*CreateArtifactTypeResponse)(nil), "api.CreateArtifactTypeResponse")
 	proto.RegisterType((*GetArtifactTypeRequest)(nil), "api.GetArtifactTypeRequest")
 	proto.RegisterType((*GetArtifactTypeResponse)(nil), "api.GetArtifactTypeResponse")
-	proto.RegisterType((*DeleteArtifactTypeRequest)(nil), "api.DeleteArtifactTypeRequest")
 	proto.RegisterType((*ListArtifactTypesRequest)(nil), "api.ListArtifactTypesRequest")
 	proto.RegisterType((*ListArtifactTypesResponse)(nil), "api.ListArtifactTypesResponse")
+	proto.RegisterType((*DeleteArtifactTypeRequest)(nil), "api.DeleteArtifactTypeRequest")
+	proto.RegisterType((*CreateArtifactRequest)(nil), "api.CreateArtifactRequest")
+	proto.RegisterType((*CreateArtifactResponse)(nil), "api.CreateArtifactResponse")
+	proto.RegisterType((*GetArtifactRequest)(nil), "api.GetArtifactRequest")
+	proto.RegisterType((*GetArtifactResponse)(nil), "api.GetArtifactResponse")
+	proto.RegisterType((*ListArtifactsRequest)(nil), "api.ListArtifactsRequest")
+	proto.RegisterType((*ListArtifactsResponse)(nil), "api.ListArtifactsResponse")
+	proto.RegisterType((*DeleteArtifactRequest)(nil), "api.DeleteArtifactRequest")
 }
 
 func init() { proto.RegisterFile("api/service.proto", fileDescriptor_42c32aec9010f89c) }
 
 var fileDescriptor_42c32aec9010f89c = []byte{
-	// 446 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x93, 0xcf, 0x6e, 0xd3, 0x40,
-	0x10, 0xc6, 0xe5, 0x04, 0x21, 0x31, 0x90, 0x56, 0xd9, 0x43, 0x49, 0xb6, 0x21, 0x35, 0x0b, 0x87,
-	0x00, 0xc2, 0x56, 0x5b, 0x09, 0x21, 0x6e, 0xfc, 0x13, 0x17, 0x38, 0xd0, 0x96, 0x0b, 0x17, 0xb4,
-	0x8e, 0x27, 0xe9, 0x0a, 0xdb, 0xbb, 0x78, 0xd7, 0x29, 0x11, 0xe2, 0xc2, 0x0d, 0xae, 0x3c, 0x1a,
-	0xaf, 0xc0, 0x83, 0x20, 0xaf, 0x17, 0x51, 0xd7, 0x76, 0x0e, 0xf4, 0xb8, 0xf3, 0xad, 0xbf, 0xef,
-	0xe7, 0x99, 0x59, 0x18, 0x72, 0x25, 0x42, 0x8d, 0xf9, 0x4a, 0xcc, 0x31, 0x50, 0xb9, 0x34, 0x92,
-	0xf4, 0xb9, 0x12, 0x74, 0x50, 0xd6, 0xb9, 0x12, 0x55, 0x8d, 0x4e, 0x96, 0x52, 0x2e, 0x13, 0x0c,
-	0x6d, 0x35, 0xcb, 0xa4, 0xe1, 0x46, 0xc8, 0x4c, 0x3b, 0x75, 0xd7, 0xa9, 0xf6, 0x14, 0x15, 0x8b,
-	0x10, 0x53, 0x65, 0xd6, 0x4e, 0xdc, 0xbb, 0x28, 0x1a, 0x91, 0xa2, 0x36, 0x3c, 0x55, 0xd5, 0x05,
-	0x76, 0x0c, 0xe3, 0xe7, 0x39, 0x72, 0x83, 0x4f, 0x73, 0x23, 0x16, 0x7c, 0x6e, 0x4e, 0xd6, 0x0a,
-	0x8f, 0xf0, 0x53, 0x81, 0xda, 0x90, 0x47, 0x30, 0xe0, 0xae, 0xfc, 0xc1, 0xac, 0x15, 0x8e, 0x3c,
-	0xdf, 0x9b, 0x5d, 0x3f, 0x18, 0x06, 0x25, 0x5b, 0xed, 0x83, 0x1b, 0xfc, 0xdc, 0x89, 0x9d, 0x00,
-	0x6d, 0x33, 0xd5, 0x4a, 0x66, 0x1a, 0xff, 0xdb, 0x75, 0x06, 0x3b, 0xaf, 0xd0, 0xb4, 0x71, 0x6e,
-	0x41, 0x4f, 0xc4, 0xd6, 0xa6, 0x7f, 0xd4, 0x13, 0x31, 0x7b, 0x0b, 0x37, 0x1b, 0x37, 0x2f, 0x19,
-	0xfe, 0x00, 0xc6, 0x2f, 0x30, 0xc1, 0xf6, 0x3e, 0xfd, 0xcb, 0xbf, 0x66, 0xf3, 0x29, 0x8c, 0x5e,
-	0x0b, 0x5d, 0x03, 0xd0, 0xee, 0x2e, 0x7b, 0x07, 0xe3, 0x16, 0xcd, 0xd1, 0x3d, 0x86, 0xad, 0x1a,
-	0x9d, 0x1e, 0x79, 0x7e, 0xbf, 0x1d, 0x6f, 0x70, 0x1e, 0x4f, 0x1f, 0x7c, 0xbf, 0x02, 0xdb, 0x6f,
-	0xd0, 0xf0, 0x98, 0x1b, 0x7e, 0x5c, 0x6d, 0x14, 0xf9, 0xe1, 0x01, 0x69, 0xce, 0x81, 0x4c, 0xad,
-	0x59, 0xe7, 0xd4, 0xe9, 0x5e, 0xa7, 0x5e, 0x51, 0xb2, 0xc3, 0x6f, 0xbf, 0x7e, 0xff, 0xec, 0x3d,
-	0x64, 0x13, 0xbb, 0x91, 0xab, 0x7d, 0x9e, 0xa8, 0x53, 0xbe, 0x1f, 0xd6, 0xc9, 0x9f, 0xd4, 0xfb,
-	0x4c, 0x56, 0xb0, 0x7d, 0x61, 0x26, 0x64, 0xd7, 0x06, 0xb5, 0xcf, 0x94, 0x4e, 0xda, 0x45, 0x87,
-	0x30, 0xb3, 0x08, 0x8c, 0xf8, 0x1b, 0x10, 0xc2, 0x2f, 0x22, 0xfe, 0x4a, 0x3e, 0xc3, 0xb0, 0xd1,
-	0x6f, 0x72, 0xcb, 0x9a, 0x77, 0xcd, 0x88, 0x4e, 0xbb, 0x64, 0x97, 0x7e, 0xd7, 0xa6, 0x4f, 0xc9,
-	0xc6, 0x06, 0x90, 0x33, 0x20, 0xcd, 0x95, 0x71, 0xdd, 0xef, 0xdc, 0x25, 0xba, 0x13, 0x54, 0x4f,
-	0x36, 0xf8, 0xfb, 0x64, 0x83, 0x97, 0xe5, 0x7b, 0x66, 0xf7, 0x6c, 0xe6, 0x9d, 0xfb, 0xb7, 0x37,
-	0x65, 0xda, 0x5f, 0x7e, 0xc6, 0xde, 0xfb, 0x4b, 0x61, 0x4e, 0x8b, 0x28, 0x98, 0xcb, 0x34, 0xfc,
-	0x58, 0x44, 0xb8, 0x48, 0xe4, 0x59, 0x98, 0xba, 0xf5, 0x28, 0x0d, 0xa2, 0xab, 0xd6, 0xfe, 0xf0,
-	0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x78, 0x6d, 0x9f, 0x4a, 0x83, 0x04, 0x00, 0x00,
+	// 645 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0x5d, 0x6f, 0x12, 0x41,
+	0x14, 0xcd, 0xb6, 0xa6, 0x69, 0x6f, 0xa5, 0x0d, 0xa3, 0x50, 0x58, 0x90, 0x92, 0x8d, 0xc6, 0x4a,
+	0xed, 0x6e, 0x28, 0x89, 0x1f, 0x4d, 0x9a, 0xa8, 0xd4, 0xf8, 0xa2, 0x0f, 0xd2, 0xfa, 0xd2, 0x17,
+	0x33, 0xe0, 0x40, 0x37, 0xb2, 0x1f, 0x32, 0x43, 0x95, 0x10, 0xd3, 0xc4, 0x47, 0x1f, 0x7c, 0xf1,
+	0x1f, 0xf8, 0x97, 0xfc, 0x0b, 0xfe, 0x10, 0xb3, 0xb3, 0xb3, 0xb0, 0xb3, 0x3b, 0x4b, 0xa8, 0xbe,
+	0x31, 0x73, 0x86, 0x7b, 0xce, 0xbd, 0x67, 0xcf, 0x85, 0x3c, 0xf6, 0x6d, 0x8b, 0x92, 0xd1, 0xa5,
+	0xdd, 0x23, 0xa6, 0x3f, 0xf2, 0x98, 0x87, 0x56, 0xb1, 0x6f, 0xeb, 0xb9, 0xe0, 0x1e, 0xfb, 0x76,
+	0x78, 0xa7, 0x57, 0x07, 0x9e, 0x37, 0x18, 0x12, 0x8b, 0xdf, 0xba, 0xae, 0xc7, 0x30, 0xb3, 0x3d,
+	0x97, 0x0a, 0xb4, 0x22, 0x50, 0x7e, 0xea, 0x8e, 0xfb, 0x16, 0x71, 0x7c, 0x36, 0x11, 0xe0, 0x6e,
+	0x12, 0x64, 0xb6, 0x43, 0x28, 0xc3, 0x8e, 0x1f, 0x3e, 0x30, 0x4e, 0xa1, 0xdc, 0x1e, 0x11, 0xcc,
+	0xc8, 0xf3, 0x11, 0xb3, 0xfb, 0xb8, 0xc7, 0xce, 0x26, 0x3e, 0xe9, 0x90, 0x4f, 0x63, 0x42, 0x19,
+	0x7a, 0x04, 0x39, 0x2c, 0xae, 0xdf, 0xb3, 0x89, 0x4f, 0x4a, 0x5a, 0x5d, 0xdb, 0xdb, 0x3c, 0xcc,
+	0x9b, 0x81, 0x36, 0xe9, 0x0f, 0x37, 0x71, 0xec, 0x64, 0x9c, 0x81, 0xae, 0x2a, 0x4a, 0x7d, 0xcf,
+	0xa5, 0xe4, 0x9f, 0xab, 0x3e, 0x84, 0xe2, 0x2b, 0xc2, 0x54, 0x3a, 0x11, 0xdc, 0x70, 0xb1, 0x13,
+	0x16, 0xda, 0xe8, 0xf0, 0xdf, 0xc6, 0x5b, 0xd8, 0x49, 0xbd, 0xfe, 0x4f, 0x01, 0x3a, 0x94, 0x5e,
+	0xdb, 0x54, 0xaa, 0x49, 0x85, 0x04, 0xe3, 0x1d, 0x94, 0x15, 0x98, 0x20, 0x7c, 0x02, 0x5b, 0x12,
+	0x21, 0x2d, 0x69, 0xf5, 0x55, 0x35, 0x63, 0x2e, 0xce, 0x48, 0x0d, 0x0b, 0xca, 0x27, 0x64, 0x48,
+	0xd4, 0xf6, 0xa8, 0xda, 0x3e, 0x87, 0x82, 0x3c, 0xfa, 0xe8, 0x71, 0x11, 0xd6, 0x7c, 0x3c, 0x22,
+	0x2e, 0x13, 0xcf, 0xc5, 0x09, 0x3d, 0x80, 0xf5, 0x88, 0xb2, 0xb4, 0xc2, 0xe7, 0x90, 0x93, 0x54,
+	0x75, 0x66, 0xb0, 0xd1, 0x86, 0x62, 0xb2, 0xb6, 0x68, 0x30, 0x5e, 0x44, 0x5b, 0x5c, 0x64, 0x0f,
+	0x50, 0xcc, 0x97, 0x45, 0xad, 0x3c, 0x83, 0x5b, 0xd2, 0xcb, 0xeb, 0x73, 0x35, 0xe0, 0x76, 0xdc,
+	0x14, 0xba, 0x88, 0xed, 0x04, 0x0a, 0x89, 0xb7, 0x82, 0x6f, 0x1f, 0x36, 0xa2, 0x82, 0x91, 0x6f,
+	0x09, 0xc2, 0x39, 0x6e, 0xec, 0x43, 0x41, 0xf6, 0x6b, 0x01, 0xe5, 0xe1, 0xaf, 0x75, 0xd8, 0x7e,
+	0x43, 0x18, 0xfe, 0x80, 0x19, 0x3e, 0x0d, 0xb7, 0x00, 0xfa, 0xae, 0x01, 0x4a, 0x67, 0x07, 0xd5,
+	0x38, 0x63, 0x66, 0x52, 0xf5, 0xdd, 0x4c, 0x3c, 0xec, 0xc2, 0x68, 0x7d, 0xfb, 0xfd, 0xe7, 0xe7,
+	0xca, 0x81, 0x51, 0xe5, 0x5b, 0xe4, 0xb2, 0x89, 0x87, 0xfe, 0x05, 0x6e, 0x5a, 0xf2, 0x67, 0x79,
+	0x24, 0xe7, 0x02, 0x4d, 0x61, 0x3b, 0x91, 0x21, 0x54, 0xe1, 0x44, 0xea, 0x1c, 0xea, 0x55, 0x35,
+	0x28, 0x24, 0x1c, 0x70, 0x09, 0xf7, 0xd1, 0x3d, 0x59, 0xc2, 0x34, 0x98, 0xc5, 0xb1, 0x2c, 0xc4,
+	0x6a, 0x7c, 0x45, 0x5f, 0x20, 0x9f, 0x4a, 0x14, 0xba, 0xc3, 0x19, 0xb2, 0x52, 0xa8, 0xd7, 0xb2,
+	0x60, 0x21, 0xe1, 0x2e, 0x97, 0x50, 0x43, 0x0b, 0xa7, 0x80, 0xa6, 0x80, 0xd2, 0xa1, 0x13, 0x16,
+	0x64, 0xa6, 0x51, 0x2f, 0x9a, 0xe1, 0xae, 0x35, 0xa3, 0x5d, 0x6b, 0xbe, 0x0c, 0x16, 0x71, 0xd4,
+	0x76, 0x63, 0xc9, 0xb6, 0x7f, 0x68, 0xb0, 0x25, 0xfb, 0x88, 0x74, 0x85, 0xb9, 0x11, 0x6b, 0x45,
+	0x89, 0x89, 0x76, 0xdb, 0x9c, 0xfa, 0xd8, 0x68, 0x26, 0xa8, 0xc3, 0xe8, 0xa7, 0xc9, 0x67, 0x83,
+	0xa0, 0x47, 0xb3, 0x10, 0xa1, 0x29, 0x6c, 0xc6, 0x1c, 0x45, 0x3b, 0x49, 0x8f, 0x23, 0x25, 0xa5,
+	0x34, 0x20, 0x64, 0x3c, 0xe5, 0x32, 0x5a, 0xa8, 0xb9, 0xcc, 0x04, 0xe6, 0x1a, 0x82, 0x69, 0x5c,
+	0x41, 0x4e, 0x4a, 0x25, 0x2a, 0xa7, 0x1c, 0x9e, 0x99, 0xaf, 0xab, 0x20, 0x21, 0xe1, 0x31, 0x97,
+	0xd0, 0x44, 0xd6, 0x52, 0x26, 0xcc, 0x35, 0xa0, 0x2b, 0xd8, 0x92, 0x2d, 0x17, 0x6e, 0x28, 0x53,
+	0x9e, 0xf9, 0x0d, 0x88, 0x09, 0x34, 0xae, 0x3f, 0x81, 0x17, 0xc6, 0x79, 0x7d, 0x60, 0xb3, 0x8b,
+	0x71, 0xd7, 0xec, 0x79, 0x8e, 0xf5, 0x71, 0xdc, 0x25, 0xfd, 0xa1, 0xf7, 0xd9, 0x72, 0xc4, 0xde,
+	0x08, 0x0a, 0x76, 0xd7, 0x38, 0x5d, 0xeb, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x92, 0xeb, 0xb5,
+	0x63, 0x50, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -364,6 +665,10 @@ type MetadataServiceClient interface {
 	GetArtifactType(ctx context.Context, in *GetArtifactTypeRequest, opts ...grpc.CallOption) (*GetArtifactTypeResponse, error)
 	ListArtifactTypes(ctx context.Context, in *ListArtifactTypesRequest, opts ...grpc.CallOption) (*ListArtifactTypesResponse, error)
 	DeleteArtifactType(ctx context.Context, in *DeleteArtifactTypeRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	CreateArtifact(ctx context.Context, in *CreateArtifactRequest, opts ...grpc.CallOption) (*CreateArtifactResponse, error)
+	GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*GetArtifactResponse, error)
+	ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*ListArtifactsResponse, error)
+	DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type metadataServiceClient struct {
@@ -410,12 +715,52 @@ func (c *metadataServiceClient) DeleteArtifactType(ctx context.Context, in *Dele
 	return out, nil
 }
 
+func (c *metadataServiceClient) CreateArtifact(ctx context.Context, in *CreateArtifactRequest, opts ...grpc.CallOption) (*CreateArtifactResponse, error) {
+	out := new(CreateArtifactResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/CreateArtifact", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) GetArtifact(ctx context.Context, in *GetArtifactRequest, opts ...grpc.CallOption) (*GetArtifactResponse, error) {
+	out := new(GetArtifactResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/GetArtifact", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) ListArtifacts(ctx context.Context, in *ListArtifactsRequest, opts ...grpc.CallOption) (*ListArtifactsResponse, error) {
+	out := new(ListArtifactsResponse)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/ListArtifacts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metadataServiceClient) DeleteArtifact(ctx context.Context, in *DeleteArtifactRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.MetadataService/DeleteArtifact", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MetadataServiceServer is the server API for MetadataService service.
 type MetadataServiceServer interface {
 	CreateArtifactType(context.Context, *CreateArtifactTypeRequest) (*CreateArtifactTypeResponse, error)
 	GetArtifactType(context.Context, *GetArtifactTypeRequest) (*GetArtifactTypeResponse, error)
 	ListArtifactTypes(context.Context, *ListArtifactTypesRequest) (*ListArtifactTypesResponse, error)
 	DeleteArtifactType(context.Context, *DeleteArtifactTypeRequest) (*empty.Empty, error)
+	CreateArtifact(context.Context, *CreateArtifactRequest) (*CreateArtifactResponse, error)
+	GetArtifact(context.Context, *GetArtifactRequest) (*GetArtifactResponse, error)
+	ListArtifacts(context.Context, *ListArtifactsRequest) (*ListArtifactsResponse, error)
+	DeleteArtifact(context.Context, *DeleteArtifactRequest) (*empty.Empty, error)
 }
 
 func RegisterMetadataServiceServer(s *grpc.Server, srv MetadataServiceServer) {
@@ -494,6 +839,78 @@ func _MetadataService_DeleteArtifactType_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MetadataService_CreateArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateArtifactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).CreateArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/CreateArtifact",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).CreateArtifact(ctx, req.(*CreateArtifactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_GetArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArtifactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).GetArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/GetArtifact",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).GetArtifact(ctx, req.(*GetArtifactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_ListArtifacts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListArtifactsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).ListArtifacts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/ListArtifacts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).ListArtifacts(ctx, req.(*ListArtifactsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetadataService_DeleteArtifact_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteArtifactRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetadataServiceServer).DeleteArtifact(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.MetadataService/DeleteArtifact",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetadataServiceServer).DeleteArtifact(ctx, req.(*DeleteArtifactRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _MetadataService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "api.MetadataService",
 	HandlerType: (*MetadataServiceServer)(nil),
@@ -513,6 +930,22 @@ var _MetadataService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteArtifactType",
 			Handler:    _MetadataService_DeleteArtifactType_Handler,
+		},
+		{
+			MethodName: "CreateArtifact",
+			Handler:    _MetadataService_CreateArtifact_Handler,
+		},
+		{
+			MethodName: "GetArtifact",
+			Handler:    _MetadataService_GetArtifact_Handler,
+		},
+		{
+			MethodName: "ListArtifacts",
+			Handler:    _MetadataService_ListArtifacts_Handler,
+		},
+		{
+			MethodName: "DeleteArtifact",
+			Handler:    _MetadataService_DeleteArtifact_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

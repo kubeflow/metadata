@@ -15,31 +15,6 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1alpha1/artifact_type/{id}": {
-      "get": {
-        "operationId": "GetArtifactType",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetArtifactTypeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
     "/api/v1alpha1/artifact_types": {
       "get": {
         "operationId": "ListArtifactTypes",
@@ -80,7 +55,77 @@
         ]
       }
     },
-    "/api/v1alpha1/artifact_types/{id}": {
+    "/api/v1alpha1/{name=artifact_types/*/artifacts/*}": {
+      "get": {
+        "operationId": "GetArtifact",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetArtifactResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Artifact name is like\n`artifact_types/{namespace}/{typename}/artifact/{id}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteArtifact",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{name=artifact_types/*}": {
+      "get": {
+        "operationId": "GetArtifactType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetArtifactTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Artifact names are of the form `artifact_types/{namespace}/{name}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
       "delete": {
         "operationId": "DeleteArtifactType",
         "responses": {
@@ -93,7 +138,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "name",
             "in": "path",
             "required": true,
             "type": "string"
@@ -103,9 +148,126 @@
           "MetadataService"
         ]
       }
+    },
+    "/api/v1alpha1/{name=artifact_types/*}/artifacts": {
+      "get": {
+        "operationId": "ListArtifacts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListArtifactsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{parent=artifact_types/*}/artifacts": {
+      "post": {
+        "operationId": "CreateArtifact",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateArtifactResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "Creates the specified artifact as an instance of ArtifactType with this\nfully qualified name. |parent| takes the form\n`artifact_types/{namespace}/{name\u003e}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "The Artifact to create. Note that Artifact.type_id is ignored.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiArtifact"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
     }
   },
   "definitions": {
+    "apiArtifact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "type_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the type of the artifact."
+        },
+        "uri": {
+          "type": "string",
+          "description": "The URI of the artifact."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Properties must be specified in the ArtifactType."
+        },
+        "custom_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Arbitrary user-provided properties that do not correspond to fields in the\nschema for the artifact type. These additional properties can be specified\nby the user when the artifact is created/updated."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional. Human-readable name of the artifact."
+        },
+        "workspace": {
+          "$ref": "#/definitions/apiWorkspace",
+          "description": "Required. The workspace that an artifact belongs to. Empty defaults to the\n'default' workspace."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Arbitrary key-value pairs for labeling."
+        },
+        "create_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the artifact was created. System-provided."
+        },
+        "update_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the artifact was last updated. System-provided."
+        }
+      },
+      "description": "Artifact represents metadata about a machine-learning workflow artifact."
+    },
     "apiArtifactType": {
       "type": "object",
       "properties": {
@@ -116,16 +278,12 @@
         },
         "name": {
           "type": "string",
-          "description": "Required. Represents the name of a type. Must be unique within a\nnamespace."
+          "description": "Required. Represents the name of a type. Name takes the form\n`{namespace}/{name}` and should be unique. {namespace} should be like\n`kubeflow.org/pipelines/v1` or `myorganization.com/ml`. Namespaces ensures\nmultiple organizations can define ML schemas without type name collision.\nIf {namespace} is empty during creation, the system-default namespace will\nbe used."
         },
-        "namespace": {
-          "$ref": "#/definitions/apiNamespace",
-          "description": "Represents the namespace under which to store this type. Empty defaults\nto the default, system-defined namespace."
-        },
-        "type_properties": {
+        "properties": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/apiType"
+            "$ref": "#/definitions/apiPropertyType"
           },
           "description": "Schema representing the fields and their types for this artifact."
         },
@@ -136,6 +294,15 @@
       },
       "description": "ArtifactType represents the type of an ML artifact. It is used to define the\nschema of a named type."
     },
+    "apiCreateArtifactResponse": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "$ref": "#/definitions/apiArtifact",
+          "description": "Newly created artifact with id."
+        }
+      }
+    },
     "apiCreateArtifactTypeResponse": {
       "type": "object",
       "properties": {
@@ -145,15 +312,13 @@
         }
       }
     },
-    "apiDoubleType": {
+    "apiGetArtifactResponse": {
       "type": "object",
       "properties": {
-        "validator": {
-          "type": "string",
-          "description": "An optional OpenAPI-compatible field-validation schema for this field."
+        "artifact": {
+          "$ref": "#/definitions/apiArtifact"
         }
-      },
-      "description": "Represents double types."
+      }
     },
     "apiGetArtifactTypeResponse": {
       "type": "object",
@@ -162,16 +327,6 @@
           "$ref": "#/definitions/apiArtifactType"
         }
       }
-    },
-    "apiIntType": {
-      "type": "object",
-      "properties": {
-        "validator": {
-          "type": "string",
-          "description": "An optional OpenAPI-compatible field-validation schema for this field."
-        }
-      },
-      "description": "Represents integer types."
     },
     "apiListArtifactTypesResponse": {
       "type": "object",
@@ -185,40 +340,54 @@
         }
       }
     },
-    "apiNamespace": {
+    "apiListArtifactsResponse": {
+      "type": "object",
+      "properties": {
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiArtifact"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiPropertyType": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "INT",
+        "DOUBLE",
+        "STRING"
+      ],
+      "default": "UNKNOWN",
+      "description": "Type is the type of a field."
+    },
+    "apiValue": {
+      "type": "object",
+      "properties": {
+        "int_value": {
+          "type": "string",
+          "format": "int64"
+        },
+        "double_value": {
+          "type": "number",
+          "format": "double"
+        },
+        "string_value": {
+          "type": "string"
+        }
+      },
+      "description": "Value is the value of the field."
+    },
+    "apiWorkspace": {
       "type": "object",
       "properties": {
         "name": {
-          "type": "string",
-          "description": "E.g. 'kubeflow.org/pipelines/v1' or 'myorganization.com/ml/v1'."
+          "type": "string"
         }
       },
-      "description": "Namespaces represent a named collection of ArtifactTypes and ExecutionTypes.\nThis ensures multiple organizations can define ML schemas without type name\ncollision."
-    },
-    "apiStringType": {
-      "type": "object",
-      "properties": {
-        "validator": {
-          "type": "string",
-          "description": "An optional OpenAPI-compatible field-validation schema for this field."
-        }
-      },
-      "description": "Represents string types."
-    },
-    "apiType": {
-      "type": "object",
-      "properties": {
-        "string_type": {
-          "$ref": "#/definitions/apiStringType"
-        },
-        "int_type": {
-          "$ref": "#/definitions/apiIntType"
-        },
-        "double_type": {
-          "$ref": "#/definitions/apiDoubleType"
-        }
-      },
-      "description": "Type is the type of a field."
+      "description": "Workspaces represent a named collection of Artifacts and Executions. Similar\nconcept as that of a folder to group files."
     }
   }
 }

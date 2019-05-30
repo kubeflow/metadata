@@ -35,15 +35,12 @@ message CreateArtifactTypeResponse {
 }
 
 message GetArtifactTypeRequest {
-  int64 id = 1;
+  // Artifact names are of the form `artifact_types/{namespace}/{name}`.
+  string name = 1;
 }
 
 message GetArtifactTypeResponse {
   ArtifactType artifact_type = 1;
-}
-
-message DeleteArtifactTypeRequest {
-  string id = 1;
 }
 
 message ListArtifactTypesRequest {}
@@ -51,6 +48,47 @@ message ListArtifactTypesRequest {}
 message ListArtifactTypesResponse {
   repeated ArtifactType artifact_types = 1;
 }
+
+message DeleteArtifactTypeRequest {
+  string name = 1;
+}
+
+message CreateArtifactRequest {
+  // Creates the specified artifact as an instance of ArtifactType with this
+  // fully qualified name. |parent| takes the form
+  // `artifact_types/{namespace}/{name>}`.
+  string parent = 1;
+  // The Artifact to create. Note that Artifact.type_id is ignored.
+  Artifact artifact = 2;
+}
+
+message CreateArtifactResponse {
+  // Newly created artifact with id.
+  Artifact artifact = 1;
+}
+
+message GetArtifactRequest {
+  // Artifact name is like
+  // `artifact_types/{namespace}/{typename}/artifact/{id}`.
+  string name = 1;
+}
+
+message GetArtifactResponse {
+  Artifact artifact = 1;
+}
+
+message ListArtifactsRequest {
+  string name = 1;
+}
+
+message ListArtifactsResponse {
+  repeated Artifact artifacts = 1;
+}
+
+message DeleteArtifactRequest {
+  string name = 1;
+}
+
 
 service MetadataService {
   rpc CreateArtifactType(CreateArtifactTypeRequest)
@@ -64,7 +102,7 @@ service MetadataService {
   rpc GetArtifactType(GetArtifactTypeRequest)
       returns (GetArtifactTypeResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/artifact_type/{id}"
+      get: "/api/v1alpha1/{name=artifact_types/*}"
     };
   }
 
@@ -78,7 +116,36 @@ service MetadataService {
   rpc DeleteArtifactType(DeleteArtifactTypeRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/artifact_types/{id}"
+      delete: "/api/v1alpha1/{name=artifact_types/*}"
+    };
+  }
+
+  rpc CreateArtifact(CreateArtifactRequest)
+      returns (CreateArtifactResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/{parent=artifact_types/*}/artifacts"
+      body: "artifact"
+    };
+  }
+
+  rpc GetArtifact(GetArtifactRequest)
+      returns (GetArtifactResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=artifact_types/*/artifacts/*}"
+    };
+  }
+
+  rpc ListArtifacts(ListArtifactsRequest)
+      returns (ListArtifactsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=artifact_types/*}/artifacts"
+    };
+  }
+
+  rpc DeleteArtifact(DeleteArtifactRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/{name=artifact_types/*/artifacts/*}"
     };
   }
 
