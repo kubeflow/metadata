@@ -71,3 +71,9 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Python built package
+*.egg-info
+dist
+.tox
+sdk/python/kfmd/swagger_client/
