@@ -51,9 +51,11 @@ class ArtifactList extends Page<{}, PipelineListState> {
 
   public render(): JSX.Element {
     const columns: Column[] = [
-      { label: 'Artifact name', flex: 1 },
-      { label: 'Description', flex: 3 },
-      { label: 'Uploaded on', flex: 1 },
+      { label: 'Name', flex: 1 },
+      { label: 'Id', flex: 1 },
+      { label: 'Type', flex: 1 },
+      { label: 'workspace', flex: 1 },
+      { label: 'Created at', flex: 1 },
     ];
 
     const rows: Row[] = this.state.artifacts.map((a) => {
