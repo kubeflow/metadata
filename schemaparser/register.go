@@ -69,10 +69,7 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 		return err
 	}
 	artifactType := &pb.ArtifactType{
-		Name: typename,
-		Namespace: &pb.Namespace{
-			Name: namespace,
-		},
+		Name:       namespace + "/" + typename,
 		Properties: make(map[string]pb.PropertyType),
 	}
 	for pname, ptype := range properties {

@@ -101,25 +101,31 @@ func TestInvalidNamespaces(t *testing.T) {
 
 func TestGetNamespacedName(t *testing.T) {
 	tests := []struct {
-		in            string
-		wantNamespace string
-		wantName      string
-		wantErr       error
+		in       string
+		wantName string
+		wantErr  error
 	}{
-		{"kubeflow.org/v1", "kubeflow.org", "v1", nil},
-		{"kubeflow.org/v1/Model", "kubeflow.org/v1", "Model", nil},
-		{"kubeflow.org/v1/Model1/Model", "kubeflow.org/v1/Model1", "Model", nil},
-		{"kubeflow.org/v1/a/b/c/d", "kubeflow.org/v1/a/b/c", "d", nil},
-		{"kubeflow.org/v1/", "", "", errors.New("malformed type name: \"kubeflow.org/v1/\"")},
-		{"kubeflow.org", "", "", errors.New("malformed type name: \"kubeflow.org\"")},
+		// Valid names with specified namespace.
+		{"kubeflow.org/v1", "kubeflow.org/v1", nil},
+		{"kubeflow.org/v1/Model", "kubeflow.org/v1/Model", nil},
+		{"kubeflow.org/v1/Model1/Model", "kubeflow.org/v1/Model1/Model", nil},
+		{"kubeflow.org/v1/a/b/c/d", "kubeflow.org/v1/a/b/c/d", nil},
+
+		// Valid names without namespaces, should get the default namespace.
+		{"Model", "types.kubeflow.org/default/Model", nil},
+		{"kubeflow.org", "types.kubeflow.org/default/kubeflow.org", nil},
+
+		// Error cases.
+		{"", "", errors.New("empty type name: \"\"")},
+		{"kubeflow.org/v1/", "", errors.New("empty type name: \"kubeflow.org/v1/\"")},
 	}
 
 	for _, test := range tests {
-		namespace, name, err := getNamespacedName(test.in)
+		name, err := getNamespacedName(test.in)
 
-		if !reflect.DeepEqual(err, test.wantErr) || namespace != test.wantNamespace || name != test.wantName {
-			t.Errorf("getNamespacedName(%q) = %q, %q, %v\nWant %q, %q, %v",
-				test.in, namespace, name, err, test.wantNamespace, test.wantName, test.wantErr)
+		if !reflect.DeepEqual(err, test.wantErr) || name != test.wantName {
+			t.Errorf("getNamespacedName(%q) = %q, %v\nWant %q, %v",
+				test.in, name, err, test.wantName, test.wantErr)
 		}
 	}
 }
@@ -149,8 +155,7 @@ func TestArtifactTypeCreation(t *testing.T) {
 	}{
 		{
 			request: ` artifact_type {
-				name:      "Model"
-				namespace: { name: "my_namespace"}
+				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
 				properties { key: "double_field" value: DOUBLE }
@@ -221,8 +226,7 @@ func TestArtifactCreation(t *testing.T) {
 	ctx := context.Background()
 	req := &pb.CreateArtifactTypeRequest{
 		ArtifactType: &pb.ArtifactType{
-			Name:      "Model",
-			Namespace: &pb.Namespace{Name: "kubeflow.org/v1"},
+			Name: "kubeflow.org/v1/Model",
 			Properties: map[string]pb.PropertyType{
 				"string_field": pb.PropertyType_STRING,
 				"int_field":    pb.PropertyType_INT,
@@ -230,12 +234,10 @@ func TestArtifactCreation(t *testing.T) {
 			},
 		},
 	}
-	res, err := svc.CreateArtifactType(ctx, req)
+	_, err := svc.CreateArtifactType(ctx, req)
 	if err != nil {
 		t.Fatalf("Failed to create ArtifactType with request %v: %v", req, err)
 	}
-
-	typeID := res.ArtifactType.Id
 
 	tests := []struct {
 		request    string
@@ -251,8 +253,8 @@ func TestArtifactCreation(t *testing.T) {
 				properties { key: "double_field" value { double_value: 1.1 }}
 				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
 				custom_properties { key: "custom_int_field" value { int_value: 200 }}
-				custom_properties { key: "custom_double_field" value { double_value: 2.2 }}
-			}`,
+				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }
+			   parent: "artifact_types/kubeflow.org/v1/Model" `,
 			wantStored: `
 				uri: "gs://some-uri"
 				properties { key: "__kf_workspace" value { string_value: "my workspace" }}
@@ -276,7 +278,6 @@ func TestArtifactCreation(t *testing.T) {
 			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
 			continue
 		}
-		req.Artifact.TypeId = typeID
 		want := req.Artifact
 
 		response, err := svc.CreateArtifact(ctx, req)

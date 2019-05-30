@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -40,6 +41,9 @@ type Service struct {
 }
 
 // New returns a new instance of Service.
+// TODO(neuromage): All the handlers work synchronously. If DB lookups result in
+// problems later down the road, consider plumbing context through to the
+// underlying MLMD store and handling timeouts and cancelation gracefully.
 func New(store MetadataStore) *Service {
 	return &Service{store: store}
 }
@@ -49,7 +53,10 @@ func (s *Service) Close() {
 	s.Close()
 }
 
-var timeNowFn = time.Now
+var (
+	timeNowFn      = time.Now
+	artifactNameRE = regexp.MustCompile(`artifact_types/.*/artifacts/([0-9]+)`)
+)
 
 const (
 	kfReservedPrefix = "__kf_"
@@ -63,6 +70,9 @@ const (
 
 	kfDefaultNamespace = "types.kubeflow.org/default"
 	kfDefaultWorkspace = "__kf_default_workspace"
+
+	artifactTypesCollection = "artifact_types/"
+	artifactCollection      = "artifacts/"
 )
 
 var (
@@ -114,43 +124,48 @@ func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 		}
 	}
 
-	namespace := kfDefaultNamespace
-	if in.Namespace != nil && in.Namespace.Name != "" {
-		namespace = in.Namespace.Name
-	}
-
-	if err := validNamespace(namespace); err != nil {
+	name, err := getNamespacedName(in.Name)
+	if err != nil {
 		return nil, err
 	}
 
-	if err := validTypeName(in.Name); err != nil {
-		return nil, err
-	}
-
-	storedName := namespace + "/" + in.Name
-	res.Name = proto.String(storedName)
+	res.Name = proto.String(name)
 
 	return res, nil
 }
 
-func getNamespacedName(n string) (string, string, error) {
+// getNamespacedName ....
+func getNamespacedName(n string) (string, error) {
 	ns := strings.Split(n, "/")
-	if len(ns) < 2 {
-		return "", "", fmt.Errorf("malformed type name: %q", n)
+	if len(ns) == 0 {
+		return "", fmt.Errorf("malformed type name: %q", n)
 	}
 
 	name := ns[len(ns)-1]
 	if len(name) == 0 {
-		return "", "", fmt.Errorf("malformed type name: %q", n)
+		return "", fmt.Errorf("empty type name: %q", n)
 	}
 
-	namespace := strings.Join(ns[0:len(ns)-1], "/")
-	return namespace, name, nil
+	namespace := kfDefaultNamespace
+	if len(ns) > 1 {
+		namespace = strings.Join(ns[0:len(ns)-1], "/")
+	}
+
+	if err := validNamespace(namespace); err != nil {
+		return "", nil
+	}
+
+	if err := validTypeName(name); err != nil {
+		return "", err
+	}
+
+	return namespace + "/" + name, nil
 }
 
 func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	res := &pb.ArtifactType{
 		Id:         in.GetId(),
+		Name:       in.GetName(),
 		Properties: make(map[string]pb.PropertyType),
 	}
 
@@ -171,27 +186,17 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 		}
 	}
 
-	namespace, name, err := getNamespacedName(in.GetName())
-	if err != nil {
-		return nil, err
-	}
-
-	res.Namespace = &pb.Namespace{Name: namespace}
-	res.Name = name
-
 	return res, nil
 }
 
-func (s *Service) getArtifactTypeByID(id int64) (*pb.ArtifactType, error) {
-	storedTypes, err := s.store.GetArtifactTypesByID([]mlmetadata.ArtifactTypeID{mlmetadata.ArtifactTypeID(id)})
+// getArtifactType ...
+func (s *Service) getArtifactType(name string) (*pb.ArtifactType, error) {
+	name = strings.TrimPrefix(name, artifactTypesCollection)
+	storedTypes, err := s.store.GetArtifactType(name)
 	if err != nil {
 		return nil, err
 	}
-	if len(storedTypes) != 1 {
-		return nil, fmt.Errorf("failed to get artifact type with id %d", id)
-	}
-
-	return toArtifactType(storedTypes[0])
+	return toArtifactType(storedTypes)
 }
 
 // CreateArtifactType creates a new artifact type.
@@ -203,13 +208,13 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifact
 	// Clear id for creation.
 	storedType.Id = nil
 
-	id, err := s.store.PutArtifactType(
+	_, err = s.store.PutArtifactType(
 		storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
 	if err != nil {
 		return nil, err
 	}
 
-	aType, err := s.getArtifactTypeByID(int64(id))
+	aType, err := s.getArtifactType(storedType.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -221,7 +226,7 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifact
 
 // GetArtifactType returns the requested artifact type.
 func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRequest) (*pb.GetArtifactTypeResponse, error) {
-	aType, err := s.getArtifactTypeByID(req.GetId())
+	aType, err := s.getArtifactType(req.GetName())
 	if err != nil {
 		return nil, err
 	}
@@ -463,7 +468,16 @@ func toArtifact(in *mlpb.Artifact) (*pb.Artifact, error) {
 	return out, nil
 }
 
-func (s *Service) getStoredArtifact(id int64) (*pb.Artifact, error) {
+func (s *Service) getStoredArtifact(name string) (*pb.Artifact, error) {
+	tokens := artifactNameRE.FindStringSubmatch(name)
+	if len(tokens) != 2 {
+		return nil, fmt.Errorf("malformed Artifact name %q. Must match pattern %q", name, artifactNameRE)
+	}
+
+	id, err := strconv.ParseInt(tokens[1], 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse Artifact id from %q: %v", tokens[1], err)
+	}
 	ids, err := s.store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
 	if err != nil {
 		return nil, err
@@ -493,6 +507,12 @@ func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequ
 	req.Artifact.CreateTime = now
 	req.Artifact.UpdateTime = now
 
+	aType, err := s.getArtifactType(req.Parent)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve ArtifactType under %q: %v", req.Parent, err)
+	}
+
+	req.Artifact.TypeId = aType.GetId()
 	stored, err := toStoredArtifact(req.Artifact)
 	if err != nil {
 		return nil, err
@@ -507,7 +527,8 @@ func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequ
 		return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", ids)
 	}
 
-	artifact, err := s.getStoredArtifact(int64(ids[0]))
+	artifactName := fmt.Sprintf("%s/artifacts/%d", req.Parent, ids[0])
+	artifact, err := s.getStoredArtifact(artifactName)
 	if err != nil {
 		return nil, err
 	}
@@ -517,7 +538,7 @@ func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequ
 
 // GetArtifact returns the requested artifact.
 func (s *Service) GetArtifact(ctx context.Context, req *pb.GetArtifactRequest) (*pb.GetArtifactResponse, error) {
-	artifact, err := s.getStoredArtifact(req.GetId())
+	artifact, err := s.getStoredArtifact(req.GetName())
 	if err != nil {
 		return nil, err
 	}

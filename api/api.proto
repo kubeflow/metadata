@@ -30,29 +30,22 @@ message Workspace {
   string name = 1;
 }
 
-// Namespaces represent a named collection of ArtifactTypes and ExecutionTypes.
-// This ensures multiple organizations can define ML schemas without type name
-// collision.
-message Namespace {
-  // E.g. 'kubeflow.org/pipelines/v1' or 'myorganization.com/ml/v1'.
-  string name = 1;
-}
-
 // ArtifactType represents the type of an ML artifact. It is used to define the
 // schema of a named type.
 message ArtifactType {
   // System-provided id.
   int64 id = 1;
-  // Required. Represents the name of a type. Must be unique within a
-  // namespace.
+  // Required. Represents the name of a type. Name takes the form
+  // `{namespace}/{name}` and should be unique. {namespace} should be like
+  // `kubeflow.org/pipelines/v1` or `myorganization.com/ml`. Namespaces ensures
+  // multiple organizations can define ML schemas without type name collision.
+  // If {namespace} is empty during creation, the system-default namespace will
+  // be used.
   string name = 2;
   // Schema representing the fields and their types for this artifact.
   map<string, PropertyType> properties = 3;
-  // Represents the namespace under which to store this type. Empty defaults
-  // to the default, system-defined namespace.
-  Namespace namespace = 4;
   // An optional human-readable description of this type.
-  string description = 5;
+  string description = 4;
 }
 
 // ExecutionType represents the type of an ML execution step.
@@ -62,13 +55,10 @@ message ExecutionType {
   // Required. Represents the name of the type. Must be unique within a
   // namespace.
   string name = 2;
-  // Represents the namespace under which to store this type. Empty defaults
-  // to the 'default' namespace.
-  Namespace namespace = 3;
   // Schema representing the fields and their types for this type.
-  map<string, PropertyType> type_properties = 4;
+  map<string, PropertyType> type_properties = 3;
   // An optional human-readable description of this type.
-  string description = 5;
+  string description = 4;
 }
 
 // Artifact represents metadata about a machine-learning workflow artifact.
