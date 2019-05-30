@@ -24,6 +24,8 @@ import (
 	"time"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	pb "github.com/kubeflow/metadata/api"
@@ -180,7 +182,7 @@ func TestArtifactTypeCreation(t *testing.T) {
 			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
 			continue
 		}
-		want := req.GetArtifactType()
+		want := proto.Clone(req.ArtifactType).(*pb.ArtifactType)
 
 		ctx := context.Background()
 		response, err := svc.CreateArtifactType(ctx, req)
@@ -223,6 +225,11 @@ func TestArtifactCreation(t *testing.T) {
 		return time.Unix(123, 0)
 	}
 
+	tsProto, err := ptypes.TimestampProto(time.Unix(123, 0))
+	if err != nil {
+		t.Fatalf("failed to create timestamp proto for tests: %v", err)
+	}
+
 	ctx := context.Background()
 	req := &pb.CreateArtifactTypeRequest{
 		ArtifactType: &pb.ArtifactType{
@@ -234,7 +241,7 @@ func TestArtifactCreation(t *testing.T) {
 			},
 		},
 	}
-	_, err := svc.CreateArtifactType(ctx, req)
+	_, err = svc.CreateArtifactType(ctx, req)
 	if err != nil {
 		t.Fatalf("Failed to create ArtifactType with request %v: %v", req, err)
 	}
@@ -278,7 +285,9 @@ func TestArtifactCreation(t *testing.T) {
 			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
 			continue
 		}
-		want := req.Artifact
+		want := proto.Clone(req.Artifact).(*pb.Artifact)
+		want.CreateTime = proto.Clone(tsProto).(*timestamp.Timestamp)
+		want.UpdateTime = proto.Clone(tsProto).(*timestamp.Timestamp)
 
 		response, err := svc.CreateArtifact(ctx, req)
 		if err != nil {
@@ -288,7 +297,7 @@ func TestArtifactCreation(t *testing.T) {
 
 		got := response.Artifact
 
-		if !cmp.Equal(got, want, cmpopts.IgnoreFields(pb.Artifact{}, "Id")) {
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(pb.Artifact{}, "Id", "TypeId")) {
 			t.Errorf("Test case %d\nCreateArtifact\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
 				i, req, got, err, want, cmp.Diff(want, got))
 		}

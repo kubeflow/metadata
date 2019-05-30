@@ -134,7 +134,11 @@ func toMLMDArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
 	return res, nil
 }
 
-// getNamespacedName ....
+// getNamespacedName checks that n is a valid name of the type
+// `{namespace}/{name}`. If {namespace} is empty, the default one
+// (kfDefaultNamespace) is used instead. Both {namespace} and {name} should
+// start with an alphabet and not contain spaces. Returns the (possibly
+// modified) fully-qualified name, or an error if n is malformed or empty.
 func getNamespacedName(n string) (string, error) {
 	ns := strings.Split(n, "/")
 	if len(ns) == 0 {
@@ -152,7 +156,7 @@ func getNamespacedName(n string) (string, error) {
 	}
 
 	if err := validNamespace(namespace); err != nil {
-		return "", nil
+		return "", err
 	}
 
 	if err := validTypeName(name); err != nil {
@@ -189,7 +193,6 @@ func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
 	return res, nil
 }
 
-// getArtifactType ...
 func (s *Service) getArtifactType(name string) (*pb.ArtifactType, error) {
 	name = strings.TrimPrefix(name, artifactTypesCollection)
 	storedTypes, err := s.store.GetArtifactType(name)
