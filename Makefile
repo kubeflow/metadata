@@ -35,6 +35,6 @@ swagger-py-client:
     -i api/service.swagger.json \
     -l python \
     -o /tmp/swagger && \
-        rm -rf python_client/swagger_client && \
-        cp -r /tmp/swagger/swagger_client python_client/ && \
+        rm -rf sdk/python/kfmd/swagger_client && \
+        cp -r /tmp/swagger/swagger_client sdk/python/kfmd/ && \
         rm -rf /tmp/swagger
