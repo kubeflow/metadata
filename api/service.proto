@@ -91,6 +91,44 @@ message DeleteArtifactRequest {
 
 
 service MetadataService {
+
+  // NOTE:
+  // The order of the following RPC methods affects the order of matching
+  // a particular HTTP path. So put a more specific path pattern before
+  // a generic one. For example,
+  // GET /api/v1alpha1/{parent=artifact_types/**}/artifacts
+  // should appear before
+  // GET /api/v1alpha1/{name=artifact_types/**} to be possibly matched.
+
+  rpc CreateArtifact(CreateArtifactRequest)
+      returns (CreateArtifactResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/{parent=artifact_types/**}/artifacts"
+      body: "artifact"
+    };
+  }
+
+  rpc GetArtifact(GetArtifactRequest)
+      returns (GetArtifactResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=artifact_types/**/artifacts/*}"
+    };
+  }
+
+  rpc ListArtifacts(ListArtifactsRequest)
+      returns (ListArtifactsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=artifact_types/**}/artifacts"
+    };
+  }
+
+  rpc DeleteArtifact(DeleteArtifactRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/{name=artifact_types/**/artifacts/*}"
+    };
+  }
+
   rpc CreateArtifactType(CreateArtifactTypeRequest)
       returns (CreateArtifactTypeResponse) {
     option (google.api.http) = {
@@ -102,7 +140,7 @@ service MetadataService {
   rpc GetArtifactType(GetArtifactTypeRequest)
       returns (GetArtifactTypeResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{name=artifact_types/*}"
+      get: "/api/v1alpha1/{name=artifact_types/**}"
     };
   }
 
@@ -116,36 +154,7 @@ service MetadataService {
   rpc DeleteArtifactType(DeleteArtifactTypeRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/{name=artifact_types/*}"
-    };
-  }
-
-  rpc CreateArtifact(CreateArtifactRequest)
-      returns (CreateArtifactResponse) {
-    option (google.api.http) = {
-      post: "/api/v1alpha1/{parent=artifact_types/*}/artifacts"
-      body: "artifact"
-    };
-  }
-
-  rpc GetArtifact(GetArtifactRequest)
-      returns (GetArtifactResponse) {
-    option (google.api.http) = {
-      get: "/api/v1alpha1/{name=artifact_types/*/artifacts/*}"
-    };
-  }
-
-  rpc ListArtifacts(ListArtifactsRequest)
-      returns (ListArtifactsResponse) {
-    option (google.api.http) = {
-      get: "/api/v1alpha1/{name=artifact_types/*}/artifacts"
-    };
-  }
-
-  rpc DeleteArtifact(DeleteArtifactRequest)
-      returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/api/v1alpha1/{name=artifact_types/*/artifacts/*}"
+      delete: "/api/v1alpha1/{name=artifact_types/**}"
     };
   }
 
