@@ -22,18 +22,21 @@ set -o nounset
 set -o pipefail
 set -o xtrace
 
+HOST=http://localhost
+PORT=8080
+
 # TODO(zhenghuiwang): this is expected to return all predefined types, but it
 # returns {} now.
-curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types
 
 # List the predefined model type.
-curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model
 
 # Add a model artifact
-curl -X POST -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts -d @artifact_model_1.json
+curl -X POST -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts -d @artifact_model_1.json
 
 # List all model artifacts
-curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts
 
 # Get the model artifcat with ID=1.
-curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts/1
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts/1
