@@ -32,7 +32,7 @@ curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artif
 # Add a model artifact
 curl -X POST -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts -d @artifact_model_1.json
 
-# List artifacts
+# List all model artifacts
 curl -H "ContentType: application/json" http://localhost:8080/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts
 
 # Get the model artifcat with ID=1.

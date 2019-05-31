@@ -241,6 +241,7 @@ func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRe
 
 // ListArtifactTypes lists all artifact types.
 func (s *Service) ListArtifactTypes(ctx context.Context, req *pb.ListArtifactTypesRequest) (*pb.ListArtifactTypesResponse, error) {
+	// TODO(zhenghuiwang): this is expected to return all defined types, but it returns {} now.
 	storedTypes, err := s.store.GetArtifactTypesByID(nil)
 	if err != nil {
 		return nil, err
