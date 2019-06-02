@@ -22,6 +22,7 @@ import (
 // MetadataStore defines the interface of methods exported by mlmetadata.Store.
 type MetadataStore interface {
 	Close()
+
 	PutArtifactType(atype *mlpb.ArtifactType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ArtifactTypeID, error)
 	GetArtifactType(name string) (*mlpb.ArtifactType, error)
 	GetArtifactTypesByID(tids []mlmetadata.ArtifactTypeID) ([]*mlpb.ArtifactType, error)
@@ -31,4 +32,13 @@ type MetadataStore interface {
 	GetArtifacts() ([]*mlpb.Artifact, error)
 	GetArtifactsByType(typeName string) ([]*mlpb.Artifact, error)
 	GetArtifactsByURI(uri string) ([]*mlpb.Artifact, error)
+
+	PutExecutionType(etype *mlpb.ExecutionType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ExecutionTypeID, error)
+	GetExecutionType(typeName string) (*mlpb.ExecutionType, error)
+	GetExecutionTypesByID(tids []mlmetadata.ExecutionTypeID) ([]*mlpb.ExecutionType, error)
+
+	PutExecutions(executions []*mlpb.Execution) ([]mlmetadata.ExecutionID, error)
+	GetExecutionsByID(eids []mlmetadata.ExecutionID) ([]*mlpb.Execution, error)
+	GetExecutions() ([]*mlpb.Execution, error)
+	GetExecutionsByType(typeName string) ([]*mlpb.Execution, error)
 }

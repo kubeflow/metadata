@@ -53,31 +53,35 @@ func (s *Service) Close() {
 	s.Close()
 }
 
-var (
-	timeNowFn      = time.Now
-	artifactNameRE = regexp.MustCompile(`artifact_types/.*/artifacts/([0-9]+)`)
-)
-
 const (
 	kfReservedPrefix = "__kf_"
 	kfWorkspace      = "__kf_workspace"
 	kfNamespace      = "__kf_namespace"
 	kfDescription    = "__kf_description"
 
-	kfCreateTime   = "__kf_create_time"
-	kfUpdateTime   = "__kf_update_time"
-	kfArtifactName = "__kf_artifact_name"
+	kfCreateTime = "__kf_create_time"
+	kfUpdateTime = "__kf_update_time"
+	kfStartTime  = "__kf_start_time"
+	kfEndTime    = "__kf_end_time"
+
+	kfArtifactName  = "__kf_artifact_name"
+	kfExecutionName = "__kf_execution_name"
 
 	kfDefaultNamespace = "types.kubeflow.org/default"
 	kfDefaultWorkspace = "__kf_default_workspace"
 
-	artifactTypesCollection = "artifact_types/"
-	artifactCollection      = "artifacts/"
+	artifactTypesCollection  = "artifact_types/"
+	artifactCollection       = "artifacts/"
+	executionTypesCollection = "execution_types/"
+	executionCollection      = "executions/"
 )
 
 var (
+	timeNowFn        = time.Now
 	validTypeNameRE  = regexp.MustCompile(`^[A-Za-z][^ /]*$`)
 	validNamespaceRE = regexp.MustCompile(`^[A-Za-z][^ ]*[^/]$`)
+	artifactNameRE   = regexp.MustCompile(`artifact_types/.*/artifacts/([0-9]+)`)
+	executionNameRE  = regexp.MustCompile(`execution_types/.*/executions/([0-9]+)`)
 )
 
 func validTypeName(n string) error {
@@ -573,14 +577,185 @@ func (s *Service) DeleteArtifact(ctx context.Context, req *pb.DeleteArtifactRequ
 	return nil, errors.New("not implemented error: DeleteArtifact")
 }
 
+func toStoredExecutionType(in *pb.ExecutionType) (*mlpb.ExecutionType, error) {
+	res := &mlpb.ExecutionType{
+		Id: proto.Int64(in.Id),
+		Properties: map[string]mlpb.PropertyType{
+			kfExecutionName: mlpb.PropertyType_STRING,
+			kfWorkspace:     mlpb.PropertyType_STRING,
+			kfCreateTime:    mlpb.PropertyType_INT,
+			kfUpdateTime:    mlpb.PropertyType_INT,
+			kfStartTime:     mlpb.PropertyType_INT,
+			kfEndTime:       mlpb.PropertyType_INT,
+		},
+	}
+
+	for k, v := range in.Properties {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			return nil, fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
+		}
+
+		switch v {
+		case pb.PropertyType_INT:
+			res.Properties[k] = mlpb.PropertyType_INT
+		case pb.PropertyType_DOUBLE:
+			res.Properties[k] = mlpb.PropertyType_DOUBLE
+		case pb.PropertyType_STRING:
+			res.Properties[k] = mlpb.PropertyType_STRING
+		default:
+			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
+		}
+	}
+
+	name, err := getNamespacedName(in.Name)
+	if err != nil {
+		return nil, err
+	}
+
+	res.Name = proto.String(name)
+
+	return res, nil
+}
+
+func toExecutionType(in *mlpb.ExecutionType) (*pb.ExecutionType, error) {
+	res := &pb.ExecutionType{
+		Id:         in.GetId(),
+		Name:       in.GetName(),
+		Properties: make(map[string]pb.PropertyType),
+	}
+
+	for k, v := range in.Properties {
+		if strings.HasPrefix(k, kfReservedPrefix) {
+			continue
+		}
+
+		switch v {
+		case mlpb.PropertyType_INT:
+			res.Properties[k] = pb.PropertyType_INT
+		case mlpb.PropertyType_DOUBLE:
+			res.Properties[k] = pb.PropertyType_DOUBLE
+		case mlpb.PropertyType_STRING:
+			res.Properties[k] = pb.PropertyType_STRING
+		default:
+			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
+		}
+	}
+
+	return res, nil
+}
+
+func toStoredExecution(in *pb.Execution) (*mlpb.Execution, error) {
+	stored := &mlpb.Execution{
+		TypeId:           proto.Int64(in.GetTypeId()),
+		Properties:       make(map[string]*mlpb.Value),
+		CustomProperties: make(map[string]*mlpb.Value),
+	}
+	if in.GetId() > 0 {
+		stored.Id = proto.Int64(in.GetId())
+	}
+
+	if err := setStoredPropertyMap(in.Properties, stored.Properties); err != nil {
+		return nil, err
+	}
+
+	if err := setStoredPropertyMap(in.CustomProperties, stored.CustomProperties); err != nil {
+		return nil, err
+	}
+
+	if in.GetName() != "" {
+		setStoredProperty(stored.Properties, kfExecutionName, in.GetName())
+	}
+
+	workspace := kfDefaultWorkspace
+	if in.GetWorkspace().GetName() != "" {
+		workspace = in.GetWorkspace().GetName()
+	}
+	if err := setStoredProperty(stored.Properties, kfWorkspace, workspace); err != nil {
+		return nil, err
+	}
+
+	createTime, err := ptypes.Timestamp(in.GetCreateTime())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: invalid create time: %v", err)
+	}
+	if err := setStoredProperty(stored.Properties, kfCreateTime, createTime.Unix()); err != nil {
+		return nil, err
+	}
+
+	updateTime, err := ptypes.Timestamp(in.GetUpdateTime())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: invalid update time: %v", err)
+	}
+	if err := setStoredProperty(stored.Properties, kfUpdateTime, updateTime.Unix()); err != nil {
+		return nil, err
+	}
+
+	if in.StartTime != nil {
+		startTime, err := ptypes.Timestamp(in.GetStartTime())
+		if err != nil {
+			return nil, fmt.Errorf("internal error: invalid start time: %v", err)
+		}
+		if err := setStoredProperty(stored.Properties, kfStartTime, startTime.Unix()); err != nil {
+			return nil, err
+		}
+	}
+
+	if in.EndTime != nil {
+		endTime, err := ptypes.Timestamp(in.GetEndTime())
+		if err != nil {
+			return nil, fmt.Errorf("internal error: invalid end time: %v", err)
+		}
+		if err := setStoredProperty(stored.Properties, kfEndTime, endTime.Unix()); err != nil {
+			return nil, err
+		}
+	}
+
+	return stored, nil
+}
+
+func (s *Service) getStoredExecutionType(name string) (*pb.ExecutionType, error) {
+	name = strings.TrimPrefix(name, executionTypesCollection)
+	storedType, err := s.store.GetExecutionType(name)
+	if err != nil {
+		return nil, err
+	}
+	return toExecutionType(storedType)
+}
+
 // CreateExecutionType creates the specified execution type.
 func (s *Service) CreateExecutionType(ctx context.Context, req *pb.CreateExecutionTypeRequest) (*pb.CreateExecutionTypeResponse, error) {
-	return nil, nil
+	storedType, err := toStoredExecutionType(req.GetExecutionType())
+	if err != nil {
+		return nil, err
+	}
+	// Clear id for creation.
+	storedType.Id = nil
+
+	_, err = s.store.PutExecutionType(storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+	if err != nil {
+		return nil, err
+	}
+
+	aType, err := s.getStoredExecutionType(storedType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateExecutionTypeResponse{
+		ExecutionType: aType,
+	}, nil
 }
 
 // GetExecutionType return the specified execution type.
 func (s *Service) GetExecutionType(ctx context.Context, req *pb.GetExecutionTypeRequest) (*pb.GetExecutionTypeResponse, error) {
-	return nil, nil
+	eType, err := s.getStoredExecutionType(req.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetExecutionTypeResponse{
+		ExecutionType: eType,
+	}, nil
 }
 
 // ListExecutionTypes lists all execution types.
@@ -593,14 +768,129 @@ func (s *Service) DeleteExecutionType(ctx context.Context, req *pb.DeleteExecuti
 	return nil, errors.New("not implemented error: DeleteExecutionType")
 }
 
+func toExecution(in *mlpb.Execution) (*pb.Execution, error) {
+	out := &pb.Execution{
+		Id:               in.GetId(),
+		TypeId:           in.GetTypeId(),
+		Properties:       make(map[string]*pb.Value),
+		CustomProperties: make(map[string]*pb.Value),
+	}
+
+	var err error
+	createTime := in.Properties[kfCreateTime].GetIntValue()
+	out.CreateTime, err = ptypes.TimestampProto(time.Unix(createTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	updateTime := in.Properties[kfUpdateTime].GetIntValue()
+	out.UpdateTime, err = ptypes.TimestampProto(time.Unix(updateTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	startTime := in.Properties[kfStartTime].GetIntValue()
+	out.StartTime, err = ptypes.TimestampProto(time.Unix(startTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	endTime := in.Properties[kfEndTime].GetIntValue()
+	out.EndTime, err = ptypes.TimestampProto(time.Unix(endTime, 0))
+	if err != nil {
+		return nil, err
+	}
+
+	out.Name = in.Properties[kfExecutionName].GetStringValue()
+	out.Workspace = &pb.Workspace{Name: in.Properties[kfWorkspace].GetStringValue()}
+
+	if err := setPropertyMapFromStored(in.Properties, out.Properties); err != nil {
+		return nil, err
+	}
+
+	if err := setPropertyMapFromStored(in.CustomProperties, out.CustomProperties); err != nil {
+		return nil, err
+	}
+
+	return out, nil
+}
+func (s *Service) getStoredExecution(name string) (*pb.Execution, error) {
+	tokens := executionNameRE.FindStringSubmatch(name)
+	if len(tokens) != 2 {
+		return nil, fmt.Errorf("malformed Execution name %q. Must match pattern %q", name, executionNameRE)
+	}
+
+	id, err := strconv.ParseInt(tokens[1], 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse Execution id from %q: %v", tokens[1], err)
+	}
+	ids, err := s.store.GetExecutionsByID([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single new Execution id, got instead : %v", ids)
+	}
+
+	return toExecution(ids[0])
+}
+
 // CreateExecution creates the specified execution.
 func (s *Service) CreateExecution(ctx context.Context, req *pb.CreateExecutionRequest) (*pb.CreateExecutionResponse, error) {
-	return nil, nil
+	if req.Execution == nil {
+		return nil, errors.New("unspecified Execution")
+	}
+
+	if req.Execution.Id > 0 {
+		return nil, errors.New("id should remain unspecified when creating Execution")
+	}
+
+	now, err := ptypes.TimestampProto(timeNowFn())
+	if err != nil {
+		return nil, fmt.Errorf("internal error: failed to generate valid timestamp: %v", err)
+	}
+	req.Execution.CreateTime = now
+	req.Execution.UpdateTime = now
+
+	eType, err := s.getStoredExecutionType(req.Parent)
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve ExecutionType under %q: %v", req.Parent, err)
+	}
+
+	req.Execution.TypeId = eType.GetId()
+	stored, err := toStoredExecution(req.Execution)
+	if err != nil {
+		return nil, err
+	}
+
+	ids, err := s.store.PutExecutions([]*mlpb.Execution{stored})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(ids) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single new Execution id, got instead : %v", ids)
+	}
+
+	executionName := fmt.Sprintf("%s/executions/%d", req.Parent, ids[0])
+	exec, err := s.getStoredExecution(executionName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateExecutionResponse{Execution: exec}, nil
+
 }
 
 // GetExecution returns the specified execution.
 func (s *Service) GetExecution(ctx context.Context, req *pb.GetExecutionRequest) (*pb.GetExecutionResponse, error) {
-	return nil, nil
+	exec, err := s.getStoredExecution(req.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.GetExecutionResponse{Execution: exec}, nil
 }
 
 // ListExecutions returns all executions.

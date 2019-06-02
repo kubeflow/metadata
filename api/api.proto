@@ -56,7 +56,7 @@ message ExecutionType {
   // namespace.
   string name = 2;
   // Schema representing the fields and their types for this type.
-  map<string, PropertyType> type_properties = 3;
+  map<string, PropertyType> properties = 3;
 
   // Reserved for input/output types to be defined later.
   reserved 4, 5;

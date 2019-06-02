@@ -55,56 +55,6 @@
         ]
       }
     },
-    "/api/v1alpha1/execution/{id}": {
-      "get": {
-        "operationId": "GetExecution",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetExecutionResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
-    "/api/v1alpha1/execution_type/{id}": {
-      "get": {
-        "operationId": "GetExecutionType",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetExecutionTypeResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
     "/api/v1alpha1/execution_types": {
       "get": {
         "operationId": "ListExecutionTypes",
@@ -138,96 +88,6 @@
             "schema": {
               "$ref": "#/definitions/apiExecutionType"
             }
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
-    "/api/v1alpha1/execution_types/{id}": {
-      "delete": {
-        "operationId": "DeleteExecutionType",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
-    "/api/v1alpha1/executions": {
-      "get": {
-        "operationId": "ListExecutions",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiListExecutionsResponse"
-            }
-          }
-        },
-        "tags": [
-          "MetadataService"
-        ]
-      },
-      "post": {
-        "operationId": "CreateExecution",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiCreateExecutionResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiExecution"
-            }
-          }
-        ],
-        "tags": [
-          "MetadataService"
-        ]
-      }
-    },
-    "/api/v1alpha1/executions/{id}": {
-      "delete": {
-        "operationId": "DeleteExecution",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
           }
         ],
         "tags": [
@@ -296,7 +156,7 @@
         "parameters": [
           {
             "name": "name",
-            "description": "Artifact names are of the form `artifact_types/{namespace}/{name}`.",
+            "description": "ArtifactType names are of the form `artifact_types/{namespace}/{name}`.",
             "in": "path",
             "required": true,
             "type": "string"
@@ -353,6 +213,123 @@
         ]
       }
     },
+    "/api/v1alpha1/{name=execution_types/*/executions/*}": {
+      "get": {
+        "operationId": "GetExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Execution name is like\n`execution_types/{namespace}/{typename}/execution/{id}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{name=execution_types/*}": {
+      "get": {
+        "operationId": "GetExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{name=execution_types/*}/executions": {
+      "get": {
+        "operationId": "ListExecutions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/{parent=artifact_types/*}/artifacts": {
       "post": {
         "operationId": "CreateArtifact",
@@ -379,6 +356,40 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/apiArtifact"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{parent=execution_types/*}/executions": {
+      "post": {
+        "operationId": "CreateExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "Creates the specified artifact as an instance of ExecutionType with this\nfully qualified name. |parent| takes the form\n`execution_types/{namespace}/{name\u003e}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "The Execution to create. Note that Execution.type_id is ignored.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiExecution"
             }
           }
         ],
@@ -603,7 +614,7 @@
           "type": "string",
           "description": "Required. Represents the name of the type. Must be unique within a\nnamespace."
         },
-        "type_properties": {
+        "properties": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/apiPropertyType"

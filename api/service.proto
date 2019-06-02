@@ -27,6 +27,8 @@ import "google/protobuf/timestamp.proto";
 
 message CreateArtifactTypeRequest {
   ArtifactType artifact_type = 1;
+  // An optional human-readable description of this type.
+  string description = 2;
 }
 
 message CreateArtifactTypeResponse {
@@ -35,7 +37,7 @@ message CreateArtifactTypeResponse {
 }
 
 message GetArtifactTypeRequest {
-  // Artifact names are of the form `artifact_types/{namespace}/{name}`.
+  // ArtifactType names are of the form `artifact_types/{namespace}/{name}`.
   string name = 1;
 }
 
@@ -99,7 +101,7 @@ message CreateExecutionTypeResponse {
 }
 
 message GetExecutionTypeRequest {
-  int64 id = 1;
+  string name = 1;
 }
 
 message GetExecutionTypeResponse {
@@ -113,11 +115,16 @@ message ListExecutionTypesResponse {
 }
 
 message DeleteExecutionTypeRequest {
-  int64 id = 1;
+  string name = 1;
 }
 
 message CreateExecutionRequest {
-  Execution execution = 1;
+  // Creates the specified artifact as an instance of ExecutionType with this
+  // fully qualified name. |parent| takes the form
+  // `execution_types/{namespace}/{name>}`.
+  string parent = 1;
+  // The Execution to create. Note that Execution.type_id is ignored.
+  Execution execution = 2;
 }
 
 message CreateExecutionResponse {
@@ -126,21 +133,25 @@ message CreateExecutionResponse {
 }
 
 message GetExecutionRequest {
-  int64 id = 1;
+  // Execution name is like
+  // `execution_types/{namespace}/{typename}/execution/{id}`.
+  string name = 1;
 }
 
 message GetExecutionResponse {
   Execution execution = 1;
 }
 
-message ListExecutionsRequest {}
+message ListExecutionsRequest {
+  string name = 1;
+}
 
 message ListExecutionsResponse {
   repeated Execution executions = 1;
 }
 
 message DeleteExecutionRequest {
-  int64 id = 1;
+  string name = 1;
 }
 
 
@@ -214,7 +225,7 @@ service MetadataService {
   rpc GetExecutionType(GetExecutionTypeRequest)
       returns (GetExecutionTypeResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/execution_type/{id}"
+      get: "/api/v1alpha1/{name=execution_types/*}"
     };
   }
 
@@ -228,14 +239,14 @@ service MetadataService {
   rpc DeleteExecutionType(DeleteExecutionTypeRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/execution_types/{id}"
+      delete: "/api/v1alpha1/{name=execution_types/*}"
     };
   }
 
   rpc CreateExecution(CreateExecutionRequest)
       returns (CreateExecutionResponse) {
     option (google.api.http) = {
-      post: "/api/v1alpha1/executions"
+      post: "/api/v1alpha1/{parent=execution_types/*}/executions"
       body: "execution"
     };
   }
@@ -243,21 +254,21 @@ service MetadataService {
   rpc GetExecution(GetExecutionRequest)
       returns (GetExecutionResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/execution/{id}"
+      get: "/api/v1alpha1/{name=execution_types/*/executions/*}"
     };
   }
 
   rpc ListExecutions(ListExecutionsRequest)
       returns (ListExecutionsResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/executions"
+      get: "/api/v1alpha1/{name=execution_types/*}/executions"
     };
   }
 
   rpc DeleteExecution(DeleteExecutionRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/executions/{id}"
+      delete: "/api/v1alpha1/{name=execution_types/*/executions/*}"
     };
   }
 
