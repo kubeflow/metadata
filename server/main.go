@@ -41,10 +41,11 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
-	mlmdDBName       = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
-	mySQLServiceHost = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
-	mySQLServicePort = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
-	mySQLServiceUser = flag.String("mysql_service_user", "root", "MySQL Service Username.")
+	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
+	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
+	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
+	mySQLServiceUser     = flag.String("mysql_service_user", "root", "MySQL Service Username.")
+	mySQLServicePassword = flag.String("mysql_service_password", "", "MySQL Service Password.")
 )
 
 func mlmdStoreOrDie() *mlmetadata.Store {
@@ -55,6 +56,7 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 				Port:     proto.Uint32(uint32(*mySQLServicePort)),
 				Database: mlmdDBName,
 				User:     mySQLServiceUser,
+				Password: mySQLServicePassword,
 			},
 		},
 	}
