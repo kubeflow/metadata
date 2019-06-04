@@ -27,6 +27,8 @@ import "google/protobuf/timestamp.proto";
 
 message CreateArtifactTypeRequest {
   ArtifactType artifact_type = 1;
+  // An optional human-readable description of this type.
+  string description = 2;
 }
 
 message CreateArtifactTypeResponse {
@@ -35,7 +37,7 @@ message CreateArtifactTypeResponse {
 }
 
 message GetArtifactTypeRequest {
-  // Artifact names are of the form `artifact_types/{namespace}/{name}`.
+  // ArtifactType names are of the form `artifact_types/{namespace}/{name}`.
   string name = 1;
 }
 
@@ -89,9 +91,71 @@ message DeleteArtifactRequest {
   string name = 1;
 }
 
+message CreateExecutionTypeRequest {
+  ExecutionType execution_type = 1;
+}
+
+message CreateExecutionTypeResponse {
+  // Newly created execution type with id.
+  ExecutionType execution_type = 1;
+}
+
+message GetExecutionTypeRequest {
+  string name = 1;
+}
+
+message GetExecutionTypeResponse {
+  ExecutionType execution_type = 1;
+}
+
+message ListExecutionTypesRequest {}
+
+message ListExecutionTypesResponse {
+  repeated ExecutionType execution_types = 1;
+}
+
+message DeleteExecutionTypeRequest {
+  string name = 1;
+}
+
+message CreateExecutionRequest {
+  // Creates the specified artifact as an instance of ExecutionType with this
+  // fully qualified name. |parent| takes the form
+  // `execution_types/{namespace}/{name>}`.
+  string parent = 1;
+  // The Execution to create. Note that Execution.type_id is ignored.
+  Execution execution = 2;
+}
+
+message CreateExecutionResponse {
+  // Newly created execution with id.
+  Execution execution = 1;
+}
+
+message GetExecutionRequest {
+  // Execution name is like
+  // `execution_types/{namespace}/{typename}/execution/{id}`.
+  string name = 1;
+}
+
+message GetExecutionResponse {
+  Execution execution = 1;
+}
+
+message ListExecutionsRequest {
+  string name = 1;
+}
+
+message ListExecutionsResponse {
+  repeated Execution executions = 1;
+}
+
+message DeleteExecutionRequest {
+  string name = 1;
+}
+
 
 service MetadataService {
-
   // NOTE:
   // The order of the following RPC methods affects the order of matching
   // a particular HTTP path. So put a more specific path pattern before
@@ -99,7 +163,6 @@ service MetadataService {
   // GET /api/v1alpha1/{parent=artifact_types/**}/artifacts
   // should appear before
   // GET /api/v1alpha1/{name=artifact_types/**} to be possibly matched.
-
   rpc CreateArtifact(CreateArtifactRequest)
       returns (CreateArtifactResponse) {
     option (google.api.http) = {
@@ -129,18 +192,40 @@ service MetadataService {
     };
   }
 
+  rpc CreateExecution(CreateExecutionRequest)
+      returns (CreateExecutionResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/{parent=execution_types/**}/executions"
+      body: "execution"
+    };
+  }
+
+  rpc GetExecution(GetExecutionRequest)
+      returns (GetExecutionResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=execution_types/**/executions/*}"
+    };
+  }
+
+  rpc ListExecutions(ListExecutionsRequest)
+      returns (ListExecutionsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=execution_types/**}/executions"
+    };
+  }
+
+  rpc DeleteExecution(DeleteExecutionRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/{name=execution_types/**/executions/*}"
+    };
+  }
+
   rpc CreateArtifactType(CreateArtifactTypeRequest)
       returns (CreateArtifactTypeResponse) {
     option (google.api.http) = {
       post: "/api/v1alpha1/artifact_types"
       body: "artifact_type"
-    };
-  }
-
-  rpc ListArtifactTypes(ListArtifactTypesRequest)
-      returns (ListArtifactTypesResponse) {
-    option (google.api.http) = {
-      get: "/api/v1alpha1/artifact_types"
     };
   }
 
@@ -151,6 +236,13 @@ service MetadataService {
     };
   }
 
+  rpc ListArtifactTypes(ListArtifactTypesRequest)
+      returns (ListArtifactTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/artifact_types"
+    };
+  }
+
   rpc DeleteArtifactType(DeleteArtifactTypeRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
@@ -158,10 +250,37 @@ service MetadataService {
     };
   }
 
+
+  rpc CreateExecutionType(CreateExecutionTypeRequest)
+      returns (CreateExecutionTypeResponse) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/execution_types"
+      body: "execution_type"
+    };
+  }
+
+  rpc GetExecutionType(GetExecutionTypeRequest)
+      returns (GetExecutionTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=execution_types/**}"
+    };
+  }
+
+  rpc ListExecutionTypes(ListExecutionTypesRequest)
+      returns (ListExecutionTypesResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/execution_types"
+    };
+  }
+
+  rpc DeleteExecutionType(DeleteExecutionTypeRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/api/v1alpha1/{name=execution_types/**}"
+    };
+  }
+
   // TODO(neuromage): Flesh out CRUD methods on the following resources:
   // - Workspaces
   // - Namespaces
-  // - Artifacts
-  // - Executions
-  // - ExecutionTypes
 }

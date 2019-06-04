@@ -55,6 +55,46 @@
         ]
       }
     },
+    "/api/v1alpha1/execution_types": {
+      "get": {
+        "operationId": "ListExecutionTypes",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionTypesResponse"
+            }
+          }
+        },
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "post": {
+        "operationId": "CreateExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiExecutionType"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/{name=artifact_types/**/artifacts/*}": {
       "get": {
         "operationId": "GetArtifact",
@@ -116,7 +156,7 @@
         "parameters": [
           {
             "name": "name",
-            "description": "Artifact names are of the form `artifact_types/{namespace}/{name}`.",
+            "description": "ArtifactType names are of the form `artifact_types/{namespace}/{name}`.",
             "in": "path",
             "required": true,
             "type": "string"
@@ -173,8 +213,126 @@
         ]
       }
     },
+    "/api/v1alpha1/{name=execution_types/**/executions/*}": {
+      "get": {
+        "operationId": "GetExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "description": "Execution name is like\n`execution_types/{namespace}/{typename}/execution/{id}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{name=execution_types/**}": {
+      "get": {
+        "operationId": "GetExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/{name=execution_types/**}/executions": {
+      "get": {
+        "operationId": "ListExecutions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/{parent=artifact_types/**}/artifacts": {
       "post": {
+        "summary": "NOTE:\nThe order of the following RPC methods affects the order of matching\na particular HTTP path. So put a more specific path pattern before\na generic one. For example,\nGET /api/v1alpha1/{parent=artifact_types/**}/artifacts\nshould appear before\nGET /api/v1alpha1/{name=artifact_types/**} to be possibly matched.",
         "operationId": "CreateArtifact",
         "responses": {
           "200": {
@@ -206,9 +364,55 @@
           "MetadataService"
         ]
       }
+    },
+    "/api/v1alpha1/{parent=execution_types/**}/executions": {
+      "post": {
+        "operationId": "CreateExecution",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreateExecutionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parent",
+            "description": "Creates the specified artifact as an instance of ExecutionType with this\nfully qualified name. |parent| takes the form\n`execution_types/{namespace}/{name\u003e}`.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "description": "The Execution to create. Note that Execution.type_id is ignored.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiExecution"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
     }
   },
   "definitions": {
+    "ExecutionState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NEW",
+        "RUNNING",
+        "COMPLETE",
+        "FAILED"
+      ],
+      "default": "UNKNOWN",
+      "description": "State captures the state of the execution."
+    },
     "apiArtifact": {
       "type": "object",
       "properties": {
@@ -312,6 +516,119 @@
         }
       }
     },
+    "apiCreateExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "execution": {
+          "$ref": "#/definitions/apiExecution",
+          "description": "Newly created execution with id."
+        }
+      }
+    },
+    "apiCreateExecutionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "execution_type": {
+          "$ref": "#/definitions/apiExecutionType",
+          "description": "Newly created execution type with id."
+        }
+      }
+    },
+    "apiExecution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "type_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The type of the execution."
+        },
+        "last_known_state": {
+          "$ref": "#/definitions/ExecutionState",
+          "description": "The last known state of an execution."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Properties must be specified in ExecutionType."
+        },
+        "custom_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiValue"
+          },
+          "description": "Arbitrary user-provided properties that do not correspond to fields in the\nschema for the execution type."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional. Human-readable name of the execution."
+        },
+        "workspace": {
+          "$ref": "#/definitions/apiWorkspace",
+          "description": "Required. The workspace that the execution belongs to. Empty defaults to\nthe 'default' workspace."
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Arbitrary key-value pairs for labeling."
+        },
+        "create_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was created. System-provided."
+        },
+        "update_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was last updated. System-provided."
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution was started."
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time at which the execution ended."
+        }
+      },
+      "description": "Execution represents metadata about a machine-learning workflow execution\nstep."
+    },
+    "apiExecutionType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "System-provided id."
+        },
+        "name": {
+          "type": "string",
+          "description": "Required. Represents the name of the type. Must be unique within a\nnamespace."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/apiPropertyType"
+          },
+          "description": "Schema representing the fields and their types for this type."
+        },
+        "description": {
+          "type": "string",
+          "description": "An optional human-readable description of this type."
+        }
+      },
+      "description": "ExecutionType represents the type of an ML execution step."
+    },
     "apiGetArtifactResponse": {
       "type": "object",
       "properties": {
@@ -325,6 +642,22 @@
       "properties": {
         "artifact_type": {
           "$ref": "#/definitions/apiArtifactType"
+        }
+      }
+    },
+    "apiGetExecutionResponse": {
+      "type": "object",
+      "properties": {
+        "execution": {
+          "$ref": "#/definitions/apiExecution"
+        }
+      }
+    },
+    "apiGetExecutionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "execution_type": {
+          "$ref": "#/definitions/apiExecutionType"
         }
       }
     },
@@ -347,6 +680,30 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/apiArtifact"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiListExecutionTypesResponse": {
+      "type": "object",
+      "properties": {
+        "execution_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiExecutionType"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiListExecutionsResponse": {
+      "type": "object",
+      "properties": {
+        "executions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiExecution"
           },
           "collectionFormat": "multi"
         }
