@@ -1,5 +1,5 @@
-from kfmd import metadata
 import unittest
+from kfmd import metadata
 
 class TestMetedata(unittest.TestCase):
 

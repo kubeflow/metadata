@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import swagger_client
 from swagger_client import Configuration, ApiClient, MetadataServiceApi
 
@@ -54,6 +55,8 @@ class Run(object):
   Captures a run of pipeline or notebooks in a workspace and provides logging
   methods for artifacts.
   """
+  # Property name to capture the whole seriazlized artifact.
+  ALL_META = "__ALL_META__"
 
   def __init__(self, workspace=None, name=None, description=None):
     """
@@ -92,14 +95,18 @@ class Run(object):
     """
     Log a model as an output of this run to metadata backend serivce.
     """
-    workspace = model.workspace if model.workspace!=None
-      else self.workspace.name
+    # TODO(zhenghui): log the model as the output of an execution.
+    workspace = model.workspace if model.workspace != None else self.workspace.name
     model_artifact = swagger_client.ApiArtifact(
       workspace=swagger_client.ApiWorkspace(name=workspace),
       uri=model.uri,
       name=model.name,
       properties={
         "description": swagger_client.ApiValue(string_value=model.description),
+        "model_type": swagger_client.ApiValue(string_value=model.model_type),
+        "version": swagger_client.ApiValue(string_value=model.version),
+        "owner": swagger_client.ApiValue(string_value=model.owner),
+        self.ALL_META: swagger_client.ApiValue(string_value=json.dumps(model.json())),
       }
     )
     print(self.workspace._client.create_artifact(
@@ -192,6 +199,19 @@ class Model(object):
     self._id = ""
     self._create_time = ""
 
+  def json(self):
+    return {
+      "id": self._id,
+      "name": self.name,
+      "description": self.description,
+      "owner": self.owner,
+      "uri": self.uri,
+      "version": self.version,
+      "model_type": self.model_type,
+      "hyperparameters": self.hyperparameters,
+      "training_framework": self.training_framework,
+    }
+
 
 class Metrics(object):
   """Captures an evaulation metrics of a model on a data set."""
@@ -239,4 +259,4 @@ class Metrics(object):
     self.values = values
     self.labels = labels
     self._id = ""
-    self._create_time = ""
+
