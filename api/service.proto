@@ -156,6 +156,13 @@ message DeleteExecutionRequest {
 
 
 service MetadataService {
+  // NOTE:
+  // The order of the following RPC methods affects the order of matching
+  // a particular HTTP path. So put a more specific path pattern before
+  // a generic one. For example,
+  // GET /api/v1alpha1/{parent=artifact_types/**}/artifacts
+  // should appear before
+  // GET /api/v1alpha1/{name=artifact_types/**} to be possibly matched.
   rpc CreateArtifact(CreateArtifactRequest)
       returns (CreateArtifactResponse) {
     option (google.api.http) = {
@@ -167,7 +174,7 @@ service MetadataService {
   rpc GetArtifact(GetArtifactRequest)
       returns (GetArtifactResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{name=artifact_types/**/artifacts/**}"
+      get: "/api/v1alpha1/{name=artifact_types/**/artifacts/*}"
     };
   }
 
@@ -181,7 +188,7 @@ service MetadataService {
   rpc DeleteArtifact(DeleteArtifactRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/{name=artifact_types/**/artifacts/**}"
+      delete: "/api/v1alpha1/{name=artifact_types/**/artifacts/*}"
     };
   }
 
@@ -196,7 +203,7 @@ service MetadataService {
   rpc GetExecution(GetExecutionRequest)
       returns (GetExecutionResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/{name=execution_types/**/executions/**}"
+      get: "/api/v1alpha1/{name=execution_types/**/executions/*}"
     };
   }
 
@@ -210,7 +217,7 @@ service MetadataService {
   rpc DeleteExecution(DeleteExecutionRequest)
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/api/v1alpha1/{name=execution_types/**/executions/**}"
+      delete: "/api/v1alpha1/{name=execution_types/**/executions/*}"
     };
   }
 

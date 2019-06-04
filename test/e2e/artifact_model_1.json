@@ -1,0 +1,27 @@
+{
+    "name": "MNIST",
+    "uri": "gs://my-bucket/mnist",
+    "workspace": {
+        "name": "workspace1"
+    },
+    "properties": {
+        "description": {
+            "string_value": "model to recognize handwritten digits"
+        },
+        "model_type": {
+            "string_value": "neural network"
+        },
+        "owner": {
+            "string_value": "someone@kubeflow.org"
+        },
+        "version": {
+            "string_value": "v0.0.1"
+        },
+        "__ALL_META__": {
+            "string_value": "{\"description\":\"model to recognize handwritten digits\",\"hyperparameters\":{\"early_stop\":true,\"layers\":[10,3,1],\"learning_rate\":0.5},\"model_type\":\"neural network\",\"name\":\"MNIST\",\"owner\":\"someone@kubeflow.org\",\"training_framework\":{\"name\":\"tensorflow\",\"vesrion\":\"v1.0\"},\"uri\":\"gcs://my-bucket/mnist\",\"version\":\"v0.0.1\"}"
+        }
+    },
+    "labels": {
+        "key1": "val1"
+    }
+}
