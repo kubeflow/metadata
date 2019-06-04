@@ -95,24 +95,29 @@ class Run(object):
     """
     Log a model as an output of this run to metadata backend serivce.
     """
+
     # TODO(zhenghui): log the model as the output of an execution.
     workspace = model.workspace if model.workspace != None else self.workspace.name
     model_artifact = swagger_client.ApiArtifact(
-      workspace=swagger_client.ApiWorkspace(name=workspace),
-      uri=model.uri,
-      name=model.name,
-      properties={
-        "description": swagger_client.ApiValue(string_value=model.description),
-        "model_type": swagger_client.ApiValue(string_value=model.model_type),
-        "version": swagger_client.ApiValue(string_value=model.version),
-        "owner": swagger_client.ApiValue(string_value=model.owner),
-        self.ALL_META: swagger_client.ApiValue(string_value=json.dumps(model.json())),
-      }
-    )
-    print(self.workspace._client.create_artifact(
+        workspace=swagger_client.ApiWorkspace(name=workspace),
+        uri=model.uri,
+        name=model.name,
+        properties={
+            "description":
+                swagger_client.ApiValue(string_value=model.description),
+            "model_type":
+                swagger_client.ApiValue(string_value=model.model_type),
+            "version":
+                swagger_client.ApiValue(string_value=model.version),
+            "owner":
+                swagger_client.ApiValue(string_value=model.owner),
+            self.ALL_META:
+                swagger_client.ApiValue(string_value=json.dumps(model.json())),
+        })
+    return self.workspace._client.create_artifact(
       parent="artifact_types/kubeflow.org/alpha/model",
       body=model_artifact,
-    ))
+    )
 
 class DataSet(object):
   """
@@ -259,4 +264,4 @@ class Metrics(object):
     self.values = values
     self.labels = labels
     self._id = ""
-
+    self._create_time = ""

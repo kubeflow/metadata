@@ -53,7 +53,9 @@ done
 for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
   TARGET=$(basename "${GENERATED_FILE}")
   cp "${GENERATED_FILE}" "${TARGET}"
-  # Replace HTTP path pattern /{VAR=<subpaths>}... with /{VAR}
+  # Fix incorrectly generated HTTP path in swagger file due to
+  # https://github.com/grpc-ecosystem/grpc-gateway/issues/407 by
+  # replacing HTTP path pattern "/{VAR=<subpaths>}..." with "/{VAR}...".
   sed -r --in-place 's/\{(\w+)=[a-zA-Z_/*]+\}/\{\1\}/g;' "${TARGET}"
 done
 
