@@ -53,6 +53,8 @@ done
 for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
   TARGET=$(basename "${GENERATED_FILE}")
   cp "${GENERATED_FILE}" "${TARGET}"
+  # Replace HTTP path pattern /{VAR=<subpaths>}... with /{VAR}
+  sed -r --in-place 's/\{(\w+)=[a-zA-Z_/*]+\}/\{\1\}/g;' "${TARGET}"
 done
 
 # Finally, run gazelle to add BUILD files for the generated code.

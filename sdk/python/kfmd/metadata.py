@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import swagger_client
+from swagger_client import Configuration, ApiClient, MetadataServiceApi
+
 """
 This module conatins Python API for logging metadata of machine learning
 workflows to Kubeflow Metadata service.
@@ -41,8 +44,10 @@ class Workspace(object):
     self.name = name
     self.description = description
     self.labels = labels
-    self._user = "" #TODO: get user from env
-    self._id = ""
+
+    config = Configuration()
+    config.host = backend_url_prefix
+    self._client = MetadataServiceApi(ApiClient(config))
 
 class Run(object):
   """
@@ -87,7 +92,20 @@ class Run(object):
     """
     Log a model as an output of this run to metadata backend serivce.
     """
-    pass
+    workspace = model.workspace if model.workspace!=None
+      else self.workspace.name
+    model_artifact = swagger_client.ApiArtifact(
+      workspace=swagger_client.ApiWorkspace(name=workspace),
+      uri=model.uri,
+      name=model.name,
+      properties={
+        "description": swagger_client.ApiValue(string_value=model.description),
+      }
+    )
+    print(self.workspace._client.create_artifact(
+      parent="artifact_types/kubeflow.org/alpha/model",
+      body=model_artifact,
+    ))
 
 class DataSet(object):
   """
@@ -145,7 +163,6 @@ class Model(object):
                model_type=None,
                training_framework=None,
                hyperparameters=None,
-               query=None,
                labels=None,
                **kwargs):
     """
@@ -171,7 +188,6 @@ class Model(object):
     self.model_type = model_type
     self.training_framework = training_framework
     self.hyperparameters = hyperparameters
-    self.query = query
     self.labels = labels
     self._id = ""
     self._create_time = ""

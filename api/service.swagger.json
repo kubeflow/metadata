@@ -55,7 +55,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/*/artifacts/*}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetArtifact",
         "responses": {
@@ -102,7 +102,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/*}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetArtifactType",
         "responses": {
@@ -149,7 +149,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/*}/artifacts": {
+    "/api/v1alpha1/{name}/artifacts": {
       "get": {
         "operationId": "ListArtifacts",
         "responses": {
@@ -173,7 +173,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent=artifact_types/*}/artifacts": {
+    "/api/v1alpha1/{parent}/artifacts": {
       "post": {
         "operationId": "CreateArtifact",
         "responses": {

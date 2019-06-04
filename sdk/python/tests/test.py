@@ -1,4 +1,4 @@
-import metadata
+from kfmd import metadata
 import unittest
 
 class TestMetedata(unittest.TestCase):
