@@ -55,8 +55,6 @@ class Run(object):
   Captures a run of pipeline or notebooks in a workspace and provides logging
   methods for artifacts.
   """
-  # Property name to capture the whole seriazlized artifact.
-  ALL_META = "__ALL_META__"
 
   def __init__(self, workspace=None, name=None, description=None):
     """
@@ -76,48 +74,30 @@ class Run(object):
     self.name = name
     self.description = description
 
-  def log_data_set(self, data_set):
+  def log(self, artifact):
     """
-    Log a DataSet as an input of this run to metadata backend serivce.
-    """
-    # TODO(zhenghuiwang): dedup the data set based the uri and version set by
-    # the user: Retrieve the id of previous insertion instead of create it
-    # again.
-    pass
+    Log an artifact as an input or output of this run to
+    metadata backend serivce.
 
-  def log_metrics(self, metrics):
-    """
-    Log a metrics as an output of this run to metadata backend serivce.
-    """
-    pass
+    This method expects `artifact` to have
+      - type_name() method to return the full type name in the form of
+        /artifact_types/<namespace>/<name>.
+      - serialization() method to return a swagger_client.ApiArtifact.
 
-  def log_model(self, model):
-    """
-    Log a model as an output of this run to metadata backend serivce.
+    This method will set artifact._id and artifact._create_time.
     """
 
-    # TODO(zhenghui): log the model as the output of an execution.
-    workspace = model.workspace if model.workspace != None else self.workspace.name
-    model_artifact = swagger_client.ApiArtifact(
-        workspace=swagger_client.ApiWorkspace(name=workspace),
-        uri=model.uri,
-        name=model.name,
-        properties={
-            "description":
-                swagger_client.ApiValue(string_value=model.description),
-            "model_type":
-                swagger_client.ApiValue(string_value=model.model_type),
-            "version":
-                swagger_client.ApiValue(string_value=model.version),
-            "owner":
-                swagger_client.ApiValue(string_value=model.owner),
-            self.ALL_META:
-                swagger_client.ApiValue(string_value=json.dumps(model.json())),
-        })
-    return self.workspace._client.create_artifact(
-      parent="artifact_types/kubeflow.org/alpha/model",
-      body=model_artifact,
+    # TODO(zhenghui): log this artifact as the input or output of an execution.
+    serialization = artifact.serialization()
+    if serialization.workspace.name == None:
+      serialization.workspace.name = self.workspace.name
+    response = self.workspace._client.create_artifact(
+      parent=artifact.type_name(),
+      body=serialization,
     )
+    artifact._id = response.artifact.id
+    artifact._create_time = response.artifact.create_time
+    return response
 
 class DataSet(object):
   """
@@ -159,6 +139,39 @@ class DataSet(object):
     self.labels = labels
     self._id = ""
     self._create_time = ""
+
+  def type_name(self):
+    return "artifact_types/kubeflow.org/alpha/data_set"
+
+  def serialization(self):
+    data_set_artifact = swagger_client.ApiArtifact(
+        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+        uri=self.uri,
+        name=self.name,
+        properties={
+            "description":
+                swagger_client.ApiValue(string_value=self.description),
+            "query":
+                swagger_client.ApiValue(string_value=self.query),
+            "version":
+                swagger_client.ApiValue(string_value=self.version),
+            "owner":
+                swagger_client.ApiValue(string_value=self.owner),
+            "__ALL_META__":
+                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+        })
+    return data_set_artifact
+
+  def json(self):
+    return {
+      "id": self._id,
+      "name": self.name,
+      "description": self.description,
+      "owner": self.owner,
+      "uri": self.uri,
+      "version": self.version,
+      "query": self.query,
+    }
 
 class Model(object):
   """
@@ -203,6 +216,28 @@ class Model(object):
     self.labels = labels
     self._id = ""
     self._create_time = ""
+
+  def type_name(self):
+    return "artifact_types/kubeflow.org/alpha/model"
+
+  def serialization(self):
+    model_artifact = swagger_client.ApiArtifact(
+        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+        uri=self.uri,
+        name=self.name,
+        properties={
+            "description":
+                swagger_client.ApiValue(string_value=self.description),
+            "model_type":
+                swagger_client.ApiValue(string_value=self.model_type),
+            "version":
+                swagger_client.ApiValue(string_value=self.version),
+            "owner":
+                swagger_client.ApiValue(string_value=self.owner),
+            "__ALL_META__":
+                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+        })
+    return model_artifact
 
   def json(self):
     return {
@@ -265,3 +300,41 @@ class Metrics(object):
     self.labels = labels
     self._id = ""
     self._create_time = ""
+
+  def type_name(self):
+    return "artifact_types/kubeflow.org/alpha/metrics"
+
+  def serialization(self):
+    model_artifact = swagger_client.ApiArtifact(
+        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+        uri=self.uri,
+        name=self.name,
+        properties={
+            "description":
+                swagger_client.ApiValue(string_value=self.description),
+            "metrics_type":
+                swagger_client.ApiValue(string_value=self.metrics_type),
+            "data_set_id":
+                swagger_client.ApiValue(string_value=self.data_set_id),
+            "model_id":
+                swagger_client.ApiValue(string_value=self.model_id),
+            "owner":
+                swagger_client.ApiValue(string_value=self.owner),
+            "__ALL_META__":
+                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+        })
+    return model_artifact
+
+  def json(self):
+    return {
+      "id": self._id,
+      "name": self.name,
+      "description": self.description,
+      "owner": self.owner,
+      "uri": self.uri,
+      "metrics_type": self.metrics_type,
+      "data_set_id": self.data_set_id,
+      "model_id": self.model_id,
+      "values": self.values,
+    }
+
