@@ -56,9 +56,13 @@ message ExecutionType {
   // namespace.
   string name = 2;
   // Schema representing the fields and their types for this type.
-  map<string, PropertyType> type_properties = 3;
+  map<string, PropertyType> properties = 3;
+
+  // Reserved for input/output types to be defined later.
+  reserved 4, 5;
+
   // An optional human-readable description of this type.
-  string description = 4;
+  string description = 6;
 }
 
 // Artifact represents metadata about a machine-learning workflow artifact.
@@ -93,26 +97,42 @@ message Artifact {
 message Execution {
   // System-provided id.
   int64 id = 1;
-  // Optional. Human-readable name of the artifact.
-  string name = 2;
-  // Required. The workspace that the execution belongs to. Empty defaults to
-  // the 'default' workspace.
-  Workspace workspace = 3;
+  // The type of the execution.
+  int64 type_id = 2;
+
+  // State captures the state of the execution.
+  enum State {
+    UNKNOWN = 0;
+    NEW = 1;
+    RUNNING = 2;
+    COMPLETE = 3;
+    FAILED = 4;
+  }
+
+  // The last known state of an execution.
+  State last_known_state = 3;
   // Properties must be specified in ExecutionType.
   map<string, Value> properties = 4;
   // Arbitrary user-provided properties that do not correspond to fields in the
   // schema for the execution type.
   map<string, Value> custom_properties = 5;
+
+  // Optional. Human-readable name of the execution.
+  string name = 6;
+  // Required. The workspace that the execution belongs to. Empty defaults to
+  // the 'default' workspace.
+  Workspace workspace = 7;
   // Arbitrary key-value pairs for labeling.
-  map<string, string> labels = 6;
+  map<string, string> labels = 8;
+
   // The time at which the execution was created. System-provided.
-  google.protobuf.Timestamp create_time = 7;
+  google.protobuf.Timestamp create_time = 9;
   // The time at which the execution was last updated. System-provided.
-  google.protobuf.Timestamp update_time = 8;
+  google.protobuf.Timestamp update_time = 10;
   // The time at which the execution was started.
-  google.protobuf.Timestamp start_time = 9;
+  google.protobuf.Timestamp start_time = 11;
   // The time at which the execution ended.
-  google.protobuf.Timestamp end_time = 10;
+  google.protobuf.Timestamp end_time = 12;
 }
 
 
