@@ -80,7 +80,7 @@ class Run(object):
     metadata backend serivce.
 
     This method expects `artifact` to have
-      - type_name() method to return the full type name in the form of
+      - ARTIFACT_TYPE_NAME stirng field the form of
         /artifact_types/<namespace>/<name>.
       - serialization() method to return a swagger_client.ApiArtifact.
 
@@ -92,7 +92,7 @@ class Run(object):
     if serialization.workspace.name == None:
       serialization.workspace.name = self.workspace.name
     response = self.workspace._client.create_artifact(
-      parent=artifact.type_name(),
+      parent=artifact.ARTIFACT_TYPE_NAME,
       body=serialization,
     )
     artifact._id = response.artifact.id
@@ -103,6 +103,7 @@ class DataSet(object):
   """
   Captures a data set in a machine learning workflow.
   """
+  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/data_set"
 
   def __init__(self,
                workspace=None,
@@ -140,9 +141,6 @@ class DataSet(object):
     self._id = ""
     self._create_time = ""
 
-  def type_name(self):
-    return "artifact_types/kubeflow.org/alpha/data_set"
-
   def serialization(self):
     data_set_artifact = swagger_client.ApiArtifact(
         workspace=swagger_client.ApiWorkspace(name=self.workspace),
@@ -177,6 +175,8 @@ class Model(object):
   """
   Captures a machine learning model.
   """
+
+  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/model"
 
   def __init__(self,
                workspace=None,
@@ -217,9 +217,6 @@ class Model(object):
     self._id = ""
     self._create_time = ""
 
-  def type_name(self):
-    return "artifact_types/kubeflow.org/alpha/model"
-
   def serialization(self):
     model_artifact = swagger_client.ApiArtifact(
         workspace=swagger_client.ApiWorkspace(name=self.workspace),
@@ -255,6 +252,10 @@ class Model(object):
 
 class Metrics(object):
   """Captures an evaulation metrics of a model on a data set."""
+
+  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/metrics"
+
+  # Possible evaluation metrics types.
   TRAINING = "training"
   VALIDATION = "validation"
   TESTING = "testing"
@@ -300,9 +301,6 @@ class Metrics(object):
     self.labels = labels
     self._id = ""
     self._create_time = ""
-
-  def type_name(self):
-    return "artifact_types/kubeflow.org/alpha/metrics"
 
   def serialization(self):
     model_artifact = swagger_client.ApiArtifact(
