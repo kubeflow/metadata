@@ -35,6 +35,9 @@ curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/
 # Add a model artifact
 curl -X POST -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts -d @artifact_model_1.json
 
+# List all artifacts.
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifacts
+
 # List all model artifacts
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts
 

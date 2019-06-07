@@ -180,8 +180,12 @@ service MetadataService {
 
   rpc ListArtifacts(ListArtifactsRequest)
       returns (ListArtifactsResponse) {
+    // List artifacts for a given artifact type.
     option (google.api.http) = {
       get: "/api/v1alpha1/{name=artifact_types/**}/artifacts"
+      additional_bindings {
+        get: "/api/v1alpha1/artifacts"
+      }
     };
   }
 
