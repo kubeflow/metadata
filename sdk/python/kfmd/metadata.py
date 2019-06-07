@@ -97,7 +97,7 @@ class Run(object):
     )
     artifact._id = response.artifact.id
     artifact._create_time = response.artifact.create_time
-    return response
+    return artifact
 
 class DataSet(object):
   """
