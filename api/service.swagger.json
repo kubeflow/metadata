@@ -119,7 +119,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/**/artifacts/*}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetArtifact",
         "responses": {
@@ -166,7 +166,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/**}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetArtifactType",
         "responses": {
@@ -213,7 +213,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=artifact_types/**}/artifacts": {
+    "/api/v1alpha1/{name}/artifacts": {
       "get": {
         "operationId": "ListArtifacts",
         "responses": {
@@ -237,7 +237,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=execution_types/**/executions/*}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetExecution",
         "responses": {
@@ -284,7 +284,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=execution_types/**}": {
+    "/api/v1alpha1/{name}": {
       "get": {
         "operationId": "GetExecutionType",
         "responses": {
@@ -330,7 +330,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name=execution_types/**}/executions": {
+    "/api/v1alpha1/{name}/executions": {
       "get": {
         "operationId": "ListExecutions",
         "responses": {
@@ -354,9 +354,9 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent=artifact_types/**}/artifacts": {
+    "/api/v1alpha1/{parent}/artifacts": {
       "post": {
-        "summary": "NOTE:\nThe order of the following RPC methods affects the order of matching\na particular HTTP path. So put a more specific path pattern before\na generic one. For example,\nGET /api/v1alpha1/{parent=artifact_types/**}/artifacts\nshould appear before\nGET /api/v1alpha1/{name=artifact_types/**} to be possibly matched.",
+        "summary": "NOTE:\nThe order of the following RPC methods affects the order of matching\na particular HTTP path. So put a more specific path pattern before\na generic one. For example,\nGET /api/v1alpha1/{parent}/artifacts\nshould appear before\nGET /api/v1alpha1/{name} to be possibly matched.",
         "operationId": "CreateArtifact",
         "responses": {
           "200": {
@@ -389,7 +389,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent=execution_types/**}/executions": {
+    "/api/v1alpha1/{parent}/executions": {
       "post": {
         "operationId": "CreateExecution",
         "responses": {
