@@ -554,9 +554,16 @@ func (s *Service) GetArtifact(ctx context.Context, req *pb.GetArtifactRequest) (
 	return &pb.GetArtifactResponse{Artifact: artifact}, nil
 }
 
-// ListArtifacts lists all known artifacts.
+// ListArtifacts lists all known artifacts if artfact type name is not set or lists all artifacts of a given type name.
 func (s *Service) ListArtifacts(ctx context.Context, req *pb.ListArtifactsRequest) (*pb.ListArtifactsResponse, error) {
-	storedArtifacts, err := s.store.GetArtifacts()
+	var storedArtifacts []*mlpb.Artifact
+	var err error
+	if req.GetName() == "" {
+		storedArtifacts, err = s.store.GetArtifacts()
+	} else {
+		typename := strings.TrimPrefix(req.GetName(), artifactTypesCollection)
+		storedArtifacts, err = s.store.GetArtifactsByType(typename)
+	}
 	if err != nil {
 		return nil, err
 	}

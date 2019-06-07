@@ -321,6 +321,92 @@ func TestArtifactCreation(t *testing.T) {
 	}
 }
 
+func TestListArtifacts(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	timeNowFn = func() time.Time {
+		return time.Unix(123, 0)
+	}
+
+	ctx := context.Background()
+	req := &pb.CreateArtifactTypeRequest{
+		ArtifactType: &pb.ArtifactType{
+			Name: "kubeflow.org/v1/Model",
+			Properties: map[string]pb.PropertyType{
+				"string_field": pb.PropertyType_STRING,
+				"int_field":    pb.PropertyType_INT,
+				"double_field": pb.PropertyType_DOUBLE,
+			},
+		},
+	}
+	_, err := svc.CreateArtifactType(ctx, req)
+	if err != nil {
+		t.Fatalf("Failed to create ArtifactType with request %v: %v", req, err)
+	}
+	req = &pb.CreateArtifactTypeRequest{
+		ArtifactType: &pb.ArtifactType{
+			Name: "kubeflow.org/v1/DataSet",
+			Properties: map[string]pb.PropertyType{
+				"int_field":    pb.PropertyType_INT,
+				"double_field": pb.PropertyType_DOUBLE,
+			},
+		},
+	}
+	_, err = svc.CreateArtifactType(ctx, req)
+	if err != nil {
+		t.Fatalf("Failed to create ArtifactType with request %v: %v", req, err)
+	}
+
+	artifacts := []string{
+		` artifact {
+				uri: "gs://some-uri"
+				name: "My Model"
+				workspace: { name: "my workspace" }
+				properties { key: "string_field" value { string_value: "string value" }}
+				properties { key: "int_field" value { int_value: 100 }}
+				properties { key: "double_field" value { double_value: 1.1 }}
+				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
+				custom_properties { key: "custom_int_field" value { int_value: 200 }}
+				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }
+			   parent: "artifact_types/kubeflow.org/v1/Model" `,
+		` artifact {
+				uri: "gs://some-uri-to-dataset"
+				name: "My Dataset"
+				workspace: { name: "my workspace" }
+				properties { key: "int_field" value { int_value: 100 }}
+				properties { key: "double_field" value { double_value: 1.1 }}
+				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }
+			   parent: "artifact_types/kubeflow.org/v1/DataSet" `,
+	}
+
+	for i, artifact := range artifacts {
+		req := &pb.CreateArtifactRequest{}
+		if err := proto.UnmarshalText(artifact, req); err != nil {
+			t.Fatalf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+		}
+		_, err := svc.CreateArtifact(ctx, req)
+		if err != nil {
+			t.Fatalf("Test case %d\nCreateArtifact\nRequest:\n%v\nGot error:\n%v\nWant nil error\n", i, req, err)
+		}
+	}
+
+	fulllist, err := svc.ListArtifacts(ctx, &pb.ListArtifactsRequest{})
+	if err != nil {
+		t.Fatalf("Failed to get artifact list: %v\n", err)
+	}
+	if len(fulllist.Artifacts) != 2 {
+		t.Errorf("Expect to get 2 artifacts but got %v\n", fulllist.Artifacts)
+	}
+	modellist, err := svc.ListArtifacts(ctx, &pb.ListArtifactsRequest{Name: "artifact_types/kubeflow.org/v1/Model"})
+	if err != nil {
+		t.Fatalf("Failed to get artifact list: %v\n", err)
+	}
+	if len(modellist.Artifacts) != 1 {
+		t.Errorf("Expect to get 1 artifact but got %v\n", modellist.Artifacts)
+	}
+}
+
 func TestExecutionTypeCreation(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)

@@ -55,6 +55,30 @@
         ]
       }
     },
+    "/api/v1alpha1/artifacts": {
+      "get": {
+        "operationId": "ListArtifacts2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListArtifactsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/execution_types": {
       "get": {
         "operationId": "ListExecutionTypes",
