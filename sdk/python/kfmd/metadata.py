@@ -95,8 +95,8 @@ class Run(object):
       parent=artifact.ARTIFACT_TYPE_NAME,
       body=serialization,
     )
-    artifact._id = response.artifact.id
-    artifact._create_time = response.artifact.create_time
+    artifact.id = response.artifact.id
+    artifact.create_time = response.artifact.create_time
     return artifact
 
 class DataSet(object):
@@ -138,8 +138,8 @@ class DataSet(object):
     self.version = version
     self.query = query
     self.labels = labels
-    self._id = ""
-    self._create_time = ""
+    self.id = None
+    self.create_time = None
 
   def serialization(self):
     data_set_artifact = swagger_client.ApiArtifact(
@@ -156,20 +156,9 @@ class DataSet(object):
             "owner":
                 swagger_client.ApiValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
         })
     return data_set_artifact
-
-  def json(self):
-    return {
-      "id": self._id,
-      "name": self.name,
-      "description": self.description,
-      "owner": self.owner,
-      "uri": self.uri,
-      "version": self.version,
-      "query": self.query,
-    }
 
 class Model(object):
   """
@@ -214,8 +203,8 @@ class Model(object):
     self.training_framework = training_framework
     self.hyperparameters = hyperparameters
     self.labels = labels
-    self._id = ""
-    self._create_time = ""
+    self.id = None
+    self.create_time = None
 
   def serialization(self):
     model_artifact = swagger_client.ApiArtifact(
@@ -232,22 +221,9 @@ class Model(object):
             "owner":
                 swagger_client.ApiValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
-
-  def json(self):
-    return {
-      "id": self._id,
-      "name": self.name,
-      "description": self.description,
-      "owner": self.owner,
-      "uri": self.uri,
-      "version": self.version,
-      "model_type": self.model_type,
-      "hyperparameters": self.hyperparameters,
-      "training_framework": self.training_framework,
-    }
 
 
 class Metrics(object):
@@ -299,8 +275,8 @@ class Metrics(object):
     self.metrics_type = metrics_type
     self.values = values
     self.labels = labels
-    self._id = ""
-    self._create_time = ""
+    self.id = None
+    self.create_time = None
 
   def serialization(self):
     model_artifact = swagger_client.ApiArtifact(
@@ -319,20 +295,6 @@ class Metrics(object):
             "owner":
                 swagger_client.ApiValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.json())),
+                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
-
-  def json(self):
-    return {
-      "id": self._id,
-      "name": self.name,
-      "description": self.description,
-      "owner": self.owner,
-      "uri": self.uri,
-      "metrics_type": self.metrics_type,
-      "data_set_id": self.data_set_id,
-      "model_id": self.model_id,
-      "values": self.values,
-    }
-

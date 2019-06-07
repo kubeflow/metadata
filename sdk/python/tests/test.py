@@ -25,7 +25,8 @@ class TestMetedata(unittest.TestCase):
             uri="file://path/to/dataset",
             version="v1.0.0",
             query="SELECT * FROM mytable"))
-    print(data_set)
+    assert data_set.id
+    assert data_set.create_time
 
     metrics = r.log(
         metadata.Metrics(
@@ -38,7 +39,8 @@ class TestMetedata(unittest.TestCase):
             metrics_type=metadata.Metrics.VALIDATION,
             values={"accuracy": 0.95},
             labels={"mylabel": "l1"}))
-    print(metrics)
+    assert metrics.id
+    assert metrics.create_time
 
     model = r.log(
         metadata.Model(
@@ -58,8 +60,8 @@ class TestMetedata(unittest.TestCase):
             },
             version="v0.0.1",
             labels={"mylabel": "l1"}))
-    print(model)
-
+    assert model.id
+    assert model.create_time
 
 if __name__ == "__main__":
   unittest.main()
