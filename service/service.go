@@ -268,7 +268,13 @@ func (s *Service) GetArtifact(ctx context.Context, req *api.GetArtifactRequest) 
 // ListArtifacts lists all known artifacts if artfact type name is not set or lists all artifacts of a given type name.
 func (s *Service) ListArtifacts(ctx context.Context, req *api.ListArtifactsRequest) (*api.ListArtifactsResponse, error) {
 	if req.Name == "" {
-		return nil, errors.New("must specify ArtifactType name")
+		// Return all artifacts.
+		artifacts, err := s.store.GetArtifacts()
+		if err != nil {
+			return nil, err
+		}
+
+		return &api.ListArtifactsResponse{Artifacts: artifacts}, nil
 	}
 
 	typeName := strings.TrimPrefix(req.Name, artifactTypesCollection)
@@ -418,7 +424,11 @@ func (s *Service) GetExecution(ctx context.Context, req *api.GetExecutionRequest
 // ListExecutions returns all executions.
 func (s *Service) ListExecutions(ctx context.Context, req *api.ListExecutionsRequest) (*api.ListExecutionsResponse, error) {
 	if req.Name == "" {
-		return nil, errors.New("must specify ExecutionType name")
+		executions, err := s.store.GetExecutions()
+		if err != nil {
+			return nil, err
+		}
+		return &api.ListExecutionsResponse{Executions: executions}, nil
 	}
 
 	typeName := strings.TrimPrefix(req.Name, executionTypesCollection)

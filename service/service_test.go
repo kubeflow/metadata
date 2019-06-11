@@ -151,7 +151,7 @@ func TestCreateArtifactType(t *testing.T) {
 	tests := []struct {
 		request      string
 		wantResponse string
-		wantErr      error
+		wantErr      bool
 	}{
 		{
 			request: ` artifact_type {
@@ -164,7 +164,12 @@ func TestCreateArtifactType(t *testing.T) {
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
 				properties { key: "double_field" value: DOUBLE }} `,
-			wantErr: nil,
+			wantErr: false,
+		},
+		{
+			request:      ``,
+			wantResponse: ``,
+			wantErr:      true,
 		},
 	}
 
@@ -183,12 +188,14 @@ func TestCreateArtifactType(t *testing.T) {
 		}
 
 		got, err := svc.CreateArtifactType(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
+			}
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
 			t.Errorf("Test case %d\nCreateArtifactType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, want, cmp.Diff(want, got))
 		}
@@ -199,58 +206,57 @@ func TestGetArtifactType(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
 
+	stored := &mlpb.ArtifactType{
+		Name: proto.String("my_namespace/Model"),
+		Properties: map[string]mlpb.PropertyType{
+			"string_field": mlpb.PropertyType_STRING,
+			"int_field":    mlpb.PropertyType_INT,
+			"double_field": mlpb.PropertyType_DOUBLE,
+		},
+	}
+
+	_, err := store.PutArtifactType(stored, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+	if err != nil {
+		t.Fatalf("store.PutArtifactType failure: %v ", err)
+	}
+
 	tests := []struct {
-		name         string
-		stored       string
-		wantResponse string
-		wantErr      error
+		request      *api.GetArtifactTypeRequest
+		wantResponse *api.GetArtifactTypeResponse
+		wantErr      bool
 	}{
 		{
-			name: "my_namespace/Model",
-			stored: `
-				name:      "my_namespace/Model"
-				properties { key: "string_field" value: STRING }
-				properties { key: "int_field" value: INT }
-				properties { key: "double_field" value: DOUBLE }`,
-			wantResponse: ` artifact_type {
-				name:      "my_namespace/Model"
-				properties { key: "string_field" value: STRING }
-				properties { key: "int_field" value: INT }
-				properties { key: "double_field" value: DOUBLE }} `,
-			wantErr: nil,
+			request: &api.GetArtifactTypeRequest{Name: "my_namespace/Model"},
+			wantResponse: &api.GetArtifactTypeResponse{
+				ArtifactType: &mlpb.ArtifactType{
+					Name: proto.String("my_namespace/Model"),
+					Properties: map[string]mlpb.PropertyType{
+						"string_field": mlpb.PropertyType_STRING,
+						"int_field":    mlpb.PropertyType_INT,
+						"double_field": mlpb.PropertyType_DOUBLE,
+					}}},
+			wantErr: false,
+		},
+		{
+			request:      &api.GetArtifactTypeRequest{Name: "my_namespace/NonExistent"},
+			wantResponse: nil,
+			wantErr:      true,
 		},
 	}
 
 	ctx := context.Background()
 	for i, test := range tests {
-		req := &api.GetArtifactTypeRequest{Name: test.name}
-
-		stored := &mlpb.ArtifactType{}
-		if err := proto.UnmarshalText(test.stored, stored); err != nil {
-			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
-			continue
-		}
-
-		_, err := store.PutArtifactType(stored, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+		got, err := svc.GetArtifactType(ctx, test.request)
 		if err != nil {
-			t.Errorf("Test case %d\nstore.PutArtifactType failure: %v ", i, err)
-		}
-
-		want := &api.GetArtifactTypeResponse{}
-		if err := proto.UnmarshalText(test.wantResponse, want); err != nil {
-			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
+			if !test.wantErr {
+				t.Errorf("Test case %d\nGetArtifactType\nRequest:\n%+v\nGot error:\n%v\nWant nil error", i, test.request, err)
+			}
 			continue
 		}
 
-		got, err := svc.GetArtifactType(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nGetArtifactType\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
-			continue
-		}
-
-		if err == nil && !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+		if !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
 			t.Errorf("Test case %d\nGetArtifactType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
-				i, req, got, want, cmp.Diff(want, got))
+				i, test.request, got, test.wantResponse, cmp.Diff(test.wantResponse, got))
 		}
 	}
 }
@@ -259,7 +265,6 @@ func TestListArtifactTypes(t *testing.T) {
 	tests := []struct {
 		stored       []*mlpb.ArtifactType
 		wantResponse *api.ListArtifactTypesResponse
-		wantErr      error
 	}{
 		{
 			stored: []*mlpb.ArtifactType{
@@ -272,7 +277,6 @@ func TestListArtifactTypes(t *testing.T) {
 					&mlpb.ArtifactType{Name: proto.String("my_namespace2/Model2")},
 				},
 			},
-			wantErr: nil,
 		},
 	}
 
@@ -290,12 +294,12 @@ func TestListArtifactTypes(t *testing.T) {
 
 		req := &api.ListArtifactTypesRequest{}
 		got, err := svc.ListArtifactTypes(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nListArtifactTypesRequest\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nListArtifactTypesRequest\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+		if !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
 			t.Errorf("Test case %d\nListArtifactTypes\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, test.wantResponse, cmp.Diff(test.wantResponse, got))
 		}
@@ -327,7 +331,6 @@ func TestCreateArtifact(t *testing.T) {
 	tests := []struct {
 		request      string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			request: ` artifact {
@@ -347,7 +350,6 @@ func TestCreateArtifact(t *testing.T) {
 				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
 				custom_properties { key: "custom_int_field" value { int_value: 200 }}
 				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }`,
-			wantErr: nil,
 		},
 		// TODO(neuromage): Add more test cases.
 	}
@@ -367,8 +369,8 @@ func TestCreateArtifact(t *testing.T) {
 		want.Artifact.TypeId = proto.Int64(typeID)
 
 		got, err := svc.CreateArtifact(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nCreateArtifact\nRequest:\n%+v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateArtifact\nRequest:\n%+v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
@@ -401,7 +403,6 @@ func TestGetArtifact(t *testing.T) {
 		name         string
 		stored       string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			name: "artifact_types/kubeflow.org/v1/Model/artifacts/1",
@@ -421,7 +422,6 @@ func TestGetArtifact(t *testing.T) {
 				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
 				custom_properties { key: "custom_int_field" value { int_value: 200 }}
 				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }`,
-			wantErr: nil,
 		},
 	}
 
@@ -448,12 +448,12 @@ func TestGetArtifact(t *testing.T) {
 		}
 
 		got, err := svc.GetArtifact(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nGetArtifact\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nGetArtifact\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id", "TypeId")) {
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id", "TypeId")) {
 			t.Errorf("Test case %d\nGetArtifact\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, want, cmp.Diff(want, got))
 		}
@@ -496,7 +496,6 @@ func TestListArtifacts(t *testing.T) {
 	tests := []struct {
 		request      *api.ListArtifactsRequest
 		wantResponse *api.ListArtifactsResponse
-		wantErr      error
 	}{
 		{
 			request: &api.ListArtifactsRequest{Name: "kubeflow.org/v1/Model"},
@@ -506,7 +505,6 @@ func TestListArtifacts(t *testing.T) {
 					&mlpb.Artifact{Uri: proto.String("artifact_2")},
 				},
 			},
-			wantErr: nil,
 		},
 		{
 			request: &api.ListArtifactsRequest{Name: "kubeflow.org/v1/Dataset"},
@@ -515,19 +513,28 @@ func TestListArtifacts(t *testing.T) {
 					&mlpb.Artifact{Uri: proto.String("artifact_3")},
 				},
 			},
-			wantErr: nil,
+		},
+		{
+			request: &api.ListArtifactsRequest{},
+			wantResponse: &api.ListArtifactsResponse{
+				Artifacts: []*mlpb.Artifact{
+					&mlpb.Artifact{Uri: proto.String("artifact_1")},
+					&mlpb.Artifact{Uri: proto.String("artifact_2")},
+					&mlpb.Artifact{Uri: proto.String("artifact_3")},
+				},
+			},
 		},
 	}
 
 	ctx := context.Background()
 	for i, test := range tests {
 		got, err := svc.ListArtifacts(ctx, test.request)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nListArtifactsRequest\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, test.request, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nListArtifactsRequest\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, test.request, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id", "TypeId")) {
+		if !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id", "TypeId")) {
 			t.Errorf("Test case %d\nListArtifacts\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, test.request, got, test.wantResponse, cmp.Diff(test.wantResponse, got))
 		}
@@ -541,7 +548,6 @@ func TestCreateExecutionType(t *testing.T) {
 	tests := []struct {
 		request      string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			request: ` execution_type {
@@ -554,7 +560,6 @@ func TestCreateExecutionType(t *testing.T) {
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
 				properties { key: "double_field" value: DOUBLE } }`,
-			wantErr: nil,
 		},
 		// TODO(neuromage): Add more test cases.
 	}
@@ -574,12 +579,12 @@ func TestCreateExecutionType(t *testing.T) {
 		}
 
 		got, err := svc.CreateExecutionType(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nCreateExecutionType\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateExecutionType\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
 			t.Errorf("Test case %d\nCreateExecutionType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, want, cmp.Diff(want, got))
 		}
@@ -594,7 +599,6 @@ func TestGetExecutionType(t *testing.T) {
 		name         string
 		stored       string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			name: "my_namespace/MyExecution",
@@ -608,7 +612,6 @@ func TestGetExecutionType(t *testing.T) {
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
 				properties { key: "double_field" value: DOUBLE }} `,
-			wantErr: nil,
 		},
 	}
 
@@ -634,12 +637,12 @@ func TestGetExecutionType(t *testing.T) {
 		}
 
 		got, err := svc.GetExecutionType(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nGetExecutionType\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nGetExecutionType\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
+		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
 			t.Errorf("Test case %d\nGetExecutionType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, want, cmp.Diff(want, got))
 		}
@@ -650,7 +653,6 @@ func TestListExecutionTypes(t *testing.T) {
 	tests := []struct {
 		stored       []*mlpb.ExecutionType
 		wantResponse *api.ListExecutionTypesResponse
-		wantErr      error
 	}{
 		{
 			stored: []*mlpb.ExecutionType{
@@ -663,7 +665,6 @@ func TestListExecutionTypes(t *testing.T) {
 					&mlpb.ExecutionType{Name: proto.String("my_namespace2/Exec2")},
 				},
 			},
-			wantErr: nil,
 		},
 	}
 
@@ -681,12 +682,12 @@ func TestListExecutionTypes(t *testing.T) {
 
 		req := &api.ListExecutionTypesRequest{}
 		got, err := svc.ListExecutionTypes(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nListExecutionTypesRequest\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nListExecutionTypesRequest\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
-		if err == nil && !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
+		if !cmp.Equal(got, test.wantResponse, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
 			t.Errorf("Test case %d\nListExecutionTypes\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, test.wantResponse, cmp.Diff(test.wantResponse, got))
 		}
@@ -718,7 +719,6 @@ func TestCreateExecution(t *testing.T) {
 	tests := []struct {
 		request      string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			request: ` execution {
@@ -736,7 +736,6 @@ func TestCreateExecution(t *testing.T) {
 				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
 				custom_properties { key: "custom_int_field" value { int_value: 200 }}
 				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }`,
-			wantErr: nil,
 		},
 		// TODO(neuromage): Add more test cases.
 	}
@@ -756,8 +755,8 @@ func TestCreateExecution(t *testing.T) {
 		want.Execution.TypeId = proto.Int64(typeID)
 
 		got, err := svc.CreateExecution(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nCreateExecution\nRequest:\n%+v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nCreateExecution\nRequest:\n%+v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
@@ -790,7 +789,6 @@ func TestGetExecution(t *testing.T) {
 		name         string
 		stored       string
 		wantResponse string
-		wantErr      error
 	}{
 		{
 			name: "execution_types/kubeflow.org/v1/MyExecution/executions/1",
@@ -808,7 +806,6 @@ func TestGetExecution(t *testing.T) {
 				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
 				custom_properties { key: "custom_int_field" value { int_value: 200 }}
 				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }`,
-			wantErr: nil,
 		},
 	}
 
@@ -835,8 +832,8 @@ func TestGetExecution(t *testing.T) {
 		}
 
 		got, err := svc.GetExecution(ctx, req)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nGetExecution\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, req, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nGetExecution\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, req, err)
 			continue
 		}
 
@@ -888,7 +885,6 @@ func TestListExecutions(t *testing.T) {
 	tests := []struct {
 		request      *api.ListExecutionsRequest
 		wantResponse *api.ListExecutionsResponse
-		wantErr      error
 	}{
 		{
 			request: &api.ListExecutionsRequest{Name: "kubeflow.org/v1/MyExecutionType1"},
@@ -898,7 +894,6 @@ func TestListExecutions(t *testing.T) {
 					&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e2"}}}},
 				},
 			},
-			wantErr: nil,
 		},
 		{
 			request: &api.ListExecutionsRequest{Name: "kubeflow.org/v1/MyExecutionType2"},
@@ -907,15 +902,24 @@ func TestListExecutions(t *testing.T) {
 					&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e3"}}}},
 				},
 			},
-			wantErr: nil,
+		},
+		{
+			request: &api.ListExecutionsRequest{},
+			wantResponse: &api.ListExecutionsResponse{
+				Executions: []*mlpb.Execution{
+					&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}}}},
+					&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e2"}}}},
+					&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e3"}}}},
+				},
+			},
 		},
 	}
 
 	ctx := context.Background()
 	for i, test := range tests {
 		got, err := svc.ListExecutions(ctx, test.request)
-		if !cmp.Equal(err, test.wantErr) {
-			t.Errorf("Test case %d\nListExecutionsRequest\nRequest:\n%v\nGot error:\n%v\nWant\n%v", i, test.request, err, test.wantErr)
+		if err != nil {
+			t.Errorf("Test case %d\nListExecutionsRequest\nRequest:\n%v\nGot error:\n%v\nWant nil error", i, test.request, err)
 			continue
 		}
 

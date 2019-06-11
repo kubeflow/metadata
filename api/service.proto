@@ -215,6 +215,10 @@ service MetadataService {
       returns (ListExecutionsResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{name=execution_types/**}/executions"
+      additional_bindings {
+        // List all executions.
+        get: "/api/v1alpha1/executions"
+      }
     };
   }
 
