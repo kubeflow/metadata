@@ -20,7 +20,9 @@ import (
 	"time"
 
 	"github.com/golang/glog"
-	pb "github.com/kubeflow/metadata/api"
+	"github.com/kubeflow/metadata/api"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+	"github.com/golang/protobuf/proto"
 	"github.com/kubeflow/metadata/service"
 )
 
@@ -68,9 +70,9 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 	if err != nil {
 		return err
 	}
-	artifactType := &pb.ArtifactType{
-		Name:       namespace + "/" + typename,
-		Properties: make(map[string]pb.PropertyType),
+	artifactType := &mlpb.ArtifactType{
+		Name:       proto.String(namespace + "/" + typename),
+		Properties: make(map[string]mlpb.PropertyType),
 	}
 	for pname, ptype := range properties {
 		if isPropertyBuiltIn(pname) {
@@ -78,19 +80,19 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 		}
 		switch ptype {
 		case StringType:
-			artifactType.Properties[pname] = pb.PropertyType_STRING
+			artifactType.Properties[pname] = mlpb.PropertyType_STRING
 		case IntegerType:
-			artifactType.Properties[pname] = pb.PropertyType_INT
+			artifactType.Properties[pname] = mlpb.PropertyType_INT
 		case NumberType:
-			artifactType.Properties[pname] = pb.PropertyType_DOUBLE
+			artifactType.Properties[pname] = mlpb.PropertyType_DOUBLE
 		default:
 			return fmt.Errorf("internal error: unknown simple property type %q for property %q", ptype, pname)
 		}
 	}
-	artifactType.Properties[wholeMetaPropertyName] = pb.PropertyType_STRING
+	artifactType.Properties[wholeMetaPropertyName] = mlpb.PropertyType_STRING
 	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	defer cancel()
-	_, err = service.CreateArtifactType(ctx, &pb.CreateArtifactTypeRequest{
+	_, err = service.CreateArtifactType(ctx, &api.CreateArtifactTypeRequest{
 		ArtifactType: artifactType,
 	})
 	if err != nil {

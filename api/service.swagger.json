@@ -46,7 +46,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiArtifactType"
+              "$ref": "#/definitions/ml_metadataArtifactType"
             }
           }
         ],
@@ -110,8 +110,32 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiExecutionType"
+              "$ref": "#/definitions/ml_metadataExecutionType"
             }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/executions": {
+      "get": {
+        "operationId": "ListExecutions2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiListExecutionsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -380,7 +404,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiArtifact"
+              "$ref": "#/definitions/ml_metadataArtifact"
             }
           }
         ],
@@ -414,7 +438,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiExecution"
+              "$ref": "#/definitions/ml_metadataExecution"
             }
           }
         ],
@@ -425,108 +449,11 @@
     }
   },
   "definitions": {
-    "ExecutionState": {
-      "type": "string",
-      "enum": [
-        "UNKNOWN",
-        "NEW",
-        "RUNNING",
-        "COMPLETE",
-        "FAILED"
-      ],
-      "default": "UNKNOWN",
-      "description": "State captures the state of the execution."
-    },
-    "apiArtifact": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64",
-          "description": "System-provided id."
-        },
-        "type_id": {
-          "type": "string",
-          "format": "int64",
-          "description": "The id of the type of the artifact."
-        },
-        "uri": {
-          "type": "string",
-          "description": "The URI of the artifact."
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiValue"
-          },
-          "description": "Properties must be specified in the ArtifactType."
-        },
-        "custom_properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiValue"
-          },
-          "description": "Arbitrary user-provided properties that do not correspond to fields in the\nschema for the artifact type. These additional properties can be specified\nby the user when the artifact is created/updated."
-        },
-        "name": {
-          "type": "string",
-          "description": "Optional. Human-readable name of the artifact."
-        },
-        "workspace": {
-          "$ref": "#/definitions/apiWorkspace",
-          "description": "Required. The workspace that an artifact belongs to. Empty defaults to the\n'default' workspace."
-        },
-        "labels": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Arbitrary key-value pairs for labeling."
-        },
-        "create_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the artifact was created. System-provided."
-        },
-        "update_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the artifact was last updated. System-provided."
-        }
-      },
-      "description": "Artifact represents metadata about a machine-learning workflow artifact."
-    },
-    "apiArtifactType": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64",
-          "description": "System-provided id."
-        },
-        "name": {
-          "type": "string",
-          "description": "Required. Represents the name of a type. Name takes the form\n`{namespace}/{name}` and should be unique. {namespace} should be like\n`kubeflow.org/pipelines/v1` or `myorganization.com/ml`. Namespaces ensures\nmultiple organizations can define ML schemas without type name collision.\nIf {namespace} is empty during creation, the system-default namespace will\nbe used."
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiPropertyType"
-          },
-          "description": "Schema representing the fields and their types for this artifact."
-        },
-        "description": {
-          "type": "string",
-          "description": "An optional human-readable description of this type."
-        }
-      },
-      "description": "ArtifactType represents the type of an ML artifact. It is used to define the\nschema of a named type."
-    },
     "apiCreateArtifactResponse": {
       "type": "object",
       "properties": {
         "artifact": {
-          "$ref": "#/definitions/apiArtifact",
+          "$ref": "#/definitions/ml_metadataArtifact",
           "description": "Newly created artifact with id."
         }
       }
@@ -535,7 +462,7 @@
       "type": "object",
       "properties": {
         "artifact_type": {
-          "$ref": "#/definitions/apiArtifactType",
+          "$ref": "#/definitions/ml_metadataArtifactType",
           "description": "Newly created artifact type with id."
         }
       }
@@ -544,7 +471,7 @@
       "type": "object",
       "properties": {
         "execution": {
-          "$ref": "#/definitions/apiExecution",
+          "$ref": "#/definitions/ml_metadataExecution",
           "description": "Newly created execution with id."
         }
       }
@@ -553,111 +480,16 @@
       "type": "object",
       "properties": {
         "execution_type": {
-          "$ref": "#/definitions/apiExecutionType",
+          "$ref": "#/definitions/ml_metadataExecutionType",
           "description": "Newly created execution type with id."
         }
       }
-    },
-    "apiExecution": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64",
-          "description": "System-provided id."
-        },
-        "type_id": {
-          "type": "string",
-          "format": "int64",
-          "description": "The type of the execution."
-        },
-        "last_known_state": {
-          "$ref": "#/definitions/ExecutionState",
-          "description": "The last known state of an execution."
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiValue"
-          },
-          "description": "Properties must be specified in ExecutionType."
-        },
-        "custom_properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiValue"
-          },
-          "description": "Arbitrary user-provided properties that do not correspond to fields in the\nschema for the execution type."
-        },
-        "name": {
-          "type": "string",
-          "description": "Optional. Human-readable name of the execution."
-        },
-        "workspace": {
-          "$ref": "#/definitions/apiWorkspace",
-          "description": "Required. The workspace that the execution belongs to. Empty defaults to\nthe 'default' workspace."
-        },
-        "labels": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "description": "Arbitrary key-value pairs for labeling."
-        },
-        "create_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the execution was created. System-provided."
-        },
-        "update_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the execution was last updated. System-provided."
-        },
-        "start_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the execution was started."
-        },
-        "end_time": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The time at which the execution ended."
-        }
-      },
-      "description": "Execution represents metadata about a machine-learning workflow execution\nstep."
-    },
-    "apiExecutionType": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64",
-          "description": "System-provided id."
-        },
-        "name": {
-          "type": "string",
-          "description": "Required. Represents the name of the type. Must be unique within a\nnamespace."
-        },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/apiPropertyType"
-          },
-          "description": "Schema representing the fields and their types for this type."
-        },
-        "description": {
-          "type": "string",
-          "description": "An optional human-readable description of this type."
-        }
-      },
-      "description": "ExecutionType represents the type of an ML execution step."
     },
     "apiGetArtifactResponse": {
       "type": "object",
       "properties": {
         "artifact": {
-          "$ref": "#/definitions/apiArtifact"
+          "$ref": "#/definitions/ml_metadataArtifact"
         }
       }
     },
@@ -665,7 +497,7 @@
       "type": "object",
       "properties": {
         "artifact_type": {
-          "$ref": "#/definitions/apiArtifactType"
+          "$ref": "#/definitions/ml_metadataArtifactType"
         }
       }
     },
@@ -673,7 +505,7 @@
       "type": "object",
       "properties": {
         "execution": {
-          "$ref": "#/definitions/apiExecution"
+          "$ref": "#/definitions/ml_metadataExecution"
         }
       }
     },
@@ -681,7 +513,7 @@
       "type": "object",
       "properties": {
         "execution_type": {
-          "$ref": "#/definitions/apiExecutionType"
+          "$ref": "#/definitions/ml_metadataExecutionType"
         }
       }
     },
@@ -691,7 +523,7 @@
         "artifact_types": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiArtifactType"
+            "$ref": "#/definitions/ml_metadataArtifactType"
           },
           "collectionFormat": "multi"
         }
@@ -703,7 +535,7 @@
         "artifacts": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiArtifact"
+            "$ref": "#/definitions/ml_metadataArtifact"
           },
           "collectionFormat": "multi"
         }
@@ -715,7 +547,7 @@
         "execution_types": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiExecutionType"
+            "$ref": "#/definitions/ml_metadataExecutionType"
           },
           "collectionFormat": "multi"
         }
@@ -727,13 +559,224 @@
         "executions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/apiExecution"
+            "$ref": "#/definitions/ml_metadataExecution"
           },
           "collectionFormat": "multi"
         }
       }
     },
-    "apiPropertyType": {
+    "ml_metadataAnyArtifactStructType": {
+      "type": "object",
+      "description": "Every ArtifactStruct is a member of this type."
+    },
+    "ml_metadataArtifact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the artifact."
+        },
+        "type_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of an ArtifactType.\nType must be specified when an artifact is created, and it cannot be\nchanged."
+        },
+        "uri": {
+          "type": "string",
+          "description": "The uniform resource identifier of the physical artifact.\nMay be empty if there is no physical artifact."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataValue"
+          },
+          "description": "Properties of the artifact.\nProperties must be specified in the ArtifactType."
+        },
+        "custom_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataValue"
+          },
+          "description": "User provided custom properties which are not defined by its type."
+        }
+      }
+    },
+    "ml_metadataArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "simple": {
+          "$ref": "#/definitions/ml_metadataArtifactType"
+        },
+        "union_type": {
+          "$ref": "#/definitions/ml_metadataUnionArtifactStructType"
+        },
+        "intersection": {
+          "$ref": "#/definitions/ml_metadataIntersectionArtifactStructType"
+        },
+        "list": {
+          "$ref": "#/definitions/ml_metadataListArtifactStructType"
+        },
+        "none": {
+          "$ref": "#/definitions/ml_metadataNoneArtifactStructType"
+        },
+        "any": {
+          "$ref": "#/definitions/ml_metadataAnyArtifactStructType"
+        },
+        "tuple": {
+          "$ref": "#/definitions/ml_metadataTupleArtifactStructType"
+        },
+        "dict": {
+          "$ref": "#/definitions/ml_metadataDictArtifactStructType"
+        }
+      },
+      "description": "The type of an ArtifactStruct.\nAn artifact struct type represents an infinite set of artifact structs.\nIt can specify the input or output type of an ExecutionType.\nSee the more specific types referenced in the message for more details."
+    },
+    "ml_metadataArtifactType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the type. 1-1 relationship between type names and IDs."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the type."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataPropertyType"
+          },
+          "description": "The schema of the type.\nProperties are always optional in the artifact.\nProperties of an artifact type can be expanded but not contracted (i.e.,\nyou can add columns but not remove them)."
+        }
+      }
+    },
+    "ml_metadataDictArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataArtifactStructType"
+          },
+          "description": "Underlying properties for the type."
+        },
+        "none_type_not_required": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "If true, then if properties[\"foo\"] can be None, then that key is not\nrequired."
+        },
+        "extra_properties_type": {
+          "$ref": "#/definitions/ml_metadataArtifactStructType",
+          "description": "Extra keys are allowed that are not specified in properties. These\nkeys must have the type specified below.\nIf this is not specified, then extra properties are not allowed."
+        }
+      },
+      "title": "A artifact struct type that represents a record or struct-like dictionary.\nArtifactStruct would be map (i.e. ArtifactStructMap)"
+    },
+    "ml_metadataExecution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the execution."
+        },
+        "type_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of an ExecutionType.\nThe ExecutionType must be specified and cannot be changed."
+        },
+        "last_known_state": {
+          "$ref": "#/definitions/ml_metadataExecutionState",
+          "description": "The last known state of an execution."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataValue"
+          },
+          "description": "Properties of the Execution.\nProperties must be specified in the ExecutionType."
+        },
+        "custom_properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataValue"
+          },
+          "description": "User provided custom properties which are not defined by its type."
+        }
+      }
+    },
+    "ml_metadataExecutionState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NEW",
+        "RUNNING",
+        "COMPLETE",
+        "FAILED"
+      ],
+      "default": "UNKNOWN",
+      "description": "TODO(martinz): consider adding INVALIDATED as a state."
+    },
+    "ml_metadataExecutionType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the type. 1-1 relationship between type names and IDs."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the type."
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataPropertyType"
+          },
+          "description": "The schema of the type.\nProperties are always optional in the execution."
+        },
+        "input_type": {
+          "$ref": "#/definitions/ml_metadataArtifactStructType",
+          "description": "The ArtifactStructType of the input.\nFor example: {\n    \"dict\":{\n       \"properties\":{\n         \"schema\":{\n           \"union_type\":{\n             \"none\":{},\n             \"simple\":{...schema type...}\n            },\n         },\n         \"data\":{\n           \"simple\":{...data_type...}\n         }\n      }\n    }\n}\nThat would be an optional schema field with a required data field."
+        },
+        "output_type": {
+          "$ref": "#/definitions/ml_metadataArtifactStructType",
+          "title": "The ArtifactStructType of the output.\nFor example {\"simple\":{...stats gen output type...}}"
+        }
+      }
+    },
+    "ml_metadataIntersectionArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "constraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ml_metadataArtifactStructType"
+          },
+          "collectionFormat": "multi"
+        }
+      },
+      "description": "A member of this type must satisfy all constraints.\nThis primarily useful not as an end-user type, but something calculated\nas an intermediate type in the system.\n\nFor example, suppose you have a method:\ndef infer_my_input_type(a): # try to infer the input type of this method.\n  use_in_method_x(a) # with input type x_input\n  use_in_method_y(a) # with input type y_input\n\nGiven this information, you know that infer_my_input_type has\ntype {\"intersection\":{\"constraints\":[x_input, y_input]}}.\n\nIntersectionArtifactStructType intersection_type = {\"constraints\":[\n    {\"dict\":{\"properties\":{\"schema\":{\"any\":{}}},\n             \"extra_properties\":{\"any\":{}}}},\n    {\"dict\":{\"properties\":{\"data\":{\"any\":{}}},\n             \"extra_properties\":{\"any\":{}}}}]}\nSince the first constraint requires the dictionary to have a schema\nproperty, and the second constraint requires it to have a data property, this\nis equivalent to:\nArtifactStructType other_type =\n     {\"dict\":{\"properties\":{\"schema\":{\"any\":{}},\"data\":{\"any\":{}}}},\n      \"extra_properties\":{\"any\":{}}}"
+    },
+    "ml_metadataListArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "element": {
+          "$ref": "#/definitions/ml_metadataArtifactStructType",
+          "description": "Every entry in the list must be of this type.\nNote: if this type is Any, then the list can have arbitrary elements."
+        }
+      },
+      "description": "Represents an ArtifactStruct list type with homogeneous elements."
+    },
+    "ml_metadataNoneArtifactStructType": {
+      "type": "object",
+      "title": "The only member of this type is a None artifact.\nNote: ArtifactStruct{} is a None artifact.\nThis can represent an execution that has no outputs (or inputs),\nor can be part of a UnionArtifactStructType to represent an optional\ninput.\nFor example, StatsGen has an \"optional\" schema input.\nA practical example of this is:\nstats_gen_type = {\n    \"dict\":{\n       \"properties\":{\n         \"schema\":{\n           \"union_type\":{\n             \"none\":{},\n             \"simple\":{...schema type...}\n            },\n         },\n         \"data\":{\n           \"simple\":{...data_type...}\n         }\n      }\n    }\n};"
+    },
+    "ml_metadataPropertyType": {
       "type": "string",
       "enum": [
         "UNKNOWN",
@@ -742,9 +785,36 @@
         "STRING"
       ],
       "default": "UNKNOWN",
-      "description": "Type is the type of a field."
+      "description": "TODO(martinz): consider moving this inside some message, to avoid having\nliterals directly in apo package."
     },
-    "apiValue": {
+    "ml_metadataTupleArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ml_metadataArtifactStructType"
+          },
+          "collectionFormat": "multi"
+        }
+      },
+      "description": "An ordered list of heterogenous artifact structs.\nThe length of the list is fixed.\nEach position in the list can have a different type."
+    },
+    "ml_metadataUnionArtifactStructType": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ml_metadataArtifactStructType"
+          },
+          "description": "An artifact struct matches this type if it matches any of the candidates.\nIf candidates is empty, this is a bottom type (matches no artifacts).",
+          "collectionFormat": "multi"
+        }
+      },
+      "description": "Represents a union of types."
+    },
+    "ml_metadataValue": {
       "type": "object",
       "properties": {
         "int_value": {
@@ -759,16 +829,7 @@
           "type": "string"
         }
       },
-      "description": "Value is the value of the field."
-    },
-    "apiWorkspace": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      },
-      "description": "Workspaces represent a named collection of Artifacts and Executions. Similar\nconcept as that of a folder to group files."
+      "description": "A value in properties."
     }
   }
 }

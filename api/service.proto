@@ -24,16 +24,15 @@ import "api/api.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "ml_metadata/proto/metadata_store.proto";
 
 message CreateArtifactTypeRequest {
-  ArtifactType artifact_type = 1;
-  // An optional human-readable description of this type.
-  string description = 2;
+  ml_metadata.ArtifactType artifact_type = 1;
 }
 
 message CreateArtifactTypeResponse {
   // Newly created artifact type with id.
-  ArtifactType artifact_type = 1;
+  ml_metadata.ArtifactType artifact_type = 1;
 }
 
 message GetArtifactTypeRequest {
@@ -42,13 +41,13 @@ message GetArtifactTypeRequest {
 }
 
 message GetArtifactTypeResponse {
-  ArtifactType artifact_type = 1;
+  ml_metadata.ArtifactType artifact_type = 1;
 }
 
 message ListArtifactTypesRequest {}
 
 message ListArtifactTypesResponse {
-  repeated ArtifactType artifact_types = 1;
+  repeated ml_metadata.ArtifactType artifact_types = 1;
 }
 
 message DeleteArtifactTypeRequest {
@@ -61,12 +60,12 @@ message CreateArtifactRequest {
   // `artifact_types/{namespace}/{name>}`.
   string parent = 1;
   // The Artifact to create. Note that Artifact.type_id is ignored.
-  Artifact artifact = 2;
+  ml_metadata.Artifact artifact = 2;
 }
 
 message CreateArtifactResponse {
   // Newly created artifact with id.
-  Artifact artifact = 1;
+  ml_metadata.Artifact artifact = 1;
 }
 
 message GetArtifactRequest {
@@ -76,7 +75,7 @@ message GetArtifactRequest {
 }
 
 message GetArtifactResponse {
-  Artifact artifact = 1;
+  ml_metadata.Artifact artifact = 1;
 }
 
 message ListArtifactsRequest {
@@ -84,7 +83,7 @@ message ListArtifactsRequest {
 }
 
 message ListArtifactsResponse {
-  repeated Artifact artifacts = 1;
+  repeated ml_metadata.Artifact artifacts = 1;
 }
 
 message DeleteArtifactRequest {
@@ -92,12 +91,12 @@ message DeleteArtifactRequest {
 }
 
 message CreateExecutionTypeRequest {
-  ExecutionType execution_type = 1;
+  ml_metadata.ExecutionType execution_type = 1;
 }
 
 message CreateExecutionTypeResponse {
   // Newly created execution type with id.
-  ExecutionType execution_type = 1;
+  ml_metadata.ExecutionType execution_type = 1;
 }
 
 message GetExecutionTypeRequest {
@@ -105,13 +104,13 @@ message GetExecutionTypeRequest {
 }
 
 message GetExecutionTypeResponse {
-  ExecutionType execution_type = 1;
+  ml_metadata.ExecutionType execution_type = 1;
 }
 
 message ListExecutionTypesRequest {}
 
 message ListExecutionTypesResponse {
-  repeated ExecutionType execution_types = 1;
+  repeated ml_metadata.ExecutionType execution_types = 1;
 }
 
 message DeleteExecutionTypeRequest {
@@ -124,12 +123,12 @@ message CreateExecutionRequest {
   // `execution_types/{namespace}/{name>}`.
   string parent = 1;
   // The Execution to create. Note that Execution.type_id is ignored.
-  Execution execution = 2;
+  ml_metadata.Execution execution = 2;
 }
 
 message CreateExecutionResponse {
   // Newly created execution with id.
-  Execution execution = 1;
+  ml_metadata.Execution execution = 1;
 }
 
 message GetExecutionRequest {
@@ -139,7 +138,7 @@ message GetExecutionRequest {
 }
 
 message GetExecutionResponse {
-  Execution execution = 1;
+  ml_metadata.Execution execution = 1;
 }
 
 message ListExecutionsRequest {
@@ -147,7 +146,7 @@ message ListExecutionsRequest {
 }
 
 message ListExecutionsResponse {
-  repeated Execution executions = 1;
+  repeated ml_metadata.Execution executions = 1;
 }
 
 message DeleteExecutionRequest {
@@ -216,6 +215,10 @@ service MetadataService {
       returns (ListExecutionsResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/{name=execution_types/**}/executions"
+      additional_bindings {
+        // List all executions.
+        get: "/api/v1alpha1/executions"
+      }
     };
   }
 
@@ -284,8 +287,4 @@ service MetadataService {
       delete: "/api/v1alpha1/{name=execution_types/**}"
     };
   }
-
-  // TODO(neuromage): Flesh out CRUD methods on the following resources:
-  // - Workspaces
-  // - Namespaces
 }

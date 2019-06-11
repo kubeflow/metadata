@@ -20,6 +20,7 @@ proto_library(
         "@com_google_protobuf//:empty_proto",
         "@com_google_protobuf//:timestamp_proto",
         "@go_googleapis//google/api:annotations_proto",
+        "@google_ml_metadata//ml_metadata/proto:metadata_store_proto_copy",
     ],
 )
 
@@ -32,7 +33,10 @@ go_proto_library(
     importpath = "github.com/kubeflow/metadata/api",
     proto = ":api_proto",
     visibility = ["//visibility:public"],
-    deps = ["@go_googleapis//google/api:annotations_go_proto"],
+    deps = [
+        "@go_googleapis//google/api:annotations_go_proto",
+        "@google_ml_metadata//ml_metadata/proto:metadata_store_go_proto",
+    ],
 )
 
 go_path(

@@ -29,9 +29,8 @@ import (
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/empty"
-	pb "github.com/kubeflow/metadata/api"
+	"github.com/kubeflow/metadata/api"
 )
 
 // Service implements the gRPC service MetadataService defined in the metadata
@@ -100,44 +99,6 @@ func validNamespace(n string) error {
 	return fmt.Errorf("invalid namespace %q: namespaces must begin with an alphabet, should not contain spaces, or end with a trailing /", n)
 }
 
-func toStoredArtifactType(in *pb.ArtifactType) (*mlpb.ArtifactType, error) {
-	res := &mlpb.ArtifactType{
-		Id: proto.Int64(in.Id),
-		Properties: map[string]mlpb.PropertyType{
-			kfArtifactName: mlpb.PropertyType_STRING,
-			kfWorkspace:    mlpb.PropertyType_STRING,
-			kfCreateTime:   mlpb.PropertyType_INT,
-			kfUpdateTime:   mlpb.PropertyType_INT,
-		},
-	}
-
-	for k, v := range in.Properties {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			return nil, fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
-		}
-
-		switch v {
-		case pb.PropertyType_INT:
-			res.Properties[k] = mlpb.PropertyType_INT
-		case pb.PropertyType_DOUBLE:
-			res.Properties[k] = mlpb.PropertyType_DOUBLE
-		case pb.PropertyType_STRING:
-			res.Properties[k] = mlpb.PropertyType_STRING
-		default:
-			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
-		}
-	}
-
-	name, err := getNamespacedName(in.Name)
-	if err != nil {
-		return nil, err
-	}
-
-	res.Name = proto.String(name)
-
-	return res, nil
-}
-
 // getNamespacedName checks that n is a valid name of the type
 // `{namespace}/{name}`. If {namespace} is empty, the default one
 // (kfDefaultNamespace) is used instead. Both {namespace} and {name} should
@@ -170,313 +131,73 @@ func getNamespacedName(n string) (string, error) {
 	return namespace + "/" + name, nil
 }
 
-func toArtifactType(in *mlpb.ArtifactType) (*pb.ArtifactType, error) {
-	res := &pb.ArtifactType{
-		Id:         in.GetId(),
-		Name:       in.GetName(),
-		Properties: make(map[string]pb.PropertyType),
-	}
-
-	for k, v := range in.Properties {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			continue
-		}
-
-		switch v {
-		case mlpb.PropertyType_INT:
-			res.Properties[k] = pb.PropertyType_INT
-		case mlpb.PropertyType_DOUBLE:
-			res.Properties[k] = pb.PropertyType_DOUBLE
-		case mlpb.PropertyType_STRING:
-			res.Properties[k] = pb.PropertyType_STRING
-		default:
-			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
-		}
-	}
-
-	return res, nil
-}
-
-func (s *Service) getArtifactType(name string) (*pb.ArtifactType, error) {
+func (s *Service) getArtifactType(name string) (*mlpb.ArtifactType, error) {
 	name = strings.TrimPrefix(name, artifactTypesCollection)
-	storedTypes, err := s.store.GetArtifactType(name)
-	if err != nil {
-		return nil, err
-	}
-	return toArtifactType(storedTypes)
+	return s.store.GetArtifactType(name)
 }
 
 // CreateArtifactType creates a new artifact type.
-func (s *Service) CreateArtifactType(ctx context.Context, req *pb.CreateArtifactTypeRequest) (*pb.CreateArtifactTypeResponse, error) {
-	storedType, err := toStoredArtifactType(req.GetArtifactType())
-	if err != nil {
-		return nil, err
-	}
-	// Clear id for creation.
-	storedType.Id = nil
-
-	_, err = s.store.PutArtifactType(
-		storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
-	if err != nil {
-		return nil, err
+func (s *Service) CreateArtifactType(ctx context.Context, req *api.CreateArtifactTypeRequest) (*api.CreateArtifactTypeResponse, error) {
+	if req.ArtifactType == nil {
+		return nil, errors.New("no ArtifactType specified")
 	}
 
-	aType, err := s.getArtifactType(storedType.GetName())
+	_, err := s.store.PutArtifactType(
+		req.ArtifactType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateArtifactTypeResponse{
+	aType, err := s.getArtifactType(req.ArtifactType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.CreateArtifactTypeResponse{
 		ArtifactType: aType,
 	}, nil
 }
 
 // GetArtifactType returns the requested artifact type.
-func (s *Service) GetArtifactType(ctx context.Context, req *pb.GetArtifactTypeRequest) (*pb.GetArtifactTypeResponse, error) {
+func (s *Service) GetArtifactType(ctx context.Context, req *api.GetArtifactTypeRequest) (*api.GetArtifactTypeResponse, error) {
 	aType, err := s.getArtifactType(req.GetName())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetArtifactTypeResponse{
+	return &api.GetArtifactTypeResponse{
 		ArtifactType: aType,
 	}, nil
 }
 
 // ListArtifactTypes lists all artifact types.
-func (s *Service) ListArtifactTypes(ctx context.Context, req *pb.ListArtifactTypesRequest) (*pb.ListArtifactTypesResponse, error) {
-	// TODO(zhenghuiwang): this is expected to return all defined types, but it returns {} now.
-	storedTypes, err := s.store.GetArtifactTypesByID(nil)
+func (s *Service) ListArtifactTypes(ctx context.Context, req *api.ListArtifactTypesRequest) (*api.ListArtifactTypesResponse, error) {
+	// TODO(neuromage): Implement ListArtifactTypes in MLMD ASAP.
+	// Assume at most 100K objects (ugh!).
+	var typeIDs []mlmetadata.ArtifactTypeID
+	for i := 0; i < 100000; i++ {
+		typeIDs = append(typeIDs, mlmetadata.ArtifactTypeID(i))
+	}
+
+	aTypes, err := s.store.GetArtifactTypesByID(typeIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	res := &pb.ListArtifactTypesResponse{}
-
-	for _, storedType := range storedTypes {
-		aType, err := toArtifactType(storedType)
-		if err != nil {
-			return nil, err
-		}
+	res := &api.ListArtifactTypesResponse{}
+	for _, aType := range aTypes {
 		res.ArtifactTypes = append(res.ArtifactTypes, aType)
 	}
+
 	return res, nil
 }
 
 // DeleteArtifactType deletes the specified artifact type.
-func (s *Service) DeleteArtifactType(ctx context.Context, req *pb.DeleteArtifactTypeRequest) (*empty.Empty, error) {
+func (s *Service) DeleteArtifactType(ctx context.Context, req *api.DeleteArtifactTypeRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteArtifactType")
 }
 
-func setStoredProperty(props map[string]*mlpb.Value, k string, v interface{}) error {
-	switch x := v.(type) {
-	case int, int32, int64:
-		vv := v.(int64)
-		props[k] = &mlpb.Value{
-			Value: &mlpb.Value_IntValue{
-				IntValue: vv,
-			},
-		}
-
-	case float32, float64:
-		vv := v.(float64)
-		props[k] = &mlpb.Value{
-			Value: &mlpb.Value_DoubleValue{
-				DoubleValue: vv,
-			},
-		}
-
-	case string:
-		vv := v.(string)
-		props[k] = &mlpb.Value{
-			Value: &mlpb.Value_StringValue{
-				StringValue: vv,
-			},
-		}
-
-	default:
-		return fmt.Errorf("property %q has invalid type %T", k, x)
-	}
-
-	return nil
-}
-
-func setProperty(props map[string]*pb.Value, k string, v interface{}) error {
-	switch x := v.(type) {
-	case int, int32, int64:
-		vv := v.(int64)
-		props[k] = &pb.Value{
-			Value: &pb.Value_IntValue{
-				IntValue: vv,
-			},
-		}
-
-	case float32, float64:
-		vv := v.(float64)
-		props[k] = &pb.Value{
-			Value: &pb.Value_DoubleValue{
-				DoubleValue: vv,
-			},
-		}
-
-	case string:
-		vv := v.(string)
-		props[k] = &pb.Value{
-			Value: &pb.Value_StringValue{
-				StringValue: vv,
-			},
-		}
-
-	default:
-		return fmt.Errorf("property %q has invalid type %T", k, x)
-	}
-
-	return nil
-}
-
-func setStoredPropertyMap(in map[string]*pb.Value, stored map[string]*mlpb.Value) error {
-	for k, v := range in {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			return fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
-		}
-
-		var err error
-		switch x := v.Value.(type) {
-		case *pb.Value_IntValue:
-			err = setStoredProperty(stored, k, v.GetIntValue())
-
-		case *pb.Value_DoubleValue:
-			err = setStoredProperty(stored, k, v.GetDoubleValue())
-
-		case *pb.Value_StringValue:
-			err = setStoredProperty(stored, k, v.GetStringValue())
-
-		default:
-			err = fmt.Errorf("property %q has invalid type %T", k, x)
-		}
-
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func toStoredArtifact(in *pb.Artifact) (*mlpb.Artifact, error) {
-	stored := &mlpb.Artifact{
-		TypeId:           proto.Int64(in.GetTypeId()),
-		Uri:              proto.String(in.GetUri()),
-		Properties:       make(map[string]*mlpb.Value),
-		CustomProperties: make(map[string]*mlpb.Value),
-	}
-	if in.GetId() > 0 {
-		stored.Id = proto.Int64(in.GetId())
-	}
-
-	if err := setStoredPropertyMap(in.Properties, stored.Properties); err != nil {
-		return nil, err
-	}
-
-	if err := setStoredPropertyMap(in.CustomProperties, stored.CustomProperties); err != nil {
-		return nil, err
-	}
-
-	if in.GetName() != "" {
-		setStoredProperty(stored.Properties, kfArtifactName, in.GetName())
-	}
-
-	workspace := kfDefaultWorkspace
-	if in.GetWorkspace().GetName() != "" {
-		workspace = in.GetWorkspace().GetName()
-	}
-	if err := setStoredProperty(stored.Properties, kfWorkspace, workspace); err != nil {
-		return nil, err
-	}
-
-	createTime, err := ptypes.Timestamp(in.GetCreateTime())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: invalid create time: %v", err)
-	}
-	if err := setStoredProperty(stored.Properties, kfCreateTime, createTime.Unix()); err != nil {
-		return nil, err
-	}
-
-	updateTime, err := ptypes.Timestamp(in.GetUpdateTime())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: invalid update time: %v", err)
-	}
-	if err := setStoredProperty(stored.Properties, kfUpdateTime, updateTime.Unix()); err != nil {
-		return nil, err
-	}
-
-	return stored, nil
-}
-
-func setPropertyMapFromStored(stored map[string]*mlpb.Value, out map[string]*pb.Value) error {
-	for k, v := range stored {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			continue
-		}
-
-		var err error
-		switch x := v.Value.(type) {
-		case *mlpb.Value_IntValue:
-			err = setProperty(out, k, v.GetIntValue())
-
-		case *mlpb.Value_DoubleValue:
-			err = setProperty(out, k, v.GetDoubleValue())
-
-		case *mlpb.Value_StringValue:
-			err = setProperty(out, k, v.GetStringValue())
-
-		default:
-			err = fmt.Errorf("property %q has invalid type %T", k, x)
-		}
-
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func toArtifact(in *mlpb.Artifact) (*pb.Artifact, error) {
-	out := &pb.Artifact{
-		Id:               in.GetId(),
-		TypeId:           in.GetTypeId(),
-		Uri:              in.GetUri(),
-		Properties:       make(map[string]*pb.Value),
-		CustomProperties: make(map[string]*pb.Value),
-	}
-
-	var err error
-	createTime := in.Properties[kfCreateTime].GetIntValue()
-	out.CreateTime, err = ptypes.TimestampProto(time.Unix(createTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	updateTime := in.Properties[kfUpdateTime].GetIntValue()
-	out.UpdateTime, err = ptypes.TimestampProto(time.Unix(updateTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	out.Name = in.Properties[kfArtifactName].GetStringValue()
-	out.Workspace = &pb.Workspace{Name: in.Properties[kfWorkspace].GetStringValue()}
-
-	if err := setPropertyMapFromStored(in.Properties, out.Properties); err != nil {
-		return nil, err
-	}
-
-	if err := setPropertyMapFromStored(in.CustomProperties, out.CustomProperties); err != nil {
-		return nil, err
-	}
-
-	return out, nil
-}
-
-func (s *Service) getStoredArtifact(name string) (*pb.Artifact, error) {
+func (s *Service) getStoredArtifact(name string) (*mlpb.Artifact, error) {
 	tokens := artifactNameRE.FindStringSubmatch(name)
 	if len(tokens) != 2 {
 		return nil, fmt.Errorf("malformed Artifact name %q. Must match pattern %q", name, artifactNameRE)
@@ -486,47 +207,37 @@ func (s *Service) getStoredArtifact(name string) (*pb.Artifact, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse Artifact id from %q: %v", tokens[1], err)
 	}
-	ids, err := s.store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
+
+	artifacts, err := s.store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
 	if err != nil {
 		return nil, err
 	}
 
-	if len(ids) != 1 {
-		return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", ids)
+	if len(artifacts) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", artifacts)
 	}
 
-	return toArtifact(ids[0])
+	return artifacts[0], nil
 }
 
 // CreateArtifact creates a new artifact.
-func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequest) (*pb.CreateArtifactResponse, error) {
+func (s *Service) CreateArtifact(ctx context.Context, req *api.CreateArtifactRequest) (*api.CreateArtifactResponse, error) {
 	if req.Artifact == nil {
 		return nil, errors.New("unspecified Artifact")
 	}
 
-	if req.Artifact.Id > 0 {
+	if req.Artifact.Id != nil {
 		return nil, errors.New("id should remain unspecified when creating Artifact")
 	}
-
-	now, err := ptypes.TimestampProto(timeNowFn())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: failed to generate valid timestamp: %v", err)
-	}
-	req.Artifact.CreateTime = now
-	req.Artifact.UpdateTime = now
 
 	aType, err := s.getArtifactType(req.Parent)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve ArtifactType under %q: %v", req.Parent, err)
 	}
 
-	req.Artifact.TypeId = aType.GetId()
-	stored, err := toStoredArtifact(req.Artifact)
-	if err != nil {
-		return nil, err
-	}
+	req.Artifact.TypeId = proto.Int64(aType.GetId())
 
-	ids, err := s.store.PutArtifacts([]*mlpb.Artifact{stored})
+	ids, err := s.store.PutArtifacts([]*mlpb.Artifact{req.Artifact})
 	if err != nil {
 		return nil, err
 	}
@@ -541,288 +252,108 @@ func (s *Service) CreateArtifact(ctx context.Context, req *pb.CreateArtifactRequ
 		return nil, err
 	}
 
-	return &pb.CreateArtifactResponse{Artifact: artifact}, nil
+	return &api.CreateArtifactResponse{Artifact: artifact}, nil
 }
 
 // GetArtifact returns the requested artifact.
-func (s *Service) GetArtifact(ctx context.Context, req *pb.GetArtifactRequest) (*pb.GetArtifactResponse, error) {
+func (s *Service) GetArtifact(ctx context.Context, req *api.GetArtifactRequest) (*api.GetArtifactResponse, error) {
 	artifact, err := s.getStoredArtifact(req.GetName())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetArtifactResponse{Artifact: artifact}, nil
+	return &api.GetArtifactResponse{Artifact: artifact}, nil
 }
 
 // ListArtifacts lists all known artifacts if artfact type name is not set or lists all artifacts of a given type name.
-func (s *Service) ListArtifacts(ctx context.Context, req *pb.ListArtifactsRequest) (*pb.ListArtifactsResponse, error) {
-	var storedArtifacts []*mlpb.Artifact
-	var err error
-	if req.GetName() == "" {
-		storedArtifacts, err = s.store.GetArtifacts()
-	} else {
-		typename := strings.TrimPrefix(req.GetName(), artifactTypesCollection)
-		storedArtifacts, err = s.store.GetArtifactsByType(typename)
+func (s *Service) ListArtifacts(ctx context.Context, req *api.ListArtifactsRequest) (*api.ListArtifactsResponse, error) {
+	if req.Name == "" {
+		// Return all artifacts.
+		artifacts, err := s.store.GetArtifacts()
+		if err != nil {
+			return nil, err
+		}
+
+		return &api.ListArtifactsResponse{Artifacts: artifacts}, nil
 	}
+
+	typeName := strings.TrimPrefix(req.Name, artifactTypesCollection)
+	artifacts, err := s.store.GetArtifactsByType(typeName)
 	if err != nil {
 		return nil, err
 	}
 
-	var artifacts []*pb.Artifact
-	for _, stored := range storedArtifacts {
-		artifact, err := toArtifact(stored)
-		if err != nil {
-			return nil, err
-		}
-		artifacts = append(artifacts, artifact)
-	}
-
-	return &pb.ListArtifactsResponse{Artifacts: artifacts}, nil
+	return &api.ListArtifactsResponse{Artifacts: artifacts}, nil
 }
 
 // DeleteArtifact deletes the specified artifact.
-func (s *Service) DeleteArtifact(ctx context.Context, req *pb.DeleteArtifactRequest) (*empty.Empty, error) {
+func (s *Service) DeleteArtifact(ctx context.Context, req *api.DeleteArtifactRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteArtifact")
 }
 
-func toStoredExecutionType(in *pb.ExecutionType) (*mlpb.ExecutionType, error) {
-	res := &mlpb.ExecutionType{
-		Id: proto.Int64(in.Id),
-		Properties: map[string]mlpb.PropertyType{
-			kfExecutionName: mlpb.PropertyType_STRING,
-			kfWorkspace:     mlpb.PropertyType_STRING,
-			kfCreateTime:    mlpb.PropertyType_INT,
-			kfUpdateTime:    mlpb.PropertyType_INT,
-			kfStartTime:     mlpb.PropertyType_INT,
-			kfEndTime:       mlpb.PropertyType_INT,
-		},
-	}
-
-	for k, v := range in.Properties {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			return nil, fmt.Errorf("field %q uses system-reserved prefix %q", k, kfReservedPrefix)
-		}
-
-		switch v {
-		case pb.PropertyType_INT:
-			res.Properties[k] = mlpb.PropertyType_INT
-		case pb.PropertyType_DOUBLE:
-			res.Properties[k] = mlpb.PropertyType_DOUBLE
-		case pb.PropertyType_STRING:
-			res.Properties[k] = mlpb.PropertyType_STRING
-		default:
-			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
-		}
-	}
-
-	name, err := getNamespacedName(in.Name)
-	if err != nil {
-		return nil, err
-	}
-
-	res.Name = proto.String(name)
-
-	return res, nil
-}
-
-func toExecutionType(in *mlpb.ExecutionType) (*pb.ExecutionType, error) {
-	res := &pb.ExecutionType{
-		Id:         in.GetId(),
-		Name:       in.GetName(),
-		Properties: make(map[string]pb.PropertyType),
-	}
-
-	for k, v := range in.Properties {
-		if strings.HasPrefix(k, kfReservedPrefix) {
-			continue
-		}
-
-		switch v {
-		case mlpb.PropertyType_INT:
-			res.Properties[k] = pb.PropertyType_INT
-		case mlpb.PropertyType_DOUBLE:
-			res.Properties[k] = pb.PropertyType_DOUBLE
-		case mlpb.PropertyType_STRING:
-			res.Properties[k] = pb.PropertyType_STRING
-		default:
-			return nil, fmt.Errorf("Property %q has invalid type %T", k, v)
-		}
-	}
-
-	return res, nil
-}
-
-func toStoredExecution(in *pb.Execution) (*mlpb.Execution, error) {
-	stored := &mlpb.Execution{
-		TypeId:           proto.Int64(in.GetTypeId()),
-		Properties:       make(map[string]*mlpb.Value),
-		CustomProperties: make(map[string]*mlpb.Value),
-	}
-	if in.GetId() > 0 {
-		stored.Id = proto.Int64(in.GetId())
-	}
-
-	if err := setStoredPropertyMap(in.Properties, stored.Properties); err != nil {
-		return nil, err
-	}
-
-	if err := setStoredPropertyMap(in.CustomProperties, stored.CustomProperties); err != nil {
-		return nil, err
-	}
-
-	if in.GetName() != "" {
-		setStoredProperty(stored.Properties, kfExecutionName, in.GetName())
-	}
-
-	workspace := kfDefaultWorkspace
-	if in.GetWorkspace().GetName() != "" {
-		workspace = in.GetWorkspace().GetName()
-	}
-	if err := setStoredProperty(stored.Properties, kfWorkspace, workspace); err != nil {
-		return nil, err
-	}
-
-	createTime, err := ptypes.Timestamp(in.GetCreateTime())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: invalid create time: %v", err)
-	}
-	if err := setStoredProperty(stored.Properties, kfCreateTime, createTime.Unix()); err != nil {
-		return nil, err
-	}
-
-	updateTime, err := ptypes.Timestamp(in.GetUpdateTime())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: invalid update time: %v", err)
-	}
-	if err := setStoredProperty(stored.Properties, kfUpdateTime, updateTime.Unix()); err != nil {
-		return nil, err
-	}
-
-	if in.StartTime != nil {
-		startTime, err := ptypes.Timestamp(in.GetStartTime())
-		if err != nil {
-			return nil, fmt.Errorf("internal error: invalid start time: %v", err)
-		}
-		if err := setStoredProperty(stored.Properties, kfStartTime, startTime.Unix()); err != nil {
-			return nil, err
-		}
-	}
-
-	if in.EndTime != nil {
-		endTime, err := ptypes.Timestamp(in.GetEndTime())
-		if err != nil {
-			return nil, fmt.Errorf("internal error: invalid end time: %v", err)
-		}
-		if err := setStoredProperty(stored.Properties, kfEndTime, endTime.Unix()); err != nil {
-			return nil, err
-		}
-	}
-
-	return stored, nil
-}
-
-func (s *Service) getStoredExecutionType(name string) (*pb.ExecutionType, error) {
+func (s *Service) getExecutionType(name string) (*mlpb.ExecutionType, error) {
 	name = strings.TrimPrefix(name, executionTypesCollection)
-	storedType, err := s.store.GetExecutionType(name)
-	if err != nil {
-		return nil, err
-	}
-	return toExecutionType(storedType)
+	return s.store.GetExecutionType(name)
 }
 
 // CreateExecutionType creates the specified execution type.
-func (s *Service) CreateExecutionType(ctx context.Context, req *pb.CreateExecutionTypeRequest) (*pb.CreateExecutionTypeResponse, error) {
-	storedType, err := toStoredExecutionType(req.GetExecutionType())
-	if err != nil {
-		return nil, err
-	}
-	// Clear id for creation.
-	storedType.Id = nil
-
-	_, err = s.store.PutExecutionType(storedType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
-	if err != nil {
-		return nil, err
+func (s *Service) CreateExecutionType(ctx context.Context, req *api.CreateExecutionTypeRequest) (*api.CreateExecutionTypeResponse, error) {
+	if req.ExecutionType == nil {
+		return nil, errors.New("no ExecutionType specified")
 	}
 
-	aType, err := s.getStoredExecutionType(storedType.GetName())
+	_, err := s.store.PutExecutionType(req.ExecutionType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateExecutionTypeResponse{
-		ExecutionType: aType,
-	}, nil
+	eType, err := s.getExecutionType(req.ExecutionType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.CreateExecutionTypeResponse{ExecutionType: eType}, nil
 }
 
 // GetExecutionType return the specified execution type.
-func (s *Service) GetExecutionType(ctx context.Context, req *pb.GetExecutionTypeRequest) (*pb.GetExecutionTypeResponse, error) {
-	eType, err := s.getStoredExecutionType(req.GetName())
+func (s *Service) GetExecutionType(ctx context.Context, req *api.GetExecutionTypeRequest) (*api.GetExecutionTypeResponse, error) {
+	eType, err := s.getExecutionType(req.GetName())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetExecutionTypeResponse{
+	return &api.GetExecutionTypeResponse{
 		ExecutionType: eType,
 	}, nil
 }
 
 // ListExecutionTypes lists all execution types.
-func (s *Service) ListExecutionTypes(ctx context.Context, req *pb.ListExecutionTypesRequest) (*pb.ListExecutionTypesResponse, error) {
-	return nil, nil
+func (s *Service) ListExecutionTypes(ctx context.Context, req *api.ListExecutionTypesRequest) (*api.ListExecutionTypesResponse, error) {
+	// Assume at most 100K objects (ugh!).
+	var typeIDs []mlmetadata.ExecutionTypeID
+	for i := 0; i < 100000; i++ {
+		typeIDs = append(typeIDs, mlmetadata.ExecutionTypeID(i))
+	}
+
+	eTypes, err := s.store.GetExecutionTypesByID(typeIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &api.ListExecutionTypesResponse{}
+	for _, eType := range eTypes {
+		res.ExecutionTypes = append(res.ExecutionTypes, eType)
+	}
+
+	return res, nil
 }
 
 // DeleteExecutionType deletes the specified execution.
-func (s *Service) DeleteExecutionType(ctx context.Context, req *pb.DeleteExecutionTypeRequest) (*empty.Empty, error) {
+func (s *Service) DeleteExecutionType(ctx context.Context, req *api.DeleteExecutionTypeRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteExecutionType")
 }
 
-func toExecution(in *mlpb.Execution) (*pb.Execution, error) {
-	out := &pb.Execution{
-		Id:               in.GetId(),
-		TypeId:           in.GetTypeId(),
-		Properties:       make(map[string]*pb.Value),
-		CustomProperties: make(map[string]*pb.Value),
-	}
-
-	var err error
-	createTime := in.Properties[kfCreateTime].GetIntValue()
-	out.CreateTime, err = ptypes.TimestampProto(time.Unix(createTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	updateTime := in.Properties[kfUpdateTime].GetIntValue()
-	out.UpdateTime, err = ptypes.TimestampProto(time.Unix(updateTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	startTime := in.Properties[kfStartTime].GetIntValue()
-	out.StartTime, err = ptypes.TimestampProto(time.Unix(startTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	endTime := in.Properties[kfEndTime].GetIntValue()
-	out.EndTime, err = ptypes.TimestampProto(time.Unix(endTime, 0))
-	if err != nil {
-		return nil, err
-	}
-
-	out.Name = in.Properties[kfExecutionName].GetStringValue()
-	out.Workspace = &pb.Workspace{Name: in.Properties[kfWorkspace].GetStringValue()}
-
-	if err := setPropertyMapFromStored(in.Properties, out.Properties); err != nil {
-		return nil, err
-	}
-
-	if err := setPropertyMapFromStored(in.CustomProperties, out.CustomProperties); err != nil {
-		return nil, err
-	}
-
-	return out, nil
-}
-func (s *Service) getStoredExecution(name string) (*pb.Execution, error) {
+func (s *Service) getExecution(name string) (*mlpb.Execution, error) {
 	tokens := executionNameRE.FindStringSubmatch(name)
 	if len(tokens) != 2 {
 		return nil, fmt.Errorf("malformed Execution name %q. Must match pattern %q", name, executionNameRE)
@@ -832,47 +363,36 @@ func (s *Service) getStoredExecution(name string) (*pb.Execution, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse Execution id from %q: %v", tokens[1], err)
 	}
-	ids, err := s.store.GetExecutionsByID([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
+
+	executions, err := s.store.GetExecutionsByID([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
 	if err != nil {
 		return nil, err
 	}
 
-	if len(ids) != 1 {
-		return nil, fmt.Errorf("internal error: expecting single new Execution id, got instead : %v", ids)
+	if len(executions) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single Execution, got instead : %v", executions)
 	}
 
-	return toExecution(ids[0])
+	return executions[0], nil
 }
 
 // CreateExecution creates the specified execution.
-func (s *Service) CreateExecution(ctx context.Context, req *pb.CreateExecutionRequest) (*pb.CreateExecutionResponse, error) {
+func (s *Service) CreateExecution(ctx context.Context, req *api.CreateExecutionRequest) (*api.CreateExecutionResponse, error) {
 	if req.Execution == nil {
 		return nil, errors.New("unspecified Execution")
 	}
 
-	if req.Execution.Id > 0 {
+	if req.Execution.Id != nil {
 		return nil, errors.New("id should remain unspecified when creating Execution")
 	}
 
-	now, err := ptypes.TimestampProto(timeNowFn())
-	if err != nil {
-		return nil, fmt.Errorf("internal error: failed to generate valid timestamp: %v", err)
-	}
-	req.Execution.CreateTime = now
-	req.Execution.UpdateTime = now
-
-	eType, err := s.getStoredExecutionType(req.Parent)
+	eType, err := s.getExecutionType(req.Parent)
 	if err != nil {
 		return nil, fmt.Errorf("failed to resolve ExecutionType under %q: %v", req.Parent, err)
 	}
 
-	req.Execution.TypeId = eType.GetId()
-	stored, err := toStoredExecution(req.Execution)
-	if err != nil {
-		return nil, err
-	}
-
-	ids, err := s.store.PutExecutions([]*mlpb.Execution{stored})
+	req.Execution.TypeId = proto.Int64(eType.GetId())
+	ids, err := s.store.PutExecutions([]*mlpb.Execution{req.Execution})
 	if err != nil {
 		return nil, err
 	}
@@ -882,31 +402,45 @@ func (s *Service) CreateExecution(ctx context.Context, req *pb.CreateExecutionRe
 	}
 
 	executionName := fmt.Sprintf("%s/executions/%d", req.Parent, ids[0])
-	exec, err := s.getStoredExecution(executionName)
+	exec, err := s.getExecution(executionName)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateExecutionResponse{Execution: exec}, nil
+	return &api.CreateExecutionResponse{Execution: exec}, nil
 
 }
 
 // GetExecution returns the specified execution.
-func (s *Service) GetExecution(ctx context.Context, req *pb.GetExecutionRequest) (*pb.GetExecutionResponse, error) {
-	exec, err := s.getStoredExecution(req.GetName())
+func (s *Service) GetExecution(ctx context.Context, req *api.GetExecutionRequest) (*api.GetExecutionResponse, error) {
+	exec, err := s.getExecution(req.GetName())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetExecutionResponse{Execution: exec}, nil
+	return &api.GetExecutionResponse{Execution: exec}, nil
 }
 
 // ListExecutions returns all executions.
-func (s *Service) ListExecutions(ctx context.Context, req *pb.ListExecutionsRequest) (*pb.ListExecutionsResponse, error) {
-	return nil, nil
+func (s *Service) ListExecutions(ctx context.Context, req *api.ListExecutionsRequest) (*api.ListExecutionsResponse, error) {
+	if req.Name == "" {
+		executions, err := s.store.GetExecutions()
+		if err != nil {
+			return nil, err
+		}
+		return &api.ListExecutionsResponse{Executions: executions}, nil
+	}
+
+	typeName := strings.TrimPrefix(req.Name, executionTypesCollection)
+	executions, err := s.store.GetExecutionsByType(typeName)
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.ListExecutionsResponse{Executions: executions}, nil
 }
 
 // DeleteExecution deletes the specified execution.
-func (s *Service) DeleteExecution(ctx context.Context, req *pb.DeleteExecutionRequest) (*empty.Empty, error) {
+func (s *Service) DeleteExecution(ctx context.Context, req *api.DeleteExecutionRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteExecution")
 }
