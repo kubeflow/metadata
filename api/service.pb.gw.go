@@ -291,10 +291,6 @@ func request_MetadataService_DeleteExecution_0(ctx context.Context, marshaler ru
 
 }
 
-var (
-	filter_MetadataService_CreateArtifactType_0 = &utilities.DoubleArray{Encoding: map[string]int{"artifact_type": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
-)
-
 func request_MetadataService_CreateArtifactType_0(ctx context.Context, marshaler runtime.Marshaler, client MetadataServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq CreateArtifactTypeRequest
 	var metadata runtime.ServerMetadata
@@ -304,10 +300,6 @@ func request_MetadataService_CreateArtifactType_0(ctx context.Context, marshaler
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
 	}
 	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq.ArtifactType); err != nil && err != io.EOF {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-
-	if err := runtime.PopulateQueryParameters(&protoReq, req.URL.Query(), filter_MetadataService_CreateArtifactType_0); err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 
