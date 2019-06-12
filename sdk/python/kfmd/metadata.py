@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import json
-import swagger_client
-from swagger_client import Configuration, ApiClient, MetadataServiceApi
+import openapi_client
+from openapi_client import Configuration, ApiClient, MetadataServiceApi
 
 """
 This module conatins Python API for logging metadata of machine learning
@@ -82,21 +83,26 @@ class Run(object):
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME stirng field the form of
         /artifact_types/<namespace>/<name>.
-      - serialization() method to return a swagger_client.ApiArtifact.
+      - serialization() method to return a openapi_client.MlMetadataArtifact.
 
-    This method will set artifact._id and artifact._create_time.
+    This method will set artifact.id.
     """
 
     # TODO(zhenghui): log this artifact as the input or output of an execution.
     serialization = artifact.serialization()
-    if serialization.workspace.name == None:
-      serialization.workspace.name = self.workspace.name
+    if serialization.custom_properties == None:
+          serialization.custom_properties = {}
+    serialization.custom_properties[
+      "__workspace__"] = openapi_client.MlMetadataValue(
+        string_value=self.workspace.name)
+    serialization.custom_properties[
+      "__run__"] = openapi_client.MlMetadataValue(
+        string_value=self.name)
     response = self.workspace._client.create_artifact(
       parent=artifact.ARTIFACT_TYPE_NAME,
       body=serialization,
     )
     artifact.id = response.artifact.id
-    artifact.create_time = response.artifact.create_time
     return artifact
 
 class DataSet(object):
@@ -139,24 +145,26 @@ class DataSet(object):
     self.query = query
     self.labels = labels
     self.id = None
-    self.create_time = None
+    self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    data_set_artifact = swagger_client.ApiArtifact(
-        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+    data_set_artifact = openapi_client.MlMetadataArtifact(
         uri=self.uri,
-        name=self.name,
         properties={
+            "name":
+                openapi_client.MlMetadataValue(string_value=self.name),
+            "create_time":
+                openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                swagger_client.ApiValue(string_value=self.description),
+                openapi_client.MlMetadataValue(string_value=self.description),
             "query":
-                swagger_client.ApiValue(string_value=self.query),
+                openapi_client.MlMetadataValue(string_value=self.query),
             "version":
-                swagger_client.ApiValue(string_value=self.version),
+                openapi_client.MlMetadataValue(string_value=self.version),
             "owner":
-                swagger_client.ApiValue(string_value=self.owner),
+                openapi_client.MlMetadataValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
+                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return data_set_artifact
 
@@ -204,24 +212,26 @@ class Model(object):
     self.hyperparameters = hyperparameters
     self.labels = labels
     self.id = None
-    self.create_time = None
+    self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    model_artifact = swagger_client.ApiArtifact(
-        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+    model_artifact = openapi_client.MlMetadataArtifact(
         uri=self.uri,
-        name=self.name,
         properties={
+            "name":
+                openapi_client.MlMetadataValue(string_value=self.name),
+            "create_time":
+                openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                swagger_client.ApiValue(string_value=self.description),
+                openapi_client.MlMetadataValue(string_value=self.description),
             "model_type":
-                swagger_client.ApiValue(string_value=self.model_type),
+                openapi_client.MlMetadataValue(string_value=self.model_type),
             "version":
-                swagger_client.ApiValue(string_value=self.version),
+                openapi_client.MlMetadataValue(string_value=self.version),
             "owner":
-                swagger_client.ApiValue(string_value=self.owner),
+                openapi_client.MlMetadataValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
+                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
 
@@ -276,25 +286,30 @@ class Metrics(object):
     self.values = values
     self.labels = labels
     self.id = None
-    self.create_time = None
+    self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    model_artifact = swagger_client.ApiArtifact(
-        workspace=swagger_client.ApiWorkspace(name=self.workspace),
+    model_artifact = openapi_client.MlMetadataArtifact(
         uri=self.uri,
-        name=self.name,
         properties={
+            "name":
+                openapi_client.MlMetadataValue(string_value=self.name),
+            "create_time":
+                openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                swagger_client.ApiValue(string_value=self.description),
+                openapi_client.MlMetadataValue(string_value=self.description),
             "metrics_type":
-                swagger_client.ApiValue(string_value=self.metrics_type),
+                openapi_client.MlMetadataValue(string_value=self.metrics_type),
             "data_set_id":
-                swagger_client.ApiValue(string_value=self.data_set_id),
+                openapi_client.MlMetadataValue(string_value=self.data_set_id),
             "model_id":
-                swagger_client.ApiValue(string_value=self.model_id),
+                openapi_client.MlMetadataValue(string_value=self.model_id),
             "owner":
-                swagger_client.ApiValue(string_value=self.owner),
+                openapi_client.MlMetadataValue(string_value=self.owner),
             "__ALL_META__":
-                swagger_client.ApiValue(string_value=json.dumps(self.__dict__)),
+                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
+
+def get_rfc3339_time():
+      return datetime.datetime.utcnow().isoformat("T") + "Z"

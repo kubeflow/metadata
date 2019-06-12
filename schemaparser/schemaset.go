@@ -30,6 +30,7 @@ const (
 	versionPropertyName   = "apiversion"
 	idPropertyName        = "id"
 	namePropertyName      = "name"
+	uriPropertyName      = "uri"
 )
 
 // SimpleProperties are properties of type integer, double and string. The map is from property name to its type.

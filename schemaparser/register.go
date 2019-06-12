@@ -19,10 +19,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/golang/glog"
-	"github.com/kubeflow/metadata/api"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
+
+	"github.com/golang/glog"
 	"github.com/golang/protobuf/proto"
+	"github.com/kubeflow/metadata/api"
 	"github.com/kubeflow/metadata/service"
 )
 
@@ -103,5 +104,5 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 
 func isPropertyBuiltIn(pname string) bool {
 	return pname == categoryPropertyName || pname == namespacePropertyName ||
-		pname == kindPropertyName || pname == versionPropertyName || pname == idPropertyName || pname == namePropertyName
+		pname == kindPropertyName || pname == versionPropertyName || pname == idPropertyName || pname == uriPropertyName
 }
