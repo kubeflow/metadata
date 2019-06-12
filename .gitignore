@@ -76,4 +76,4 @@ Temporary Items
 *.egg-info
 dist
 .tox
-sdk/python/kfmd/swagger_client/
+sdk/python/kfmd/openapi_client/
