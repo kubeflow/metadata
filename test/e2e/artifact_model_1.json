@@ -24,7 +24,7 @@
         }
     },
     "custom_properties": {
-        "__Kf_run__": {
+        "__kf_run__": {
             "string_value": "run123"
         },
         "__kf_workspace__": {
