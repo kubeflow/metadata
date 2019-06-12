@@ -1,10 +1,11 @@
 import unittest
+import openapi_client
 from kfmd import metadata
 
 
 class TestMetedata(unittest.TestCase):
 
-  def test_log_metadata(self):
+  def test_log_metadata_successfully(self):
     ws1 = metadata.Workspace(
         backend_url_prefix="127.0.0.1:8080",
         name="ws_1",
@@ -59,6 +60,34 @@ class TestMetedata(unittest.TestCase):
             version="v0.0.1",
             labels={"mylabel": "l1"}))
     assert model.id
+
+    def test_log_invalid_artifacts_should_fail(self):
+        r = metadata.Run(name="test run")
+        artifact1 = ArtifactFixture(openapi_client.MlMetadataArtifact(
+            uri="gs://uri",
+            custom_properites={
+                r.WORKSPACE_PROPERTY_NAME:
+                openapi_client.MlMetadataValue(string_value="ws1"),
+            }
+        ))
+        self.assertRaise(ValueError, r.log, artifact1)
+        artifact2 = ArtifactFixture(openapi_client.MlMetadataArtifact(
+            uri="gs://uri",
+            custom_properites={
+                r.RUN_PROPERTY_NAME:
+                openapi_client.MlMetadataValue(string_value="run1"),
+            }
+        ))
+        self.assertRaise(ValueError, r.log, artifact2)
+
+class ArtifactFixture(object):
+  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"
+
+  def __init__(self, serialization_fixture=None):
+        self._fixture = serialization_fixture
+
+  def serialization(self):
+      return self._fixture
 
 if __name__ == "__main__":
   unittest.main()

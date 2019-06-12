@@ -57,6 +57,9 @@ class Run(object):
   methods for artifacts.
   """
 
+  WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
+  RUN_PROPERTY_NAME = '__kf_run__'
+
   def __init__(self, workspace=None, name=None, description=None):
     """
     Args:
@@ -92,15 +95,21 @@ class Run(object):
     serialization = artifact.serialization()
     if serialization.custom_properties == None:
           serialization.custom_properties = {}
+    if self.WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
+          raise ValueError("custom_properties contains reserved key %s"
+                           % self.WORKSPACE_PROPERTY_NAME)
+    if self.RUN_PROPERTY_NAME in serialization.custom_properties:
+      raise ValueError("custom_properties contains reserved key %s"
+                       % self.RUN_PROPERTY_NAME)
     serialization.custom_properties[
-      "__workspace__"] = openapi_client.MlMetadataValue(
+        self.WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
         string_value=self.workspace.name)
     serialization.custom_properties[
-      "__run__"] = openapi_client.MlMetadataValue(
+        self.RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
         string_value=self.name)
     response = self.workspace._client.create_artifact(
-      parent=artifact.ARTIFACT_TYPE_NAME,
-      body=serialization,
+        parent=artifact.ARTIFACT_TYPE_NAME,
+        body=serialization,
     )
     artifact.id = response.artifact.id
     return artifact
