@@ -51,6 +51,46 @@ class Workspace(object):
     config.host = backend_url_prefix
     self._client = MetadataServiceApi(ApiClient(config))
 
+  def list(self, artifact_type_name=None):
+    """
+    Args:
+      artifact_type_name {str} name of artifact type.
+    Returns a list of artifacts of the provided typed associated
+    with this workspace. Each artifact is represented as a dict.
+    """
+    if artifact_type_name == None:
+      artifact_type_name = Model.ARTIFACT_TYPE_NAME
+    response = self._client.list_artifacts(artifact_type_name)
+    results = []
+    if not response.artifacts:
+      return results
+    for artifact in response.artifacts:
+      results.append(self._flat(artifact))
+    return results
+
+  def _flat(self, artifact):
+    result = {
+      "id": artifact.id,
+    }
+    if not artifact.properties:
+      return result
+    for k,v in artifact.properties.items():
+      if k != "__ALL_META__":
+        if v.string_value != None:
+          result[k] = v.string_value
+        elif v.int_value != None:
+          result[k] = v.int_value
+        else:
+          result[k] = v.double_value
+    if not "__ALL_META__" in artifact.properties:
+      return result
+    # Pick up all nested object stored in the __ALL_META__ field.
+    all_meta = artifact.properties["__ALL_META__"].string_value
+    for k, v in json.loads(all_meta).items():
+      if not k in result:
+        result[k] = v
+    return result
+
 class Run(object):
   """
   Captures a run of pipeline or notebooks in a workspace and provides logging
@@ -84,7 +124,7 @@ class Run(object):
     metadata backend serivce.
 
     This method expects `artifact` to have
-      - ARTIFACT_TYPE_NAME stirng field the form of
+      - ARTIFACT_TYPE_NAME string field the form of
         /artifact_types/<namespace>/<name>.
       - serialization() method to return a openapi_client.MlMetadataArtifact.
 
