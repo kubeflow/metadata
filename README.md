@@ -4,6 +4,10 @@
 Repository for assets related to Metadata.
 
 ## Building & Testing
+**Make sure to use the [Bazel 0.24.1](https://github.com/bazelbuild/bazel/releases/tag/0.24.1) version. If not,
+follow the [instructions](https://docs.bazel.build/versions/master/install-ubuntu.html#step-3-run-the-installer) to
+update your Bazel version.**
+
 To build and test everything under the project using `Bazel`, run:
 ```
 make build
