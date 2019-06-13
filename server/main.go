@@ -41,24 +41,27 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
-	mlmdDBType					 = flag.String("mlmd_db_type", "sqlite", "Database type to use when creating MLMD instance. Supported options: mysql, sqlite")
+	mlmdDBType					 = flag.String("mlmd_db_type", "in-memory", "Database type to use when creating MLMD instance. Supported options: mysql, in-memory, sqlite")
 	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
 	mySQLServiceUser     = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 	mySQLServicePassword = flag.String("mysql_service_password", "", "MySQL Service Password.")
+	sqliteFilenameUri		 = flag.String("sqlite_filename_uri", "mlmetadata", "Sqlite Filename URI")
+	sqliteConnMode		   = flag.Int("sqlite_conn_mode", 3, "Sqlite Connection Mode. Supported options: 0(UNKNOWN), 1(READONLY), 2(READWRITE), 3(READWRITE_OPENCREATE)")
 )
 
 func mlmdStoreOrDie() *mlmetadata.Store {
 	var cfg *mlpb.ConnectionConfig
-	if *mlmdDBType == "sqlite" {
+	switch *mlmdDBType {
+	case "in-memory":
 		cfg = &mlpb.ConnectionConfig{
 			Config: &mlpb.ConnectionConfig_FakeDatabase{
 				&mlpb.FakeDatabaseConfig{
 				},
 			},
 		}
-	} else if *mlmdDBType == "mysql" {
+	case "mysql":
 		cfg = &mlpb.ConnectionConfig{
 			Config: &mlpb.ConnectionConfig_Mysql{
 				&mlpb.MySQLDatabaseConfig{
@@ -70,8 +73,17 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 				},
 			},
 		}
-	} else {
-		glog.Fatalf("Unknown mlmd_db_type %s: please choose from [mysql, sqlite]", *mlmdDBType)
+	case "sqlite":
+		cfg = &mlpb.ConnectionConfig{
+			Config: &mlpb.ConnectionConfig_Sqlite{
+				&mlpb.SqliteMetadataSourceConfig{
+					FilenameUri:      sqliteFilenameUri,
+					ConnectionMode:   mlpb.SqliteMetadataSourceConfig_ConnectionMode.Enum(mlpb.SqliteMetadataSourceConfig_ConnectionMode(*sqliteConnMode)),
+				},
+			},
+		}
+	default:
+		glog.Fatalf("Unknown mlmd_db_type %q: please choose from [mysql, sqlite, in-memory]", *mlmdDBType)
 	}
 
 	store, err := mlmetadata.NewStore(cfg)
