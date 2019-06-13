@@ -41,14 +41,14 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
-	mlmdDBType					 = flag.String("mlmd_db_type", "mysql", "Database type to use when creating MLMD instance. Supported options: in-memory, mysql, sqlite")
+	mlmdDBType           = flag.String("mlmd_db_type", "mysql", "Database type to use when creating MLMD instance. Supported options: in-memory, mysql, sqlite")
 	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
 	mySQLServiceUser     = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 	mySQLServicePassword = flag.String("mysql_service_password", "", "MySQL Service Password.")
-	sqliteFilenameUri		 = flag.String("sqlite_filename_uri", "mlmetadata", "Sqlite Filename URI")
-	sqliteConnMode		   = flag.Int("sqlite_conn_mode", 3, "Sqlite Connection Mode. Supported options: 0(UNKNOWN), 1(READONLY), 2(READWRITE), 3(READWRITE_OPENCREATE)")
+	sqliteFilenameUri    = flag.String("sqlite_filename_uri", "mlmetadata", "Sqlite Filename URI")
+	sqliteConnMode       = flag.Int("sqlite_conn_mode", 3, "Sqlite Connection Mode. Supported options: 0(UNKNOWN), 1(READONLY), 2(READWRITE), 3(READWRITE_OPENCREATE)")
 )
 
 func mlmdStoreOrDie() *mlmetadata.Store {
@@ -77,8 +77,8 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 		cfg = &mlpb.ConnectionConfig{
 			Config: &mlpb.ConnectionConfig_Sqlite{
 				&mlpb.SqliteMetadataSourceConfig{
-					FilenameUri:      sqliteFilenameUri,
-					ConnectionMode:   mlpb.SqliteMetadataSourceConfig_ConnectionMode.Enum(mlpb.SqliteMetadataSourceConfig_ConnectionMode(*sqliteConnMode)),
+					FilenameUri:    sqliteFilenameUri,
+					ConnectionMode: mlpb.SqliteMetadataSourceConfig_ConnectionMode.Enum(mlpb.SqliteMetadataSourceConfig_ConnectionMode(*sqliteConnMode)),
 				},
 			},
 		}
