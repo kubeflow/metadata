@@ -41,7 +41,7 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
-	mlmdDBType					 = flag.String("mlmd_db_type", "in-memory", "Database type to use when creating MLMD instance. Supported options: mysql, in-memory, sqlite")
+	mlmdDBType					 = flag.String("mlmd_db_type", "mysql", "Database type to use when creating MLMD instance. Supported options: in-memory, mysql, sqlite")
 	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
@@ -83,7 +83,7 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 			},
 		}
 	default:
-		glog.Fatalf("Unknown mlmd_db_type %q: please choose from [mysql, sqlite, in-memory]", *mlmdDBType)
+		glog.Fatalf("Unknown mlmd_db_type %q: please choose from [in-memory, mysql, sqlite]", *mlmdDBType)
 	}
 
 	store, err := mlmetadata.NewStore(cfg)
