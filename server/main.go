@@ -70,6 +70,8 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 				},
 			},
 		}
+	} else {
+		glog.Fatalf("Unknown mlmd_db_type %s: please choose from [mysql, sqlite]", *mlmdDBType)
 	}
 
 	store, err := mlmetadata.NewStore(cfg)
