@@ -31,11 +31,11 @@ metadata-docker-image:
 swagger-py-client:
 	mkdir -p /tmp/swagger
 	./api/generate_proto.sh && \
-	wget http://central.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.5/swagger-codegen-cli-2.4.5.jar -O /tmp/swagger/swagger-codegen-cli.jar && \
+	wget http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/4.0.1/openapi-generator-cli-4.0.1.jar -O /tmp/swagger/swagger-codegen-cli.jar && \
     java -jar /tmp/swagger/swagger-codegen-cli.jar generate \
     	-i api/service.swagger.json \
-    	-l python \
+    	-g python \
     	-o /tmp/swagger && \
     rm -rf sdk/python/kfmd/swagger_client && \
-    cp -r /tmp/swagger/swagger_client sdk/python/kfmd/ && \
+    cp -r /tmp/swagger/openapi_client sdk/python/kfmd/ && \
     rm -rf /tmp/swagger

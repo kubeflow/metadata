@@ -237,17 +237,17 @@ service MetadataService {
     };
   }
 
-  rpc GetArtifactType(GetArtifactTypeRequest)
-      returns (GetArtifactTypeResponse) {
-    option (google.api.http) = {
-      get: "/api/v1alpha1/{name=artifact_types/**}"
-    };
-  }
-
   rpc ListArtifactTypes(ListArtifactTypesRequest)
       returns (ListArtifactTypesResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/artifact_types"
+    };
+  }
+
+  rpc GetArtifactType(GetArtifactTypeRequest)
+      returns (GetArtifactTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=artifact_types/**}"
     };
   }
 
@@ -267,17 +267,17 @@ service MetadataService {
     };
   }
 
-  rpc GetExecutionType(GetExecutionTypeRequest)
-      returns (GetExecutionTypeResponse) {
-    option (google.api.http) = {
-      get: "/api/v1alpha1/{name=execution_types/**}"
-    };
-  }
-
   rpc ListExecutionTypes(ListExecutionTypesRequest)
       returns (ListExecutionTypesResponse) {
     option (google.api.http) = {
       get: "/api/v1alpha1/execution_types"
+    };
+  }
+
+  rpc GetExecutionType(GetExecutionTypeRequest)
+      returns (GetExecutionTypeResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/{name=execution_types/**}"
     };
   }
 
