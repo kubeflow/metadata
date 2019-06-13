@@ -41,7 +41,7 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
-	mlmdDBType					 = flag.String("mlmd_db_type", "sqlite", "Database type to use when creating MLMD instance: e.g. mysql, sqlite")
+	mlmdDBType					 = flag.String("mlmd_db_type", "sqlite", "Database type to use when creating MLMD instance. Supported options: mysql, sqlite")
 	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
