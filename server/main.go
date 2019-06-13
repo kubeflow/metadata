@@ -41,6 +41,7 @@ var (
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
 
+	mlmdDBType					 = flag.String("mlmd_db_type", "sqlite", "Database type to use when creating MLMD instance: e.g. mysql, sqlite")
 	mlmdDBName           = flag.String("mlmd_db_name", "mlmetadata", "Database name to use when creating MLMD instance.")
 	mySQLServiceHost     = flag.String("mysql_service_host", "localhost", "MySQL Service Hostname.")
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
@@ -49,16 +50,26 @@ var (
 )
 
 func mlmdStoreOrDie() *mlmetadata.Store {
-	cfg := &mlpb.ConnectionConfig{
-		Config: &mlpb.ConnectionConfig_Mysql{
-			&mlpb.MySQLDatabaseConfig{
-				Host:     mySQLServiceHost,
-				Port:     proto.Uint32(uint32(*mySQLServicePort)),
-				Database: mlmdDBName,
-				User:     mySQLServiceUser,
-				Password: mySQLServicePassword,
+	var cfg *mlpb.ConnectionConfig
+	if *mlmdDBType == "sqlite" {
+		cfg = &mlpb.ConnectionConfig{
+			Config: &mlpb.ConnectionConfig_FakeDatabase{
+				&mlpb.FakeDatabaseConfig{
+				},
 			},
-		},
+		}
+	} else if *mlmdDBType == "mysql" {
+		cfg = &mlpb.ConnectionConfig{
+			Config: &mlpb.ConnectionConfig_Mysql{
+				&mlpb.MySQLDatabaseConfig{
+					Host:     mySQLServiceHost,
+					Port:     proto.Uint32(uint32(*mySQLServicePort)),
+					Database: mlmdDBName,
+					User:     mySQLServiceUser,
+					Password: mySQLServicePassword,
+				},
+			},
+		}
 	}
 
 	store, err := mlmetadata.NewStore(cfg)
