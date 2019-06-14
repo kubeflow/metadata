@@ -71,7 +71,7 @@ class TestMetedata(unittest.TestCase):
     artifact1 = ArtifactFixture(openapi_client.MlMetadataArtifact(
         uri="gs://uri",
         custom_properties={
-            r.WORKSPACE_PROPERTY_NAME:
+            metadata.WORKSPACE_PROPERTY_NAME:
             openapi_client.MlMetadataValue(string_value="ws1"),
         }
     ))
@@ -79,7 +79,7 @@ class TestMetedata(unittest.TestCase):
     artifact2 = ArtifactFixture(openapi_client.MlMetadataArtifact(
         uri="gs://uri",
         custom_properties={
-            r.RUN_PROPERTY_NAME:
+            metadata.RUN_PROPERTY_NAME:
             openapi_client.MlMetadataValue(string_value="run1"),
         }
     ))
