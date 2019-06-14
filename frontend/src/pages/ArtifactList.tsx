@@ -15,29 +15,43 @@
  */
 
 import * as React from 'react';
-import CustomTable, { Column, Row } from '../components/CustomTable';
-import { Page } from './Page';
-import { ToolbarProps } from '../components/Toolbar';
-import { classes } from 'typestyle';
-import { commonCss, padding } from '../Css';
-import { formatDateString } from '../lib/Utils';
+import CustomTable, {CustomRendererProps, Column, Row} from '../components/CustomTable';
+import {Page} from './Page';
+import {ToolbarProps} from '../components/Toolbar';
+import {classes} from 'typestyle';
+import {commonCss, padding} from '../Css';
+import {formatDateString} from '../lib/Utils';
+import {getApi} from '../lib/Api';
+import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
+import {Link} from 'react-router-dom';
+import {RoutePage, RouteParams} from '../components/Router';
 
 interface PipelineListState {
-  artifacts: any[];
-  selectedIds: string[];
-  uploadDialogOpen: boolean;
+  artifacts: MlMetadataArtifact[];
 }
+
+const WORKSPACE_PROP = '__kf_workspace__';
 
 class ArtifactList extends Page<{}, PipelineListState> {
   private _tableRef = React.createRef<CustomTable>();
+  private api = getApi();
+  private artifactTypes: Map<string, MlMetadataArtifactType>;
+  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
+    (props: CustomRendererProps<string>) => {
+      return (
+        <Link onClick={(e) => e.stopPropagation()}
+          className={commonCss.link}
+          to={RoutePage.MODEL_DETAILS.replace(
+            ':' + RouteParams.artifactId, props.id)}>
+          {props.value}
+        </Link>
+      );
+    }
 
   constructor(props: any) {
     super(props);
-
     this.state = {
       artifacts: [],
-      selectedIds: [],
-      uploadDialogOpen: false,
     };
   }
 
@@ -51,24 +65,35 @@ class ArtifactList extends Page<{}, PipelineListState> {
 
   public render(): JSX.Element {
     const columns: Column[] = [
-      { label: 'Name', flex: 1 },
-      { label: 'Id', flex: 1 },
-      { label: 'Type', flex: 1 },
-      { label: 'workspace', flex: 1 },
-      { label: 'Created at', flex: 1 },
+      {label: 'Name', flex: 1, customRenderer: this.nameCustomRenderer},
+      {label: 'Version', flex: 1},
+      {label: 'Type', flex: 1},
+      {label: 'URI', flex: 1},
+      {label: 'Workspace', flex: 1},
+      {label: 'Created at', flex: 1},
     ];
 
     const rows: Row[] = this.state.artifacts.map((a) => {
+      const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
+        this.artifactTypes.get(a.type_id!)!.name : a.type_id;
       return {
         id: a.id!,
-        otherFields: [a.name!, a.description!, formatDateString(a.created_at!)],
+        otherFields: [
+          a.properties!.name.string_value,
+          a.properties!.version ? a.properties!.version!.string_value : null,
+          type,
+          a.uri,
+          a.custom_properties![WORKSPACE_PROP] ?
+            a.custom_properties![WORKSPACE_PROP].string_value : '',
+          formatDateString(a.properties!.create_time!.string_value),
+        ],
       };
     });
 
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
         <CustomTable ref={this._tableRef} columns={columns} rows={rows}
-          updateSelection={this._selectionChanged.bind(this)} selectedIds={this.state.selectedIds}
+          disableSelection={true}
           reload={this._reload.bind(this)}
           emptyMessage='No artifacts found.' />
       </div>
@@ -82,22 +107,30 @@ class ArtifactList extends Page<{}, PipelineListState> {
   }
 
   private async _reload(request: any): Promise<string> {
-    let response: any | null = null;
-    // try {
-    //   response = await Apis.pipelineServiceApi.listPipelines(
-    //     request.pageToken, request.pageSize, request.sortBy, request.filter);
-    //   this.clearBanner();
-    // } catch (err) {
-    //   await this.showPageError('Error: failed to retrieve list of pipelines.', err);
-    // }
+    if (!this.artifactTypes) {
+      this.artifactTypes = await this.getArtifactTypes();
+    }
 
-    this.setStateSafe({ artifacts: (response && response.artifacts) || [] });
-
-    return response ? response.next_page_token || '' : '';
+    try {
+      const response = await this.api.metadataService.listArtifacts2();
+      this.setStateSafe({artifacts: (response && response.artifacts) || []});
+    } catch (err) {
+      this.showPageError('Unable to retrieve Metadata artifacts', err);
+    }
+    return '';
   }
 
-  private _selectionChanged(selectedIds: string[]): void {
-    this.setStateSafe({ selectedIds });
+  private async getArtifactTypes():
+    Promise<Map<string, MlMetadataArtifactType>> {
+    try {
+      throw new Error('Not implemented yet');
+      // const response = await this.api.metadataService.listArtifactTypes();
+      // return new Map(
+      //   response.artifact_types!.map((at) => [at.id!, at])
+      // );
+    } catch (err) {
+      return new Map();
+    }
   }
 }
 

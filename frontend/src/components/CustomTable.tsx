@@ -15,19 +15,19 @@
  */
 
 import * as React from 'react';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import Checkbox, {CheckboxProps} from '@material-ui/core/Checkbox';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+import TextField, {TextFieldProps} from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import WarningIcon from '@material-ui/icons/WarningRounded';
-import { classes, stylesheet } from 'typestyle';
-import { fonts, fontsize, dimension, commonCss, color, padding, zIndex } from '../Css';
-import { logger } from '../lib/Utils';
+import {classes, stylesheet} from 'typestyle';
+import {fonts, fontsize, dimension, commonCss, color, padding, zIndex} from '../Css';
+import {logger} from '../lib/Utils';
 
 export enum ExpandState {
   COLLAPSED,
@@ -39,7 +39,7 @@ export interface Column {
   flex?: number;
   label: string;
   sortKey?: string;
-  customRenderer?: React.FC<CustomRendererProps<{} | undefined>>;
+  customRenderer?: React.FC<CustomRendererProps<any>>;
 }
 
 export interface CustomRendererProps<T> {
@@ -250,7 +250,7 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
   }
 
   public render(): JSX.Element {
-    const { pageSize } = this.state;
+    const {pageSize} = this.state;
     const numSelected = (this.props.selectedIds || []).length;
     const totalFlex = this.props.columns.reduce((total, c) => total += (c.flex || 1), 0);
     const widths = this.props.columns.map(c => (c.flex || 1) / totalFlex * 100);
@@ -270,7 +270,7 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
           )}
           {this.props.columns.map((col, i) => {
             return (
-              <div key={i} style={{ width: widths[i] + '%' }} className={css.columnName}>
+              <div key={i} style={{width: widths[i] + '%'}} className={css.columnName}>
                 <div>{col.label}</div>
               </div>
             );
@@ -278,12 +278,12 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
         </div>
 
         {/* Body */}
-        <div className={commonCss.scrollContainer} style={{ minHeight: 60 }}>
+        <div className={commonCss.scrollContainer} style={{minHeight: 60}}>
           {/* Busy experience */}
           {this.state.isBusy && (<React.Fragment>
             <div className={commonCss.busyOverlay} />
             <CircularProgress size={25} className={commonCss.absoluteCenter}
-              style={{ zIndex: zIndex.BUSY_OVERLAY }} />
+              style={{zIndex: zIndex.BUSY_OVERLAY}} />
           </React.Fragment>)}
 
           {/* Empty experience */}
@@ -315,12 +315,12 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                   </div>
                 )}
                 {row.otherFields.map((cell, c) => (
-                  <div key={c} style={{ width: widths[c] + '%' }} className={css.cell}>
+                  <div key={c} style={{width: widths[c] + '%'}} className={css.cell}>
                     {c === 0 && row.error && (
                       <Tooltip title={row.error}><WarningIcon className={css.icon} /></Tooltip>
                     )}
                     {this.props.columns[c].customRenderer ?
-                      this.props.columns[c].customRenderer!({ value: cell, id: row.id }) : cell}
+                      this.props.columns[c].customRenderer!({value: cell, id: row.id}) : cell}
                   </div>
                 ))}
               </div>
@@ -333,8 +333,8 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
           <div className={css.footer}>
             <span className={padding(10, 'r')}>Rows per page:</span>
             <TextField select={true} variant='standard' className={css.rowsPerPage}
-              classes={{ root: css.verticalAlignInitial }}
-              InputProps={{ disableUnderline: true }} onChange={this._requestRowsPerPage.bind(this)}
+              classes={{root: css.verticalAlignInitial}}
+              InputProps={{disableUnderline: true}} onChange={this._requestRowsPerPage.bind(this)}
               value={pageSize}>
               {[10, 20, 50, 100].map((size, i) => (
                 <MenuItem key={i} value={size}>{size}</MenuItem>
@@ -370,7 +370,7 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
 
       result = await this.props.reload(request);
     } finally {
-      this.setStateSafe({ isBusy: false });
+      this.setStateSafe({isBusy: false});
     }
     return result;
   }
@@ -400,13 +400,13 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
       maxPageIndex = newCurrentPage;
     }
 
-    this.setStateSafe({ currentPage: newCurrentPage, maxPageIndex });
+    this.setStateSafe({currentPage: newCurrentPage, maxPageIndex});
   }
 
   private async _requestRowsPerPage(event: React.ChangeEvent): Promise<void> {
     const pageSize = (event.target as TextFieldProps).value as number;
 
-    this._resetToFirstPage(await this.reload({ pageSize, pageToken: '' }));
+    this._resetToFirstPage(await this.reload({pageSize, pageToken: ''}));
   }
 
   private _resetToFirstPage(newPageToken?: string): void {

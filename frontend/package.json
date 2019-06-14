@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
     "lodash": ">=4.17.11",
+    "portable-fetch": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
@@ -28,7 +29,7 @@
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "postinstall": "cd ./server && npm i",
+    "postinstall": "cd ./server && npm i && cd ../src/apis/service && npm i",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
@@ -46,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

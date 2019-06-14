@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "build/dist",
+    "module": "esnext",
     "target": "es5",
     "lib": [
       "dom",
@@ -7,19 +9,36 @@
       "esnext"
     ],
     "allowJs": true,
-    "skipLibCheck": true,
-    "strictPropertyInitialization": false,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
     "isolatedModules": true,
+    "jsx": "preserve",
+    "moduleResolution": "node",
     "noEmit": true,
-    "jsx": "preserve"
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "strictFunctionTypes": false,
+    "strict": false,
+    "suppressImplicitAnyIndexErrors": true
   },
+  "exclude": [
+    "build",
+    "gen_licenses.js",
+    "node_modules",
+    "scripts",
+    "server",
+    "src/apis"
+  ],
   "include": [
     "src"
   ]

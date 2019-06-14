@@ -15,18 +15,18 @@
  */
 
 import * as React from 'react';
-import Banner, { BannerProps } from '../components/Banner';
+import Banner, {BannerProps} from '../components/Banner';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Page404 from '../pages/404';
-import Snackbar, { SnackbarProps } from '@material-ui/core/Snackbar';
-import Toolbar, { ToolbarProps } from './Toolbar';
-import { Route, Switch, Redirect, HashRouter } from 'react-router-dom';
-import { classes, stylesheet } from 'typestyle';
-import { commonCss } from '../Css';
+import Snackbar, {SnackbarProps} from '@material-ui/core/Snackbar';
+import Toolbar, {ToolbarProps} from './Toolbar';
+import {Route, Switch, Redirect, HashRouter} from 'react-router-dom';
+import {classes, stylesheet} from 'typestyle';
+import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
 
 const css = stylesheet({
@@ -35,13 +35,18 @@ const css = stylesheet({
   },
 });
 
+export enum RouteParams {
+  artifactId = 'id'
+}
+
 // tslint:disable-next-line:variable-name
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
+  MODEL_DETAILS: `/artifacts/models/:${RouteParams.artifactId}`,
 };
 
 export interface DialogProps {
-  buttons?: Array<{ onClick?: () => any, text: string }>;
+  buttons?: Array<{onClick?: () => any, text: string}>;
   // TODO: This should be generalized to any react component.
   content?: string;
   onClose?: () => any;
@@ -63,9 +68,9 @@ class Router extends React.Component<{}, RouteComponentState> {
 
     this.state = {
       bannerProps: {},
-      dialogProps: { open: false },
-      snackbarProps: { autoHideDuration: 5000, open: false },
-      toolbarProps: { breadcrumbs: [{ displayName: '', href: '' }], actions: [], ...props },
+      dialogProps: {open: false},
+      snackbarProps: {autoHideDuration: 5000, open: false},
+      toolbarProps: {breadcrumbs: [{displayName: '', href: ''}], actions: [], ...props},
     };
   }
 
@@ -78,8 +83,8 @@ class Router extends React.Component<{}, RouteComponentState> {
       updateToolbar: this._updateToolbar.bind(this),
     };
 
-    const routes: Array<{ path: string, Component: React.ComponentClass, view?: any }> = [
-      { path: RoutePage.ARTIFACTS, Component: ArtifactList },
+    const routes: Array<{path: string, Component: React.ComponentClass, view?: any}> = [
+      {path: RoutePage.ARTIFACTS, Component: ArtifactList},
     ];
 
     return (
@@ -87,7 +92,7 @@ class Router extends React.Component<{}, RouteComponentState> {
         <div className={commonCss.page}>
           <div className={commonCss.flexGrow}>
             <div className={classes(commonCss.page)}>
-              <Route render={({ ...props }) => (<Toolbar {...this.state.toolbarProps} {...props} />)} />
+              <Route render={({...props}) => (<Toolbar {...this.state.toolbarProps} {...props} />)} />
               {this.state.bannerProps.message
                 && <Banner
                   message={this.state.bannerProps.message}
@@ -95,18 +100,18 @@ class Router extends React.Component<{}, RouteComponentState> {
                   additionalInfo={this.state.bannerProps.additionalInfo}
                   refresh={this.state.bannerProps.refresh} />}
               <Switch>
-                <Route exact={true} path={'/'} render={({ ...props }) => (
+                <Route exact={true} path={'/'} render={({...props}) => (
                   <Redirect to={RoutePage.ARTIFACTS} {...props} />
                 )} />
                 {routes.map((route, i) => {
-                  const { path, Component, ...otherProps } = { ...route };
-                  return <Route key={i} exact={true} path={path} render={({ ...props }) => (
+                  const {path, Component, ...otherProps} = {...route};
+                  return <Route key={i} exact={true} path={path} render={({...props}) => (
                     <Component {...props} {...childProps} {...otherProps} />
                   )} />;
                 })}
 
                 {/* 404 */}
-                {<Route render={({ ...props }) => <Page404 {...props} {...childProps} />} />}
+                {<Route render={({...props}) => <Page404 {...props} {...childProps} />} />}
               </Switch>
 
               <Snackbar
@@ -118,7 +123,7 @@ class Router extends React.Component<{}, RouteComponentState> {
             </div>
           </div>
 
-          <Dialog open={this.state.dialogProps.open !== false} classes={{ paper: css.dialog }}
+          <Dialog open={this.state.dialogProps.open !== false} classes={{paper: css.dialog}}
             className='dialog' onClose={() => this._handleDialogClosed()}>
             {this.state.dialogProps.title && (
               <DialogTitle> {this.state.dialogProps.title}</DialogTitle>
@@ -148,11 +153,11 @@ class Router extends React.Component<{}, RouteComponentState> {
     if (dialogProps.open === undefined) {
       dialogProps.open = true;
     }
-    this.setState({ dialogProps });
+    this.setState({dialogProps});
   }
 
   private _handleDialogClosed(onClick?: () => void): void {
-    this.setState({ dialogProps: { open: false } });
+    this.setState({dialogProps: {open: false}});
     if (onClick) {
       onClick();
     }
@@ -163,21 +168,21 @@ class Router extends React.Component<{}, RouteComponentState> {
 
   private _updateToolbar(newToolbarProps: Partial<ToolbarProps>): void {
     const toolbarProps = Object.assign(this.state.toolbarProps, newToolbarProps);
-    this.setState({ toolbarProps });
+    this.setState({toolbarProps});
   }
 
   private _updateBanner(bannerProps: BannerProps): void {
-    this.setState({ bannerProps });
+    this.setState({bannerProps});
   }
 
   private _updateSnackbar(snackbarProps: SnackbarProps): void {
     snackbarProps.autoHideDuration =
       snackbarProps.autoHideDuration || this.state.snackbarProps.autoHideDuration;
-    this.setState({ snackbarProps });
+    this.setState({snackbarProps});
   }
 
   private _handleSnackbarClose(): void {
-    this.setState({ snackbarProps: { open: false, message: '' } });
+    this.setState({snackbarProps: {open: false, message: ''}});
   }
 }
 
