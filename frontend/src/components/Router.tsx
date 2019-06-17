@@ -28,6 +28,7 @@ import {Route, Switch, Redirect, HashRouter} from 'react-router-dom';
 import {classes, stylesheet} from 'typestyle';
 import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
+import ModelDetails from '../pages/ModelDetails';
 
 const css = stylesheet({
   dialog: {
@@ -54,6 +55,12 @@ export interface DialogProps {
   title?: string;
 }
 
+interface RouteConfig {
+  path: string,
+  Component: React.ComponentClass,
+  view?: any
+}
+
 interface RouteComponentState {
   bannerProps: BannerProps;
   dialogProps: DialogProps;
@@ -63,9 +70,13 @@ interface RouteComponentState {
 
 class Router extends React.Component<{}, RouteComponentState> {
 
+  private routes: RouteConfig[] = [
+    {path: RoutePage.ARTIFACTS, Component: ArtifactList},
+    {path: RoutePage.MODEL_DETAILS, Component: ModelDetails},
+  ];
+
   constructor(props: any) {
     super(props);
-
     this.state = {
       bannerProps: {},
       dialogProps: {open: false},
@@ -82,11 +93,6 @@ class Router extends React.Component<{}, RouteComponentState> {
       updateSnackbar: this._updateSnackbar.bind(this),
       updateToolbar: this._updateToolbar.bind(this),
     };
-
-    const routes: Array<{path: string, Component: React.ComponentClass, view?: any}> = [
-      {path: RoutePage.ARTIFACTS, Component: ArtifactList},
-    ];
-
     return (
       <HashRouter>
         <div className={commonCss.page}>
@@ -103,7 +109,7 @@ class Router extends React.Component<{}, RouteComponentState> {
                 <Route exact={true} path={'/'} render={({...props}) => (
                   <Redirect to={RoutePage.ARTIFACTS} {...props} />
                 )} />
-                {routes.map((route, i) => {
+                {this.routes.map((route, i) => {
                   const {path, Component, ...otherProps} = {...route};
                   return <Route key={i} exact={true} path={path} render={({...props}) => (
                     <Component {...props} {...childProps} {...otherProps} />

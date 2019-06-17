@@ -21,7 +21,7 @@ import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {formatDateString} from '../lib/Utils';
-import {getApi} from '../lib/Api';
+import {getApi, CustomProperties} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
@@ -30,7 +30,6 @@ interface PipelineListState {
   artifacts: MlMetadataArtifact[];
 }
 
-const WORKSPACE_PROP = '__kf_workspace__';
 
 class ArtifactList extends Page<{}, PipelineListState> {
   private _tableRef = React.createRef<CustomTable>();
@@ -83,8 +82,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
           a.properties!.version ? a.properties!.version!.string_value : null,
           type,
           a.uri,
-          a.custom_properties![WORKSPACE_PROP] ?
-            a.custom_properties![WORKSPACE_PROP].string_value : '',
+          a.custom_properties![CustomProperties.WORKSPACE] ?
+            a.custom_properties![CustomProperties.WORKSPACE].string_value : '',
           formatDateString(a.properties!.create_time!.string_value),
         ],
       };

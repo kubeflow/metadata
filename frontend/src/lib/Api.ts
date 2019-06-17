@@ -1,5 +1,12 @@
 import {MetadataServiceApi} from '../apis/service';
 
+/** Known custom properties */
+export enum CustomProperties {
+  ALL_META = '__ALL_META__',
+  WORKSPACE = '__kf_workspace__',
+  RUN = '__kf_run__',
+}
+
 /**
  * Class to wrap backend APIs.
  */
