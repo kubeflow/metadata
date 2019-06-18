@@ -143,7 +143,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/{artifactName}": {
       "get": {
         "operationId": "GetArtifact",
         "responses": {
@@ -156,7 +156,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "artifactName",
             "description": "Artifact name is like\n`artifact_types/{namespace}/{typename}/artifact/{id}`.",
             "in": "path",
             "required": true,
@@ -179,7 +179,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "artifactName",
             "in": "path",
             "required": true,
             "type": "string"
@@ -190,7 +190,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/{artifactTypeName}": {
       "get": {
         "operationId": "GetArtifactType",
         "responses": {
@@ -203,7 +203,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "artifactTypeName",
             "description": "ArtifactType names are of the form `artifact_types/{namespace}/{name}`.",
             "in": "path",
             "required": true,
@@ -226,7 +226,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "artifactTypeName",
             "in": "path",
             "required": true,
             "type": "string"
@@ -261,7 +261,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/{executionName}": {
       "get": {
         "operationId": "GetExecution",
         "responses": {
@@ -274,7 +274,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "executionName",
             "description": "Execution name is like\n`execution_types/{namespace}/{typename}/execution/{id}`.",
             "in": "path",
             "required": true,
@@ -297,7 +297,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "executionName",
             "in": "path",
             "required": true,
             "type": "string"
@@ -308,7 +308,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/{executionType}": {
       "get": {
         "operationId": "GetExecutionType",
         "responses": {
@@ -321,7 +321,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "executionType",
             "in": "path",
             "required": true,
             "type": "string"
@@ -343,7 +343,7 @@
         },
         "parameters": [
           {
-            "name": "name",
+            "name": "executionType",
             "in": "path",
             "required": true,
             "type": "string"
