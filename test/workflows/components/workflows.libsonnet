@@ -221,8 +221,14 @@
                 ],
                 [
                   {
-                    name: "setup-cluster",
-                    template: "setup-cluster",
+                    name: "create-cluster",
+                    template: "create-cluster",
+                  },
+                ],
+                [
+                  {
+                    name: "setup-services",
+                    template: "setup-services",
                   },
                 ],
                 [
@@ -267,12 +273,6 @@
                 ],
               },
             },  // checkout
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-cluster",testWorkerImage, [
-              "test/scripts/create-cluster.sh",
-            ]),  // setup cluster
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("teardown-cluster",testWorkerImage, [
-              "test/scripts/tear-down-cluster.sh",
-             ]),  // teardown cluster
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-pr-symlink", testWorkerImage, [
               "python",
               "-m",
@@ -292,6 +292,21 @@
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImage, [
               "test/scripts/unittests.sh",
             ]),  // unit test
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-cluster",testWorkerImage, [
+              "test/scripts/create-cluster.sh",
+            ]),  // setup cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("teardown-cluster",testWorkerImage, [
+              "test/scripts/tear-down-cluster.sh",
+            ]),  // teardown cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("build-images",testWorkerImage, [
+              "test/scripts/build-images.sh",
+            ]),  // teardown cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services",testWorkerImage, [
+              "test/scripts/unittests.sh",
+            ]),  // teardown cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("run-e2e-tests",testWorkerImage, [
+              "test/scripts/unittests.sh",
+            ]),  // teardown cluster
           ],  // templates
         },
       },  // e2e
