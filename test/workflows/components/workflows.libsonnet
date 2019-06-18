@@ -213,6 +213,24 @@
                     template: "unit-test",
                   },
                 ],
+                [
+                  {
+                    name: "build-images",
+                    template: "build-images",
+                  },
+                ],
+                [
+                  {
+                    name: "setup-cluster",
+                    template: "setup-cluster",
+                  },
+                ],
+                [
+                  {
+                    name: "run-e2e-tests",
+                    template: "run-e2e-tests",
+                  },
+                ],
               ],
             },
             {
@@ -221,6 +239,11 @@
                 [{
                   name: "copy-artifacts",
                   template: "copy-artifacts",
+                }],
+                [{
+                  name: "teardown-cluster",
+                  template: "teardown-cluster",
+
                 }],
               ],
             },
@@ -233,7 +256,7 @@
                 ],
                 env: prow_env + [{
                   name: "EXTRA_REPOS",
-                  value: "kubeflow/testing@HEAD",
+                  value: "kubeflow/testing@HEAD;kubeflow/manifests@HEAD",
                 }],
                 image: testWorkerImage,
                 volumeMounts: [
@@ -244,6 +267,12 @@
                 ],
               },
             },  // checkout
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-cluster",testWorkerImage, [
+              "test/scripts/create-cluster.sh",
+            ]),  // setup cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("teardown-cluster",testWorkerImage, [
+              "test/scripts/tear-down-cluster.sh",
+             ]),  // teardown cluster
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-pr-symlink", testWorkerImage, [
               "python",
               "-m",
