@@ -21,7 +21,7 @@ import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {formatDateString} from '../lib/Utils';
-import {getApi, CustomProperties} from '../lib/Api';
+import {Api, CustomProperties} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
@@ -30,10 +30,9 @@ interface PipelineListState {
   artifacts: MlMetadataArtifact[];
 }
 
-
 class ArtifactList extends Page<{}, PipelineListState> {
-  private _tableRef = React.createRef<CustomTable>();
-  private api = getApi();
+  private tableRef = React.createRef<CustomTable>();
+  private api = Api.getInstance();
   private artifactTypes: Map<string, MlMetadataArtifactType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
@@ -52,6 +51,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
     this.state = {
       artifacts: [],
     };
+    this.reload = this.reload.bind(this);
   }
 
   public getInitialToolbarState(): ToolbarProps {
@@ -91,30 +91,32 @@ class ArtifactList extends Page<{}, PipelineListState> {
 
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
-        <CustomTable ref={this._tableRef} columns={columns} rows={rows}
+        <CustomTable ref={this.tableRef}
+          columns={columns}
+          rows={rows}
           disableSelection={true}
-          reload={this._reload.bind(this)}
+          reload={this.reload}
           emptyMessage='No artifacts found.' />
       </div>
     );
   }
 
   public async refresh(): Promise<void> {
-    if (this._tableRef.current) {
-      await this._tableRef.current.reload();
+    if (this.tableRef.current) {
+      await this.tableRef.current.reload();
     }
   }
 
-  private async _reload(request: any): Promise<string> {
+  private async reload(): Promise<string> {
     if (!this.artifactTypes) {
       this.artifactTypes = await this.getArtifactTypes();
     }
-
     try {
       const response = await this.api.metadataService.listArtifacts2();
       this.setStateSafe({artifacts: (response && response.artifacts) || []});
+      this.clearBanner();
     } catch (err) {
-      this.showPageError('Unable to retrieve Metadata artifacts', err);
+      this.showPageError('Unable to retrieve Metadata artifacts.', err);
     }
     return '';
   }

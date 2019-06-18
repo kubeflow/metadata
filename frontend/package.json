@@ -14,6 +14,8 @@
     "typestyle": "^2.0.1"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.9.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/express": "^4.16.0",
     "@types/jest": "^24.0.13",
     "@types/lodash": ">=4.14.117",
@@ -21,6 +23,10 @@
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "enzyme-to-json": "^3.3.5",
+    "react-router-test-context": "^0.1.0",
     "typescript": "^3.4.5"
   },
   "scripts": {
@@ -29,9 +35,10 @@
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "postinstall": "cd ./server && npm i && cd ../src/apis/service && npm i",
+    "postinstall": "cd ./server && npm i",
     "start": "react-scripts start",
-    "test": "react-scripts test"
+    "test": "react-scripts test --env=jsdom",
+    "test:coverage": "npm test -- --env=jsdom --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,6 +53,18 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!<rootDir>/node_modules/"
+    ],
+    "coverageReporters": [
+      "text"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
     ]
   },
   "proxy": "http://localhost:3001"

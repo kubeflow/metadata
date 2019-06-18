@@ -19,7 +19,7 @@ import {Page} from './Page';
 import {ModelInfo, ModelInfoProps} from '../components/ModelInfo';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
-import {getApi, CustomProperties} from '../lib/Api';
+import {Api, CustomProperties} from '../lib/Api';
 import {MlMetadataArtifact} from '../apis/service';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
@@ -38,7 +38,7 @@ interface ModelSchema {
 }
 
 export default class ModelDetails extends Page<{}, ModelDetailsState> {
-  private api = getApi();
+  private api = Api.getInstance();
 
   constructor(props: {}) {
     super(props);
