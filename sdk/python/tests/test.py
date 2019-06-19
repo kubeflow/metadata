@@ -61,24 +61,29 @@ class TestMetedata(unittest.TestCase):
             labels={"mylabel": "l1"}))
     assert model.id
 
-    def test_log_invalid_artifacts_should_fail(self):
-        r = metadata.Run(name="test run")
-        artifact1 = ArtifactFixture(openapi_client.MlMetadataArtifact(
-            uri="gs://uri",
-            custom_properites={
-                r.WORKSPACE_PROPERTY_NAME:
-                openapi_client.MlMetadataValue(string_value="ws1"),
-            }
-        ))
-        self.assertRaise(ValueError, r.log, artifact1)
-        artifact2 = ArtifactFixture(openapi_client.MlMetadataArtifact(
-            uri="gs://uri",
-            custom_properites={
-                r.RUN_PROPERTY_NAME:
-                openapi_client.MlMetadataValue(string_value="run1"),
-            }
-        ))
-        self.assertRaise(ValueError, r.log, artifact2)
+    self.assertTrue(len(ws1.list()) > 0)
+    self.assertTrue(len(ws1.list(metadata.Model.ARTIFACT_TYPE_NAME)) > 0)
+    self.assertTrue(len(ws1.list(metadata.Metrics.ARTIFACT_TYPE_NAME)) > 0)
+    self.assertTrue(len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0)
+
+  def test_log_invalid_artifacts_should_fail(self):
+    r = metadata.Run(name="test run")
+    artifact1 = ArtifactFixture(openapi_client.MlMetadataArtifact(
+        uri="gs://uri",
+        custom_properties={
+            metadata.WORKSPACE_PROPERTY_NAME:
+            openapi_client.MlMetadataValue(string_value="ws1"),
+        }
+    ))
+    self.assertRaises(ValueError, r.log, artifact1)
+    artifact2 = ArtifactFixture(openapi_client.MlMetadataArtifact(
+        uri="gs://uri",
+        custom_properties={
+            metadata.RUN_PROPERTY_NAME:
+            openapi_client.MlMetadataValue(string_value="run1"),
+        }
+    ))
+    self.assertRaises(ValueError, r.log, artifact2)
 
 class ArtifactFixture(object):
   ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"

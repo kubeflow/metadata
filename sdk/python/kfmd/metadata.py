@@ -22,6 +22,10 @@ This module conatins Python API for logging metadata of machine learning
 workflows to Kubeflow Metadata service.
 """
 
+WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
+RUN_PROPERTY_NAME = '__kf_run__'
+ALL_META_PROPERTY_NAME = '__ALL_META__'
+
 class Workspace(object):
   """
   Groups a set of runs of pipelines, notebooks and their related artifacts
@@ -51,14 +55,58 @@ class Workspace(object):
     config.host = backend_url_prefix
     self._client = MetadataServiceApi(ApiClient(config))
 
+  def list(self, artifact_type_name=None):
+    """
+    Args:
+      artifact_type_name {str} name of artifact type.
+    Returns a list of artifacts of the provided typed associated
+    with this workspace. Each artifact is represented as a dict.
+    """
+    if artifact_type_name == None:
+      artifact_type_name = Model.ARTIFACT_TYPE_NAME
+    response = self._client.list_artifacts(artifact_type_name)
+    results = []
+    if not response.artifacts:
+      return results
+    for artifact in response.artifacts:
+      flat = self._flat(artifact)
+      if "workspace" in flat and flat["workspace"] == self.name:
+        results.append(flat)
+    return results
+
+  def _flat(self, artifact):
+    result = {
+      "id": artifact.id,
+    }
+    if artifact.custom_properties != None:
+        if WORKSPACE_PROPERTY_NAME in artifact.custom_properties:
+          result["workspace"] = artifact.custom_properties[WORKSPACE_PROPERTY_NAME].string_value
+        if RUN_PROPERTY_NAME in artifact.custom_properties:
+          result["run"] = artifact.custom_properties[RUN_PROPERTY_NAME].string_value
+    if not artifact.properties:
+      return result
+    for k,v in artifact.properties.items():
+      if k != ALL_META_PROPERTY_NAME:
+        if v.string_value != None:
+          result[k] = v.string_value
+        elif v.int_value != None:
+          result[k] = v.int_value
+        else:
+          result[k] = v.double_value
+    if not ALL_META_PROPERTY_NAME in artifact.properties:
+      return result
+    # Pick up all nested objects stored in the __ALL_META__ field.
+    all_meta = artifact.properties[ALL_META_PROPERTY_NAME].string_value
+    for k, v in json.loads(all_meta).items():
+      if not k in result:
+        result[k] = v
+    return result
+
 class Run(object):
   """
   Captures a run of pipeline or notebooks in a workspace and provides logging
   methods for artifacts.
   """
-
-  WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
-  RUN_PROPERTY_NAME = '__kf_run__'
 
   def __init__(self, workspace=None, name=None, description=None):
     """
@@ -84,7 +132,7 @@ class Run(object):
     metadata backend serivce.
 
     This method expects `artifact` to have
-      - ARTIFACT_TYPE_NAME stirng field the form of
+      - ARTIFACT_TYPE_NAME string field the form of
         /artifact_types/<namespace>/<name>.
       - serialization() method to return a openapi_client.MlMetadataArtifact.
 
@@ -95,17 +143,17 @@ class Run(object):
     serialization = artifact.serialization()
     if serialization.custom_properties == None:
           serialization.custom_properties = {}
-    if self.WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
+    if WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
           raise ValueError("custom_properties contains reserved key %s"
-                           % self.WORKSPACE_PROPERTY_NAME)
-    if self.RUN_PROPERTY_NAME in serialization.custom_properties:
+                           % WORKSPACE_PROPERTY_NAME)
+    if RUN_PROPERTY_NAME in serialization.custom_properties:
       raise ValueError("custom_properties contains reserved key %s"
-                       % self.RUN_PROPERTY_NAME)
+                       % RUN_PROPERTY_NAME)
     serialization.custom_properties[
-        self.WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+        WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
         string_value=self.workspace.name)
     serialization.custom_properties[
-        self.RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+        RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
         string_value=self.name)
     response = self.workspace._client.create_artifact(
         parent=artifact.ARTIFACT_TYPE_NAME,
@@ -172,7 +220,7 @@ class DataSet(object):
                 openapi_client.MlMetadataValue(string_value=self.version),
             "owner":
                 openapi_client.MlMetadataValue(string_value=self.owner),
-            "__ALL_META__":
+            ALL_META_PROPERTY_NAME:
                 openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return data_set_artifact
@@ -239,7 +287,7 @@ class Model(object):
                 openapi_client.MlMetadataValue(string_value=self.version),
             "owner":
                 openapi_client.MlMetadataValue(string_value=self.owner),
-            "__ALL_META__":
+            ALL_META_PROPERTY_NAME:
                 openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
@@ -315,7 +363,7 @@ class Metrics(object):
                 openapi_client.MlMetadataValue(string_value=self.model_id),
             "owner":
                 openapi_client.MlMetadataValue(string_value=self.owner),
-            "__ALL_META__":
+            ALL_META_PROPERTY_NAME:
                 openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
         })
     return model_artifact
