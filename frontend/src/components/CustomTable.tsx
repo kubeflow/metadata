@@ -38,7 +38,6 @@ export enum ExpandState {
 export interface Column {
   flex?: number;
   label: string;
-  sortKey?: string;
   customRenderer?: React.FC<CustomRendererProps<any>>;
 }
 
@@ -105,12 +104,6 @@ export const css = stylesheet({
     borderBottom: '1px solid transparent !important',
     boxSizing: 'border-box',
     height: '40px !important',
-  },
-  filterBorderRadius: {
-    borderRadius: 8,
-  },
-  filterBox: {
-    margin: '16px 0',
   },
   footer: {
     borderBottom: '1px solid ' + color.divider,

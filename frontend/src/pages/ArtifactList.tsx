@@ -94,6 +94,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
         <CustomTable ref={this.tableRef}
           columns={columns}
           rows={rows}
+          disablePaging={true}
           disableSelection={true}
           reload={this.reload}
           emptyMessage='No artifacts found.' />
