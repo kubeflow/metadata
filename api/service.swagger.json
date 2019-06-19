@@ -143,7 +143,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/artifact_types/{name}": {
       "get": {
         "operationId": "GetArtifact",
         "responses": {
@@ -190,7 +190,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/artifact_types/{name}": {
       "get": {
         "operationId": "GetArtifactType",
         "responses": {
@@ -237,7 +237,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}/artifacts": {
+    "/api/v1alpha1/artifact_types/{name}/artifacts": {
       "get": {
         "operationId": "ListArtifacts",
         "responses": {
@@ -261,7 +261,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/execution_types/{name}": {
       "get": {
         "operationId": "GetExecution",
         "responses": {
@@ -308,7 +308,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}": {
+    "/api/v1alpha1/execution_types/{name}": {
       "get": {
         "operationId": "GetExecutionType",
         "responses": {
@@ -354,7 +354,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{name}/executions": {
+    "/api/v1alpha1/execution_types/{name}/executions": {
       "get": {
         "operationId": "ListExecutions",
         "responses": {
@@ -378,9 +378,9 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent}/artifacts": {
+    "/api/v1alpha1/artifact_types/{parent}/artifacts": {
       "post": {
-        "summary": "NOTE:\nThe order of the following RPC methods affects the order of matching\na particular HTTP path. So put a more specific path pattern before\na generic one. For example,\nGET /api/v1alpha1/{parent}/artifacts\nshould appear before\nGET /api/v1alpha1/{name} to be possibly matched.",
+        "summary": "NOTE:\nThe order of the following RPC methods affects the order of matching\na particular HTTP path. So put a more specific path pattern before\na generic one. For example,\nGET /api/v1alpha1/artifact_types/{parent}/artifacts\nshould appear before\nGET /api/v1alpha1/artifact_types/{name} to be possibly matched.",
         "operationId": "CreateArtifact",
         "responses": {
           "200": {
@@ -413,7 +413,7 @@
         ]
       }
     },
-    "/api/v1alpha1/{parent}/executions": {
+    "/api/v1alpha1/execution_types/{parent}/executions": {
       "post": {
         "operationId": "CreateExecution",
         "responses": {

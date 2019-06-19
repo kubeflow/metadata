@@ -55,8 +55,11 @@ for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
   cp "${GENERATED_FILE}" "${TARGET}"
   # Fix incorrectly generated HTTP path in swagger file due to
   # https://github.com/grpc-ecosystem/grpc-gateway/issues/407 by
-  # replacing HTTP path pattern "/{VAR=<subpaths>}..." with "/{VAR}...".
-  sed -r --in-place 's/\{(\w+)=[a-zA-Z_/*]+\}/\{\1\}/g;' "${TARGET}"
+  #
+  # replacing HTTP path pattern "/{VAR=abc/**}..." with "/abc/{VAR}...".
+  sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\}/\2\/\{\1\}/g;' "${TARGET}"
+  # replacing HTTP path pattern "/{VAR=abc/**/def/*}..." with "/abc/{VAR}..."
+  sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\/(\w+)\/\*\}/\2\/\{\1\}/g;' "${TARGET}"
 done
 
 # Finally, run gazelle to add BUILD files for the generated code.
