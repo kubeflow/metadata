@@ -61,7 +61,8 @@
       "!<rootDir>/node_modules/"
     ],
     "coverageReporters": [
-      "text"
+      "text",
+      "lcov"
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

@@ -75,14 +75,7 @@ export default class ModelDetails extends Page<{}, ModelDetailsState> {
     }
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
-        {!!model && (
-          <div>
-            <ModelInfo {...modelInfoProps} />
-            <pre style={{marginTop: '10px', borderTop: '1px solid #000'}}>
-              {JSON.stringify(this.state.model, undefined, 2)}
-            </pre>
-          </div>
-        )}
+        {!!model && <ModelInfo {...modelInfoProps} />}
       </div>
     );
   }
@@ -100,23 +93,24 @@ export default class ModelDetails extends Page<{}, ModelDetailsState> {
   }
 
   private async load(): Promise<void> {
-    // TODO: Use the getArtifact API method which doesn't seem to be generated
+    /* TODO: Use the getArtifact API method once we can properly build the
+     * correctly formatted name parameter */
     const id = this.props.match.params[RouteParams.artifactId];
     try {
       const response = await this.api.metadataService.listArtifacts2();
       const [model] = response.artifacts!.filter((a) => id === a.id);
-      if (model) {
-        let title = model.properties!.name!.string_value!;
-        if (model.properties!.version) {
-          title += ` (version: ${model.properties!.version!.string_value})`;
-        }
-        this.props.updateToolbar({
-          pageTitle: title
-        });
-        this.setState({model});
+      if (!model) throw new Error('No Model identified by id: ${id}');
+
+      let title = model.properties!.name!.string_value!;
+      if (model.properties!.version) {
+        title += ` (version: ${model.properties!.version!.string_value})`;
       }
+      this.props.updateToolbar({
+        pageTitle: title
+      });
+      this.setState({model});
     } catch (err) {
-      this.showPageError(`Unable to retrieve Model ${id}`, err);
+      this.showPageError(`Unable to retrieve Model ${id}.`, err);
     }
   }
 }

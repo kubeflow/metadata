@@ -16,6 +16,7 @@
 import * as React from 'react';
 import {stylesheet, classes} from 'typestyle';
 import {color, commonCss} from '../Css';
+import {formatDateString} from '../lib/Utils';
 
 const css = stylesheet({
   modelInfo: {
@@ -45,7 +46,7 @@ export interface ModelInfoProps {
   workspace?: string;
   run?: string;
   apiVersion?: string;
-  hyperparameters?: {[name: string]: string};
+  hyperparameters?: {[name: string]: {}};
   modelType?: string;
   trainingFramework?: {name: string, version: string};
 }
@@ -53,8 +54,7 @@ export interface ModelInfoProps {
 export class ModelInfo extends React.Component<ModelInfoProps, {}> {
 
   public render(): JSX.Element {
-    const createTime = this.props.createTime ?
-      new Date(this.props.createTime).toLocaleString() : '';
+    const createTime = formatDateString(this.props.createTime);
     return (
       <section>
         <h1 className={commonCss.header}>Model info</h1>
@@ -88,7 +88,7 @@ export class ModelInfo extends React.Component<ModelInfoProps, {}> {
             <dd className={classes(css.value, commonCss.flexColumn)}>{
               this.props.hyperparameters &&
               Object.entries(this.props.hyperparameters)
-                .map((e) => <span>{`${e[0]}: ${e[1]}`}</span>)
+                .map((e, i) => <span key={i}>{`${e[0]}: ${e[1]}`}</span>)
             }
             </dd>
           </div>
@@ -114,5 +114,4 @@ export class ModelInfo extends React.Component<ModelInfoProps, {}> {
       </section>
     );
   }
-
 }
