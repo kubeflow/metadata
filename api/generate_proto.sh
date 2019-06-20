@@ -82,4 +82,3 @@ done
 
 # Finally, run gazelle to add BUILD files for the generated code.
 bazel run //:gazelle
-echo "Generate swagger files... $ID_PARAM"
