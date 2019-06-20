@@ -133,7 +133,7 @@ class Run(object):
 
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME string field the form of
-        /artifact_types/<namespace>/<name>.
+        <namespace>/<name>.
       - serialization() method to return a openapi_client.MlMetadataArtifact.
 
     This method will set artifact.id.
@@ -166,7 +166,7 @@ class DataSet(object):
   """
   Captures a data set in a machine learning workflow.
   """
-  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/data_set"
+  ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/data_set"
 
   def __init__(self,
                workspace=None,
@@ -230,7 +230,7 @@ class Model(object):
   Captures a machine learning model.
   """
 
-  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/model"
+  ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/model"
 
   def __init__(self,
                workspace=None,
@@ -296,7 +296,7 @@ class Model(object):
 class Metrics(object):
   """Captures an evaulation metrics of a model on a data set."""
 
-  ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/metrics"
+  ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/metrics"
 
   # Possible evaluation metrics types.
   TRAINING = "training"
