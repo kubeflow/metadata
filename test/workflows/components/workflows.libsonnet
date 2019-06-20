@@ -55,6 +55,8 @@
       local srcRootDir = testDir + "/src";
       // The directory containing the kubeflow/metadata repo
       local srcDir = srcRootDir + "/kubeflow/metadata";
+      // The directory containing the kubeflow/manifests repo;
+      local manifestsDir = srcRootDir + "/kubeflow/manifests";
       local testWorkerImage = "gcr.io/kubeflow-ci/test-worker";
       local golangImage = "golang:1.9.4-stretch";
       local pythonImage = "python:3.6-jessie";
@@ -105,6 +107,10 @@
                 // Add the source directories to the python path.
                 name: "PYTHONPATH",
                 value: k8sPy + ":" + kubeflowPy,
+              },
+              {
+                name: "MANIFESTS_DIR",
+                value: manifestsDir,
               },
               {
                 // Set the GOPATH
@@ -302,7 +308,7 @@
               "test/scripts/build-images.sh",
             ]),  // teardown cluster
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services",testWorkerImage, [
-              "test/scripts/unittests.sh",
+              "test/scripts/setup-services.sh",
             ]),  // teardown cluster
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("run-e2e-tests",testWorkerImage, [
               "test/scripts/unittests.sh",
