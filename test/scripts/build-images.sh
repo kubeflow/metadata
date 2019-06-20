@@ -28,8 +28,12 @@ REGISTRY="${GCP_REGISTRY}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
 
+echo "REGISTRY ${REGISTRY}"
+echo "REPO_NAME ${REPO_NAME}"
+echo "VERSION ${VERSION}"
+
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 
-gcloud builds submit . --tag=${REGISTRY}/${REPO_NAME}/metadata:${VERSION} --project=${PROJECT}
+gcloud builds submit . --timeout=40m --tag=${REGISTRY}/${REPO_NAME}/metadata:${VERSION} --project=${PROJECT}
 gcloud container images add-tag --quiet ${REGISTRY}/${REPO_NAME}/metadata:${VERSION} ${REGISTRY}/${REPO_NAME}/metadata:latest --verbosity=info
