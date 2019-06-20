@@ -237,14 +237,8 @@
                 ],
                 [
                   {
-                    name: "setup-services",
-                    template: "setup-services",
-                  },
-                ],
-                [
-                  {
-                    name: "run-e2e-tests",
-                    template: "run-e2e-tests",
+                    name: "setup-services-run-tests",
+                    template: "setup-services-run-tests",
                   },
                 ],
               ],
