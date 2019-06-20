@@ -25,6 +25,8 @@ ZONE="${GCP_ZONE}"
 PROJECT="${GCP_PROJECT}"
 NAMESPACE="${DEPLOY_NAMESPACE}"
 REGISTRY="${GCP_REGISTRY}"
+VERSION=$(git describe --tags --always --dirty)
+VERSION=${VERSION/%?/}
 
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}

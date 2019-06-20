@@ -113,6 +113,10 @@
                 value: manifestsDir,
               },
               {
+                name: "SRC_DIR",
+                value: srcDir,
+              },
+              {
                 // Set the GOPATH
                 name: "GOPATH",
                 value: goDir,
@@ -307,11 +311,8 @@
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("build-images",testWorkerImage, [
               "test/scripts/build-images.sh",
             ]),  // teardown cluster
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services",testWorkerImage, [
-              "test/scripts/setup-services.sh",
-            ]),  // teardown cluster
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("run-e2e-tests",testWorkerImage, [
-              "test/scripts/unittests.sh",
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services-run-tests",testWorkerImage, [
+              "test/scripts/setup-services-run-tests.sh",
             ]),  // teardown cluster
           ],  // templates
         },

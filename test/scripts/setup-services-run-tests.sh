@@ -26,6 +26,7 @@ PROJECT="${GCP_PROJECT}"
 NAMESPACE="${DEPLOY_NAMESPACE}"
 REGISTRY="${GCP_REGISTRY}"
 VERSION=$(git describe --tags --always --dirty)
+VERSION=${VERSION/%?/}
 
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
@@ -54,9 +55,6 @@ roleRef:
   name: cluster-admin
   apiGroup: ""
 EOF
-
-#This is required. But I don't know why.
-VERSION=${VERSION/%?/}
 
 echo "REGISTRY ${REGISTRY}"
 echo "REPO_NAME ${REPO_NAME}"
@@ -92,6 +90,7 @@ kubectl -n kubeflow get deploy
 kubectl -n kubeflow get svc
 kubectl -n kubeflow get pod
 
+# Port forwading
 kubectl -n kubeflow port-forward $(kubectl -n kubeflow get pod -o=name | grep metadata-deployment | sed -e "s@pods\/@@" | head -1) 8080:8080 &
 echo "kubectl port-forward start"
 sleep 5
@@ -100,3 +99,11 @@ until curl localhost:6789 || [ $TIMEOUT -eq 0 ]; do
     sleep 5
     TIMEOUT=$(( TIMEOUT - 1 ))
 done
+
+# Run CURL tests
+cd "${SRC_DIR}/test/e2e" && sh make_requests.sh
+# Run Python tests
+pip install pandas
+cd "${SRC_DIR}/sdk/python" && sh tests/run_tests.sh
+
+exit 0
