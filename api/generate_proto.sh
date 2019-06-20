@@ -48,19 +48,38 @@ for GENERATED_FILE in $GENERATED_GO_PROTO_FILES; do
   "${AUTOGEN_CMD}" -i --no-tlc -c "Google LLC" -l apache "${TARGET}"
 done
 
+ID_PARAM=$(cat << EOM
+          \{\n\
+            \"name\": \"id\",\n\
+            \"in\": \"path\",\n\
+            \"required\": true,\n\
+            \"type\": \"string\"\n\
+          \},
+EOM
+)
+
+SKIP_34LINES=$(printf 'n;%.0s' {1..34})
+SKIP_11LINES=$(printf 'n;%.0s' {1..11})
+
 # Copy the generated files into source tree. JSON can't have comments on
 # license.
 for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
   TARGET=$(basename "${GENERATED_FILE}")
-  cp "${GENERATED_FILE}" "${TARGET}"
+  cp -f "${GENERATED_FILE}" "${TARGET}"
   # Fix incorrectly generated HTTP path in swagger file due to
   # https://github.com/grpc-ecosystem/grpc-gateway/issues/407 by
   #
-  # replacing HTTP path pattern "/{VAR=abc/**}..." with "/abc/{VAR}...".
+  # replacing HTTP path pattern "/{VAR=abc/**}..." with "/abc/{VAR}...", and
   sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\}/\2\/\{\1\}/g;' "${TARGET}"
-  # replacing HTTP path pattern "/{VAR=abc/**/def/*}..." with "/abc/{VAR}..."
-  sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\/(\w+)\/\*\}/\2\/\{\1\}/g;' "${TARGET}"
+  # replacing HTTP path pattern "/{VAR=abc/**/def/*}..." with "/abc/{VAR}/def/{id}...".
+  # Add {id} parameter to DELETE.
+  sed -r --in-place "/\{(\w+)=(\w+)\/\*\*\/(\w+)\/\*\}/!b;$SKIP_34LINES;a$ID_PARAM" "${TARGET}"
+  # Add {id} parameter to GET.
+  sed -r --in-place "/\{(\w+)=(\w+)\/\*\*\/(\w+)\/\*\}/!b;$SKIP_11LINES;a$ID_PARAM" "${TARGET}"
+  # Rename Path pattern
+  sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\/(\w+)\/\*\}/\2\/\{\1\}\/\3\/\{id}/g;' "${TARGET}"
 done
 
 # Finally, run gazelle to add BUILD files for the generated code.
 bazel run //:gazelle
+echo "Generate swagger files... $ID_PARAM"

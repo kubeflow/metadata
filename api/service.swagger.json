@@ -143,7 +143,7 @@
         ]
       }
     },
-    "/api/v1alpha1/artifact_types/{name}": {
+    "/api/v1alpha1/artifact_types/{name}/artifacts/{id}": {
       "get": {
         "operationId": "GetArtifact",
         "responses": {
@@ -155,6 +155,12 @@
           }
         },
         "parameters": [
+{
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "name",
             "description": "Artifact name is like\n`artifact_types/{namespace}/{typename}/artifact/{id}`.",
@@ -178,6 +184,12 @@
           }
         },
         "parameters": [
+{
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "name",
             "in": "path",
@@ -261,7 +273,7 @@
         ]
       }
     },
-    "/api/v1alpha1/execution_types/{name}": {
+    "/api/v1alpha1/execution_types/{name}/executions/{id}": {
       "get": {
         "operationId": "GetExecution",
         "responses": {
@@ -273,6 +285,12 @@
           }
         },
         "parameters": [
+{
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "name",
             "description": "Execution name is like\n`execution_types/{namespace}/{typename}/execution/{id}`.",
@@ -296,6 +314,12 @@
           }
         },
         "parameters": [
+{
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "name",
             "in": "path",
