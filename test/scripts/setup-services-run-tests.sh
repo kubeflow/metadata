@@ -23,8 +23,8 @@ set -o pipefail
 CLUSTER_NAME="${CLUSTER_NAME}"
 ZONE="${GCP_ZONE}"
 PROJECT="${GCP_PROJECT}"
-NAMESPACE="${DEPLOY_NAMESPACE}"
 REGISTRY="${GCP_REGISTRY}"
+NAMESPACE="${DEPLOY_NAMEPACE}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
 
@@ -68,52 +68,56 @@ echo "VERSION ${VERSION}"
 cd "${MANIFESTS_DIR}"
 
 sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
-sed -i -e "s@--mysql_service_host=metadata-db.default@--mysql_service_host=metadata-db.kubeflow@" metadata/base/metadata-deployment.yaml
+sed -i -e "s@--mysql_service_host=metadata-db.kubeflow@--mysql_service_host=metadata-db.${NAMESPACE}@" metadata/base/metadata-deployment.yaml
 
 cat metadata/base/metadata-deployment.yaml
 
 cd metadata/base
 
-kustomize build . | kubectl apply -n kubeflow -f -
+kustomize build . | kubectl apply -n $NAMESPACE -f -
 
 TIMEOUT=120
-PODNUM=$(kubectl get deployment metadata-deployment -n kubeflow -o jsonpath={.spec.replicas})
+PODNUM=$(kubectl get deployment metadata-deployment -n $NAMESPACE -o jsonpath={.spec.replicas})
 echo "Expect to have $PODNUM pods of metadata-deployment."
-until [[ $(kubectl get pods -n kubeflow | grep "1/1" | grep metadata-deployment | wc -l) -eq $PODNUM ]]
+until [[ $(kubectl get pods -n $NAMESPACE | grep "1/1" | grep metadata-deployment | wc -l) -eq $PODNUM ]]
 do
-    echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-deployment)
+    echo Pod Status $(kubectl get pods -n $NAMESPACE | grep metadata-deployment)
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
         echo "FAITAL: Pods of metadata-deployment are not ready after $TIMEOUT seconds!"
-        kubectl get pods -n kubeflow
+        kubectl get pods -n $NAMESPACE
         exit 1
     fi
 done
 
 TIMEOUT=120
-PODNUM=$(kubectl get deployment metadata-db -n kubeflow -o jsonpath={.spec.replicas})
+PODNUM=$(kubectl get deployment metadata-db -n $NAMESPACE -o jsonpath={.spec.replicas})
 echo "Expect to have $PODNUM pods of metadata-db."
-until [[ $(kubectl get pods -n kubeflow | grep "1/1" | grep metadata-db | wc -l) -eq $PODNUM ]]
+until [[ $(kubectl get pods -n $NAMESPACE | grep "1/1" | grep metadata-db | wc -l) -eq $PODNUM ]]
 do
-    echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-db)
+    echo Pod Status $(kubectl get pods -n $NAMESPACE | grep metadata-db)
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
         echo "FAITAL: Pods of metadata-db are not ready after $TIMEOUT seconds!"
-        kubectl get pods -n kubeflow
+        kubectl get pods -n $NAMESPACE
         exit 1
     fi
 done
 
 kubectl version
-kubectl -n kubeflow get deploy
-kubectl -n kubeflow get svc
-kubectl -n kubeflow get pod
+kubectl -n $NAMESPACE get deploy
+kubectl -n $NAMESPACE get svc
+kubectl -n $NAMESPACE get pod
 
 # Port forwading
-kubectl -n kubeflow port-forward $(kubectl -n kubeflow get pod -o=name | grep metadata-deployment | sed -e "s@pods\/@@" | head -1) 8080:8080 &
-echo "kubectl port-forward start"
+TARGET_POD=$(kubectl -n $NAMESPACE get pod -o=name | grep metadata-deployment | head -1)
+echo "kubectl port-forward from $TARGET_POD"
+kubectl -n $NAMESPACE port-forward $TARGET_POD 8080:8080 &
+
+# Stream server logs.
+kubectl -n $NAMESPACE logs -f $TARGET_POD &
 
 # Wait at most 60 seconds for the server to be ready.
 TIMEOUT=12
