@@ -19,6 +19,7 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -o xtrace
 
 CLUSTER_NAME="${CLUSTER_NAME}"
 ZONE="${GCP_ZONE}"
@@ -121,15 +122,16 @@ kubectl -n $NAMESPACE logs -f $TARGET_POD &
 
 # Wait at most 60 seconds for the server to be ready.
 TIMEOUT=12
-until curl localhost:8080 || [ $TIMEOUT -eq 0 ]; do
+until curl -H "ContentType: application/json" localhost:8080/api/v1alpha1/artifact_types || [ $TIMEOUT -eq 0 ]; do
+    echo "Server is not up. $TIMEOUT"
     sleep 5
     TIMEOUT=$(( TIMEOUT - 1 ))
 done
 
 # Run CURL tests
-cd "${SRC_DIR}/test/e2e" && sh make_requests.sh
+cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 # Run Python tests
 pip install pandas
-cd "${SRC_DIR}/sdk/python" && sh tests/run_tests.sh
+cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
 
 exit 0
