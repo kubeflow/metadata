@@ -59,6 +59,8 @@ roleRef:
   apiGroup: ""
 EOF
 
+kubectl create namespace kubeflow
+
 echo "REGISTRY ${REGISTRY}"
 echo "REPO_NAME ${REPO_NAME}"
 echo "VERSION ${VERSION}"
