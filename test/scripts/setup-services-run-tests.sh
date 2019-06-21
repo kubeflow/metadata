@@ -77,14 +77,15 @@ cd metadata/base
 kustomize build . | kubectl apply -n kubeflow -f -
 
 TIMEOUT=120
-PODNUM=$(kubectl get deploy -n kubeflow | grep -v NAME | wc -l)
-until kubectl get pods -n kubeflow | grep Running | [[ $(wc -l) -eq $PODNUM ]]; do
-    echo Pod Status $(kubectl get pods -n kubeflow | grep "1/1" | wc -l)/$PODNUM
-
+PODNUM=$(kubectl get deployment metadata-deployment -n kubeflow -o jsonpath={.spec.replicas})
+echo "Expect to have $PODNUM pods."
+until [[ $(kubectl get pods -n kubeflow | grep Running | grep metadata-deployment | wc -l) -eq $PODNUM ]]
+do
+    echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-deployment)
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
-        echo "NG"
+        echo "FAITAL: Pods are not ready after $TIMEOUT seconds!"
         kubectl get pods -n kubeflow
         exit 1
     fi
@@ -100,7 +101,7 @@ kubectl -n kubeflow port-forward $(kubectl -n kubeflow get pod -o=name | grep me
 echo "kubectl port-forward start"
 sleep 5
 TIMEOUT=120
-until curl localhost:6789 || [ $TIMEOUT -eq 0 ]; do
+until curl localhost:8080 || [ $TIMEOUT -eq 0 ]; do
     sleep 5
     TIMEOUT=$(( TIMEOUT - 1 ))
 done
