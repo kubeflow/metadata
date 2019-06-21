@@ -24,6 +24,10 @@ CLUSTER_NAME="${CLUSTER_NAME}"
 ZONE="${GCP_ZONE}"
 PROJECT="${GCP_PROJECT}"
 
+# TODO: leave the cluster for debug. Remove it before submit.
+echo "cluster name $CLUSTER_NAME"
+exit 0
+
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 echo "Tearing down the cluster"
