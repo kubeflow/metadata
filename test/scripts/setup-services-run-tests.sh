@@ -63,7 +63,7 @@ echo "REGISTRY ${REGISTRY}"
 echo "REPO_NAME ${REPO_NAME}"
 echo "VERSION ${VERSION}"
 
-cd "${MANIEFESTS_DIR}"
+cd "${MANIFESTS_DIR}"
 
 sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:v.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
 sed -i -e "s@--mysql_service_host=metadata-db.default@--mysql_service_host=metadata-db.kubeflow@" metadata/base/metadata-deployment.yaml
