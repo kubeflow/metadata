@@ -67,7 +67,7 @@ echo "VERSION ${VERSION}"
 
 cd "${MANIFESTS_DIR}"
 
-sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:v.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
+sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
 sed -i -e "s@--mysql_service_host=metadata-db.default@--mysql_service_host=metadata-db.kubeflow@" metadata/base/metadata-deployment.yaml
 
 cat metadata/base/metadata-deployment.yaml
@@ -79,7 +79,7 @@ kustomize build . | kubectl apply -n kubeflow -f -
 TIMEOUT=120
 PODNUM=$(kubectl get deployment metadata-deployment -n kubeflow -o jsonpath={.spec.replicas})
 echo "Expect to have $PODNUM pods of metadata-deployment."
-until [[ $(kubectl get pods -n kubeflow | grep Running | grep metadata-deployment | wc -l) -eq $PODNUM ]]
+until [[ $(kubectl get pods -n kubeflow | grep "1/1" | grep metadata-deployment | wc -l) -eq $PODNUM ]]
 do
     echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-deployment)
     sleep 10
@@ -94,7 +94,7 @@ done
 TIMEOUT=120
 PODNUM=$(kubectl get deployment metadata-db -n kubeflow -o jsonpath={.spec.replicas})
 echo "Expect to have $PODNUM pods of metadata-db."
-until [[ $(kubectl get pods -n kubeflow | grep Running | grep metadata-db | wc -l) -eq $PODNUM ]]
+until [[ $(kubectl get pods -n kubeflow | grep "1/1" | grep metadata-db | wc -l) -eq $PODNUM ]]
 do
     echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-db)
     sleep 10
