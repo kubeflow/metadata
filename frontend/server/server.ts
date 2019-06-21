@@ -26,7 +26,7 @@ const {
   /** API service will listen to this host */
   METADATA_SERVICE_HOST = 'localhost',
   /** API service will listen to this port */
-  METADATA_SERVICE_PORT = '4001'
+  METADATA_SERVICE_PORT = '3001'
 } = process.env;
 
 const app = express() as Application;
@@ -47,7 +47,7 @@ Usage: node server.js <static-dir> [port].
 
 const staticDir = path.resolve(process.argv[2]);
 
-const port = process.argv[3] || 4000;
+const port = process.argv[3] || 3000;
 const apiServerAddress = `http://${METADATA_SERVICE_HOST}:${METADATA_SERVICE_PORT}`;
 
 const v1beta1Prefix = 'apis/v1beta1';
