@@ -78,14 +78,29 @@ kustomize build . | kubectl apply -n kubeflow -f -
 
 TIMEOUT=120
 PODNUM=$(kubectl get deployment metadata-deployment -n kubeflow -o jsonpath={.spec.replicas})
-echo "Expect to have $PODNUM pods."
+echo "Expect to have $PODNUM pods of metadata-deployment."
 until [[ $(kubectl get pods -n kubeflow | grep Running | grep metadata-deployment | wc -l) -eq $PODNUM ]]
 do
     echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-deployment)
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
-        echo "FAITAL: Pods are not ready after $TIMEOUT seconds!"
+        echo "FAITAL: Pods of metadata-deployment are not ready after $TIMEOUT seconds!"
+        kubectl get pods -n kubeflow
+        exit 1
+    fi
+done
+
+TIMEOUT=120
+PODNUM=$(kubectl get deployment metadata-db -n kubeflow -o jsonpath={.spec.replicas})
+echo "Expect to have $PODNUM pods of metadata-db."
+until [[ $(kubectl get pods -n kubeflow | grep Running | grep metadata-db | wc -l) -eq $PODNUM ]]
+do
+    echo Pod Status $(kubectl get pods -n kubeflow | grep metadata-db)
+    sleep 10
+    TIMEOUT=$(( TIMEOUT - 1 ))
+    if [[ $TIMEOUT -eq 0 ]];then
+        echo "FAITAL: Pods of metadata-db are not ready after $TIMEOUT seconds!"
         kubectl get pods -n kubeflow
         exit 1
     fi
@@ -99,8 +114,9 @@ kubectl -n kubeflow get pod
 # Port forwading
 kubectl -n kubeflow port-forward $(kubectl -n kubeflow get pod -o=name | grep metadata-deployment | sed -e "s@pods\/@@" | head -1) 8080:8080 &
 echo "kubectl port-forward start"
-sleep 5
-TIMEOUT=120
+
+# Wait at most 60 seconds for the server to be ready.
+TIMEOUT=12
 until curl localhost:8080 || [ $TIMEOUT -eq 0 ]; do
     sleep 5
     TIMEOUT=$(( TIMEOUT - 1 ))
