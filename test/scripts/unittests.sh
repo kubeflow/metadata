@@ -23,7 +23,8 @@ set -o pipefail
 
 export PATH="$PATH:$HOME/bin"
 
-make swagger-py-client
+# TODO(zhenghui): add java into the testing worker image and generate swagger client.
+# make swagger-py-client
 
 bazel build -c opt --define=grpc_no_ares=true //...
 bazel test -c opt --define=grpc_no_ares=true //...
