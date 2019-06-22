@@ -29,9 +29,6 @@ NAMESPACE="${DEPLOY_NAMESPACE}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
 
-#TODO: remove to use the image just built
-VERSION="latest"
-
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 
