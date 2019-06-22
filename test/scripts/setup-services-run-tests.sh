@@ -120,8 +120,8 @@ kubectl -n $NAMESPACE port-forward $TARGET_POD 8080:8080 &
 # Stream server logs.
 kubectl -n $NAMESPACE logs -f $TARGET_POD &
 
-# Wait at most 60 seconds for the server to be ready.
-TIMEOUT=12
+# Wait at most 20 minutes for the server to be ready.
+TIMEOUT=240
 until curl -H "ContentType: application/json" localhost:8080/api/v1alpha1/artifact_types || [ $TIMEOUT -eq 0 ]; do
     echo "Server is not up. $TIMEOUT"
     sleep 5
