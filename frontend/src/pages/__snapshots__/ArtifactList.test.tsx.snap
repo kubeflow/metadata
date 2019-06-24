@@ -1,0 +1,454 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArtifactList Renders with a list of Artifacts 1`] = `
+<ArtifactList
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={
+    Object {
+      "pathname": "/artifacts",
+    }
+  }
+  match=""
+  toolbarProps={
+    Object {
+      "actions": Array [],
+      "breadcrumbs": Array [],
+      "pageTitle": "Artifacts",
+    }
+  }
+  updateBanner={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {},
+        ],
+        Array [
+          Object {},
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  updateDialog={[MockFunction]}
+  updateSnackbar={[MockFunction]}
+  updateToolbar={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "actions": Array [],
+            "breadcrumbs": Array [],
+            "pageTitle": "Artifacts",
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <div
+    className="page_f1flacxk f9qqjqd"
+  >
+    <CustomTable
+      columns={
+        Array [
+          Object {
+            "customRenderer": [Function],
+            "flex": 1,
+            "label": "Name",
+          },
+          Object {
+            "flex": 1,
+            "label": "Version",
+          },
+          Object {
+            "flex": 1,
+            "label": "Type",
+          },
+          Object {
+            "flex": 1,
+            "label": "URI",
+          },
+          Object {
+            "flex": 1,
+            "label": "Workspace",
+          },
+          Object {
+            "flex": 1,
+            "label": "Created at",
+          },
+        ]
+      }
+      disablePaging={true}
+      disableSelection={true}
+      emptyMessage="No artifacts found."
+      reload={[Function]}
+      rows={
+        Array [
+          Object {
+            "id": "1",
+            "otherFields": Array [
+              "model",
+              "v1",
+              "1",
+              "gs://my-bucket/mnist",
+              "workspace-1",
+              "6/11/2019, 6:21:48 PM",
+            ],
+          },
+          Object {
+            "id": "2",
+            "otherFields": Array [
+              "dataset",
+              "v2",
+              "3",
+              "gs://my-bucket/dataset2",
+              "workspace-1",
+              "6/15/2019, 6:21:48 PM",
+            ],
+          },
+        ]
+      }
+    >
+      <div
+        className="pageOverflowHidden_f15djeb2"
+      >
+        <div
+          className="header_f15jqnss feotlki"
+        >
+          <div
+            className="columnName_fcye2mf"
+            key="0"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              Name
+            </div>
+          </div>
+          <div
+            className="columnName_fcye2mf"
+            key="1"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              Version
+            </div>
+          </div>
+          <div
+            className="columnName_fcye2mf"
+            key="2"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              Type
+            </div>
+          </div>
+          <div
+            className="columnName_fcye2mf"
+            key="3"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              URI
+            </div>
+          </div>
+          <div
+            className="columnName_fcye2mf"
+            key="4"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              Workspace
+            </div>
+          </div>
+          <div
+            className="columnName_fcye2mf"
+            key="5"
+            style={
+              Object {
+                "width": "16.666666666666664%",
+              }
+            }
+          >
+            <div>
+              Created at
+            </div>
+          </div>
+        </div>
+        <div
+          className="scrollContainer_fea2b5v"
+          style={
+            Object {
+              "minHeight": 60,
+            }
+          }
+        >
+          <div
+            className="expandableContainer_f1l0zr01"
+            key="0"
+          >
+            <div
+              className="tableRow row_f1xdiyip feotlki"
+              onClick={[Function]}
+              role="checkbox"
+              tabIndex={-1}
+            >
+              <div
+                className="cell_fy8nr2z"
+                key="0"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                <Link
+                  className="link_f1d44nl9"
+                  onClick={[Function]}
+                  replace={false}
+                  to="/artifacts/models/1"
+                >
+                  <a
+                    className="link_f1d44nl9"
+                    href="/artifacts/models/1"
+                    onClick={[Function]}
+                  >
+                    model
+                  </a>
+                </Link>
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="1"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                v1
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="2"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                1
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="3"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                gs://my-bucket/mnist
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="4"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                workspace-1
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="5"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                6/11/2019, 6:21:48 PM
+              </div>
+            </div>
+          </div>
+          <div
+            className="expandableContainer_f1l0zr01"
+            key="1"
+          >
+            <div
+              className="tableRow row_f1xdiyip feotlki"
+              onClick={[Function]}
+              role="checkbox"
+              tabIndex={-1}
+            >
+              <div
+                className="cell_fy8nr2z"
+                key="0"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                <Link
+                  className="link_f1d44nl9"
+                  onClick={[Function]}
+                  replace={false}
+                  to="/artifacts/models/2"
+                >
+                  <a
+                    className="link_f1d44nl9"
+                    href="/artifacts/models/2"
+                    onClick={[Function]}
+                  >
+                    dataset
+                  </a>
+                </Link>
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="1"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                v2
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="2"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                3
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="3"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                gs://my-bucket/dataset2
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="4"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                workspace-1
+              </div>
+              <div
+                className="cell_fy8nr2z"
+                key="5"
+                style={
+                  Object {
+                    "width": "16.666666666666664%",
+                  }
+                }
+              >
+                6/15/2019, 6:21:48 PM
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </CustomTable>
+  </div>
+</ArtifactList>
+`;
+
+exports[`ArtifactList Renders with no data 1`] = `
+<div
+  className="page_f1flacxk f9qqjqd"
+>
+  <CustomTable
+    columns={
+      Array [
+        Object {
+          "customRenderer": [Function],
+          "flex": 1,
+          "label": "Name",
+        },
+        Object {
+          "flex": 1,
+          "label": "Version",
+        },
+        Object {
+          "flex": 1,
+          "label": "Type",
+        },
+        Object {
+          "flex": 1,
+          "label": "URI",
+        },
+        Object {
+          "flex": 1,
+          "label": "Workspace",
+        },
+        Object {
+          "flex": 1,
+          "label": "Created at",
+        },
+      ]
+    }
+    disablePaging={true}
+    disableSelection={true}
+    emptyMessage="No artifacts found."
+    reload={[Function]}
+    rows={Array []}
+  />
+</div>
+`;

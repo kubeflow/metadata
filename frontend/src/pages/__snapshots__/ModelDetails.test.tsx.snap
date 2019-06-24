@@ -1,0 +1,267 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModelDetails Renders progress bar with no data 1`] = `<WithStyles(LinearProgress) />`;
+
+exports[`ModelDetails Renders with a Model and updates the page title 1`] = `
+<ModelDetails
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
+  match={
+    Object {
+      "params": Object {
+        "id": "1",
+      },
+    }
+  }
+  toolbarProps={
+    Object {
+      "actions": Array [],
+      "breadcrumbs": Array [
+        Object {
+          "displayName": "Artifacts",
+          "href": "/artifacts",
+        },
+      ],
+      "pageTitle": "Model 1 details",
+    }
+  }
+  updateBanner={[MockFunction]}
+  updateDialog={[MockFunction]}
+  updateSnackbar={[MockFunction]}
+  updateToolbar={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "actions": Array [],
+            "breadcrumbs": Array [
+              Object {
+                "displayName": "Artifacts",
+                "href": "/artifacts",
+              },
+            ],
+            "pageTitle": "Model 1 details",
+          },
+        ],
+        Array [
+          Object {
+            "pageTitle": "model (version: v1)",
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <div
+    className="page_f1flacxk f9qqjqd"
+  >
+    <ModelInfo
+      createTime="2019-06-12T01:21:48.259263Z"
+      description="A really great model"
+      hyperparameters={
+        Object {
+          "early_stop": true,
+          "layers": Array [
+            10,
+            3,
+            1,
+          ],
+          "learning_rate": 0.5,
+        }
+      }
+      modelType="neural network"
+      run="1"
+      trainingFramework={
+        Object {
+          "name": "tensorflow",
+          "version": "v1.0",
+        }
+      }
+      uri="gs://my-bucket/mnist"
+      version="v1"
+      workspace="workspace-1"
+    >
+      <section>
+        <h1
+          className="header_f189n3y"
+        >
+          Model info
+        </h1>
+        <dl
+          className="modelInfo_fnuket9"
+        >
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Type
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              neural network
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Description
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              A really great model
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Version ID
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              v1
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Workspace
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              workspace-1
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Run
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              1
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Creation time
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              6/11/2019, 6:21:48 PM
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Hyperparameters
+            </dt>
+            <dd
+              className="value_f1ej2mlj flexColumn_fr3ikkd"
+            >
+              <span
+                key="0"
+              >
+                early_stop: true
+              </span>
+              <span
+                key="1"
+              >
+                layers: 10,3,1
+              </span>
+              <span
+                key="2"
+              >
+                learning_rate: 0.5
+              </span>
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Training data
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              gs://my-bucket/mnist
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Training framework
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              tensorflow
+                   v1.0
+            </dd>
+          </div>
+          <div
+            className="field_f16919hf"
+          >
+            <dt
+              className="term_f1wopveh"
+            >
+              Training data
+            </dt>
+            <dd
+              className="value_f1ej2mlj"
+            >
+              gs://my-bucket/mnist
+            </dd>
+          </div>
+        </dl>
+      </section>
+    </ModelInfo>
+  </div>
+</ModelDetails>
+`;

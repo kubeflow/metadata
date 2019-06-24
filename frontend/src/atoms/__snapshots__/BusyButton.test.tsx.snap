@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BusyButton renders a primary outlined buton 1`] = `
+<WithStyles(Button)
+  className="root_f1gmzqw4"
+  color="primary"
+>
+  <span>
+    test busy button
+  </span>
+</WithStyles(Button)>
+`;
+
+exports[`BusyButton renders disabled 1`] = `
+<WithStyles(Button)
+  className="root_f1gmzqw4"
+  color="secondary"
+  disabled={true}
+>
+  <pure(HelpIcon)
+    className="icon_f1ojihnt"
+  />
+  <span>
+    test busy button
+  </span>
+</WithStyles(Button)>
+`;
+
+exports[`BusyButton renders with a title and icon 1`] = `
+<WithStyles(Button)
+  className="root_f1gmzqw4"
+  color="secondary"
+>
+  <pure(HelpIcon)
+    className="icon_f1ojihnt"
+  />
+  <span>
+    test busy button
+  </span>
+</WithStyles(Button)>
+`;
+
+exports[`BusyButton renders with a title and icon, and busy 1`] = `
+<WithStyles(Button)
+  className="root_f1gmzqw4 rootBusy_fronhm5"
+  color="secondary"
+  disabled={true}
+>
+  <pure(HelpIcon)
+    className="icon_f1ojihnt"
+  />
+  <span>
+    test busy button
+  </span>
+  <WithStyles(CircularProgress)
+    className="spinner_fiqr0h3 spinnerBusy_f1wemlvb"
+    size={15}
+  />
+</WithStyles(Button)>
+`;
+
+exports[`BusyButton renders with just a title 1`] = `
+<WithStyles(Button)
+  className="root_f1gmzqw4"
+  color="secondary"
+>
+  <span>
+    test busy button
+  </span>
+</WithStyles(Button)>
+`;

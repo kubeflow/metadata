@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Router initial render 1`] = `
+<HashRouter>
+  <div
+    className="page_f1flacxk"
+  >
+    <div
+      className="flexGrow_fr87ocy"
+    >
+      <div
+        className="page_f1flacxk"
+      >
+        <Route
+          render={[Function]}
+        />
+        <Switch>
+          <Route
+            exact={true}
+            path="/"
+            render={[Function]}
+          />
+          <Route
+            exact={true}
+            key="0"
+            path="/artifacts"
+            render={[Function]}
+          />
+          <Route
+            exact={true}
+            key="1"
+            path="/artifacts/models/:id"
+            render={[Function]}
+          />
+          <Route
+            render={[Function]}
+          />
+        </Switch>
+        <WithStyles(Snackbar)
+          autoHideDuration={5000}
+          onClose={[Function]}
+          open={false}
+        />
+      </div>
+    </div>
+    <WithStyles(Dialog)
+      className="dialog"
+      classes={
+        Object {
+          "paper": "dialog_f1pzjmip",
+        }
+      }
+      onClose={[Function]}
+      open={false}
+    />
+  </div>
+</HashRouter>
+`;
