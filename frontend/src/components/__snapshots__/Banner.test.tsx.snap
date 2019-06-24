@@ -1,0 +1,126 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Banner defaults to error mode 1`] = `
+<div
+  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+>
+  <div
+    className="message_fddsvlq"
+  >
+    <pure(ErrorIcon)
+      className="icon_f1jqzauf"
+    />
+    Some message
+  </div>
+  <div
+    className="flex_f16jawj4"
+  />
+</div>
+`;
+
+exports[`Banner shows "Details" button and has dialog when there is additional info 1`] = `
+<div
+  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+>
+  <div
+    className="message_fddsvlq"
+  >
+    <pure(ErrorIcon)
+      className="icon_f1jqzauf"
+    />
+    Some message
+  </div>
+  <div
+    className="flex_f16jawj4"
+  >
+    <WithStyles(Button)
+      className="button_fu86r2b"
+      onClick={[Function]}
+    >
+      Details
+    </WithStyles(Button)>
+  </div>
+  <WithStyles(Dialog)
+    onClose={[Function]}
+    open={false}
+  >
+    <WithStyles(DialogTitle)>
+      An error occurred
+    </WithStyles(DialogTitle)>
+    <WithStyles(DialogContent)
+      className="prewrap_f1g32z8v"
+    >
+      More info
+    </WithStyles(DialogContent)>
+    <WithStyles(DialogActions)>
+      <WithStyles(Button)
+        id="dismissDialogBtn"
+        onClick={[Function]}
+      >
+        Dismiss
+      </WithStyles(Button)>
+    </WithStyles(DialogActions)>
+  </WithStyles(Dialog)>
+</div>
+`;
+
+exports[`Banner shows "Refresh" button when passed a refresh function 1`] = `
+<div
+  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+>
+  <div
+    className="message_fddsvlq"
+  >
+    <pure(ErrorIcon)
+      className="icon_f1jqzauf"
+    />
+    Some message
+  </div>
+  <div
+    className="flex_f16jawj4"
+  >
+    <WithStyles(Button)
+      className="button_fu86r2b refreshButton_fgq2mjo"
+      onClick={[Function]}
+    >
+      Refresh
+    </WithStyles(Button)>
+  </div>
+</div>
+`;
+
+exports[`Banner uses error mode when instructed 1`] = `
+<div
+  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+>
+  <div
+    className="message_fddsvlq"
+  >
+    <pure(ErrorIcon)
+      className="icon_f1jqzauf"
+    />
+    Some message
+  </div>
+  <div
+    className="flex_f16jawj4"
+  />
+</div>
+`;
+
+exports[`Banner uses warning mode when instructed 1`] = `
+<div
+  className="flex_f16jawj4 banner_forn49x mode_fdjkr5s"
+>
+  <div
+    className="message_fddsvlq"
+  >
+    <pure(WarningIcon)
+      className="icon_f1jqzauf"
+    />
+    Some message
+  </div>
+  <div
+    className="flex_f16jawj4"
+  />
+</div>
+`;

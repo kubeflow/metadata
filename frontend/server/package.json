@@ -1,0 +1,27 @@
+{
+  "description": "Frontend webserver package for Kubeflow Metadata",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "http-proxy-middleware": "^0.18.0",
+    "node-fetch": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.11.1",
+    "@types/node-fetch": "^2.1.2",
+    "typescript": "3.3.1"
+  },
+  "scripts": {
+    "build": "tsc --lib es2015 --outDir ./dist --typeRoots ./node_modules/@types *.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kubeflow/metadata.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/kubeflow/metadata/issues"
+  },
+  "homepage": "https://github.com/kubeflow/metadata#readme"
+}
