@@ -11,99 +11,99 @@ exports[`ModelInfo Renders Model information 1`] = `
     className="modelInfo_fnuket9"
   >
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Type
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         neural network
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Description
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         model to recognize handwritten digits
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Version ID
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         v0.0.1
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Workspace
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         workspace1
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Run
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         run123
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Creation time
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
-        6/11/2019, 6:21:48 PM
+        6/11/2019, 9:21:48 PM
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Hyperparameters
       </dt>
       <dd
-        className="value_f1ej2mlj flexColumn_fr3ikkd"
+        className="value_f1d9lp3k flexColumn_fr3ikkd"
       >
         <span
           key="0"
@@ -123,44 +123,44 @@ exports[`ModelInfo Renders Model information 1`] = `
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Training data
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         gs://my-bucket/mnist
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Training framework
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         tensorflow
                    v1.0
       </dd>
     </div>
     <div
-      className="field_f16919hf"
+      className="field_f1bgv1eo"
     >
       <dt
-        className="term_f1wopveh"
+        className="term_fuqr2el"
       >
         Training data
       </dt>
       <dd
-        className="value_f1ej2mlj"
+        className="value_f1d9lp3k"
       >
         gs://my-bucket/mnist
       </dd>

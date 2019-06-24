@@ -36,11 +36,18 @@ class ArtifactList extends Page<{}, PipelineListState> {
   private artifactTypes: Map<string, MlMetadataArtifactType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
+      const [artifactType, artifactId] = props.id.split(':');
+      // TODO: Only support details for Models now
+      if (artifactType.indexOf('model') === -1) {
+        return <span>{props.value}</span>;
+      }
+      const link = RoutePage.MODEL_DETAILS
+        .replace(`:${RouteParams.MODEL_TYPE}`, artifactType)
+        .replace(`:${RouteParams.ID}`, artifactId);
       return (
         <Link onClick={(e) => e.stopPropagation()}
           className={commonCss.link}
-          to={RoutePage.MODEL_DETAILS.replace(
-            ':' + RouteParams.artifactId, props.id)}>
+          to={link}>
           {props.value}
         </Link>
       );
@@ -66,28 +73,30 @@ class ArtifactList extends Page<{}, PipelineListState> {
     const columns: Column[] = [
       {label: 'Name', flex: 1, customRenderer: this.nameCustomRenderer},
       {label: 'Version', flex: 1},
-      {label: 'Type', flex: 1},
-      {label: 'URI', flex: 1},
+      {label: 'Type', flex: 2},
+      {label: 'URI', flex: 2},
       {label: 'Workspace', flex: 1},
       {label: 'Created at', flex: 1},
     ];
 
-    const rows: Row[] = this.state.artifacts.map((a) => {
-      const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
-        this.artifactTypes.get(a.type_id!)!.name : a.type_id;
-      return {
-        id: a.id!,
-        otherFields: [
-          a.properties!.name.string_value,
-          a.properties!.version ? a.properties!.version!.string_value : null,
-          type,
-          a.uri,
-          a.custom_properties![CustomProperties.WORKSPACE] ?
-            a.custom_properties![CustomProperties.WORKSPACE].string_value : '',
-          formatDateString(a.properties!.create_time!.string_value),
-        ],
-      };
-    });
+    const rows: Row[] = this.state.artifacts
+      .filter((a) => !!a.properties) // We can't show much without properties
+      .map((a) => {
+        const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
+          this.artifactTypes.get(a.type_id!)!.name : a.type_id;
+        return {
+          id: `${type}:${a.id}`, // Join with colon so we can build the link
+          otherFields: [
+            a.properties!.name.string_value,
+            a.properties!.version ? a.properties!.version!.string_value : null,
+            type,
+            a.uri,
+            a.custom_properties![CustomProperties.WORKSPACE] ?
+              a.custom_properties![CustomProperties.WORKSPACE].string_value : '',
+            formatDateString(a.properties!.create_time!.string_value),
+          ],
+        };
+      });
 
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
@@ -125,12 +134,12 @@ class ArtifactList extends Page<{}, PipelineListState> {
   private async getArtifactTypes():
     Promise<Map<string, MlMetadataArtifactType>> {
     try {
-      throw new Error('Not implemented yet');
-      // const response = await this.api.metadataService.listArtifactTypes();
-      // return new Map(
-      //   response.artifact_types!.map((at) => [at.id!, at])
-      // );
+      const response = await this.api.metadataService.listArtifactTypes();
+      return new Map(
+        response.artifact_types!.map((at) => [at.id!, at])
+      );
     } catch (err) {
+      // TODO: Show error since we won't be able to resolve links?
       return new Map();
     }
   }

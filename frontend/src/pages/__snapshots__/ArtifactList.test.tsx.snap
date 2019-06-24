@@ -80,11 +80,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             "label": "Version",
           },
           Object {
-            "flex": 1,
+            "flex": 2,
             "label": "Type",
           },
           Object {
-            "flex": 1,
+            "flex": 2,
             "label": "URI",
           },
           Object {
@@ -104,25 +104,25 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
       rows={
         Array [
           Object {
-            "id": "1",
+            "id": "kubeflow.org/alpha/metrics:1",
             "otherFields": Array [
               "model",
               "v1",
-              "1",
+              "kubeflow.org/alpha/metrics",
               "gs://my-bucket/mnist",
               "workspace-1",
-              "6/11/2019, 6:21:48 PM",
+              "6/11/2019, 9:21:48 PM",
             ],
           },
           Object {
-            "id": "2",
+            "id": "kubeflow.org/alpha/model:2",
             "otherFields": Array [
               "dataset",
               "v2",
-              "3",
+              "kubeflow.org/alpha/model",
               "gs://my-bucket/dataset2",
               "workspace-1",
-              "6/15/2019, 6:21:48 PM",
+              "6/15/2019, 9:21:48 PM",
             ],
           },
         ]
@@ -139,7 +139,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="0"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "12.5%",
               }
             }
           >
@@ -152,7 +152,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="1"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "12.5%",
               }
             }
           >
@@ -165,7 +165,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="2"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "25%",
               }
             }
           >
@@ -178,7 +178,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="3"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "25%",
               }
             }
           >
@@ -191,7 +191,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="4"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "12.5%",
               }
             }
           >
@@ -204,7 +204,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             key="5"
             style={
               Object {
-                "width": "16.666666666666664%",
+                "width": "12.5%",
               }
             }
           >
@@ -236,31 +236,20 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="0"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
-                <Link
-                  className="link_f1d44nl9"
-                  onClick={[Function]}
-                  replace={false}
-                  to="/artifacts/models/1"
-                >
-                  <a
-                    className="link_f1d44nl9"
-                    href="/artifacts/models/1"
-                    onClick={[Function]}
-                  >
-                    model
-                  </a>
-                </Link>
+                <span>
+                  model
+                </span>
               </div>
               <div
                 className="cell_fy8nr2z"
                 key="1"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
@@ -271,18 +260,18 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="2"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "25%",
                   }
                 }
               >
-                1
+                kubeflow.org/alpha/metrics
               </div>
               <div
                 className="cell_fy8nr2z"
                 key="3"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "25%",
                   }
                 }
               >
@@ -293,7 +282,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="4"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
@@ -304,11 +293,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="5"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
-                6/11/2019, 6:21:48 PM
+                6/11/2019, 9:21:48 PM
               </div>
             </div>
           </div>
@@ -327,7 +316,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="0"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
@@ -335,11 +324,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                   className="link_f1d44nl9"
                   onClick={[Function]}
                   replace={false}
-                  to="/artifacts/models/2"
+                  to="/artifact_types/kubeflow.org/alpha/model/artifacts/2"
                 >
                   <a
                     className="link_f1d44nl9"
-                    href="/artifacts/models/2"
+                    href="/artifact_types/kubeflow.org/alpha/model/artifacts/2"
                     onClick={[Function]}
                   >
                     dataset
@@ -351,7 +340,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="1"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
@@ -362,18 +351,18 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="2"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "25%",
                   }
                 }
               >
-                3
+                kubeflow.org/alpha/model
               </div>
               <div
                 className="cell_fy8nr2z"
                 key="3"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "25%",
                   }
                 }
               >
@@ -384,7 +373,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="4"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
@@ -395,11 +384,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 key="5"
                 style={
                   Object {
-                    "width": "16.666666666666664%",
+                    "width": "12.5%",
                   }
                 }
               >
-                6/15/2019, 6:21:48 PM
+                6/15/2019, 9:21:48 PM
               </div>
             </div>
           </div>
@@ -427,11 +416,11 @@ exports[`ArtifactList Renders with no data 1`] = `
           "label": "Version",
         },
         Object {
-          "flex": 1,
+          "flex": 2,
           "label": "Type",
         },
         Object {
-          "flex": 1,
+          "flex": 2,
           "label": "URI",
         },
         Object {
