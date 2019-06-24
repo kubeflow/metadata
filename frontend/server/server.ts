@@ -19,14 +19,14 @@ import fetch from 'node-fetch';
 import * as path from 'path';
 import * as process from 'process';
 
-const BASEPATH = '/pipeline';
+const BASEPATH = '/metadata';
 
 /** All configurable environment variables can be found here. */
 const {
   /** API service will listen to this host */
-  METADATA_SERVICE_HOST = 'localhost',
+  METADATA_SERVICE_SERVICE_HOST = 'localhost',
   /** API service will listen to this port */
-  METADATA_SERVICE_PORT = '3001'
+  METADATA_SERVICE_SERVICE_PORT_HTTP = '8080'
 } = process.env;
 
 const app = express() as Application;
@@ -48,9 +48,9 @@ Usage: node server.js <static-dir> [port].
 const staticDir = path.resolve(process.argv[2]);
 
 const port = process.argv[3] || 3000;
-const apiServerAddress = `http://${METADATA_SERVICE_HOST}:${METADATA_SERVICE_PORT}`;
+const apiServerAddress = `http://${METADATA_SERVICE_SERVICE_HOST}:${METADATA_SERVICE_SERVICE_PORT_HTTP}`;
 
-const v1beta1Prefix = 'apis/v1beta1';
+const v1beta1Prefix = 'api/v1alpha1';
 
 const clusterNameHandler = async (req, res) => {
   const response = await fetch(

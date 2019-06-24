@@ -38,5 +38,5 @@ WORKDIR /server
 
 EXPOSE 3000
 RUN npm run build
-ENV API_SERVER_ADDRESS http://localhost:3001
+ENV API_SERVER_ADDRESS http://localhost:8080
 CMD node dist/server.js ../client/ 3000
