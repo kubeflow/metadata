@@ -5,21 +5,39 @@ import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RoutePage} from '../components/Router';
-import {ApiListArtifactsResponse} from '../apis/service';
+import {ApiListArtifactsResponse, ApiListArtifactTypesResponse} from '../apis/service';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
+  const mockListArtifactTypes = jest.spyOn(
+    Api.getInstance().metadataService, 'listArtifactTypes');
   const mockListArtifacts = jest.spyOn(
     Api.getInstance().metadataService, 'listArtifacts2');
+  const fakeArtifactTypesResponse: ApiListArtifactTypesResponse = {
+    artifact_types: [
+      {
+        id: '1',
+        name: 'kubeflow.org/alpha/metrics',
+      },
+      {
+        id: '2',
+        name: 'kubeflow.org/alpha/data_set',
+      },
+      {
+        id: '3',
+        name: 'kubeflow.org/alpha/model',
+      },
+    ]
+  };
   const fakeArtifactsResponse: ApiListArtifactsResponse = {
     artifacts: [
       {
-        id: "1",
-        type_id: "1",
-        uri: "gs://my-bucket/mnist",
+        id: '1',
+        type_id: '1',
+        uri: 'gs://my-bucket/mnist',
         properties: {
           name: {string_value: 'model'},
           version: {string_value: 'v1'},
@@ -30,9 +48,9 @@ describe('ArtifactList', () => {
         },
       },
       {
-        id: "2",
-        type_id: "3",
-        uri: "gs://my-bucket/dataset2",
+        id: '2',
+        type_id: '3',
+        uri: 'gs://my-bucket/dataset2',
         properties: {
           name: {string_value: 'dataset'},
           version: {string_value: 'v2'},
@@ -70,10 +88,11 @@ describe('ArtifactList', () => {
   });
 
   it('Renders with a list of Artifacts', async () => {
+    mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
     mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await mockListArtifacts;
+    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     tree.update();
     expect(tree).toMatchSnapshot();

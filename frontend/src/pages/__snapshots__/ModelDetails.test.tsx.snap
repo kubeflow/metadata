@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ModelDetails Renders progress bar with no data 1`] = `<WithStyles(LinearProgress) />`;
+exports[`ModelDetails Renders progress bar with no data 1`] = `<WithStyles(CircularProgress) />`;
 
 exports[`ModelDetails Renders with a Model and updates the page title 1`] = `
 <ModelDetails
@@ -13,6 +13,7 @@ exports[`ModelDetails Renders with a Model and updates the page title 1`] = `
   match={
     Object {
       "params": Object {
+        "artifactType": "kubeflow.org/alpha/model",
         "id": "1",
       },
     }
@@ -105,99 +106,99 @@ exports[`ModelDetails Renders with a Model and updates the page title 1`] = `
           className="modelInfo_fnuket9"
         >
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Type
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               neural network
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Description
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               A really great model
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Version ID
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               v1
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Workspace
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               workspace-1
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Run
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               1
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Creation time
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
-              6/11/2019, 6:21:48 PM
+              6/11/2019, 9:21:48 PM
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Hyperparameters
             </dt>
             <dd
-              className="value_f1ej2mlj flexColumn_fr3ikkd"
+              className="value_f1d9lp3k flexColumn_fr3ikkd"
             >
               <span
                 key="0"
@@ -217,44 +218,44 @@ exports[`ModelDetails Renders with a Model and updates the page title 1`] = `
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Training data
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               gs://my-bucket/mnist
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Training framework
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               tensorflow
                    v1.0
             </dd>
           </div>
           <div
-            className="field_f16919hf"
+            className="field_f1bgv1eo"
           >
             <dt
-              className="term_f1wopveh"
+              className="term_fuqr2el"
             >
               Training data
             </dt>
             <dd
-              className="value_f1ej2mlj"
+              className="value_f1d9lp3k"
             >
               gs://my-bucket/mnist
             </dd>

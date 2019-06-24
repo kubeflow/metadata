@@ -600,7 +600,7 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
     return {
         /**
          * 
-         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/{parent}/artifacts should appear before GET /api/v1alpha1/{name} to be possibly matched.
+         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/artifact_types/{parent}/artifacts should appear before GET /api/v1alpha1/artifact_types/{name} to be possibly matched.
          * @param {string} parent Creates the specified artifact as an instance of ArtifactType with this fully qualified name. |parent| takes the form &#x60;artifact_types/{namespace}/{name&gt;}&#x60;.
          * @param {MlMetadataArtifact} body The Artifact to create. Note that Artifact.type_id is ignored.
          * @param {*} [options] Override http request option.
@@ -615,7 +615,7 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createArtifact.');
             }
-            const localVarPath = `/api/v1alpha1/{parent}/artifacts`
+            const localVarPath = `/api/v1alpha1/artifact_types/{parent}/artifacts`
                 .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
@@ -683,7 +683,7 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createExecution.');
             }
-            const localVarPath = `/api/v1alpha1/{parent}/executions`
+            const localVarPath = `/api/v1alpha1/execution_types/{parent}/executions`
                 .replace(`{${"parent"}}`, encodeURIComponent(String(parent)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
@@ -737,17 +737,23 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} artifactName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifact(artifactName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'artifactName' is not null or undefined
-            if (artifactName === null || artifactName === undefined) {
-                throw new RequiredError('artifactName','Required parameter artifactName was null or undefined when calling deleteArtifact.');
+        deleteArtifact(id: string, name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteArtifact.');
             }
-            const localVarPath = `/api/v1alpha1/{artifactName}`
-                .replace(`{${"artifactName"}}`, encodeURIComponent(String(artifactName)));
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling deleteArtifact.');
+            }
+            const localVarPath = `/api/v1alpha1/artifact_types/{name}/artifacts/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
             const localVarHeaderParameter = {} as any;
@@ -765,17 +771,17 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} artifactTypeName 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifactType(artifactTypeName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'artifactTypeName' is not null or undefined
-            if (artifactTypeName === null || artifactTypeName === undefined) {
-                throw new RequiredError('artifactTypeName','Required parameter artifactTypeName was null or undefined when calling deleteArtifactType.');
+        deleteArtifactType(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling deleteArtifactType.');
             }
-            const localVarPath = `/api/v1alpha1/{artifactTypeName}`
-                .replace(`{${"artifactTypeName"}}`, encodeURIComponent(String(artifactTypeName)));
+            const localVarPath = `/api/v1alpha1/artifact_types/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
             const localVarHeaderParameter = {} as any;
@@ -793,17 +799,23 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} executionName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecution(executionName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'executionName' is not null or undefined
-            if (executionName === null || executionName === undefined) {
-                throw new RequiredError('executionName','Required parameter executionName was null or undefined when calling deleteExecution.');
+        deleteExecution(id: string, name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling deleteExecution.');
             }
-            const localVarPath = `/api/v1alpha1/{executionName}`
-                .replace(`{${"executionName"}}`, encodeURIComponent(String(executionName)));
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling deleteExecution.');
+            }
+            const localVarPath = `/api/v1alpha1/execution_types/{name}/executions/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
             const localVarHeaderParameter = {} as any;
@@ -821,17 +833,17 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecutionType(executionType: string, options: any = {}): FetchArgs {
-            // verify required parameter 'executionType' is not null or undefined
-            if (executionType === null || executionType === undefined) {
-                throw new RequiredError('executionType','Required parameter executionType was null or undefined when calling deleteExecutionType.');
+        deleteExecutionType(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling deleteExecutionType.');
             }
-            const localVarPath = `/api/v1alpha1/{executionType}`
-                .replace(`{${"executionType"}}`, encodeURIComponent(String(executionType)));
+            const localVarPath = `/api/v1alpha1/execution_types/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
             const localVarHeaderParameter = {} as any;
@@ -849,17 +861,23 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} artifactName Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifact(artifactName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'artifactName' is not null or undefined
-            if (artifactName === null || artifactName === undefined) {
-                throw new RequiredError('artifactName','Required parameter artifactName was null or undefined when calling getArtifact.');
+        getArtifact(id: string, name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getArtifact.');
             }
-            const localVarPath = `/api/v1alpha1/{artifactName}`
-                .replace(`{${"artifactName"}}`, encodeURIComponent(String(artifactName)));
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling getArtifact.');
+            }
+            const localVarPath = `/api/v1alpha1/artifact_types/{name}/artifacts/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -877,17 +895,17 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} artifactTypeName ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
+         * @param {string} name ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifactType(artifactTypeName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'artifactTypeName' is not null or undefined
-            if (artifactTypeName === null || artifactTypeName === undefined) {
-                throw new RequiredError('artifactTypeName','Required parameter artifactTypeName was null or undefined when calling getArtifactType.');
+        getArtifactType(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling getArtifactType.');
             }
-            const localVarPath = `/api/v1alpha1/{artifactTypeName}`
-                .replace(`{${"artifactTypeName"}}`, encodeURIComponent(String(artifactTypeName)));
+            const localVarPath = `/api/v1alpha1/artifact_types/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -905,17 +923,23 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} executionName Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecution(executionName: string, options: any = {}): FetchArgs {
-            // verify required parameter 'executionName' is not null or undefined
-            if (executionName === null || executionName === undefined) {
-                throw new RequiredError('executionName','Required parameter executionName was null or undefined when calling getExecution.');
+        getExecution(id: string, name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling getExecution.');
             }
-            const localVarPath = `/api/v1alpha1/{executionName}`
-                .replace(`{${"executionName"}}`, encodeURIComponent(String(executionName)));
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling getExecution.');
+            }
+            const localVarPath = `/api/v1alpha1/execution_types/{name}/executions/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)))
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -933,17 +957,17 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecutionType(executionType: string, options: any = {}): FetchArgs {
-            // verify required parameter 'executionType' is not null or undefined
-            if (executionType === null || executionType === undefined) {
-                throw new RequiredError('executionType','Required parameter executionType was null or undefined when calling getExecutionType.');
+        getExecutionType(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling getExecutionType.');
             }
-            const localVarPath = `/api/v1alpha1/{executionType}`
-                .replace(`{${"executionType"}}`, encodeURIComponent(String(executionType)));
+            const localVarPath = `/api/v1alpha1/execution_types/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -992,7 +1016,7 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
             if (name === null || name === undefined) {
                 throw new RequiredError('name','Required parameter name was null or undefined when calling listArtifacts.');
             }
-            const localVarPath = `/api/v1alpha1/{name}/artifacts`
+            const localVarPath = `/api/v1alpha1/artifact_types/{name}/artifacts`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
@@ -1069,7 +1093,7 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
             if (name === null || name === undefined) {
                 throw new RequiredError('name','Required parameter name was null or undefined when calling listExecutions.');
             }
-            const localVarPath = `/api/v1alpha1/{name}/executions`
+            const localVarPath = `/api/v1alpha1/execution_types/{name}/executions`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
@@ -1124,7 +1148,7 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/{parent}/artifacts should appear before GET /api/v1alpha1/{name} to be possibly matched.
+         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/artifact_types/{parent}/artifacts should appear before GET /api/v1alpha1/artifact_types/{name} to be possibly matched.
          * @param {string} parent Creates the specified artifact as an instance of ArtifactType with this fully qualified name. |parent| takes the form &#x60;artifact_types/{namespace}/{name&gt;}&#x60;.
          * @param {MlMetadataArtifact} body The Artifact to create. Note that Artifact.type_id is ignored.
          * @param {*} [options] Override http request option.
@@ -1199,12 +1223,13 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} artifactName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifact(artifactName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteArtifact(artifactName, options);
+        deleteArtifact(id: string, name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteArtifact(id, name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1217,12 +1242,12 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} artifactTypeName 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifactType(artifactTypeName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteArtifactType(artifactTypeName, options);
+        deleteArtifactType(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteArtifactType(name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1235,12 +1260,13 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} executionName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecution(executionName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteExecution(executionName, options);
+        deleteExecution(id: string, name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteExecution(id, name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1253,12 +1279,12 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecutionType(executionType: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteExecutionType(executionType, options);
+        deleteExecutionType(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).deleteExecutionType(name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1271,12 +1297,13 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} artifactName Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifact(artifactName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetArtifactResponse> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getArtifact(artifactName, options);
+        getArtifact(id: string, name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetArtifactResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getArtifact(id, name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1289,12 +1316,12 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} artifactTypeName ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
+         * @param {string} name ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifactType(artifactTypeName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetArtifactTypeResponse> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getArtifactType(artifactTypeName, options);
+        getArtifactType(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetArtifactTypeResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getArtifactType(name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1307,12 +1334,13 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} executionName Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecution(executionName: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetExecutionResponse> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getExecution(executionName, options);
+        getExecution(id: string, name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetExecutionResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getExecution(id, name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1325,12 +1353,12 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecutionType(executionType: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetExecutionTypeResponse> {
-            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getExecutionType(executionType, options);
+        getExecutionType(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiGetExecutionTypeResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).getExecutionType(name, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1458,7 +1486,7 @@ export const MetadataServiceApiFactory = function (configuration?: Configuration
     return {
         /**
          * 
-         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/{parent}/artifacts should appear before GET /api/v1alpha1/{name} to be possibly matched.
+         * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/artifact_types/{parent}/artifacts should appear before GET /api/v1alpha1/artifact_types/{name} to be possibly matched.
          * @param {string} parent Creates the specified artifact as an instance of ArtifactType with this fully qualified name. |parent| takes the form &#x60;artifact_types/{namespace}/{name&gt;}&#x60;.
          * @param {MlMetadataArtifact} body The Artifact to create. Note that Artifact.type_id is ignored.
          * @param {*} [options] Override http request option.
@@ -1497,75 +1525,79 @@ export const MetadataServiceApiFactory = function (configuration?: Configuration
         },
         /**
          * 
-         * @param {string} artifactName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifact(artifactName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).deleteArtifact(artifactName, options)(fetch, basePath);
+        deleteArtifact(id: string, name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).deleteArtifact(id, name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} artifactTypeName 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteArtifactType(artifactTypeName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).deleteArtifactType(artifactTypeName, options)(fetch, basePath);
+        deleteArtifactType(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).deleteArtifactType(name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} executionName 
+         * @param {string} id 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecution(executionName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).deleteExecution(executionName, options)(fetch, basePath);
+        deleteExecution(id: string, name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).deleteExecution(id, name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteExecutionType(executionType: string, options?: any) {
-            return MetadataServiceApiFp(configuration).deleteExecutionType(executionType, options)(fetch, basePath);
+        deleteExecutionType(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).deleteExecutionType(name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} artifactName Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifact(artifactName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).getArtifact(artifactName, options)(fetch, basePath);
+        getArtifact(id: string, name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).getArtifact(id, name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} artifactTypeName ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
+         * @param {string} name ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getArtifactType(artifactTypeName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).getArtifactType(artifactTypeName, options)(fetch, basePath);
+        getArtifactType(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).getArtifactType(name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} executionName Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
+         * @param {string} id 
+         * @param {string} name Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecution(executionName: string, options?: any) {
-            return MetadataServiceApiFp(configuration).getExecution(executionName, options)(fetch, basePath);
+        getExecution(id: string, name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).getExecution(id, name, options)(fetch, basePath);
         },
         /**
          * 
-         * @param {string} executionType 
+         * @param {string} name 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getExecutionType(executionType: string, options?: any) {
-            return MetadataServiceApiFp(configuration).getExecutionType(executionType, options)(fetch, basePath);
+        getExecutionType(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).getExecutionType(name, options)(fetch, basePath);
         },
         /**
          * 
@@ -1631,7 +1663,7 @@ export const MetadataServiceApiFactory = function (configuration?: Configuration
 export class MetadataServiceApi extends BaseAPI {
     /**
      * 
-     * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/{parent}/artifacts should appear before GET /api/v1alpha1/{name} to be possibly matched.
+     * @summary NOTE: The order of the following RPC methods affects the order of matching a particular HTTP path. So put a more specific path pattern before a generic one. For example, GET /api/v1alpha1/artifact_types/{parent}/artifacts should appear before GET /api/v1alpha1/artifact_types/{name} to be possibly matched.
      * @param {string} parent Creates the specified artifact as an instance of ArtifactType with this fully qualified name. |parent| takes the form &#x60;artifact_types/{namespace}/{name&gt;}&#x60;.
      * @param {MlMetadataArtifact} body The Artifact to create. Note that Artifact.type_id is ignored.
      * @param {*} [options] Override http request option.
@@ -1678,90 +1710,94 @@ export class MetadataServiceApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} artifactName 
+     * @param {string} id 
+     * @param {string} name 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public deleteArtifact(artifactName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).deleteArtifact(artifactName, options)(this.fetch, this.basePath);
+    public deleteArtifact(id: string, name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).deleteArtifact(id, name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} artifactTypeName 
+     * @param {string} name 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public deleteArtifactType(artifactTypeName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).deleteArtifactType(artifactTypeName, options)(this.fetch, this.basePath);
+    public deleteArtifactType(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).deleteArtifactType(name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} executionName 
+     * @param {string} id 
+     * @param {string} name 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public deleteExecution(executionName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).deleteExecution(executionName, options)(this.fetch, this.basePath);
+    public deleteExecution(id: string, name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).deleteExecution(id, name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} executionType 
+     * @param {string} name 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public deleteExecutionType(executionType: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).deleteExecutionType(executionType, options)(this.fetch, this.basePath);
+    public deleteExecutionType(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).deleteExecutionType(name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} artifactName Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
+     * @param {string} id 
+     * @param {string} name Artifact name is like &#x60;artifact_types/{namespace}/{typename}/artifact/{id}&#x60;.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public getArtifact(artifactName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).getArtifact(artifactName, options)(this.fetch, this.basePath);
+    public getArtifact(id: string, name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).getArtifact(id, name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} artifactTypeName ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
+     * @param {string} name ArtifactType names are of the form &#x60;artifact_types/{namespace}/{name}&#x60;.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public getArtifactType(artifactTypeName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).getArtifactType(artifactTypeName, options)(this.fetch, this.basePath);
+    public getArtifactType(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).getArtifactType(name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} executionName Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
+     * @param {string} id 
+     * @param {string} name Execution name is like &#x60;execution_types/{namespace}/{typename}/execution/{id}&#x60;.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public getExecution(executionName: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).getExecution(executionName, options)(this.fetch, this.basePath);
+    public getExecution(id: string, name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).getExecution(id, name, options)(this.fetch, this.basePath);
     }
 
     /**
      * 
-     * @param {string} executionType 
+     * @param {string} name 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MetadataServiceApi
      */
-    public getExecutionType(executionType: string, options?: any) {
-        return MetadataServiceApiFp(this.configuration).getExecutionType(executionType, options)(this.fetch, this.basePath);
+    public getExecutionType(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).getExecutionType(name, options)(this.fetch, this.basePath);
     }
 
     /**

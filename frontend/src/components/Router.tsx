@@ -37,13 +37,15 @@ const css = stylesheet({
 });
 
 export enum RouteParams {
-  artifactId = 'id'
+  ARTIFACT_TYPE = 'artifactType',
+  MODEL_TYPE = 'artifactType([^\\s]{0,}model)',
+  ID = 'id',
 }
 
-// tslint:disable-next-line:variable-name
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
-  MODEL_DETAILS: `/artifacts/models/:${RouteParams.artifactId}`,
+  MODEL_DETAILS:
+    `/artifact_types/:${RouteParams.MODEL_TYPE}/artifacts/:${RouteParams.ID}`,
 };
 
 export interface DialogProps {

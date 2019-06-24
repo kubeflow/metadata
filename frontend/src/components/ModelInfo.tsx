@@ -26,13 +26,19 @@ const css = stylesheet({
   },
   field: {
     flexBasis: '300px',
-    marginBottom: '20px',
+    marginBottom: '32px',
   },
   term: {
     color: color.grey,
+    fontSize: '12px',
+    letterSpacing: '0.2px',
+    lineHeight: '16px',
   },
   value: {
     color: color.secondaryText,
+    fontSize: '14px',
+    letterSpacing: '0.2px',
+    lineHeight: '20px',
   }
 });
 

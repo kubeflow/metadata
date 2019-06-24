@@ -23,7 +23,7 @@ import {Api, CustomProperties} from '../lib/Api';
 import {MlMetadataArtifact} from '../apis/service';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {LinearProgress} from '@material-ui/core';
+import {CircularProgress} from '@material-ui/core';
 import {logger} from '../lib/Utils';
 
 interface ModelDetailsState {
@@ -51,7 +51,7 @@ export default class ModelDetails extends Page<{}, ModelDetailsState> {
 
   public render(): JSX.Element {
     const {model} = this.state;
-    if (!model) return <LinearProgress />;
+    if (!model) return <CircularProgress />;
     const modelInfoProps: ModelInfoProps = {
       description: model.properties!.description.string_value,
       version: model!.properties!.version.string_value,
@@ -84,7 +84,7 @@ export default class ModelDetails extends Page<{}, ModelDetailsState> {
     return {
       actions: [],
       breadcrumbs: [{displayName: 'Artifacts', href: RoutePage.ARTIFACTS}],
-      pageTitle: `Model ${this.props.match.params[RouteParams.artifactId]} details`
+      pageTitle: `Model ${this.props.match.params[RouteParams.ID]} details`
     };
   }
 
@@ -95,11 +95,12 @@ export default class ModelDetails extends Page<{}, ModelDetailsState> {
   private async load(): Promise<void> {
     /* TODO: Use the getArtifact API method once we can properly build the
      * correctly formatted name parameter */
-    const id = this.props.match.params[RouteParams.artifactId];
+    const type = this.props.match.params[RouteParams.ARTIFACT_TYPE];
+    const id = this.props.match.params[RouteParams.ID];
     try {
-      const response = await this.api.metadataService.listArtifacts2();
-      const [model] = response.artifacts!.filter((a) => id === a.id);
-      if (!model) throw new Error('No Model identified by id: ${id}');
+      const response = await this.api.metadataService.getArtifact(id, type);
+      const model = response.artifact;
+      if (!model) throw new Error(`No Model identified by id: ${id}`);
 
       let title = model.properties!.name!.string_value!;
       if (model.properties!.version) {
