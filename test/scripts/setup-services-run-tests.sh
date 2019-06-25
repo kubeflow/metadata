@@ -57,7 +57,7 @@ roleRef:
   apiGroup: ""
 EOF
 
-kubectl create namespace kubeflow
+kubectl create namespace $NAMESPACE
 
 echo "REGISTRY ${REGISTRY}"
 echo "REPO_NAME ${REPO_NAME}"
@@ -83,7 +83,7 @@ do
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
-        echo "FAITAL: Pods of metadata-deployment are not ready after $TIMEOUT seconds!"
+        echo "FATAL: Pods of metadata-deployment are not ready after $TIMEOUT seconds!"
         kubectl get pods -n $NAMESPACE
         exit 1
     fi
@@ -98,7 +98,7 @@ do
     sleep 10
     TIMEOUT=$(( TIMEOUT - 1 ))
     if [[ $TIMEOUT -eq 0 ]];then
-        echo "FAITAL: Pods of metadata-db are not ready after $TIMEOUT seconds!"
+        echo "FATAL: Pods of metadata-db are not ready after $TIMEOUT seconds!"
         kubectl get pods -n $NAMESPACE
         exit 1
     fi
@@ -109,7 +109,7 @@ kubectl -n $NAMESPACE get deploy
 kubectl -n $NAMESPACE get svc
 kubectl -n $NAMESPACE get pod
 
-# Port forwading
+# Port forwarding
 TARGET_POD=$(kubectl -n $NAMESPACE get pod -o=name | grep metadata-deployment | head -1)
 echo "kubectl port-forward from $TARGET_POD"
 kubectl -n $NAMESPACE port-forward $TARGET_POD 8080:8080 &
