@@ -460,6 +460,17 @@ func TestGetArtifact(t *testing.T) {
 	}
 }
 
+func TestListArtifactsWhenNoneExists(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+	resp, err := svc.ListArtifacts(context.Background(), &api.ListArtifactsRequest{
+		Name: "",
+	})
+	if err != nil || len(resp.GetArtifacts()) != 0 {
+		t.Fatalf("Expect {} but got response %v with err '%v'", resp, err)
+	}
+}
+
 func TestListArtifacts(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
@@ -841,6 +852,17 @@ func TestGetExecution(t *testing.T) {
 			t.Errorf("Test case %d\nGetExecution\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
 				i, req, got, want, cmp.Diff(want, got))
 		}
+	}
+}
+
+func TestListExecutionsWhenNoneExists(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+	resp, err := svc.ListExecutions(context.Background(), &api.ListExecutionsRequest{
+		Name: "",
+	})
+	if err != nil || len(resp.GetExecutions()) != 0 {
+		t.Fatalf("Expect {} but got response %v with err '%v'", resp, err)
 	}
 }
 
