@@ -5,7 +5,7 @@ import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
-import {ApiListArtifactsResponse, ApiGetArtifactResponse} from '../apis/service';
+import {ApiGetArtifactResponse} from '../apis/service';
 
 describe('ModelDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -17,9 +17,9 @@ describe('ModelDetails', () => {
   const fakeArtifactResponse: ApiGetArtifactResponse = {
     artifact:
     {
-      id: "1",
-      type_id: "1",
-      uri: "gs://my-bucket/mnist",
+      id: '1',
+      type_id: '1',
+      uri: 'gs://my-bucket/mnist',
       properties: {
         name: {string_value: 'model'},
         description: {string_value: 'A really great model'},
@@ -38,7 +38,7 @@ describe('ModelDetails', () => {
       },
     }
   };
-  const MODEL_TYPE = 'kubeflow.org/alpha/model'
+  const MODEL_TYPE = 'kubeflow.org/alpha/model';
   const FAKE_MODEL_ID = '1';
 
   function generateProps(): PageProps {

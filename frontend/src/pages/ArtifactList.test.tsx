@@ -99,13 +99,30 @@ describe('ArtifactList', () => {
   });
 
   it('Shows error when artifacts cannot be retrieved', async () => {
+    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
     mockListArtifacts.mockRejectedValue(new Error('List artifacts error'));
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await mockListArtifacts;
+    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve Metadata artifacts. ' +
+      message: 'Unable to retrieve Artifacts. ' +
+        'Click Details for more information.',
+      mode: 'error',
+    }));
+  });
+
+  it('Shows error when artifact types cannot be retrieved', async () => {
+    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+    mockListArtifactTypes.mockRejectedValue(
+      new Error('List artifact types error'));
+    tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+    await TestUtils.flushPromises();
+    expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
+      message:
+        'Unable to retrieve Artifact Types, some features may not work. ' +
         'Click Details for more information.',
       mode: 'error',
     }));
