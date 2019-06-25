@@ -118,7 +118,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
   }
 
   private async reload(): Promise<string> {
-    if (!this.artifactTypes) {
+    if (!this.artifactTypes || !this.artifactTypes.size) {
       this.artifactTypes = await this.getArtifactTypes();
     }
     try {
@@ -126,7 +126,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
       this.setStateSafe({artifacts: (response && response.artifacts) || []});
       this.clearBanner();
     } catch (err) {
-      this.showPageError('Unable to retrieve Metadata artifacts.', err);
+      this.showPageError('Unable to retrieve Artifacts.', err);
     }
     return '';
   }
@@ -139,7 +139,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
         response.artifact_types!.map((at) => [at.id!, at])
       );
     } catch (err) {
-      // TODO: Show error since we won't be able to resolve links?
+      this.showPageError(
+        'Unable to retrieve Artifact Types, some features may not work.', err);
       return new Map();
     }
   }
