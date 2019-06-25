@@ -267,20 +267,22 @@ func (s *Service) GetArtifact(ctx context.Context, req *api.GetArtifactRequest) 
 
 // ListArtifacts lists all known artifacts if artfact type name is not set or lists all artifacts of a given type name.
 func (s *Service) ListArtifacts(ctx context.Context, req *api.ListArtifactsRequest) (*api.ListArtifactsResponse, error) {
+	var err error
+	var artifacts []*mlpb.Artifact
 	if req.Name == "" {
 		// Return all artifacts.
-		artifacts, err := s.store.GetArtifacts()
-		if err != nil {
-			return nil, err
-		}
-
-		return &api.ListArtifactsResponse{Artifacts: artifacts}, nil
+		artifacts, err = s.store.GetArtifacts()
+	} else {
+		typeName := strings.TrimPrefix(req.Name, artifactTypesCollection)
+		artifacts, err = s.store.GetArtifactsByType(typeName)
 	}
 
-	typeName := strings.TrimPrefix(req.Name, artifactTypesCollection)
-	artifacts, err := s.store.GetArtifactsByType(typeName)
 	if err != nil {
-		return nil, err
+		// An empty list is returned if no artifact is found.
+		if err.Error() != "Cannot find any record" {
+			return nil, err
+		}
+		artifacts = []*mlpb.Artifact{}
 	}
 
 	return &api.ListArtifactsResponse{Artifacts: artifacts}, nil
@@ -423,18 +425,21 @@ func (s *Service) GetExecution(ctx context.Context, req *api.GetExecutionRequest
 
 // ListExecutions returns all executions.
 func (s *Service) ListExecutions(ctx context.Context, req *api.ListExecutionsRequest) (*api.ListExecutionsResponse, error) {
+	var err error
+	var executions []*mlpb.Execution
 	if req.Name == "" {
-		executions, err := s.store.GetExecutions()
-		if err != nil {
-			return nil, err
-		}
-		return &api.ListExecutionsResponse{Executions: executions}, nil
+		executions, err = s.store.GetExecutions()
+	} else {
+		typeName := strings.TrimPrefix(req.Name, executionTypesCollection)
+		executions, err = s.store.GetExecutionsByType(typeName)
 	}
 
-	typeName := strings.TrimPrefix(req.Name, executionTypesCollection)
-	executions, err := s.store.GetExecutionsByType(typeName)
 	if err != nil {
-		return nil, err
+		// An empty list is returned if no executions is found.
+		if err.Error() != "Cannot find any record" {
+			return nil, err
+		}
+		executions = []*mlpb.Execution{}
 	}
 
 	return &api.ListExecutionsResponse{Executions: executions}, nil
