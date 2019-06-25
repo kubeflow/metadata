@@ -14,16 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This shell script is used to build a cluster and create a namespace from our
-# argo workflow
+# This shell script is used to tear down a testing cluster.
 
 set -o errexit
 set -o nounset
 set -o pipefail
 
-export PATH="$PATH:$HOME/bin"
+CLUSTER_NAME="${CLUSTER_NAME}"
+ZONE="${GCP_ZONE}"
+PROJECT="${GCP_PROJECT}"
 
-make swagger-py-client
-
-bazel build -c opt --define=grpc_no_ares=true //...
-bazel test -c opt --define=grpc_no_ares=true //...
+echo "Activating service-account"
+gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
+echo "Tearing down the cluster"
+gcloud container clusters delete ${CLUSTER_NAME} --zone=${ZONE} --project=${PROJECT}

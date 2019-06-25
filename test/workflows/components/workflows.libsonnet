@@ -55,6 +55,8 @@
       local srcRootDir = testDir + "/src";
       // The directory containing the kubeflow/metadata repo
       local srcDir = srcRootDir + "/kubeflow/metadata";
+      // The directory containing the kubeflow/manifests repo;
+      local manifestsDir = srcRootDir + "/kubeflow/manifests";
       local testWorkerImage = "gcr.io/kubeflow-ci/test-worker";
       local golangImage = "golang:1.9.4-stretch";
       local pythonImage = "python:3.6-jessie";
@@ -105,6 +107,14 @@
                 // Add the source directories to the python path.
                 name: "PYTHONPATH",
                 value: k8sPy + ":" + kubeflowPy,
+              },
+              {
+                name: "MANIFESTS_DIR",
+                value: manifestsDir,
+              },
+              {
+                name: "SRC_DIR",
+                value: srcDir,
               },
               {
                 // Set the GOPATH
@@ -213,6 +223,24 @@
                     template: "unit-test",
                   },
                 ],
+                [
+                  {
+                    name: "build-images",
+                    template: "build-images",
+                  },
+                ],
+                [
+                  {
+                    name: "create-cluster",
+                    template: "create-cluster",
+                  },
+                ],
+                [
+                  {
+                    name: "setup-services-run-tests",
+                    template: "setup-services-run-tests",
+                  },
+                ],
               ],
             },
             {
@@ -221,6 +249,11 @@
                 [{
                   name: "copy-artifacts",
                   template: "copy-artifacts",
+                }],
+                [{
+                  name: "teardown-cluster",
+                  template: "teardown-cluster",
+
                 }],
               ],
             },
@@ -233,7 +266,7 @@
                 ],
                 env: prow_env + [{
                   name: "EXTRA_REPOS",
-                  value: "kubeflow/testing@HEAD",
+                  value: "kubeflow/testing@HEAD;kubeflow/manifests@HEAD",
                 }],
                 image: testWorkerImage,
                 volumeMounts: [
@@ -263,6 +296,18 @@
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImage, [
               "test/scripts/unittests.sh",
             ]),  // unit test
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-cluster",testWorkerImage, [
+              "test/scripts/create-cluster.sh",
+            ]),  // setup cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("teardown-cluster",testWorkerImage, [
+              "test/scripts/tear-down-cluster.sh",
+            ]),  // teardown cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("build-images",testWorkerImage, [
+              "test/scripts/build-images.sh",
+            ]),  // teardown cluster
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services-run-tests",testWorkerImage, [
+              "test/scripts/setup-services-run-tests.sh",
+            ]),  // teardown cluster
           ],  // templates
         },
       },  // e2e
