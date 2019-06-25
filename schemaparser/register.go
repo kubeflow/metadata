@@ -31,6 +31,7 @@ const (
 	wholeMetaPropertyName string = "__ALL_META__"
 	categoryPropertyName  string = "category"
 	artifactCategory      string = "artifact"
+	executionCategory     string = "execution"
 	defaultTimeout               = 5 * time.Second
 )
 
@@ -58,7 +59,11 @@ func RegisterSchemas(service *service.Service, schemaRootDir string) ([]string, 
 				return nil, fmt.Errorf("failed to register schema: %v", err)
 			}
 			types = append(types, namespace+"/"+typename)
-			// TODO(zhenghuiwang): add cases for execution and other categories.
+		case executionCategory:
+			if err := registerExecutionType(service, ss, id, namespace, typename); err != nil {
+				return nil, fmt.Errorf("failed to register schema: %v", err)
+			}
+			types = append(types, namespace+"/"+typename)
 		default:
 			glog.Errorf("Ignored unknown type %q in %q", typename, id)
 		}
@@ -95,6 +100,42 @@ func registerArtifactType(service *service.Service, ss *SchemaSet, id, namespace
 	defer cancel()
 	_, err = service.CreateArtifactType(ctx, &api.CreateArtifactTypeRequest{
 		ArtifactType: artifactType,
+	})
+	if err != nil {
+		return fmt.Errorf("error response from metadata server: %s", err)
+	}
+	return nil
+}
+
+func registerExecutionType(service *service.Service, ss *SchemaSet, id, namespace, typename string) error {
+	properties, err := ss.SimpleProperties(id)
+	if err != nil {
+		return err
+	}
+	executionType := &mlpb.ExecutionType{
+		Name:       proto.String(namespace + "/" + typename),
+		Properties: make(map[string]mlpb.PropertyType),
+	}
+	for pname, ptype := range properties {
+		if isPropertyBuiltIn(pname) {
+			continue
+		}
+		switch ptype {
+		case StringType:
+			executionType.Properties[pname] = mlpb.PropertyType_STRING
+		case IntegerType:
+			executionType.Properties[pname] = mlpb.PropertyType_INT
+		case NumberType:
+			executionType.Properties[pname] = mlpb.PropertyType_DOUBLE
+		default:
+			return fmt.Errorf("internal error: unknown simple property type %q for property %q", ptype, pname)
+		}
+	}
+	executionType.Properties[wholeMetaPropertyName] = mlpb.PropertyType_STRING
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+	_, err = service.CreateExecutionType(ctx, &api.CreateExecutionTypeRequest{
+		ExecutionType: executionType,
 	})
 	if err != nil {
 		return fmt.Errorf("error response from metadata server: %s", err)
