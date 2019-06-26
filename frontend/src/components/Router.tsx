@@ -28,7 +28,7 @@ import {Route, Switch, Redirect, HashRouter} from 'react-router-dom';
 import {classes, stylesheet} from 'typestyle';
 import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
-import ModelDetails from '../pages/ModelDetails';
+import ArtifactDetails from '../pages/ArtifactDetails';
 
 const css = stylesheet({
   dialog: {
@@ -38,14 +38,13 @@ const css = stylesheet({
 
 export enum RouteParams {
   ARTIFACT_TYPE = 'artifactType',
-  MODEL_TYPE = 'artifactType([^\\s]{0,}model)',
   ID = 'id',
 }
 
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
-  MODEL_DETAILS:
-    `/artifact_types/:${RouteParams.MODEL_TYPE}/artifacts/:${RouteParams.ID}`,
+  ARTIFACT_DETAILS:
+    `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
 };
 
 export interface DialogProps {
@@ -74,7 +73,7 @@ class Router extends React.Component<{}, RouteComponentState> {
 
   private routes: RouteConfig[] = [
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
-    {path: RoutePage.MODEL_DETAILS, Component: ModelDetails},
+    {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
   ];
 
   constructor(props: any) {

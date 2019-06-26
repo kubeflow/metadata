@@ -14,33 +14,12 @@
  * limitations under the License.
  */
 import * as React from 'react';
-import {stylesheet, classes} from 'typestyle';
-import {color, commonCss} from '../Css';
-import {formatDateString} from '../lib/Utils';
-
-const css = stylesheet({
-  modelInfo: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  field: {
-    flexBasis: '300px',
-    marginBottom: '32px',
-  },
-  term: {
-    color: color.grey,
-    fontSize: '12px',
-    letterSpacing: '0.2px',
-    lineHeight: '16px',
-  },
-  value: {
-    color: color.secondaryText,
-    fontSize: '14px',
-    letterSpacing: '0.2px',
-    lineHeight: '20px',
-  }
-});
+import {classes} from 'typestyle';
+import {commonCss} from '../Css';
+import {getArtifactProperty, logger} from '../lib/Utils';
+import {css} from './ArtifactInfo';
+import {MlMetadataArtifact} from '../apis/service';
+import {ArtifactProperties} from '../lib/Api';
 
 // Standard artifact properties and Model properties from
 // https://github.com/kubeflow/metadata/blob/master/schema/alpha/artifacts/model.json
@@ -57,67 +36,56 @@ export interface ModelInfoProps {
   trainingFramework?: {name: string, version: string};
 }
 
-export class ModelInfo extends React.Component<ModelInfoProps, {}> {
+// From ../../schema/alpha/artifacts/model.json
+interface ModelSchema {
+  hyperparameters?: {[name: string]: string};
+  model_type?: string;
+  training_framework?: {name: string, version: string};
+}
+
+export class ModelInfo extends React.Component<{model: MlMetadataArtifact}, {}> {
 
   public render(): JSX.Element {
-    const createTime = formatDateString(this.props.createTime);
+    const {model} = this.props;
+    let modelData: ModelSchema = {};
+    try {
+      modelData = JSON.parse(
+        getArtifactProperty(model, ArtifactProperties.ALL_META) || '{}');
+    } catch (err) {
+      logger.error(
+        `Unable to parse ${ArtifactProperties.ALL_META} property`, err);
+    }
+
     return (
-      <section>
-        <h1 className={commonCss.header}>Model info</h1>
-        <dl className={css.modelInfo}>
-          <div className={css.field}>
-            <dt className={css.term}>Type</dt>
-            <dd className={css.value}>{this.props.modelType}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Description</dt>
-            <dd className={css.value}>{this.props.description}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Version ID</dt>
-            <dd className={css.value}>{this.props.version}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Workspace</dt>
-            <dd className={css.value}>{this.props.workspace}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Run</dt>
-            <dd className={css.value}>{this.props.run}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Creation time</dt>
-            <dd className={css.value}>{createTime}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Hyperparameters</dt>
-            <dd className={classes(css.value, commonCss.flexColumn)}>{
-              this.props.hyperparameters &&
-              Object.entries(this.props.hyperparameters)
-                .map((e, i) => <span key={i}>{`${e[0]}: ${e[1]}`}</span>)
+      <React.Fragment>
+        <div className={css.field}>
+          <dt className={css.term}>Type</dt>
+          <dd className={css.value}>{modelData.model_type}</dd>
+        </div>
+        <div className={css.field}>
+          <dt className={css.term}>Hyperparameters</dt>
+          <dd className={classes(css.value, commonCss.flexColumn)}>{
+            modelData.hyperparameters &&
+            Object.entries(modelData.hyperparameters)
+              .map((e, i) => <span key={i}>{`${e[0]}: ${e[1]}`}</span>)
+          }
+          </dd>
+        </div>
+        <div className={css.field}>
+          <dt className={css.term}>Training data</dt>
+          <dd className={css.value}>{this.props.model.uri}</dd>
+        </div>
+        <div className={css.field}>
+          <dt className={css.term}>Training framework</dt>
+          <dd className={css.value}>
+            {
+              modelData.training_framework ?
+                `${modelData.training_framework.name}
+                   ${modelData.training_framework.version || ''}` : ''
             }
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Training data</dt>
-            <dd className={css.value}>{this.props.uri}</dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Training framework</dt>
-            <dd className={css.value}>
-              {
-                this.props.trainingFramework ?
-                  `${this.props.trainingFramework.name}
-                   ${this.props.trainingFramework.version || ''}` : ''
-              }
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Training data</dt>
-            <dd className={css.value}>{this.props.uri}</dd>
-          </div>
-        </dl>
-      </section>
+          </dd>
+        </div>
+      </React.Fragment>
     );
   }
 }

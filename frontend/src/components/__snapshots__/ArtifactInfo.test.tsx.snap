@@ -1,0 +1,215 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
+<section>
+  <h1
+    className="header_f189n3y"
+  >
+    Model
+     info
+  </h1>
+  <dl
+    className="artifactInfo_fnuket9"
+  >
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Version ID
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        v1
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Workspace
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        workspace-1
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Run
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        1
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Description
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        A really great model
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Creation time
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        6/11/2019, 9:21:48 PM
+      </dd>
+    </div>
+    <ModelInfo
+      model={
+        Object {
+          "custom_properties": Object {
+            "__kf_run__": Object {
+              "string_value": "1",
+            },
+            "__kf_workspace__": Object {
+              "string_value": "workspace-1",
+            },
+          },
+          "id": "1",
+          "properties": Object {
+            "__ALL_META__": Object {
+              "string_value": "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+            },
+            "create_time": Object {
+              "string_value": "2019-06-12T01:21:48.259263Z",
+            },
+            "description": Object {
+              "string_value": "A really great model",
+            },
+            "name": Object {
+              "string_value": "test model",
+            },
+            "version": Object {
+              "string_value": "v1",
+            },
+          },
+          "type_id": "1",
+          "uri": "gs://my-bucket/mnist",
+        }
+      }
+    />
+  </dl>
+</section>
+`;
+
+exports[`ArtifactInfo Renders generic Artifact information 1`] = `
+<section>
+  <h1
+    className="header_f189n3y"
+  >
+    Data Set
+     info
+  </h1>
+  <dl
+    className="artifactInfo_fnuket9"
+  >
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Version ID
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        v0.0.1
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Workspace
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        workspace-1
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Run
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      />
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Description
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      />
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        Creation time
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        6/11/2019, 9:21:48 PM
+      </dd>
+    </div>
+    <div
+      className="field_f1bgv1eo"
+    >
+      <dt
+        className="term_fuqr2el"
+      >
+        URI
+      </dt>
+      <dd
+        className="value_f1d9lp3k"
+      >
+        gs://my-bucket/dataset
+      </dd>
+    </div>
+  </dl>
+</section>
+`;

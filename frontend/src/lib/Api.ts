@@ -1,8 +1,16 @@
 import {MetadataServiceApi} from '../apis/service';
 
-/** Known custom properties */
-export enum CustomProperties {
+/** Known Artifact properties */
+export enum ArtifactProperties {
   ALL_META = '__ALL_META__',
+  CREATE_TIME = 'create_time',
+  NAME = 'name',
+  VERSION = 'version',
+  DESCRIPTION = 'description',
+}
+
+/** Known Artifact custom properties */
+export enum ArtifactCustomProperties {
   WORKSPACE = '__kf_workspace__',
   RUN = '__kf_run__',
 }

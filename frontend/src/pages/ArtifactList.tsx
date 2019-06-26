@@ -20,8 +20,8 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {formatDateString} from '../lib/Utils';
-import {Api, CustomProperties} from '../lib/Api';
+import {formatDateString, getArtifactProperty} from '../lib/Utils';
+import {Api, ArtifactProperties, ArtifactCustomProperties} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
@@ -37,12 +37,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
       const [artifactType, artifactId] = props.id.split(':');
-      // TODO: Only support details for Models now
-      if (artifactType.indexOf('model') === -1) {
-        return <span>{props.value}</span>;
-      }
-      const link = RoutePage.MODEL_DETAILS
-        .replace(`:${RouteParams.MODEL_TYPE}`, artifactType)
+      const link = RoutePage.ARTIFACT_DETAILS
+        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
         .replace(`:${RouteParams.ID}`, artifactId);
       return (
         <Link onClick={(e) => e.stopPropagation()}
@@ -87,13 +83,13 @@ class ArtifactList extends Page<{}, PipelineListState> {
         return {
           id: `${type}:${a.id}`, // Join with colon so we can build the link
           otherFields: [
-            a.properties!.name.string_value,
-            a.properties!.version ? a.properties!.version!.string_value : null,
+            getArtifactProperty(a, ArtifactProperties.NAME),
+            getArtifactProperty(a, ArtifactProperties.VERSION),
             type,
             a.uri,
-            a.custom_properties![CustomProperties.WORKSPACE] ?
-              a.custom_properties![CustomProperties.WORKSPACE].string_value : '',
-            formatDateString(a.properties!.create_time!.string_value),
+            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
+            formatDateString(
+              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
           ],
         };
       });
@@ -118,6 +114,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
   }
 
   private async reload(): Promise<string> {
+    // TODO: Consider making an Api method for returning and caching types
     if (!this.artifactTypes || !this.artifactTypes.size) {
       this.artifactTypes = await this.getArtifactTypes();
     }
