@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { isFunction } from 'lodash';
+import {isFunction} from 'lodash';
+import {MlMetadataArtifact} from '../apis/service';
 
 export const logger = {
   error: (...args: any[]) => {
@@ -45,4 +46,27 @@ export async function errorToMessage(error: any): Promise<string> {
   }
 
   return JSON.stringify(error) || '';
+}
+
+/** Title cases a string by capitalizing the first letter of each word. */
+export function titleCase(str: string): string {
+  return str.split(/[\s_-]/)
+    .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
+    .join(' ');
+}
+
+/**
+ * Safely extracts the named property or custom property from the provided
+ * Artifact.
+ * @param artifact
+ * @param propertyName
+ * @param fromCustomProperties
+ */
+export function getArtifactProperty(artifact: MlMetadataArtifact,
+  propertyName: string, fromCustomProperties = false): string | null {
+  const props = fromCustomProperties ?
+    artifact.custom_properties : artifact.properties;
+
+  return (props && props[propertyName] && props[propertyName].string_value)
+    || null;
 }

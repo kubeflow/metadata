@@ -240,9 +240,20 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                   }
                 }
               >
-                <span>
-                  model
-                </span>
+                <Link
+                  className="link_f1d44nl9"
+                  onClick={[Function]}
+                  replace={false}
+                  to="/artifact_types/kubeflow.org/alpha/metrics/artifacts/1"
+                >
+                  <a
+                    className="link_f1d44nl9"
+                    href="/artifact_types/kubeflow.org/alpha/metrics/artifacts/1"
+                    onClick={[Function]}
+                  >
+                    model
+                  </a>
+                </Link>
               </div>
               <div
                 className="cell_fy8nr2z"

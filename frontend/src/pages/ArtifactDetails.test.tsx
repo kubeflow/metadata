@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ModelDetails from './ModelDetails';
+import ArtifactDetails from './ArtifactDetails';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
@@ -7,7 +7,7 @@ import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
 import {ApiGetArtifactResponse} from '../apis/service';
 
-describe('ModelDetails', () => {
+describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
@@ -21,7 +21,7 @@ describe('ModelDetails', () => {
       type_id: '1',
       uri: 'gs://my-bucket/mnist',
       properties: {
-        name: {string_value: 'model'},
+        name: {string_value: 'test model'},
         description: {string_value: 'A really great model'},
         version: {string_value: 'v1'},
         create_time: {string_value: '2019-06-12T01:21:48.259263Z'},
@@ -43,7 +43,7 @@ describe('ModelDetails', () => {
 
   function generateProps(): PageProps {
     return TestUtils.generatePageProps(
-      ModelDetails,
+      ArtifactDetails,
       {} as any,
       {
         params: {
@@ -65,32 +65,45 @@ describe('ModelDetails', () => {
   afterEach(() => tree.unmount());
 
   it('Renders progress bar with no data', () => {
-    tree = shallow(<ModelDetails {...generateProps()} />);
+    tree = shallow(<ArtifactDetails {...generateProps()} />);
 
     expect(tree).toMatchSnapshot();
   });
 
-  it('Renders with a Model and updates the page title', async () => {
+  it('Renders with a Model Artifact and updates the page title', async () => {
     mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
-    tree = TestUtils.mountWithRouter(<ModelDetails {...generateProps()} />);
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
     await TestUtils.flushPromises();
     tree.update();
     expect(tree).toMatchSnapshot();
     expect(updateToolbarSpy).toHaveBeenLastCalledWith(expect.objectContaining({
-      pageTitle: 'model (version: v1)',
+      pageTitle: 'test model (version: v1)',
     }));
   });
 
-  it('Shows error when Models cannot be retrieved', async () => {
-    mockGetArtifact.mockRejectedValue(new Error('Get Model error'));
-    tree = TestUtils.mountWithRouter(<ModelDetails {...generateProps()} />);
+  it('Shows error when returned Artifact is empty', async () => {
+    mockGetArtifact.mockResolvedValue({});
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve Model 1. ' +
+      message: 'Unable to retrieve kubeflow.org/alpha/model 1. ' +
+        'Click Details for more information.',
+      mode: 'error',
+    }));
+  });
+
+  it('Shows error when Artifact cannot be retrieved', async () => {
+    mockGetArtifact.mockRejectedValue(new Error('Get Model error'));
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
+
+    await mockGetArtifact;
+    await TestUtils.flushPromises();
+    expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
+      message: 'Unable to retrieve kubeflow.org/alpha/model 1. ' +
         'Click Details for more information.',
       mode: 'error',
     }));
