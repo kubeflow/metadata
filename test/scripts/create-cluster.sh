@@ -14,16 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This shell script is used to build a cluster and create a namespace from our
-# argo workflow
+# This shell script is used to create a cluster to run e2e tests.
 
 set -o errexit
 set -o nounset
 set -o pipefail
 
-export PATH="$PATH:$HOME/bin"
+CLUSTER_NAME="${CLUSTER_NAME}"
+ZONE="${GCP_ZONE}"
+PROJECT="${GCP_PROJECT}"
+NAMESPACE="${DEPLOY_NAMESPACE}"
 
-make swagger-py-client
+echo "Activating service-account"
+gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
 
-bazel build -c opt --define=grpc_no_ares=true //...
-bazel test -c opt --define=grpc_no_ares=true //...
+echo "Create cluster"
+gcloud --project ${PROJECT} beta container clusters create ${CLUSTER_NAME} \
+    --zone ${ZONE} \
+    --cluster-version 1.11
+echo "Configuring kubectl"
+gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
+    --zone ${ZONE}
