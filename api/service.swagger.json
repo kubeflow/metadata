@@ -79,6 +79,80 @@
         ]
       }
     },
+    "/api/v1alpha1/events": {
+      "post": {
+        "operationId": "CreateEvent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ml_metadataEvent"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/events/{name=artifacts/*}:search": {
+      "get": {
+        "operationId": "SearchEvents2",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSearchEventsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
+    "/api/v1alpha1/events/{name=exections/*}:search": {
+      "get": {
+        "operationId": "SearchEvents",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiSearchEventsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      }
+    },
     "/api/v1alpha1/execution_types": {
       "get": {
         "operationId": "ListExecutionTypes",
@@ -473,6 +547,32 @@
     }
   },
   "definitions": {
+    "EventPath": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PathStep"
+          },
+          "description": "A simple path (e.g. {step{key:\"foo\"}}) can name an artifact in the\ncontext of an execution.",
+          "collectionFormat": "multi"
+        }
+      },
+      "description": "A simple path (e.g. {step{key:\"foo\"}}) can name an artifact in the context\nof an execution."
+    },
+    "PathStep": {
+      "type": "object",
+      "properties": {
+        "index": {
+          "type": "string",
+          "format": "int64"
+        },
+        "key": {
+          "type": "string"
+        }
+      }
+    },
     "apiCreateArtifactResponse": {
       "type": "object",
       "properties": {
@@ -589,6 +689,18 @@
         }
       }
     },
+    "apiSearchEventsResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ml_metadataEvent"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
     "ml_metadataAnyArtifactStructType": {
       "type": "object",
       "description": "Every ArtifactStruct is a member of this type."
@@ -698,6 +810,47 @@
         }
       },
       "title": "A artifact struct type that represents a record or struct-like dictionary.\nArtifactStruct would be map (i.e. ArtifactStructMap)"
+    },
+    "ml_metadataEvent": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The artifact id is required for an event, and should refer to an\nexisting artifact."
+        },
+        "execution_id": {
+          "type": "string",
+          "format": "int64",
+          "description": "The execution_id is required for an event, and should refer to an\nexisting execution."
+        },
+        "path": {
+          "$ref": "#/definitions/EventPath",
+          "description": "The path in an artifact struct, or the name of an artifact."
+        },
+        "type": {
+          "$ref": "#/definitions/ml_metadataEventType",
+          "description": "The type of an event."
+        },
+        "milliseconds_since_epoch": {
+          "type": "string",
+          "format": "int64",
+          "title": "Time the event occurred\nEpoch is Jan 1, 1970, UTC"
+        }
+      },
+      "description": "An event represents a relationship between an artifact ID and an\nexecution.\nThere are four kinds of events, relating to both input and output, as\nwell as declared versus undeclared.\nFor example, the DECLARED_INPUT events are part of the signature of an\nexecution. For example, consider:\nmy_execution({\"data\":[3,7],\"schema\":8})\nWhere 3, 7, and 8 are artifact_ids. Assuming execution_id is 12, this\nbecomes:\n{artifact_id:3, execution_id: 12, type:DECLARED_INPUT,\n path:{step:[{\"key\":\"data\"},{\"index\":0}]}}\n{artifact_id:7, execution_id: 12, type:DECLARED_INPUT,\n path:{step:[{\"key\":\"data\"},{\"index\":1}]}}\n{artifact_id:8, execution_id: 12, type:DECLARED_INPUT,\n path:{step:[{\"key\":\"schema\"}]}}\nThe INPUT is an artifact actually read by the execution.\nThe OUTPUT is an artifact actually written by the execution.\nThe DECLARED_OUTPUT are the artifacts that are the \"official\" output.\nFor example, the trainer may output multiple caches of the parameters\n(as OUTPUT objects),\nbut then finally write the SavedModel as a DECLARED_OUTPUT.\nTODO(martinz): add a type for Event, similar to ArtifactType."
+    },
+    "ml_metadataEventType": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "DECLARED_OUTPUT",
+        "DECLARED_INPUT",
+        "INPUT",
+        "OUTPUT"
+      ],
+      "default": "UNKNOWN",
+      "description": "Events distinguish between an artifact that is written by the execution\n(possibly as a cache), versus artifacts that are part of the declared\noutput of the Execution. For more information on what DECLARED_ means,\nsee the comment on the message."
     },
     "ml_metadataExecution": {
       "type": "object",

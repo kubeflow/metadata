@@ -153,6 +153,17 @@ message DeleteExecutionRequest {
   string name = 1;
 }
 
+message CreateEventRequest {
+  ml_metadata.Event event = 1;
+}
+
+message SearchEventsRequest {
+  string name = 1;
+}
+
+message SearchEventsResponse {
+  repeated ml_metadata.Event events = 1;
+}
 
 service MetadataService {
   // NOTE:
@@ -285,6 +296,25 @@ service MetadataService {
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/api/v1alpha1/{name=execution_types/**}"
+    };
+  }
+
+  rpc CreateEvent(CreateEventRequest)
+      returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1alpha1/events"
+      body: "event"
+    };
+  }
+
+  // Search events based on an artifact or execution id.
+  rpc SearchEvents(SearchEventsRequest)
+      returns (SearchEventsResponse) {
+    option (google.api.http) = {
+      get: "/api/v1alpha1/events/{name=exections/*}:search"
+      additional_bindings {
+        get: "/api/v1alpha1/events/{name=artifacts/*}:search"
+      }
     };
   }
 }
