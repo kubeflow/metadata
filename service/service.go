@@ -452,7 +452,7 @@ func (s *Service) DeleteExecution(ctx context.Context, req *api.DeleteExecutionR
 
 func (s *Service) CreateEvent(ctx context.Context, req *api.CreateEventRequest) (*empty.Empty, error) {
 	err := s.store.PutEvents([]*mlpb.Event{req.GetEvent()})
-	return nil, err
+	return &empty.Empty{}, err
 }
 
 func (s *Service) SearchEvents(ctx context.Context, req *api.SearchEventsRequest) (*api.SearchEventsResponse, error) {

@@ -69,6 +69,8 @@ for GENERATED_FILE in $GENERATED_SWAGGER_FILES; do
   # Fix incorrectly generated HTTP path in swagger file due to
   # https://github.com/grpc-ecosystem/grpc-gateway/issues/407 by
   #
+  # replacing HTTP path pattern "/{VAR=abc/*}..." with "/abc/{VAR}...", and
+  sed -r --in-place 's/\{(\w+)=(\w+)\/\*\}/\2\/\{\1\}/g;' "${TARGET}"
   # replacing HTTP path pattern "/{VAR=abc/**}..." with "/abc/{VAR}...", and
   sed -r --in-place 's/\{(\w+)=(\w+)\/\*\*\}/\2\/\{\1\}/g;' "${TARGET}"
   # replacing HTTP path pattern "/{VAR=abc/**/def/*}..." with "/abc/{VAR}/def/{id}...".

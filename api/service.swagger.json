@@ -105,8 +105,9 @@
         ]
       }
     },
-    "/api/v1alpha1/events/{name=artifacts/*}:search": {
+    "/api/v1alpha1/events/artifacts/{name}:search": {
       "get": {
+        "summary": "Search events based on an artifact or execution id.",
         "operationId": "SearchEvents2",
         "responses": {
           "200": {
@@ -129,8 +130,9 @@
         ]
       }
     },
-    "/api/v1alpha1/events/{name=exections/*}:search": {
+    "/api/v1alpha1/events/exections/{name}:search": {
       "get": {
+        "summary": "Search events based on an artifact or execution id.",
         "operationId": "SearchEvents",
         "responses": {
           "200": {
