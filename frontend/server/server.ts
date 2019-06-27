@@ -26,7 +26,7 @@ const {
   /** API service will listen to this host */
   METADATA_SERVICE_SERVICE_HOST = 'localhost',
   /** API service will listen to this port */
-  METADATA_SERVICE_SERVICE_PORT_HTTP = '8080'
+  METADATA_SERVICE_SERVICE_PORT = '8080'
 } = process.env;
 
 const app = express() as Application;
@@ -48,7 +48,7 @@ Usage: node server.js <static-dir> [port].
 const staticDir = path.resolve(process.argv[2]);
 
 const port = process.argv[3] || 3000;
-const apiServerAddress = `http://${METADATA_SERVICE_SERVICE_HOST}:${METADATA_SERVICE_SERVICE_PORT_HTTP}`;
+const apiServerAddress = `http://${METADATA_SERVICE_SERVICE_HOST}:${METADATA_SERVICE_SERVICE_PORT}`;
 
 const v1beta1Prefix = 'api/v1alpha1';
 

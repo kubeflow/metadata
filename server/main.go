@@ -36,7 +36,6 @@ import (
 )
 
 var (
-	host          = flag.String("host", "localhost", "Hostname to listen on.")
 	rpcPort       = flag.Int("rpc_port", 9090, "RPC serving port.")
 	httpPort      = flag.Int("http_port", 8080, "HTTP serving port.")
 	schemaRootDir = flag.String("schema_root_dir", "schema/alpha", "Root directory for the predefined schemas.")
@@ -107,7 +106,7 @@ func main() {
 	}
 	glog.Infof("Loaded predefined types: %v\n", predefinedTypes)
 
-	rpcEndpoint := fmt.Sprintf("%s:%d", *host, *rpcPort)
+	rpcEndpoint := fmt.Sprintf(":%d", *rpcPort)
 	rpcServer := grpc.NewServer()
 	pb.RegisterMetadataServiceServer(rpcServer, service)
 
@@ -129,7 +128,7 @@ func main() {
 		glog.Fatal(err)
 	}
 
-	httpEndpoint := fmt.Sprintf("%s:%d", *host, *httpPort)
+	httpEndpoint := fmt.Sprintf(":%d", *httpPort)
 	glog.Infof("HTTP server listening on %s", httpEndpoint)
 	if err := http.ListenAndServe(httpEndpoint, mux); err != nil {
 		glog.Fatal(err)
