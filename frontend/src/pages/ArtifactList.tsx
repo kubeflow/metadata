@@ -20,8 +20,8 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {formatDateString} from '../lib/Utils';
-import {Api, CustomProperties} from '../lib/Api';
+import {formatDateString, getArtifactProperty} from '../lib/Utils';
+import {Api, ArtifactProperties, ArtifactCustomProperties} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
@@ -36,11 +36,14 @@ class ArtifactList extends Page<{}, PipelineListState> {
   private artifactTypes: Map<string, MlMetadataArtifactType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
+      const [artifactType, artifactId] = props.id.split(':');
+      const link = RoutePage.ARTIFACT_DETAILS
+        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
+        .replace(`:${RouteParams.ID}`, artifactId);
       return (
         <Link onClick={(e) => e.stopPropagation()}
           className={commonCss.link}
-          to={RoutePage.MODEL_DETAILS.replace(
-            ':' + RouteParams.artifactId, props.id)}>
+          to={link}>
           {props.value}
         </Link>
       );
@@ -66,28 +69,30 @@ class ArtifactList extends Page<{}, PipelineListState> {
     const columns: Column[] = [
       {label: 'Name', flex: 1, customRenderer: this.nameCustomRenderer},
       {label: 'Version', flex: 1},
-      {label: 'Type', flex: 1},
-      {label: 'URI', flex: 1},
+      {label: 'Type', flex: 2},
+      {label: 'URI', flex: 2},
       {label: 'Workspace', flex: 1},
       {label: 'Created at', flex: 1},
     ];
 
-    const rows: Row[] = this.state.artifacts.map((a) => {
-      const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
-        this.artifactTypes.get(a.type_id!)!.name : a.type_id;
-      return {
-        id: a.id!,
-        otherFields: [
-          a.properties!.name.string_value,
-          a.properties!.version ? a.properties!.version!.string_value : null,
-          type,
-          a.uri,
-          a.custom_properties![CustomProperties.WORKSPACE] ?
-            a.custom_properties![CustomProperties.WORKSPACE].string_value : '',
-          formatDateString(a.properties!.create_time!.string_value),
-        ],
-      };
-    });
+    const rows: Row[] = this.state.artifacts
+      .filter((a) => !!a.properties) // We can't show much without properties
+      .map((a) => {
+        const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
+          this.artifactTypes.get(a.type_id!)!.name : a.type_id;
+        return {
+          id: `${type}:${a.id}`, // Join with colon so we can build the link
+          otherFields: [
+            getArtifactProperty(a, ArtifactProperties.NAME),
+            getArtifactProperty(a, ArtifactProperties.VERSION),
+            type,
+            a.uri,
+            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
+            formatDateString(
+              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
+          ],
+        };
+      });
 
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
@@ -109,7 +114,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
   }
 
   private async reload(): Promise<string> {
-    if (!this.artifactTypes) {
+    // TODO: Consider making an Api method for returning and caching types
+    if (!this.artifactTypes || !this.artifactTypes.size) {
       this.artifactTypes = await this.getArtifactTypes();
     }
     try {
@@ -117,7 +123,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
       this.setStateSafe({artifacts: (response && response.artifacts) || []});
       this.clearBanner();
     } catch (err) {
-      this.showPageError('Unable to retrieve Metadata artifacts.', err);
+      this.showPageError('Unable to retrieve Artifacts.', err);
     }
     return '';
   }
@@ -125,12 +131,13 @@ class ArtifactList extends Page<{}, PipelineListState> {
   private async getArtifactTypes():
     Promise<Map<string, MlMetadataArtifactType>> {
     try {
-      throw new Error('Not implemented yet');
-      // const response = await this.api.metadataService.listArtifactTypes();
-      // return new Map(
-      //   response.artifact_types!.map((at) => [at.id!, at])
-      // );
+      const response = await this.api.metadataService.listArtifactTypes();
+      return new Map(
+        response.artifact_types!.map((at) => [at.id!, at])
+      );
     } catch (err) {
+      this.showPageError(
+        'Unable to retrieve Artifact Types, some features may not work.', err);
       return new Map();
     }
   }

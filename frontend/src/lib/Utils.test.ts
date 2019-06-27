@@ -17,6 +17,7 @@
 import {
   logger,
   formatDateString,
+  titleCase,
 } from './Utils';
 
 describe('Utils', () => {
@@ -61,5 +62,22 @@ describe('Utils', () => {
     it('handles undefined', () => {
       expect(formatDateString(undefined)).toBe('-');
     });
+  });
+
+  describe('titleCase', () => {
+    it('Capitalizes the first letter of each word in a sentence', () => {
+      expect(titleCase('this is a sentence')).toBe('This Is A Sentence');
+    });
+
+    it('Capitalizes the first letter of words seperated by non-word characters',
+      () => {
+        expect(titleCase('test-hyphen_underscore.period'))
+          .toBe('Test Hyphen Underscore.period');
+      });
+
+    it('Returns an empty string when given an empty string',
+      () => {
+        expect(titleCase('')).toBe('');
+      });
   });
 });

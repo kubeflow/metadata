@@ -1,170 +1,187 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ModelInfo Renders Model information 1`] = `
-<section>
-  <h1
-    className="header_f189n3y"
+<Fragment>
+  <div
+    className="field_f1bgv1eo"
   >
-    Model info
-  </h1>
-  <dl
-    className="modelInfo_fnuket9"
+    <dt
+      className="term_fuqr2el"
+    >
+      Type
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    >
+      neural network
+    </dd>
+  </div>
+  <div
+    className="field_f1bgv1eo"
   >
-    <div
-      className="field_f16919hf"
+    <dt
+      className="term_fuqr2el"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Type
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        neural network
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+      Hyperparameters
+    </dt>
+    <dd
+      className="value_f1d9lp3k flexColumn_fr3ikkd"
     >
-      <dt
-        className="term_f1wopveh"
+      <span
+        key="0"
       >
-        Description
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
+        early_stop: true
+      </span>
+      <span
+        key="1"
       >
-        model to recognize handwritten digits
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+        layers: 10,3,1
+      </span>
+      <span
+        key="2"
+      >
+        learning_rate: 0.5
+      </span>
+    </dd>
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Version ID
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        v0.0.1
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+      Training data
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Workspace
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        workspace1
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+      gs://my-bucket/mnist
+    </dd>
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Run
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        run123
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+      Training framework
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Creation time
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        6/11/2019, 6:21:48 PM
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
-    >
-      <dt
-        className="term_f1wopveh"
-      >
-        Hyperparameters
-      </dt>
-      <dd
-        className="value_f1ej2mlj flexColumn_fr3ikkd"
-      >
-        <span
-          key="0"
-        >
-          early_stop: true
-        </span>
-        <span
-          key="1"
-        >
-          layers: 10,3,1
-        </span>
-        <span
-          key="2"
-        >
-          learning_rate: 0.5
-        </span>
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
-    >
-      <dt
-        className="term_f1wopveh"
-      >
-        Training data
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        gs://my-bucket/mnist
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
-    >
-      <dt
-        className="term_f1wopveh"
-      >
-        Training framework
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        tensorflow
+      tensorflow
                    v1.0
-      </dd>
-    </div>
-    <div
-      className="field_f16919hf"
+    </dd>
+  </div>
+</Fragment>
+`;
+
+exports[`ModelInfo Renders Model information with malformed __ALL_META__ property 1`] = `
+<Fragment>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
     >
-      <dt
-        className="term_f1wopveh"
-      >
-        Training data
-      </dt>
-      <dd
-        className="value_f1ej2mlj"
-      >
-        gs://my-bucket/mnist
-      </dd>
-    </div>
-  </dl>
-</section>
+      Type
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    />
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Hyperparameters
+    </dt>
+    <dd
+      className="value_f1d9lp3k flexColumn_fr3ikkd"
+    />
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Training data
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    >
+      gs://my-bucket/mnist
+    </dd>
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Training framework
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    />
+  </div>
+</Fragment>
+`;
+
+exports[`ModelInfo Renders Model information with missing __ALL_META__ property 1`] = `
+<Fragment>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Type
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    />
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Hyperparameters
+    </dt>
+    <dd
+      className="value_f1d9lp3k flexColumn_fr3ikkd"
+    />
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Training data
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    >
+      gs://my-bucket/mnist
+    </dd>
+  </div>
+  <div
+    className="field_f1bgv1eo"
+  >
+    <dt
+      className="term_fuqr2el"
+    >
+      Training framework
+    </dt>
+    <dd
+      className="value_f1d9lp3k"
+    />
+  </div>
+</Fragment>
 `;

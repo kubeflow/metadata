@@ -26,6 +26,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
+    "license-checker": "^25.0.1",
     "react-router-test-context": "^0.1.0",
     "typescript": "^3.4.5"
   },
@@ -34,6 +35,7 @@
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "react-scripts build",
+    "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -q -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
     "eject": "react-scripts eject",
     "postinstall": "cd ./server && npm i",
     "start": "react-scripts start",
