@@ -25,8 +25,7 @@ set -o xtrace
 HOST=http://localhost
 PORT=8080
 
-# TODO(zhenghuiwang): this is expected to return all predefined types, but it
-# returns {} now.
+# List all artifact types.
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types
 
 # List the predefined model type.
@@ -43,3 +42,9 @@ curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/
 
 # Get the model artifcat with ID=1.
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts/1
+
+# List all execution types.
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types
+
+# List the predefined model type.
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution
