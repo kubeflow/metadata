@@ -455,7 +455,7 @@ func (s *Service) CreateEvent(ctx context.Context, req *api.CreateEventRequest) 
 	return &empty.Empty{}, err
 }
 
-func (s *Service) SearchEvents(ctx context.Context, req *api.SearchEventsRequest) (*api.SearchEventsResponse, error) {
+func (s *Service) ListEvents(ctx context.Context, req *api.ListEventsRequest) (*api.ListEventsResponse, error) {
 	name := req.GetName()
 	var events []*mlpb.Event
 	var err error
@@ -472,7 +472,7 @@ func (s *Service) SearchEvents(ctx context.Context, req *api.SearchEventsRequest
 		}
 		events, err = s.store.GetEventsByExecutionIDs([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
 	}
-	return &api.SearchEventsResponse{
+	return &api.ListEventsResponse{
 		Events: events,
 	}, err
 }

@@ -157,11 +157,11 @@ message CreateEventRequest {
   ml_metadata.Event event = 1;
 }
 
-message SearchEventsRequest {
+message ListEventsRequest {
   string name = 1;
 }
 
-message SearchEventsResponse {
+message ListEventsResponse {
   repeated ml_metadata.Event events = 1;
 }
 
@@ -307,13 +307,13 @@ service MetadataService {
     };
   }
 
-  // Search events based on an artifact or execution id.
-  rpc SearchEvents(SearchEventsRequest)
-      returns (SearchEventsResponse) {
+  // List events based on an artifact or execution id.
+  rpc ListEvents(ListEventsRequest)
+      returns (ListEventsResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/events/{name=exections/*}:search"
+      get: "/api/v1alpha1/events/{name=exections/*}"
       additional_bindings {
-        get: "/api/v1alpha1/events/{name=artifacts/*}:search"
+        get: "/api/v1alpha1/events/{name=artifacts/*}"
       }
     };
   }

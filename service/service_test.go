@@ -922,7 +922,7 @@ func TestListExecutions(t *testing.T) {
 	}
 }
 
-func TestCreateEventsAndSearch(t *testing.T) {
+func TestCreateEventsAndList(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
 
@@ -965,18 +965,18 @@ func TestCreateEventsAndSearch(t *testing.T) {
 			t.Fatalf("Failed to create event %v, err %v\n", e, err)
 		}
 	}
-	resp1, err := svc.SearchEvents(
+	resp1, err := svc.ListEvents(
 		context.Background(),
-		&api.SearchEventsRequest{
+		&api.ListEventsRequest{
 			Name: fmt.Sprintf("artifacts/%d", artifacts[0]),
 		})
 	if err != nil || len(resp1.Events) != 2 {
 		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp1, err)
 	}
 
-	resp2, err := svc.SearchEvents(
+	resp2, err := svc.ListEvents(
 		context.Background(),
-		&api.SearchEventsRequest{
+		&api.ListEventsRequest{
 			Name: fmt.Sprintf("executions/%d", executions[0]),
 		})
 	if err != nil || len(resp2.Events) != 2 {

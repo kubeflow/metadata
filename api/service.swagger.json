@@ -105,15 +105,15 @@
         ]
       }
     },
-    "/api/v1alpha1/events/artifacts/{name}:search": {
+    "/api/v1alpha1/events/artifacts/{name}": {
       "get": {
-        "summary": "Search events based on an artifact or execution id.",
-        "operationId": "SearchEvents2",
+        "summary": "List events based on an artifact or execution id.",
+        "operationId": "ListEvents2",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiSearchEventsResponse"
+              "$ref": "#/definitions/apiListEventsResponse"
             }
           }
         },
@@ -130,15 +130,15 @@
         ]
       }
     },
-    "/api/v1alpha1/events/exections/{name}:search": {
+    "/api/v1alpha1/events/exections/{name}": {
       "get": {
-        "summary": "Search events based on an artifact or execution id.",
-        "operationId": "SearchEvents",
+        "summary": "List events based on an artifact or execution id.",
+        "operationId": "ListEvents",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiSearchEventsResponse"
+              "$ref": "#/definitions/apiListEventsResponse"
             }
           }
         },
@@ -667,6 +667,18 @@
         }
       }
     },
+    "apiListEventsResponse": {
+      "type": "object",
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ml_metadataEvent"
+          },
+          "collectionFormat": "multi"
+        }
+      }
+    },
     "apiListExecutionTypesResponse": {
       "type": "object",
       "properties": {
@@ -686,18 +698,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ml_metadataExecution"
-          },
-          "collectionFormat": "multi"
-        }
-      }
-    },
-    "apiSearchEventsResponse": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ml_metadataEvent"
           },
           "collectionFormat": "multi"
         }
