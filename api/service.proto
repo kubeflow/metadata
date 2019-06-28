@@ -311,7 +311,7 @@ service MetadataService {
   rpc ListEvents(ListEventsRequest)
       returns (ListEventsResponse) {
     option (google.api.http) = {
-      get: "/api/v1alpha1/events/{name=exections/*}"
+      get: "/api/v1alpha1/events/{name=executions/*}"
       additional_bindings {
         get: "/api/v1alpha1/events/{name=artifacts/*}"
       }

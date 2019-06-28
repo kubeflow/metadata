@@ -4,7 +4,7 @@ FROM golang:1.12
 
 ENV GO111MODULE on
 
-RUN apt-get update && apt-get -y install cmake unzip patch && apt-get clean
+RUN apt-get update && apt-get -y install cmake unzip patch wget && apt-get clean
 
 RUN cd /tmp && \
     wget -O /tmp/bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/0.24.1/bazel-0.24.1-installer-linux-x86_64.sh && \
@@ -20,6 +20,9 @@ COPY . .
 RUN bazel build -c opt --define=grpc_no_ares=true //...
 
 RUN cp bazel-bin/server/linux_amd64_stripped/server server/server
+
+# Copy Licenses
+RUN wget https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt -O GRPC-GATEWAY-LICENSE.txt
 
 CMD ["./server/server"]
 
