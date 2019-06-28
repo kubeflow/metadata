@@ -15,19 +15,27 @@
  */
 
 import * as React from 'react';
+import ArrowRight from '@material-ui/icons/ArrowRight';
 import Checkbox, {CheckboxProps} from '@material-ui/core/Checkbox';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FilterIcon from '@material-ui/icons/FilterList';
 import IconButton from '@material-ui/core/IconButton';
+import Input from '../atoms/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Radio from '@material-ui/core/Radio';
+import Separator from '../atoms/Separator';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TextField, {TextFieldProps} from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import WarningIcon from '@material-ui/icons/WarningRounded';
+import {ListRequest} from '../lib/Api';
 import {classes, stylesheet} from 'typestyle';
 import {fonts, fontsize, dimension, commonCss, color, padding, zIndex} from '../Css';
 import {logger} from '../lib/Utils';
+import {debounce} from 'lodash';
+import {InputAdornment} from '@material-ui/core';
 
 export enum ExpandState {
   COLLAPSED,
@@ -38,6 +46,7 @@ export enum ExpandState {
 export interface Column {
   flex?: number;
   label: string;
+  sortKey?: string;
   customRenderer?: React.FC<CustomRendererProps<any>>;
 }
 
@@ -105,6 +114,12 @@ export const css = stylesheet({
     boxSizing: 'border-box',
     height: '40px !important',
   },
+  filterBorderRadius: {
+    borderRadius: 8,
+  },
+  filterBox: {
+    margin: '16px 0',
+  },
   footer: {
     borderBottom: '1px solid ' + color.divider,
     fontFamily: fonts.secondary,
@@ -164,33 +179,52 @@ interface CustomTableProps {
   columns: Column[];
   disablePaging?: boolean;
   disableSelection?: boolean;
+  disableSorting?: boolean;
   emptyMessage?: string;
-  reload: (request: any) => Promise<string>;
+  filterLabel?: string;
+  getExpandComponent?: (index: number) => React.ReactNode;
+  initialSortColumn?: string;
+  initialSortOrder?: 'asc' | 'desc';
+  noFilterBox?: boolean;
+  reload: (request: ListRequest) => Promise<string>;
   rows: Row[];
   selectedIds?: string[];
+  toggleExpansion?: (rowId: number) => void;
   updateSelection?: (selectedIds: string[]) => void;
   useRadioButtons?: boolean;
 }
 
 interface CustomTableState {
   currentPage: number;
+  filterString: string;
+  filterStringEncoded: string;
   isBusy: boolean;
   maxPageIndex: number;
+  sortOrder: 'asc' | 'desc';
   pageSize: number;
+  sortBy: string;
   tokenList: string[];
 }
 
 export default class CustomTable extends React.Component<CustomTableProps, CustomTableState> {
   private _isMounted = true;
 
+  private _debouncedFilterRequest =
+    debounce((filterString: string) => this._requestFilter(filterString), 300);
+
   constructor(props: CustomTableProps) {
     super(props);
 
     this.state = {
       currentPage: 0,
+      filterString: '',
+      filterStringEncoded: '',
       isBusy: false,
       maxPageIndex: Number.MAX_SAFE_INTEGER,
       pageSize: 10,
+      sortBy: props.initialSortColumn ||
+        (props.columns.length ? props.columns[0].sortKey || '' : ''),
+      sortOrder: props.initialSortOrder || 'desc',
       tokenList: [''],
     };
   }
@@ -240,16 +274,38 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
 
   public componentWillUnmount(): void {
     this._isMounted = false;
+    this._debouncedFilterRequest.cancel();
   }
 
   public render(): JSX.Element {
-    const {pageSize} = this.state;
+    const {filterString, pageSize, sortBy, sortOrder} = this.state;
     const numSelected = (this.props.selectedIds || []).length;
     const totalFlex = this.props.columns.reduce((total, c) => total += (c.flex || 1), 0);
     const widths = this.props.columns.map(c => (c.flex || 1) / totalFlex * 100);
 
     return (
       <div className={commonCss.pageOverflowHidden}>
+
+        {/* Filter/Search bar */}
+        {!this.props.noFilterBox && (
+          <div>
+            <Input id='tableFilterBox' label={this.props.filterLabel || 'Filter'} height={48} maxWidth={'100%'}
+              className={css.filterBox} InputLabelProps={{classes: {root: css.noMargin}}}
+              onChange={this.handleFilterChange} value={filterString}
+              variant='outlined'
+              InputProps={{
+                classes: {
+                  notchedOutline: css.filterBorderRadius,
+                  root: css.noLeftPadding,
+                },
+                startAdornment: (
+                  <InputAdornment position='end'>
+                    <FilterIcon style={{color: color.lowContrast, paddingRight: 16}} />
+                  </InputAdornment>
+                )
+              }} />
+          </div>
+        )}
 
         {/* Header */}
         <div className={classes(
@@ -261,10 +317,27 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                 onChange={this.handleSelectAllClick.bind(this)} />
             </div>
           )}
+          {/* Shift cells to account for expand button */}
+          {!!this.props.getExpandComponent && (
+            <Separator orientation='horizontal' units={40} />
+          )}
           {this.props.columns.map((col, i) => {
+            const isColumnSortable = !!this.props.columns[i].sortKey;
+            const isCurrentSortColumn = sortBy === this.props.columns[i].sortKey;
             return (
-              <div key={i} style={{width: widths[i] + '%'}} className={css.columnName}>
-                <div>{col.label}</div>
+              <div key={i} style={{width: widths[i] + '%'}}
+                className={css.columnName}>
+                {this.props.disableSorting === true && <div>{col.label}</div>}
+                {!this.props.disableSorting && (
+                  <Tooltip title={isColumnSortable ? 'Sort' : 'Cannot sort by this column'}
+                    enterDelay={300}>
+                    <TableSortLabel active={isCurrentSortColumn} className={commonCss.ellipsis}
+                      direction={isColumnSortable ? sortOrder : undefined}
+                      onClick={() => this._requestSort(this.props.columns[i].sortKey)}>
+                      {col.label}
+                    </TableSortLabel>
+                  </Tooltip>
+                )}
               </div>
             );
           })}
@@ -288,23 +361,32 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
               logger.error('Rows must have the same number of cells defined in columns');
               return null;
             }
-            return (<div className={classes(css.expandableContainer)} key={i}>
+            return (<div className={classes(css.expandableContainer,
+              row.expandState === ExpandState.EXPANDED && css.expandedContainer)} key={i}>
               <div role='checkbox' tabIndex={-1} className={
                 classes(
                   'tableRow',
                   css.row,
                   this.props.disableSelection === true && padding(20, 'l'),
                   this.isSelected(row.id) && css.selected,
+                  row.expandState === ExpandState.EXPANDED && css.expandedRow
                 )}
                 onClick={e => this.handleClick(e, row.id)}>
-                {(this.props.disableSelection !== true) && (
+                {(this.props.disableSelection !== true || !!this.props.getExpandComponent) && (
                   <div className={classes(css.cell, css.selectionToggle)}>
                     {/* If using checkboxes */}
-                    {(this.props.useRadioButtons !== true) && (
+                    {(this.props.disableSelection !== true && this.props.useRadioButtons !== true) && (
                       <Checkbox color='primary' checked={this.isSelected(row.id)} />)}
                     {/* If using radio buttons */}
-                    {(this.props.useRadioButtons) && (
+                    {(this.props.disableSelection !== true && this.props.useRadioButtons) && (
                       <Radio color='primary' checked={this.isSelected(row.id)} />)}
+                    {!!this.props.getExpandComponent && (
+                      <IconButton className={classes(css.expandButton,
+                        row.expandState === ExpandState.EXPANDED && css.expandButtonExpanded)}
+                        onClick={(e) => this._expandButtonToggled(e, i)}>
+                        <ArrowRight />
+                      </IconButton>
+                    )}
                   </div>
                 )}
                 {row.otherFields.map((cell, c) => (
@@ -317,6 +399,11 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                   </div>
                 ))}
               </div>
+              {row.expandState === ExpandState.EXPANDED && this.props.getExpandComponent && (
+                <div className={padding(20, 'lrb')}>
+                  {this.props.getExpandComponent(i)}
+                </div>
+              )}
             </div>);
           })}
         </div>
@@ -347,19 +434,29 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
     );
   }
 
-  public async reload(loadRequest?: any): Promise<string> {
+  public async reload(loadRequest?: ListRequest): Promise<string> {
     // Override the current state with incoming request
-    const request = Object.assign({
+    const request: ListRequest = Object.assign({
+      filter: this.state.filterStringEncoded,
+      orderAscending: this.state.sortOrder === 'asc',
       pageSize: this.state.pageSize,
       pageToken: this.state.tokenList[this.state.currentPage],
+      sortBy: this.state.sortBy,
     }, loadRequest);
 
     let result = '';
     try {
       this.setStateSafe({
+        filterStringEncoded: request.filter,
         isBusy: true,
         pageSize: request.pageSize,
+        sortBy: request.sortBy,
+        sortOrder: request.orderAscending ? 'asc' : 'desc',
       });
+
+      if (request.sortBy && !request.orderAscending) {
+        request.sortBy += ' desc';
+      }
 
       result = await this.props.reload(request);
     } finally {
@@ -368,9 +465,38 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
     return result;
   }
 
+  public handleFilterChange = (event: any) => {
+    const value = event.target.value;
+    // Set state here so that the UI will be updated even if the actual filter request is debounced
+    this.setStateSafe(
+      {filterString: value} as any,
+      async () => await this._debouncedFilterRequest(value as string)
+    );
+  }
+
+  // Exposed for testing
+  protected async _requestFilter(filterString?: string): Promise<void> {
+    this._resetToFirstPage(await this.reload({filter: filterString}));
+  }
+
   private setStateSafe(newState: Partial<CustomTableState>, cb?: () => void): void {
     if (this._isMounted) {
       this.setState(newState as any, cb);
+    }
+  }
+
+  private _requestSort(sortBy?: string): void {
+    if (sortBy) {
+      // Set the sort column to the provided column if it's different, and
+      // invert the sort order it if it's the same column
+      const sortOrder =
+        this.state.sortBy === sortBy
+          ? (this.state.sortOrder === 'asc' ? 'desc' : 'asc')
+          : 'asc';
+      this.setStateSafe({sortOrder, sortBy}, async () => {
+        this._resetToFirstPage(
+          await this.reload({pageToken: '', orderAscending: sortOrder === 'asc', sortBy}));
+      });
     }
   }
 
@@ -418,5 +544,12 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
       maxPageIndex,
       tokenList: newTokenList,
     });
+  }
+
+  private _expandButtonToggled(e: React.MouseEvent, rowIndex: number): void {
+    e.stopPropagation();
+    if (this.props.toggleExpansion) {
+      this.props.toggleExpansion(rowIndex);
+    }
   }
 }
