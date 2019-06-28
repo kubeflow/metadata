@@ -1039,7 +1039,7 @@ var (
 
 	pattern_MetadataService_CreateEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1alpha1", "events"}, ""))
 
-	pattern_MetadataService_ListEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4}, []string{"api", "v1alpha1", "events", "exections", "name"}, ""))
+	pattern_MetadataService_ListEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4}, []string{"api", "v1alpha1", "events", "executions", "name"}, ""))
 
 	pattern_MetadataService_ListEvents_1 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 2, 5, 4}, []string{"api", "v1alpha1", "events", "artifacts", "name"}, ""))
 )
