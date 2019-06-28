@@ -449,3 +449,30 @@ func (s *Service) ListExecutions(ctx context.Context, req *api.ListExecutionsReq
 func (s *Service) DeleteExecution(ctx context.Context, req *api.DeleteExecutionRequest) (*empty.Empty, error) {
 	return nil, errors.New("not implemented error: DeleteExecution")
 }
+
+func (s *Service) CreateEvent(ctx context.Context, req *api.CreateEventRequest) (*empty.Empty, error) {
+	err := s.store.PutEvents([]*mlpb.Event{req.GetEvent()})
+	return &empty.Empty{}, err
+}
+
+func (s *Service) ListEvents(ctx context.Context, req *api.ListEventsRequest) (*api.ListEventsResponse, error) {
+	name := req.GetName()
+	var events []*mlpb.Event
+	var err error
+	if strings.HasPrefix(name, artifactCollection) {
+		id, err := strconv.ParseInt(strings.TrimPrefix(name, artifactCollection), 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse Artifact id from %q: %v", name, err)
+		}
+		events, err = s.store.GetEventsByArtifactIDs([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
+	} else {
+		id, err := strconv.ParseInt(strings.TrimPrefix(name, executionCollection), 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("failed to parse Artifact id from %q: %v", name, err)
+		}
+		events, err = s.store.GetEventsByExecutionIDs([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
+	}
+	return &api.ListEventsResponse{
+		Events: events,
+	}, err
+}

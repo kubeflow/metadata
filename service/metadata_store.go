@@ -41,4 +41,8 @@ type MetadataStore interface {
 	GetExecutionsByID(eids []mlmetadata.ExecutionID) ([]*mlpb.Execution, error)
 	GetExecutions() ([]*mlpb.Execution, error)
 	GetExecutionsByType(typeName string) ([]*mlpb.Execution, error)
+
+	PutEvents(events []*mlpb.Event) error
+	GetEventsByArtifactIDs([]mlmetadata.ArtifactID) ([]*mlpb.Event, error)
+	GetEventsByExecutionIDs([]mlmetadata.ExecutionID) ([]*mlpb.Event, error)
 }
