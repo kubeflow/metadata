@@ -17,6 +17,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"ml_metadata/metadata_store/mlmetadata"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
 	"reflect"
@@ -475,31 +476,17 @@ func TestListArtifacts(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
 
-	storeArtifact := func(typename string, artifacts []*mlpb.Artifact) {
-		aType := &mlpb.ArtifactType{Name: proto.String(typename)}
-
-		typeID, err := store.PutArtifactType(aType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
-		if err != nil {
-			t.Fatalf("Failed to create ArtifactType %+v: %v", aType, err)
-		}
-
-		for _, artifact := range artifacts {
-			artifact.TypeId = proto.Int64(int64(typeID))
-		}
-
-		_, err = store.PutArtifacts(artifacts)
-		if err != nil {
-			t.Fatalf("Failed to put Artifacts %+v: %v", artifacts, err)
-		}
-	}
-
 	storeArtifact(
+		t,
+		store,
 		"kubeflow.org/v1/Model",
 		[]*mlpb.Artifact{
 			&mlpb.Artifact{Uri: proto.String("artifact_1")},
 			&mlpb.Artifact{Uri: proto.String("artifact_2")}})
 
 	storeArtifact(
+		t,
+		store,
 		"kubeflow.org/v1/Dataset",
 		[]*mlpb.Artifact{
 			&mlpb.Artifact{Uri: proto.String("artifact_3")}})
@@ -870,28 +857,9 @@ func TestListExecutions(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
 
-	storeExecution := func(typename string, artifacts []*mlpb.Execution) {
-		aType := &mlpb.ExecutionType{
-			Name:       proto.String(typename),
-			Properties: map[string]mlpb.PropertyType{"name": mlpb.PropertyType_STRING},
-		}
-
-		typeID, err := store.PutExecutionType(aType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
-		if err != nil {
-			t.Fatalf("Failed to create ExecutionType %+v: %v", aType, err)
-		}
-
-		for _, artifact := range artifacts {
-			artifact.TypeId = proto.Int64(int64(typeID))
-		}
-
-		_, err = store.PutExecutions(artifacts)
-		if err != nil {
-			t.Fatalf("Failed to put Executions %+v: %v", artifacts, err)
-		}
-	}
-
 	storeExecution(
+		t,
+		store,
 		"kubeflow.org/v1/MyExecutionType1",
 		[]*mlpb.Execution{
 			&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}}}},
@@ -899,6 +867,8 @@ func TestListExecutions(t *testing.T) {
 		})
 
 	storeExecution(
+		t,
+		store,
 		"kubeflow.org/v1/MyExecutionType2",
 		[]*mlpb.Execution{
 			&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e3"}}}},
@@ -950,4 +920,108 @@ func TestListExecutions(t *testing.T) {
 				i, test.request, got, test.wantResponse, cmp.Diff(test.wantResponse, got))
 		}
 	}
+}
+
+func TestCreateEventsAndList(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	executions := storeExecution(
+		t,
+		store,
+		"kubeflow.org/v1/MyExecutionType1",
+		[]*mlpb.Execution{
+			&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}}}},
+			&mlpb.Execution{Properties: map[string]*mlpb.Value{"name": &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e2"}}}},
+		})
+	artifacts := storeArtifact(
+		t,
+		store,
+		"kubeflow.org/v1/Model",
+		[]*mlpb.Artifact{
+			&mlpb.Artifact{Uri: proto.String("artifact_1")},
+			&mlpb.Artifact{Uri: proto.String("artifact_2")}})
+
+	inputType := mlpb.Event_INPUT
+	outputType := mlpb.Event_OUTPUT
+	e1 := &mlpb.Event{
+		ArtifactId:  proto.Int64((int64)(artifacts[0])),
+		ExecutionId: proto.Int64((int64)(executions[0])),
+		Type:        &inputType,
+	}
+	e2 := &mlpb.Event{
+		ArtifactId:  proto.Int64((int64)(artifacts[0])),
+		ExecutionId: proto.Int64((int64)(executions[1])),
+		Type:        &inputType,
+	}
+	e3 := &mlpb.Event{
+		ArtifactId:  proto.Int64((int64)(artifacts[1])),
+		ExecutionId: proto.Int64((int64)(executions[0])),
+		Type:        &outputType,
+	}
+	for _, e := range []*mlpb.Event{e1, e2, e3} {
+		_, err := svc.CreateEvent(context.Background(), &api.CreateEventRequest{Event: e})
+		if err != nil {
+			t.Fatalf("Failed to create event %v, err %v\n", e, err)
+		}
+	}
+	resp1, err := svc.ListEvents(
+		context.Background(),
+		&api.ListEventsRequest{
+			Name: fmt.Sprintf("artifacts/%d", artifacts[0]),
+		})
+	if err != nil || len(resp1.Events) != 2 {
+		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp1, err)
+	}
+
+	resp2, err := svc.ListEvents(
+		context.Background(),
+		&api.ListEventsRequest{
+			Name: fmt.Sprintf("executions/%d", executions[0]),
+		})
+	if err != nil || len(resp2.Events) != 2 {
+		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp1, err)
+	}
+
+}
+
+func storeArtifact(t *testing.T, store *mlmetadata.Store, typename string, artifacts []*mlpb.Artifact) []mlmetadata.ArtifactID {
+	aType := &mlpb.ArtifactType{Name: proto.String(typename)}
+
+	typeID, err := store.PutArtifactType(aType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+	if err != nil {
+		t.Fatalf("Failed to create ArtifactType %+v: %v", aType, err)
+	}
+
+	for _, artifact := range artifacts {
+		artifact.TypeId = proto.Int64(int64(typeID))
+	}
+
+	resp, err := store.PutArtifacts(artifacts)
+	if err != nil {
+		t.Fatalf("Failed to put Artifacts %+v: %v", artifacts, err)
+	}
+	return resp
+}
+
+func storeExecution(t *testing.T, store *mlmetadata.Store, typename string, artifacts []*mlpb.Execution) []mlmetadata.ExecutionID {
+	aType := &mlpb.ExecutionType{
+		Name:       proto.String(typename),
+		Properties: map[string]mlpb.PropertyType{"name": mlpb.PropertyType_STRING},
+	}
+
+	typeID, err := store.PutExecutionType(aType, &mlmetadata.PutTypeOptions{AllFieldsMustMatch: true})
+	if err != nil {
+		t.Fatalf("Failed to create ExecutionType %+v: %v", aType, err)
+	}
+
+	for _, artifact := range artifacts {
+		artifact.TypeId = proto.Int64(int64(typeID))
+	}
+
+	resp, err := store.PutExecutions(artifacts)
+	if err != nil {
+		t.Fatalf("Failed to put Executions %+v: %v", artifacts, err)
+	}
+	return resp
 }
