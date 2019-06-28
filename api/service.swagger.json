@@ -130,7 +130,7 @@
         ]
       }
     },
-    "/api/v1alpha1/events/exections/{name}": {
+    "/api/v1alpha1/events/executions/{name}": {
       "get": {
         "summary": "List events based on an artifact or execution id.",
         "operationId": "ListEvents",
