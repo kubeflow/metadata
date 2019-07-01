@@ -57,6 +57,7 @@
       "last 1 safari version"
     ]
   },
+  "homepage": "./",
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
