@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
+import {classes} from 'typestyle';
 
-type Orientation = 'horizontal' | 'vertical';
-interface SeparatorProps {
-  orientation?: Orientation;
-  units?: number;
-}
+// Mocks the typestyle module to emit a fixed string for class names to avoid
+// test churn on style changes
 
-const style = (orientation: Orientation, units: number) => {
-  return orientation === 'horizontal' ? {
-    display: 'inline-block',
-    minWidth: units,
-    width: units,
-  } : {
-      display: 'block',
-      flexShrink: 0,
-      height: units,
-      minHeight: units,
-    };
+const cssRaw = () => null;
+const cssRule = () => null;
+const style = (obj) => '';
+const stylesheet = (obj) => {
+  const mock = {};
+  Object.keys(obj).forEach(key => mock[key] = key);
+  return mock;
 };
 
-export default (props: SeparatorProps) => <span style={
-  style(props.orientation || 'horizontal', props.units || 10)
-} />;
+export {
+  classes,
+  cssRaw,
+  cssRule,
+  style,
+  stylesheet
+};

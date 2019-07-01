@@ -68,7 +68,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
   }
 >
   <div
-    className="page_f1flacxk f9qqjqd"
+    className="page"
   >
     <ArtifactInfo
       artifact={
@@ -107,80 +107,80 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
     >
       <section>
         <h1
-          className="header_f189n3y"
+          className="header"
         >
           Model
            info
         </h1>
         <dl
-          className="artifactInfo_fnuket9"
+          className="artifactInfo"
         >
           <div
-            className="field_f1bgv1eo"
+            className="field"
           >
             <dt
-              className="term_fuqr2el"
+              className="term"
             >
               Version ID
             </dt>
             <dd
-              className="value_f1d9lp3k"
+              className="value"
             >
               v1
             </dd>
           </div>
           <div
-            className="field_f1bgv1eo"
+            className="field"
           >
             <dt
-              className="term_fuqr2el"
+              className="term"
             >
               Workspace
             </dt>
             <dd
-              className="value_f1d9lp3k"
+              className="value"
             >
               workspace-1
             </dd>
           </div>
           <div
-            className="field_f1bgv1eo"
+            className="field"
           >
             <dt
-              className="term_fuqr2el"
+              className="term"
             >
               Run
             </dt>
             <dd
-              className="value_f1d9lp3k"
+              className="value"
             >
               1
             </dd>
           </div>
           <div
-            className="field_f1bgv1eo"
+            className="field"
           >
             <dt
-              className="term_fuqr2el"
+              className="term"
             >
               Description
             </dt>
             <dd
-              className="value_f1d9lp3k"
+              className="value"
             >
               A really great model
             </dd>
           </div>
           <div
-            className="field_f1bgv1eo"
+            className="field"
           >
             <dt
-              className="term_fuqr2el"
+              className="term"
             >
               Creation time
             </dt>
             <dd
-              className="value_f1d9lp3k"
+              className="value"
             >
               6/11/2019, 9:21:48 PM
             </dd>
@@ -220,29 +220,29 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
             }
           >
             <div
-              className="field_f1bgv1eo"
+              className="field"
             >
               <dt
-                className="term_fuqr2el"
+                className="term"
               >
                 Type
               </dt>
               <dd
-                className="value_f1d9lp3k"
+                className="value"
               >
                 neural network
               </dd>
             </div>
             <div
-              className="field_f1bgv1eo"
+              className="field"
             >
               <dt
-                className="term_fuqr2el"
+                className="term"
               >
                 Hyperparameters
               </dt>
               <dd
-                className="value_f1d9lp3k flexColumn_fr3ikkd"
+                className="value flexColumn"
               >
                 <span
                   key="0"
@@ -262,29 +262,29 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
               </dd>
             </div>
             <div
-              className="field_f1bgv1eo"
+              className="field"
             >
               <dt
-                className="term_fuqr2el"
+                className="term"
               >
                 Training data
               </dt>
               <dd
-                className="value_f1d9lp3k"
+                className="value"
               >
                 gs://my-bucket/mnist
               </dd>
             </div>
             <div
-              className="field_f1bgv1eo"
+              className="field"
             >
               <dt
-                className="term_fuqr2el"
+                className="term"
               >
                 Training framework
               </dt>
               <dd
-                className="value_f1d9lp3k"
+                className="value"
               >
                 tensorflow
                    v1.0

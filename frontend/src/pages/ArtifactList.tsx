@@ -21,13 +21,15 @@ import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {formatDateString, getArtifactProperty} from '../lib/Utils';
-import {Api, ArtifactProperties, ArtifactCustomProperties} from '../lib/Api';
+import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
 
 interface PipelineListState {
   artifacts: MlMetadataArtifact[];
+  rows: Row[];
+  columns: Column[];
 }
 
 class ArtifactList extends Page<{}, PipelineListState> {
@@ -53,6 +55,21 @@ class ArtifactList extends Page<{}, PipelineListState> {
     super(props);
     this.state = {
       artifacts: [],
+      columns: [
+        {
+          label: 'Name',
+          flex: 1,
+          customRenderer: this.nameCustomRenderer,
+          sortKey: 'name',
+        },
+        {label: 'Version', flex: 1, sortKey: 'version'},
+        {label: 'Type', flex: 2, sortKey: 'type'},
+        {label: 'URI', flex: 2, sortKey: 'uri', },
+        {label: 'Workspace', flex: 1, sortKey: 'workspace'},
+        {label: 'Created at', flex: 1, sortKey: 'created_at'},
+      ],
+      rows: [],
+
     };
     this.reload = this.reload.bind(this);
   }
@@ -66,34 +83,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
   }
 
   public render(): JSX.Element {
-    const columns: Column[] = [
-      {label: 'Name', flex: 1, customRenderer: this.nameCustomRenderer},
-      {label: 'Version', flex: 1},
-      {label: 'Type', flex: 2},
-      {label: 'URI', flex: 2},
-      {label: 'Workspace', flex: 1},
-      {label: 'Created at', flex: 1},
-    ];
-
-    const rows: Row[] = this.state.artifacts
-      .filter((a) => !!a.properties) // We can't show much without properties
-      .map((a) => {
-        const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
-          this.artifactTypes.get(a.type_id!)!.name : a.type_id;
-        return {
-          id: `${type}:${a.id}`, // Join with colon so we can build the link
-          otherFields: [
-            getArtifactProperty(a, ArtifactProperties.NAME),
-            getArtifactProperty(a, ArtifactProperties.VERSION),
-            type,
-            a.uri,
-            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
-            formatDateString(
-              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
-          ],
-        };
-      });
-
+    const {rows, columns} = this.state;
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
         <CustomTable ref={this.tableRef}
@@ -102,6 +92,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
+          initialSortColumn='name'
+          initialSortOrder='asc'
           emptyMessage='No artifacts found.' />
       </div>
     );
@@ -113,18 +105,24 @@ class ArtifactList extends Page<{}, PipelineListState> {
     }
   }
 
-  private async reload(): Promise<string> {
+  private async reload(request: ListRequest): Promise<string> {
     // TODO: Consider making an Api method for returning and caching types
     if (!this.artifactTypes || !this.artifactTypes.size) {
       this.artifactTypes = await this.getArtifactTypes();
     }
-    try {
-      const response = await this.api.metadataService.listArtifacts2();
-      this.setStateSafe({artifacts: (response && response.artifacts) || []});
-      this.clearBanner();
-    } catch (err) {
-      this.showPageError('Unable to retrieve Artifacts.', err);
+    const {artifacts} = this.state;
+    if (!artifacts.length) {
+      try {
+        const response = await this.api.metadataService.listArtifacts2();
+        this.setState({artifacts: (response && response.artifacts) || []});
+        this.clearBanner();
+      } catch (err) {
+        this.showPageError('Unable to retrieve Artifacts.', err);
+      }
     }
+    this.setState({
+      rows: this.getRowsFromArtifacts(request),
+    });
     return '';
   }
 
@@ -140,6 +138,53 @@ class ArtifactList extends Page<{}, PipelineListState> {
         'Unable to retrieve Artifact Types, some features may not work.', err);
       return new Map();
     }
+  }
+
+  /**
+   * Temporary solution to apply sorting, filtering, and pagination to the
+   * local list of artifacts until server-side handling is available
+   * TODO: Replace once https://github.com/kubeflow/metadata/issues/73 is done.
+   * @param artifacts
+   * @param request
+   */
+  private getRowsFromArtifacts(request: ListRequest): Row[] {
+    return this.state.artifacts
+      .filter((a) => !!a.properties) // We can't show much without properties
+      .map((a) => { // Flattens
+        const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
+          this.artifactTypes.get(a.type_id!)!.name : a.type_id;
+        return {
+          id: `${type}:${a.id}`, // Join with colon so we can build the link
+          otherFields: [
+            getArtifactProperty(a, ArtifactProperties.NAME),
+            getArtifactProperty(a, ArtifactProperties.VERSION),
+            type,
+            a.uri,
+            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
+            formatDateString(
+              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
+          ],
+        };
+      })
+      .filter((r) => !request.filter || r.otherFields.join('')
+        .toLowerCase()
+        .indexOf(request.filter.toLowerCase()) > -1)
+      .sort((r1, r2) => {
+        if (!request.sortBy) return -1;
+
+        const sortBy = request.sortBy.endsWith(' desc') ?
+          request.sortBy.slice(0, request.sortBy.length - 5) : request.sortBy;
+        const sortIndex = this.state.columns
+          .findIndex((c) => sortBy === c.sortKey);
+        // Convert null to string to avoid null comparison behavior
+        const compare = (r1.otherFields[sortIndex] || '') <
+          (r2.otherFields[sortIndex] || '');
+        if (request.orderAscending) {
+          return compare ? -1 : 1;
+        } else {
+          return compare ? 1 : -1;
+        }
+      });
   }
 }
 
