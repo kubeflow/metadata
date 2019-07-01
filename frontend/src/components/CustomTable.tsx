@@ -476,7 +476,7 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
 
   // Exposed for testing
   protected async _requestFilter(filterString?: string): Promise<void> {
-    this._resetToFirstPage(await this.reload({filter: filterString}));
+    this._resetToFirstPage(await this.reload({filter: filterString || ''}));
   }
 
   private setStateSafe(newState: Partial<CustomTableState>, cb?: () => void): void {

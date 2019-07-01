@@ -3,29 +3,29 @@
 exports[`ModelInfo Renders Model information 1`] = `
 <Fragment>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Type
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     >
       neural network
     </dd>
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Hyperparameters
     </dt>
     <dd
-      className="value_f1d9lp3k flexColumn_fr3ikkd"
+      className="value flexColumn"
     >
       <span
         key="0"
@@ -45,29 +45,29 @@ exports[`ModelInfo Renders Model information 1`] = `
     </dd>
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training data
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     >
       gs://my-bucket/mnist
     </dd>
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training framework
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     >
       tensorflow
                    v1.0
@@ -79,53 +79,53 @@ exports[`ModelInfo Renders Model information 1`] = `
 exports[`ModelInfo Renders Model information with malformed __ALL_META__ property 1`] = `
 <Fragment>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Type
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     />
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Hyperparameters
     </dt>
     <dd
-      className="value_f1d9lp3k flexColumn_fr3ikkd"
+      className="value flexColumn"
     />
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training data
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     >
       gs://my-bucket/mnist
     </dd>
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training framework
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     />
   </div>
 </Fragment>
@@ -134,53 +134,53 @@ exports[`ModelInfo Renders Model information with malformed __ALL_META__ propert
 exports[`ModelInfo Renders Model information with missing __ALL_META__ property 1`] = `
 <Fragment>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Type
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     />
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Hyperparameters
     </dt>
     <dd
-      className="value_f1d9lp3k flexColumn_fr3ikkd"
+      className="value flexColumn"
     />
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training data
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     >
       gs://my-bucket/mnist
     </dd>
   </div>
   <div
-    className="field_f1bgv1eo"
+    className="field"
   >
     <dt
-      className="term_fuqr2el"
+      className="term"
     >
       Training framework
     </dt>
     <dd
-      className="value_f1d9lp3k"
+      className="value"
     />
   </div>
 </Fragment>

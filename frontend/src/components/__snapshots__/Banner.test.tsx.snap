@@ -2,39 +2,39 @@
 
 exports[`Banner defaults to error mode 1`] = `
 <div
-  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+  className="flex banner mode"
 >
   <div
-    className="message_fddsvlq"
+    className="message"
   >
     <pure(ErrorIcon)
-      className="icon_f1jqzauf"
+      className="icon"
     />
     Some message
   </div>
   <div
-    className="flex_f16jawj4"
+    className="flex"
   />
 </div>
 `;
 
 exports[`Banner shows "Details" button and has dialog when there is additional info 1`] = `
 <div
-  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+  className="flex banner mode"
 >
   <div
-    className="message_fddsvlq"
+    className="message"
   >
     <pure(ErrorIcon)
-      className="icon_f1jqzauf"
+      className="icon"
     />
     Some message
   </div>
   <div
-    className="flex_f16jawj4"
+    className="flex"
   >
     <WithStyles(Button)
-      className="button_fu86r2b"
+      className="button"
       onClick={[Function]}
     >
       Details
@@ -48,7 +48,7 @@ exports[`Banner shows "Details" button and has dialog when there is additional i
       An error occurred
     </WithStyles(DialogTitle)>
     <WithStyles(DialogContent)
-      className="prewrap_f1g32z8v"
+      className="prewrap"
     >
       More info
     </WithStyles(DialogContent)>
@@ -66,21 +66,21 @@ exports[`Banner shows "Details" button and has dialog when there is additional i
 
 exports[`Banner shows "Refresh" button when passed a refresh function 1`] = `
 <div
-  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+  className="flex banner mode"
 >
   <div
-    className="message_fddsvlq"
+    className="message"
   >
     <pure(ErrorIcon)
-      className="icon_f1jqzauf"
+      className="icon"
     />
     Some message
   </div>
   <div
-    className="flex_f16jawj4"
+    className="flex"
   >
     <WithStyles(Button)
-      className="button_fu86r2b refreshButton_fgq2mjo"
+      className="button refreshButton"
       onClick={[Function]}
     >
       Refresh
@@ -91,36 +91,36 @@ exports[`Banner shows "Refresh" button when passed a refresh function 1`] = `
 
 exports[`Banner uses error mode when instructed 1`] = `
 <div
-  className="flex_f16jawj4 banner_forn49x mode_fo01qrq"
+  className="flex banner mode"
 >
   <div
-    className="message_fddsvlq"
+    className="message"
   >
     <pure(ErrorIcon)
-      className="icon_f1jqzauf"
+      className="icon"
     />
     Some message
   </div>
   <div
-    className="flex_f16jawj4"
+    className="flex"
   />
 </div>
 `;
 
 exports[`Banner uses warning mode when instructed 1`] = `
 <div
-  className="flex_f16jawj4 banner_forn49x mode_fdjkr5s"
+  className="flex banner mode"
 >
   <div
-    className="message_fddsvlq"
+    className="message"
   >
     <pure(WarningIcon)
-      className="icon_f1jqzauf"
+      className="icon"
     />
     Some message
   </div>
   <div
-    className="flex_f16jawj4"
+    className="flex"
   />
 </div>
 `;

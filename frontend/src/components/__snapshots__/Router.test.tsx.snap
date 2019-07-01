@@ -3,13 +3,13 @@
 exports[`Router initial render 1`] = `
 <HashRouter>
   <div
-    className="page_f1flacxk"
+    className="page"
   >
     <div
-      className="flexGrow_fr87ocy"
+      className="flexGrow"
     >
       <div
-        className="page_f1flacxk"
+        className="page"
       >
         <Route
           render={[Function]}
@@ -47,7 +47,7 @@ exports[`Router initial render 1`] = `
       className="dialog"
       classes={
         Object {
-          "paper": "dialog_f1pzjmip",
+          "paper": "dialog",
         }
       }
       onClose={[Function]}

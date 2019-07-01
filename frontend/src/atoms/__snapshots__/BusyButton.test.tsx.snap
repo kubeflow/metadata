@@ -2,7 +2,7 @@
 
 exports[`BusyButton renders a primary outlined buton 1`] = `
 <WithStyles(Button)
-  className="root_f1gmzqw4"
+  className="root"
   color="primary"
 >
   <span>
@@ -13,12 +13,12 @@ exports[`BusyButton renders a primary outlined buton 1`] = `
 
 exports[`BusyButton renders disabled 1`] = `
 <WithStyles(Button)
-  className="root_f1gmzqw4"
+  className="root"
   color="secondary"
   disabled={true}
 >
   <pure(HelpIcon)
-    className="icon_f1ojihnt"
+    className="icon"
   />
   <span>
     test busy button
@@ -28,11 +28,11 @@ exports[`BusyButton renders disabled 1`] = `
 
 exports[`BusyButton renders with a title and icon 1`] = `
 <WithStyles(Button)
-  className="root_f1gmzqw4"
+  className="root"
   color="secondary"
 >
   <pure(HelpIcon)
-    className="icon_f1ojihnt"
+    className="icon"
   />
   <span>
     test busy button
@@ -42,18 +42,18 @@ exports[`BusyButton renders with a title and icon 1`] = `
 
 exports[`BusyButton renders with a title and icon, and busy 1`] = `
 <WithStyles(Button)
-  className="root_f1gmzqw4 rootBusy_fronhm5"
+  className="root rootBusy"
   color="secondary"
   disabled={true}
 >
   <pure(HelpIcon)
-    className="icon_f1ojihnt"
+    className="icon"
   />
   <span>
     test busy button
   </span>
   <WithStyles(CircularProgress)
-    className="spinner_fiqr0h3 spinnerBusy_f1wemlvb"
+    className="spinner spinnerBusy"
     size={15}
   />
 </WithStyles(Button)>
@@ -61,7 +61,7 @@ exports[`BusyButton renders with a title and icon, and busy 1`] = `
 
 exports[`BusyButton renders with just a title 1`] = `
 <WithStyles(Button)
-  className="root_f1gmzqw4"
+  className="root"
   color="secondary"
 >
   <span>

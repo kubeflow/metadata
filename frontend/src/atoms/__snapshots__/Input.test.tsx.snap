@@ -2,7 +2,7 @@
 
 exports[`Input accepts height and width as prop overrides 1`] = `
 <TextField
-  className="textField_f7kh2f6"
+  className="textField"
   required={false}
   select={false}
   spellCheck={false}
@@ -20,7 +20,7 @@ exports[`Input accepts height and width as prop overrides 1`] = `
 
 exports[`Input renders with the right styles by default 1`] = `
 <TextField
-  className="textField_f7kh2f6"
+  className="textField"
   required={false}
   select={false}
   spellCheck={false}

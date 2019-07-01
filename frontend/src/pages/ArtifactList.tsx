@@ -92,6 +92,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
+          initialSortColumn='name'
+          initialSortOrder='asc'
           emptyMessage='No artifacts found.' />
       </div>
     );
@@ -141,6 +143,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
   /**
    * Temporary solution to apply sorting, filtering, and pagination to the
    * local list of artifacts until server-side handling is available
+   * TODO: Replace once https://github.com/kubeflow/metadata/issues/73 is done.
    * @param artifacts
    * @param request
    */
@@ -163,21 +166,24 @@ class ArtifactList extends Page<{}, PipelineListState> {
           ],
         };
       })
-      .filter((r) => !request.filter || r.otherFields.join('').toLowerCase()
+      .filter((r) => !request.filter || r.otherFields.join('')
+        .toLowerCase()
         .indexOf(request.filter.toLowerCase()) > -1)
       .sort((r1, r2) => {
-        if (request.sortBy) {
-          const sortIndex = this.state.columns
-            .findIndex((c) => request.sortBy === c.sortKey) || 0;
-          const compare = r1.otherFields[sortIndex]! <
-            r2.otherFields[sortIndex]!;
-          if (request.orderAscending) {
-            return compare ? -1 : 1;
-          } else {
-            return compare ? 1 : -1;
-          }
+        if (!request.sortBy) return -1;
+
+        const sortBy = request.sortBy.endsWith(' desc') ?
+          request.sortBy.slice(0, request.sortBy.length - 5) : request.sortBy;
+        const sortIndex = this.state.columns
+          .findIndex((c) => sortBy === c.sortKey);
+        // Convert null to string to avoid null comparison behavior
+        const compare = (r1.otherFields[sortIndex] || '') <
+          (r2.otherFields[sortIndex] || '');
+        if (request.orderAscending) {
+          return compare ? -1 : 1;
+        } else {
+          return compare ? 1 : -1;
         }
-        return -1;
       });
   }
 }

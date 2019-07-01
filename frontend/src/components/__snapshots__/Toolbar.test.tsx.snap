@@ -2,7 +2,7 @@
 
 exports[`Toolbar disables the back button when there is no browser history 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -12,15 +12,15 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -28,15 +28,15 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
         </Link>
       </span>
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="1"
         title="test display name2"
       >
         <pure(ChevronRightIcon)
-          className="chevron_fin4unf"
+          className="chevron"
         />
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path2"
         >
@@ -45,7 +45,7 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -54,23 +54,23 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={true}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 disabled_fl0don4"
+              className="backIcon disabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -129,7 +129,7 @@ exports[`Toolbar renders nothing when there are no breadcrumbs or actions 1`] = 
 
 exports[`Toolbar renders outlined action buttons 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -139,15 +139,15 @@ exports[`Toolbar renders outlined action buttons 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -155,15 +155,15 @@ exports[`Toolbar renders outlined action buttons 1`] = `
         </Link>
       </span>
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="1"
         title="test display name2"
       >
         <pure(ChevronRightIcon)
-          className="chevron_fin4unf"
+          className="chevron"
         />
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path2"
         >
@@ -172,7 +172,7 @@ exports[`Toolbar renders outlined action buttons 1`] = `
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -181,23 +181,23 @@ exports[`Toolbar renders outlined action buttons 1`] = `
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -222,7 +222,7 @@ exports[`Toolbar renders outlined action buttons 1`] = `
 
 exports[`Toolbar renders primary action buttons 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -232,15 +232,15 @@ exports[`Toolbar renders primary action buttons 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -248,15 +248,15 @@ exports[`Toolbar renders primary action buttons 1`] = `
         </Link>
       </span>
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="1"
         title="test display name2"
       >
         <pure(ChevronRightIcon)
-          className="chevron_fin4unf"
+          className="chevron"
         />
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path2"
         >
@@ -265,7 +265,7 @@ exports[`Toolbar renders primary action buttons 1`] = `
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -274,23 +274,23 @@ exports[`Toolbar renders primary action buttons 1`] = `
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -300,7 +300,7 @@ exports[`Toolbar renders primary action buttons 1`] = `
       <div>
         <BusyButton
           busy={false}
-          className="buttonAction_f10oq0s9"
+          className="buttonAction"
           color="secondary"
           id="test id"
           onClick={[MockFunction]}
@@ -315,7 +315,7 @@ exports[`Toolbar renders primary action buttons 1`] = `
 
 exports[`Toolbar renders primary action buttons without outline, even if outline is true 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -325,15 +325,15 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -341,15 +341,15 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
         </Link>
       </span>
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="1"
         title="test display name2"
       >
         <pure(ChevronRightIcon)
-          className="chevron_fin4unf"
+          className="chevron"
         />
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path2"
         >
@@ -358,7 +358,7 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -367,23 +367,23 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -393,7 +393,7 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
       <div>
         <BusyButton
           busy={false}
-          className="buttonAction_f10oq0s9"
+          className="buttonAction"
           color="secondary"
           id="test id"
           onClick={[MockFunction]}
@@ -408,7 +408,7 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
 
 exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -418,15 +418,15 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -434,15 +434,15 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
         </Link>
       </span>
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="1"
         title="test display name2"
       >
         <pure(ChevronRightIcon)
-          className="chevron_fin4unf"
+          className="chevron"
         />
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path2"
         >
@@ -451,7 +451,7 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -460,23 +460,23 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -533,7 +533,7 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
 
 exports[`Toolbar renders without actions and one breadcrumb 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -543,15 +543,15 @@ exports[`Toolbar renders without actions and one breadcrumb 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -560,7 +560,7 @@ exports[`Toolbar renders without actions and one breadcrumb 1`] = `
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -569,30 +569,30 @@ exports[`Toolbar renders without actions and one breadcrumb 1`] = `
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   />
 </div>
 `;
 
 exports[`Toolbar renders without actions, one breadcrumb, and a page name 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -602,15 +602,15 @@ exports[`Toolbar renders without actions, one breadcrumb, and a page name 1`] = 
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     >
       <span
-        className="flex_f16jawj4"
+        className="flex"
         key="0"
         title="test display name"
       >
         <Link
-          className="unstyled_f1ikaigl ellipsis_f15ay66x link_f1b3v6im"
+          className="unstyled ellipsis link"
           replace={false}
           to="/some/test/path"
         >
@@ -619,7 +619,7 @@ exports[`Toolbar renders without actions, one breadcrumb, and a page name 1`] = 
       </span>
     </div>
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <WithStyles(Tooltip)
         enterDelay={300}
@@ -628,32 +628,32 @@ exports[`Toolbar renders without actions, one breadcrumb, and a page name 1`] = 
         <div>
            
           <WithStyles(IconButton)
-            className="backLink_fxaclcu"
+            className="backLink"
             disabled={false}
             onClick={[Function]}
           >
             <pure(ArrowBackIcon)
-              className="backIcon_f116wd06 enabled_fep5z4h"
+              className="backIcon enabled"
             />
           </WithStyles(IconButton)>
         </div>
       </WithStyles(Tooltip)>
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       >
         test page title
       </span>
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   />
 </div>
 `;
 
 exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -663,13 +663,13 @@ exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     />
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       >
         <div
           id="myComponent"
@@ -680,7 +680,7 @@ exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -706,7 +706,7 @@ exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
 
 exports[`Toolbar renders without breadcrumbs and a string page title 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -716,20 +716,20 @@ exports[`Toolbar renders without breadcrumbs and a string page title 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     />
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       >
         test page title
       </span>
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -755,7 +755,7 @@ exports[`Toolbar renders without breadcrumbs and a string page title 1`] = `
 
 exports[`Toolbar renders without breadcrumbs and one action 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -765,18 +765,18 @@ exports[`Toolbar renders without breadcrumbs and one action 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     />
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}
@@ -802,7 +802,7 @@ exports[`Toolbar renders without breadcrumbs and one action 1`] = `
 
 exports[`Toolbar renders without breadcrumbs and two actions 1`] = `
 <div
-  className="root_f1vld0bw topLevelToolbar_fbk8awx"
+  className="root topLevelToolbar"
 >
   <div
     style={
@@ -812,18 +812,18 @@ exports[`Toolbar renders without breadcrumbs and two actions 1`] = `
     }
   >
     <div
-      className="breadcrumbs_farqb1 flex_f16jawj4"
+      className="breadcrumbs flex"
     />
     <div
-      className="flex_f16jawj4"
+      className="flex"
     >
       <span
-        className="pageName_fm8co7i ellipsis_f15ay66x"
+        className="pageName ellipsis"
       />
     </div>
   </div>
   <div
-    className="actions_f1vuwukv"
+    className="actions"
   >
     <WithStyles(Tooltip)
       enterDelay={300}

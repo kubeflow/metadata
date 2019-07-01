@@ -3,80 +3,80 @@
 exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
 <section>
   <h1
-    className="header_f189n3y"
+    className="header"
   >
     Model
      info
   </h1>
   <dl
-    className="artifactInfo_fnuket9"
+    className="artifactInfo"
   >
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Version ID
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         v1
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Workspace
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         workspace-1
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Run
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         1
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Description
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         A really great model
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Creation time
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         6/11/2019, 9:21:48 PM
       </dd>
@@ -122,90 +122,90 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
 exports[`ArtifactInfo Renders generic Artifact information 1`] = `
 <section>
   <h1
-    className="header_f189n3y"
+    className="header"
   >
     Data Set
      info
   </h1>
   <dl
-    className="artifactInfo_fnuket9"
+    className="artifactInfo"
   >
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Version ID
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         v0.0.1
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Workspace
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         workspace-1
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Run
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       />
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Description
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       />
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         Creation time
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         6/11/2019, 9:21:48 PM
       </dd>
     </div>
     <div
-      className="field_f1bgv1eo"
+      className="field"
     >
       <dt
-        className="term_fuqr2el"
+        className="term"
       >
         URI
       </dt>
       <dd
-        className="value_f1d9lp3k"
+        className="value"
       >
         gs://my-bucket/dataset
       </dd>
