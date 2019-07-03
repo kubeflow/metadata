@@ -53,7 +53,7 @@ class Workspace(object):
 
     config = Configuration()
     config.host = backend_url_prefix
-    self._client = MetadataServiceApi(ApiClient(config))
+    self.client = MetadataServiceApi(ApiClient(config))
 
   def list(self, artifact_type_name=None):
     """
@@ -62,9 +62,9 @@ class Workspace(object):
     Returns a list of artifacts of the provided typed associated
     with this workspace. Each artifact is represented as a dict.
     """
-    if artifact_type_name == None:
+    if artifact_type_name is None:
       artifact_type_name = Model.ARTIFACT_TYPE_NAME
-    response = self._client.list_artifacts(artifact_type_name)
+    response = self.client.list_artifacts(artifact_type_name)
     results = []
     if not response.artifacts:
       return results
@@ -78,7 +78,7 @@ class Workspace(object):
     result = {
       "id": artifact.id,
     }
-    if artifact.custom_properties != None:
+    if artifact.custom_properties is not None:
         if WORKSPACE_PROPERTY_NAME in artifact.custom_properties:
           result["workspace"] = artifact.custom_properties[WORKSPACE_PROPERTY_NAME].string_value
         if RUN_PROPERTY_NAME in artifact.custom_properties:
@@ -87,9 +87,9 @@ class Workspace(object):
       return result
     for k,v in artifact.properties.items():
       if k != ALL_META_PROPERTY_NAME:
-        if v.string_value != None:
+        if v.string_value is not None:
           result[k] = v.string_value
-        elif v.int_value != None:
+        elif v.int_value is not None:
           result[k] = v.int_value
         else:
           result[k] = v.double_value
@@ -104,32 +104,83 @@ class Workspace(object):
 
 class Run(object):
   """
-  Captures a run of pipeline or notebooks in a workspace and provides logging
-  methods for artifacts.
+  Captures a run of pipeline or notebooks in a workspace and group executions.
   """
 
   def __init__(self, workspace=None, name=None, description=None):
     """
     Args:
-      workspace {Worspace} -- Requried workspace object.
-      name {str} -- Requried name of this run.
+      workspace {Worspace} -- Required workspace object.
+      name {str} -- Required name of this run.
       description {str} -- Optional description.
-
-    Creates a new run in a workspace and an execution for this run.
-    The run.log_XXX() methods will attach corresponding artifacts as the
-    input or output of this execution.
-
-    Returns a run object for logging.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
     self.workspace = workspace
     self.name = name
     self.description = description
 
-  def log(self, artifact):
+class Execution(object):
+  """
+  Captures a run of pipeline or notebooks in a workspace and group executions.
+  """
+  EXECUTION_TYPE_NAME = "kubeflow.org/alpha/execution"
+
+  def __init__(self, name=None, workspace=None, run=None, description=None):
     """
-    Log an artifact as an input or output of this run to
-    metadata backend serivce.
+    Args:
+      name {str} -- Required name of this run.
+      workspace {Worspace} -- required workspace object.
+      run {Run} -- optional run object.
+      description {str} -- Optional description.
+
+    Creates a new execution in a workspace and run.
+    The exection.log_XXX() methods will attach corresponding artifacts as the
+    input or output of this execution.
+
+    Returns an execution object for logging.
+    """
+    # TODO(zhenghuiwang): check each field's type and whether set.
+    self.id = None
+    self.name = name
+    if workspace is None:
+      raise ValueError("'workspace' must be set.")
+    self.workspace = workspace
+    self.run = run
+    self.description = description
+    self.create_time = get_rfc3339_time()
+    response = self.workspace.client.create_execution(
+        parent=self.EXECUTION_TYPE_NAME,
+        body=self.serialized(),
+    )
+    self.id = response.execution.id
+
+  def serialized(self):
+    execution = openapi_client.MlMetadataExecution(
+    properties={
+        "name":
+            openapi_client.MlMetadataValue(string_value=self.name),
+        "create_time":
+            openapi_client.MlMetadataValue(string_value=self.create_time),
+        "description":
+            openapi_client.MlMetadataValue(string_value=self.description),
+    })
+    if self.description is None:
+      del execution.properties["description"]
+
+    execution.custom_properties = {}
+    if self.workspace is not None:
+      execution.custom_properties[
+          WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+          string_value=self.workspace.name)
+    if self.run is not None:
+      execution.custom_properties[
+          RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+          string_value=self.run.name)
+    return execution
+
+  def log_input(self, artifact):
+    """
+    Log an artifact as an input of this execution.
 
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME string field the form of
@@ -138,10 +189,49 @@ class Run(object):
 
     This method will set artifact.id.
     """
+    self._log(artifact)
+    input_event = openapi_client.MlMetadataEvent(
+      artifact_id=artifact.id,
+      execution_id=self.id,
+      type=openapi_client.MlMetadataEventType.INPUT
+    )
+    self.workspace.client.create_event(input_event)
+    return artifact
 
-    # TODO(zhenghui): log this artifact as the input or output of an execution.
+  def log_output(self, artifact):
+    """
+    Log an artifact as an output of this execution.
+
+    This method expects `artifact` to have
+      - ARTIFACT_TYPE_NAME string field the form of
+        <namespace>/<name>.
+      - serialization() method to return a openapi_client.MlMetadataArtifact.
+
+    This method will set artifact.id.
+    """
+    self._log(artifact)
+    output_event = openapi_client.MlMetadataEvent(
+      artifact_id=artifact.id,
+      execution_id=self.id,
+      type=openapi_client.MlMetadataEventType.OUTPUT
+    )
+    self.workspace.client.create_event(output_event)
+    return artifact
+
+
+  def _log(self, artifact):
+    """
+    Log an artifact.
+
+    This method expects `artifact` to have
+      - ARTIFACT_TYPE_NAME string field the form of
+        <namespace>/<name>.
+      - serialization() method to return a openapi_client.MlMetadataArtifact.
+
+    This method will set artifact.id.
+    """
     serialization = artifact.serialization()
-    if serialization.custom_properties == None:
+    if serialization.custom_properties is None:
           serialization.custom_properties = {}
     if WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
           raise ValueError("custom_properties contains reserved key %s"
@@ -149,13 +239,15 @@ class Run(object):
     if RUN_PROPERTY_NAME in serialization.custom_properties:
       raise ValueError("custom_properties contains reserved key %s"
                        % RUN_PROPERTY_NAME)
-    serialization.custom_properties[
-        WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
-        string_value=self.workspace.name)
-    serialization.custom_properties[
-        RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
-        string_value=self.name)
-    response = self.workspace._client.create_artifact(
+    if self.workspace is not None:
+      serialization.custom_properties[
+          WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+          string_value=self.workspace.name)
+    if self.run is not None:
+      serialization.custom_properties[
+          RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+          string_value=self.run.name)
+    response = self.workspace.client.create_artifact(
         parent=artifact.ARTIFACT_TYPE_NAME,
         body=serialization,
     )
