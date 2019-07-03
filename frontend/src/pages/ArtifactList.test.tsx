@@ -54,7 +54,7 @@ describe('ArtifactList', () => {
         uri: 'gs://my-bucket/dataset2',
         properties: {
           name: {string_value: 'dataset'},
-          version: {string_value: 'v2'},
+          version: {string_value: 'v1'},
           create_time: {string_value: '2019-06-16T01:21:48.259263Z'},
         },
         custom_properties: {
@@ -63,6 +63,19 @@ describe('ArtifactList', () => {
       },
       {
         id: '3',
+        type_id: '2',
+        uri: 'gs://my-bucket/dataset2',
+        properties: {
+          name: {string_value: 'dataset'},
+          version: {string_value: 'v2'},
+          create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+      {
+        id: '4',
         type_id: '1',
         uri: 'gcs://my-bucket/mnist-eval.csv',
         properties: {
@@ -81,7 +94,20 @@ describe('ArtifactList', () => {
           __kf_run__: {string_value: 'run-2019-06-28T01:40:11.735816'},
           __kf_workspace__: {string_value: 'ws1'}
         }
-      }
+      },
+      {
+        id: '5',
+        type_id: '3',
+        uri: 'gs://my-bucket/mnist',
+        properties: {
+          name: {string_value: 'model'},
+          version: {string_value: 'v2'},
+          create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
     ]
   };
 
@@ -137,6 +163,26 @@ describe('ArtifactList', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('Renders and sorts Artifacts in ascending order by version',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      table.reload({sortBy: 'version', orderAscending: true});
+      tree.update();
+
+      const rows = table.props.rows.map((r) =>
+        r.otherFields.slice(0, 2).join('-'));
+      expect(rows).toEqual(['dataset-v1', 'MNIST-evaluation-', 'model-v1']);
+      expect(tree).toMatchSnapshot();
+    });
+
   it('Renders and sorts Artifacts in descending order by created_at',
     async () => {
       mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
@@ -151,8 +197,9 @@ describe('ArtifactList', () => {
       table.reload({sortBy: 'created_at', orderAscending: false});
       tree.update();
 
-      const rows = table.props.rows.map((r) => r.otherFields[0]);
-      expect(rows).toEqual(['MNIST-evaluation', 'dataset', 'model']);
+      const rows = table.props.rows.map((r) =>
+        r.otherFields.slice(0, 2).join('-'));
+      expect(rows).toEqual(['dataset-v2', 'MNIST-evaluation-', 'model-v2']);
       expect(tree).toMatchSnapshot();
     });
 
