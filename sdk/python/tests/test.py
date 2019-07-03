@@ -76,11 +76,11 @@ class TestMetedata(unittest.TestCase):
     self.assertTrue(len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0)
 
     # Test lineage tracking.
-    output_events = ws1._client.list_events2(model.id).events
+    output_events = ws1.client.list_events2(model.id).events
     assert len(output_events) == 1
     execution_id = output_events[0].execution_id
     assert execution_id == e.id
-    all_events = ws1._client.list_events(execution_id).events
+    all_events = ws1.client.list_events(execution_id).events
     assert len(all_events) == 3
 
   def test_log_invalid_artifacts_should_fail(self):
