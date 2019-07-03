@@ -15,7 +15,7 @@
 from setuptools import setup
 
 NAME = 'kfmd'
-VERSION = '0.0.1'
+VERSION = '0.1.6'
 
 REQUIRES = [
 ]
@@ -28,7 +28,7 @@ setup(
     install_requires=REQUIRES,
     packages=[
         'kfmd',
-        'kfmd.swagger_client',
+        'kfmd.openapi_client',
     ],
     classifiers=[
         'Intended Audience :: Developers',
