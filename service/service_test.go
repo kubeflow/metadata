@@ -970,7 +970,7 @@ func TestCreateEventsAndList(t *testing.T) {
 		&api.ListEventsRequest{
 			Name: fmt.Sprintf("artifacts/%d", artifacts[0]),
 		})
-	if err != nil || len(resp1.Events) != 2 {
+	if err != nil || len(resp1.Events) != 2 || len(resp1.GetArtifacts()) != 1 || len(resp1.GetExecutions()) != 2 {
 		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp1, err)
 	}
 
@@ -979,8 +979,8 @@ func TestCreateEventsAndList(t *testing.T) {
 		&api.ListEventsRequest{
 			Name: fmt.Sprintf("executions/%d", executions[0]),
 		})
-	if err != nil || len(resp2.Events) != 2 {
-		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp1, err)
+	if err != nil || len(resp2.Events) != 2 || len(resp2.GetArtifacts()) != 2 || len(resp2.GetExecutions()) != 1 {
+		t.Fatalf("Expect to find 2 events, but got response %v with err %v\n", resp2, err)
 	}
 
 }

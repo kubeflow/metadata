@@ -163,6 +163,8 @@ message ListEventsRequest {
 
 message ListEventsResponse {
   repeated ml_metadata.Event events = 1;
+  map<int64, ml_metadata.Artifact> artifacts = 2;
+  map<int64, ml_metadata.Execution> executions = 3;
 }
 
 service MetadataService {
