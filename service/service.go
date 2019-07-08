@@ -472,7 +472,55 @@ func (s *Service) ListEvents(ctx context.Context, req *api.ListEventsRequest) (*
 		}
 		events, err = s.store.GetEventsByExecutionIDs([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
 	}
+	artifacts, err := s.getArtifactsInEvents(events)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get artifacts in events: %v", err)
+	}
+	executions, err := s.getExecutionsInEvents(events)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get executions in events: %v", err)
+	}
 	return &api.ListEventsResponse{
-		Events: events,
+		Events:     events,
+		Artifacts:  artifacts,
+		Executions: executions,
 	}, err
+}
+
+func (s *Service) getArtifactsInEvents(events []*mlpb.Event) (map[int64]*mlpb.Artifact, error) {
+	results := make(map[int64]*mlpb.Artifact)
+	for _, e := range events {
+		id := e.GetArtifactId()
+		if _, exists := results[id]; exists {
+			continue
+		}
+		artifacts, err := s.store.GetArtifactsByID([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(id)})
+		if err != nil {
+			return nil, err
+		}
+		if len(artifacts) != 1 {
+			return nil, fmt.Errorf("internal error: expecting single new Artifact id, got instead : %v", artifacts)
+		}
+		results[id] = artifacts[0]
+	}
+	return results, nil
+}
+
+func (s *Service) getExecutionsInEvents(events []*mlpb.Event) (map[int64]*mlpb.Execution, error) {
+	results := make(map[int64]*mlpb.Execution)
+	for _, e := range events {
+		id := e.GetExecutionId()
+		if _, exists := results[id]; exists {
+			continue
+		}
+		executions, err := s.store.GetExecutionsByID([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(id)})
+		if err != nil {
+			return nil, err
+		}
+		if len(executions) != 1 {
+			return nil, fmt.Errorf("internal error: expecting single new execution id, got instead : %v", executions)
+		}
+		results[id] = executions[0]
+	}
+	return results, nil
 }

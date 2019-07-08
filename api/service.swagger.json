@@ -676,6 +676,18 @@
             "$ref": "#/definitions/ml_metadataEvent"
           },
           "collectionFormat": "multi"
+        },
+        "artifacts": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataArtifact"
+          }
+        },
+        "executions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ml_metadataExecution"
+          }
         }
       }
     },
