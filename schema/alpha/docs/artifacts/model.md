@@ -31,7 +31,7 @@ schema for an machine learning model
   "model_type": "neural network",
   "training_framework": {
     "name": "tensorflow",
-    "vesrion": "v1.0"
+    "version": "v1.0"
   },
   "hyperparameters": {
     "learning_rate": 0.5,
