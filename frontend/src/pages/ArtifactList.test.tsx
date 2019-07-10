@@ -6,7 +6,7 @@ import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import {ApiListArtifactsResponse, ApiListArtifactTypesResponse} from '../apis/service';
-import CustomTable from '../components/CustomTable';
+import CustomTable, {ExpandState} from '../components/CustomTable';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -201,6 +201,58 @@ describe('ArtifactList', () => {
         r.otherFields.slice(0, 2).join('-'));
       expect(rows).toEqual(['dataset-v2', 'MNIST-evaluation-', 'model-v2']);
       expect(tree).toMatchSnapshot();
+    });
+
+  it('Renders and expands dataset Artifacts',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      // First item is Dataset based on default sort
+      tree.find('IconButton.expandButton').first().simulate('click');
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      expect(table.props.rows[0].expandState).toBe(ExpandState.EXPANDED);
+      const expandedRows = tree.find('.expandedContainer CustomTableRow');
+      expect(expandedRows.length).toBe(2);
+      expect(expandedRows.get(0).props.row.id)
+        .toBe('kubeflow.org/alpha/data_set:3');
+      expect(expandedRows.get(1).props.row.id)
+        .toBe('kubeflow.org/alpha/data_set:2');
+
+      tree.find('IconButton.expandButton').first().simulate('click');
+      expect(table.props.rows[0].expandState).toBe(ExpandState.COLLAPSED);
+      expect(tree.find('.expandedContainer').exists()).toBeFalsy();
+    });
+
+  it('Renders and expands metrics Artifact with no grouped rows',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      // Second item is Metrics based on default sort
+      tree.find('IconButton.expandButton').at(1).simulate('click');
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      expect(table.props.rows[1].expandState).toBe(ExpandState.EXPANDED);
+      const expandedRows = tree.find('.expandedContainer CustomTableRow');
+      expect(expandedRows.length).toBe(1);
+      expect(expandedRows.get(0).props.row.id)
+        .toBe('kubeflow.org/alpha/metrics:4');
+      expect(tree.find('.expandedContainer p').text())
+        .toBe('No other rows in group');
+
+      tree.find('IconButton.expandButton').at(1).simulate('click');
+      expect(table.props.rows[1].expandState).toBe(ExpandState.COLLAPSED);
+      expect(tree.find('.expandedContainer').exists()).toBeFalsy();
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {

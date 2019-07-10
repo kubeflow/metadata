@@ -202,6 +202,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
    */
   private groupRows(rows: Row[]): Row[] {
     const flattenedRows = rows.reduce((map, r) => {
+      // Artifact row key is "{artifact_type}/{name}"
       const stringKey = `${r.otherFields[2]}/${r.otherFields[0]}`;
       const rows = map.get(stringKey);
       if (rows) {
