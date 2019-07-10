@@ -26,6 +26,7 @@ type MetadataStore interface {
 	PutArtifactType(atype *mlpb.ArtifactType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ArtifactTypeID, error)
 	GetArtifactType(name string) (*mlpb.ArtifactType, error)
 	GetArtifactTypesByID(tids []mlmetadata.ArtifactTypeID) ([]*mlpb.ArtifactType, error)
+	GetArtifactTypes() ([]*mlpb.ArtifactType, error)
 
 	PutArtifacts(artifacts []*mlpb.Artifact) ([]mlmetadata.ArtifactID, error)
 	GetArtifactsByID(aids []mlmetadata.ArtifactID) ([]*mlpb.Artifact, error)
@@ -36,6 +37,7 @@ type MetadataStore interface {
 	PutExecutionType(etype *mlpb.ExecutionType, opts *mlmetadata.PutTypeOptions) (mlmetadata.ExecutionTypeID, error)
 	GetExecutionType(typeName string) (*mlpb.ExecutionType, error)
 	GetExecutionTypesByID(tids []mlmetadata.ExecutionTypeID) ([]*mlpb.ExecutionType, error)
+	GetExecutionTypes() ([]*mlpb.ExecutionType, error)
 
 	PutExecutions(executions []*mlpb.Execution) ([]mlmetadata.ExecutionID, error)
 	GetExecutionsByID(eids []mlmetadata.ExecutionID) ([]*mlpb.Execution, error)
