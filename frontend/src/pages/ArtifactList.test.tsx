@@ -41,7 +41,7 @@ describe('ArtifactList', () => {
         uri: 'gs://my-bucket/mnist',
         properties: {
           name: {string_value: 'model'},
-          version: {string_value: 'v1'},
+          version: {string_value: 'v0'},
           create_time: {string_value: '2019-06-12T01:21:48.259263Z'},
         },
         custom_properties: {
@@ -68,7 +68,7 @@ describe('ArtifactList', () => {
         properties: {
           name: {string_value: 'dataset'},
           version: {string_value: 'v2'},
-          create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
+          create_time: {string_value: '2019-07-01T01:00:00.000000Z'},
         },
         custom_properties: {
           __kf_workspace__: {string_value: 'workspace-1'},
@@ -101,7 +101,7 @@ describe('ArtifactList', () => {
         uri: 'gs://my-bucket/mnist',
         properties: {
           name: {string_value: 'model'},
-          version: {string_value: 'v2'},
+          version: {string_value: 'v1'},
           create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
         },
         custom_properties: {
@@ -179,7 +179,7 @@ describe('ArtifactList', () => {
 
       const rows = table.props.rows.map((r) =>
         r.otherFields.slice(0, 2).join('-'));
-      expect(rows).toEqual(['dataset-v1', 'MNIST-evaluation-', 'model-v1']);
+      expect(rows).toEqual(['MNIST-evaluation-', 'model-v0', 'dataset-v1']);
       expect(tree).toMatchSnapshot();
     });
 
@@ -199,7 +199,7 @@ describe('ArtifactList', () => {
 
       const rows = table.props.rows.map((r) =>
         r.otherFields.slice(0, 2).join('-'));
-      expect(rows).toEqual(['dataset-v2', 'MNIST-evaluation-', 'model-v2']);
+      expect(rows).toEqual(['dataset-v2', 'model-v1', 'MNIST-evaluation-']);
       expect(tree).toMatchSnapshot();
     });
 
@@ -213,10 +213,11 @@ describe('ArtifactList', () => {
       await TestUtils.flushPromises();
       tree.update();
 
-      // First item is Dataset based on default sort
-      tree.find('IconButton.expandButton').first().simulate('click');
       const table = tree.find(CustomTable).instance() as CustomTable;
-      expect(table.props.rows[0].expandState).toBe(ExpandState.EXPANDED);
+      const index = table.props.rows
+        .findIndex((r) => r.otherFields[0] === 'dataset');
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(2);
       expect(expandedRows.get(0).props.row.id)
@@ -224,8 +225,8 @@ describe('ArtifactList', () => {
       expect(expandedRows.get(1).props.row.id)
         .toBe('kubeflow.org/alpha/data_set:2');
 
-      tree.find('IconButton.expandButton').first().simulate('click');
-      expect(table.props.rows[0].expandState).toBe(ExpandState.COLLAPSED);
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
       expect(tree.find('.expandedContainer').exists()).toBeFalsy();
     });
 
@@ -239,10 +240,11 @@ describe('ArtifactList', () => {
       await TestUtils.flushPromises();
       tree.update();
 
-      // Second item is Metrics based on default sort
-      tree.find('IconButton.expandButton').at(1).simulate('click');
       const table = tree.find(CustomTable).instance() as CustomTable;
-      expect(table.props.rows[1].expandState).toBe(ExpandState.EXPANDED);
+      const index = table.props.rows
+        .findIndex((r) => r.otherFields[0] === 'MNIST-evaluation');
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(1);
       expect(expandedRows.get(0).props.row.id)
@@ -250,8 +252,8 @@ describe('ArtifactList', () => {
       expect(tree.find('.expandedContainer p').text())
         .toBe('No other rows in group');
 
-      tree.find('IconButton.expandButton').at(1).simulate('click');
-      expect(table.props.rows[1].expandState).toBe(ExpandState.COLLAPSED);
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
       expect(tree.find('.expandedContainer').exists()).toBeFalsy();
     });
 

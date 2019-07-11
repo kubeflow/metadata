@@ -5188,17 +5188,6 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
       rows={
         Array [
           Object {
-            "id": "kubeflow.org/alpha/data_set:2",
-            "otherFields": Array [
-              "dataset",
-              "v1",
-              "kubeflow.org/alpha/data_set",
-              "gs://my-bucket/dataset2",
-              "workspace-1",
-              "6/15/2019, 9:21:48 PM",
-            ],
-          },
-          Object {
             "id": "kubeflow.org/alpha/metrics:4",
             "otherFields": Array [
               "MNIST-evaluation",
@@ -5213,11 +5202,22 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
             "id": "kubeflow.org/alpha/model:1",
             "otherFields": Array [
               "model",
-              "v1",
+              "v0",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
               "workspace-1",
               "6/11/2019, 9:21:48 PM",
+            ],
+          },
+          Object {
+            "id": "kubeflow.org/alpha/data_set:2",
+            "otherFields": Array [
+              "dataset",
+              "v1",
+              "kubeflow.org/alpha/data_set",
+              "gs://my-bucket/dataset2",
+              "workspace-1",
+              "6/15/2019, 9:21:48 PM",
             ],
           },
         ]
@@ -10073,14 +10073,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/data_set:2",
+                    "id": "kubeflow.org/alpha/metrics:4",
                     "otherFields": Array [
-                      "dataset",
-                      "v1",
-                      "kubeflow.org/alpha/data_set",
-                      "gs://my-bucket/dataset2",
-                      "workspace-1",
-                      "6/15/2019, 9:21:48 PM",
+                      "MNIST-evaluation",
+                      null,
+                      "kubeflow.org/alpha/metrics",
+                      "gcs://my-bucket/mnist-eval.csv",
+                      "ws1",
+                      "6/27/2019, 9:40:11 PM",
                     ],
                   }
                 }
@@ -10098,14 +10098,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/data_set/artifacts/2"
+                    to="/artifact_types/kubeflow.org/alpha/metrics/artifacts/4"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/data_set/artifacts/2"
+                      href="/artifact_types/kubeflow.org/alpha/metrics/artifacts/4"
                       onClick={[Function]}
                     >
-                      dataset
+                      MNIST-evaluation
                     </a>
                   </Link>
                 </div>
@@ -10117,9 +10117,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                       "width": "12.5%",
                     }
                   }
-                >
-                  v1
-                </div>
+                />
                 <div
                   className="cell"
                   key="2"
@@ -10129,7 +10127,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  kubeflow.org/alpha/data_set
+                  kubeflow.org/alpha/metrics
                 </div>
                 <div
                   className="cell"
@@ -10140,7 +10138,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  gs://my-bucket/dataset2
+                  gcs://my-bucket/mnist-eval.csv
                 </div>
                 <div
                   className="cell"
@@ -10151,7 +10149,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  workspace-1
+                  ws1
                 </div>
                 <div
                   className="cell"
@@ -10162,7 +10160,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  6/15/2019, 9:21:48 PM
+                  6/27/2019, 9:40:11 PM
                 </div>
               </CustomTableRow>
             </div>
@@ -10369,14 +10367,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/metrics:4",
+                    "id": "kubeflow.org/alpha/model:1",
                     "otherFields": Array [
-                      "MNIST-evaluation",
-                      null,
-                      "kubeflow.org/alpha/metrics",
-                      "gcs://my-bucket/mnist-eval.csv",
-                      "ws1",
-                      "6/27/2019, 9:40:11 PM",
+                      "model",
+                      "v0",
+                      "kubeflow.org/alpha/model",
+                      "gs://my-bucket/mnist",
+                      "workspace-1",
+                      "6/11/2019, 9:21:48 PM",
                     ],
                   }
                 }
@@ -10394,14 +10392,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/metrics/artifacts/4"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/metrics/artifacts/4"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
                       onClick={[Function]}
                     >
-                      MNIST-evaluation
+                      model
                     </a>
                   </Link>
                 </div>
@@ -10413,7 +10411,9 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                       "width": "12.5%",
                     }
                   }
-                />
+                >
+                  v0
+                </div>
                 <div
                   className="cell"
                   key="2"
@@ -10423,7 +10423,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  kubeflow.org/alpha/metrics
+                  kubeflow.org/alpha/model
                 </div>
                 <div
                   className="cell"
@@ -10434,7 +10434,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  gcs://my-bucket/mnist-eval.csv
+                  gs://my-bucket/mnist
                 </div>
                 <div
                   className="cell"
@@ -10445,7 +10445,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  ws1
+                  workspace-1
                 </div>
                 <div
                   className="cell"
@@ -10456,7 +10456,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  6/27/2019, 9:40:11 PM
+                  6/11/2019, 9:21:48 PM
                 </div>
               </CustomTableRow>
             </div>
@@ -10663,14 +10663,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/model:1",
+                    "id": "kubeflow.org/alpha/data_set:2",
                     "otherFields": Array [
-                      "model",
+                      "dataset",
                       "v1",
-                      "kubeflow.org/alpha/model",
-                      "gs://my-bucket/mnist",
+                      "kubeflow.org/alpha/data_set",
+                      "gs://my-bucket/dataset2",
                       "workspace-1",
-                      "6/11/2019, 9:21:48 PM",
+                      "6/15/2019, 9:21:48 PM",
                     ],
                   }
                 }
@@ -10688,14 +10688,14 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/data_set/artifacts/2"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/data_set/artifacts/2"
                       onClick={[Function]}
                     >
-                      model
+                      dataset
                     </a>
                   </Link>
                 </div>
@@ -10719,7 +10719,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  kubeflow.org/alpha/model
+                  kubeflow.org/alpha/data_set
                 </div>
                 <div
                   className="cell"
@@ -10730,7 +10730,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  gs://my-bucket/mnist
+                  gs://my-bucket/dataset2
                 </div>
                 <div
                   className="cell"
@@ -10752,7 +10752,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by version 
                     }
                   }
                 >
-                  6/11/2019, 9:21:48 PM
+                  6/15/2019, 9:21:48 PM
                 </div>
               </CustomTableRow>
             </div>
@@ -10884,6 +10884,17 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
               "kubeflow.org/alpha/data_set",
               "gs://my-bucket/dataset2",
               "workspace-1",
+              "6/30/2019, 9:00:00 PM",
+            ],
+          },
+          Object {
+            "id": "kubeflow.org/alpha/model:5",
+            "otherFields": Array [
+              "model",
+              "v1",
+              "kubeflow.org/alpha/model",
+              "gs://my-bucket/mnist",
+              "workspace-1",
               "6/30/2019, 8:00:00 PM",
             ],
           },
@@ -10896,17 +10907,6 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
               "gcs://my-bucket/mnist-eval.csv",
               "ws1",
               "6/27/2019, 9:40:11 PM",
-            ],
-          },
-          Object {
-            "id": "kubeflow.org/alpha/model:5",
-            "otherFields": Array [
-              "model",
-              "v2",
-              "kubeflow.org/alpha/model",
-              "gs://my-bucket/mnist",
-              "workspace-1",
-              "6/30/2019, 8:00:00 PM",
             ],
           },
         ]
@@ -15769,7 +15769,7 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
                       "kubeflow.org/alpha/data_set",
                       "gs://my-bucket/dataset2",
                       "workspace-1",
-                      "6/30/2019, 8:00:00 PM",
+                      "6/30/2019, 9:00:00 PM",
                     ],
                   }
                 }
@@ -15851,7 +15851,7 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
                     }
                   }
                 >
-                  6/30/2019, 8:00:00 PM
+                  6/30/2019, 9:00:00 PM
                 </div>
               </CustomTableRow>
             </div>
@@ -15859,6 +15859,302 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
           <div
             className="expandableContainer"
             key="1"
+          >
+            <div
+              className="tableRow row"
+              onClick={[Function]}
+              role="checkbox"
+              tabIndex={-1}
+            >
+              <div
+                className="cell selectionToggle"
+              >
+                <WithStyles(IconButton)
+                  className="expandButton"
+                  onClick={[Function]}
+                >
+                  <IconButton
+                    className="expandButton"
+                    classes={
+                      Object {
+                        "colorInherit": "MuiIconButton-colorInherit-437",
+                        "colorPrimary": "MuiIconButton-colorPrimary-438",
+                        "colorSecondary": "MuiIconButton-colorSecondary-439",
+                        "disabled": "MuiIconButton-disabled-440",
+                        "label": "MuiIconButton-label-441",
+                        "root": "MuiIconButton-root-436",
+                      }
+                    }
+                    color="default"
+                    disabled={false}
+                    onClick={[Function]}
+                  >
+                    <WithStyles(ButtonBase)
+                      centerRipple={true}
+                      className="MuiIconButton-root-436 expandButton"
+                      disabled={false}
+                      focusRipple={true}
+                      onClick={[Function]}
+                    >
+                      <ButtonBase
+                        centerRipple={true}
+                        className="MuiIconButton-root-436 expandButton"
+                        classes={
+                          Object {
+                            "disabled": "MuiButtonBase-disabled-424",
+                            "focusVisible": "MuiButtonBase-focusVisible-425",
+                            "root": "MuiButtonBase-root-423",
+                          }
+                        }
+                        component="button"
+                        disableRipple={false}
+                        disableTouchRipple={false}
+                        disabled={false}
+                        focusRipple={true}
+                        onClick={[Function]}
+                        tabIndex="0"
+                        type="button"
+                      >
+                        <button
+                          className="MuiButtonBase-root-423 MuiIconButton-root-436 expandButton"
+                          disabled={false}
+                          onBlur={[Function]}
+                          onClick={[Function]}
+                          onContextMenu={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onKeyUp={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseLeave={[Function]}
+                          onMouseUp={[Function]}
+                          onTouchEnd={[Function]}
+                          onTouchMove={[Function]}
+                          onTouchStart={[Function]}
+                          tabIndex="0"
+                          type="button"
+                        >
+                          <span
+                            className="MuiIconButton-label-441"
+                          >
+                            <pure(ArrowRightIcon)>
+                              <ArrowRightIcon>
+                                <WithStyles(SvgIcon)>
+                                  <SvgIcon
+                                    classes={
+                                      Object {
+                                        "colorAction": "MuiSvgIcon-colorAction-404",
+                                        "colorDisabled": "MuiSvgIcon-colorDisabled-406",
+                                        "colorError": "MuiSvgIcon-colorError-405",
+                                        "colorPrimary": "MuiSvgIcon-colorPrimary-402",
+                                        "colorSecondary": "MuiSvgIcon-colorSecondary-403",
+                                        "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-407",
+                                        "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-409",
+                                        "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-408",
+                                        "root": "MuiSvgIcon-root-401",
+                                      }
+                                    }
+                                    color="inherit"
+                                    component="svg"
+                                    fontSize="default"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      className="MuiSvgIcon-root-401"
+                                      focusable="false"
+                                      role="presentation"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        d="M10 17l5-5-5-5v10z"
+                                      />
+                                      <path
+                                        d="M0 24V0h24v24H0z"
+                                        fill="none"
+                                      />
+                                    </svg>
+                                  </SvgIcon>
+                                </WithStyles(SvgIcon)>
+                              </ArrowRightIcon>
+                            </pure(ArrowRightIcon)>
+                          </span>
+                          <NoSsr
+                            defer={false}
+                            fallback={null}
+                          >
+                            <WithStyles(TouchRipple)
+                              center={true}
+                              innerRef={[Function]}
+                            >
+                              <TouchRipple
+                                center={true}
+                                classes={
+                                  Object {
+                                    "child": "MuiTouchRipple-child-446",
+                                    "childLeaving": "MuiTouchRipple-childLeaving-447",
+                                    "childPulsate": "MuiTouchRipple-childPulsate-448",
+                                    "ripple": "MuiTouchRipple-ripple-443",
+                                    "ripplePulsate": "MuiTouchRipple-ripplePulsate-445",
+                                    "rippleVisible": "MuiTouchRipple-rippleVisible-444",
+                                    "root": "MuiTouchRipple-root-442",
+                                  }
+                                }
+                              >
+                                <TransitionGroup
+                                  childFactory={[Function]}
+                                  className="MuiTouchRipple-root-442"
+                                  component="span"
+                                  enter={true}
+                                  exit={true}
+                                >
+                                  <span
+                                    className="MuiTouchRipple-root-442"
+                                  />
+                                </TransitionGroup>
+                              </TouchRipple>
+                            </WithStyles(TouchRipple)>
+                          </NoSsr>
+                        </button>
+                      </ButtonBase>
+                    </WithStyles(ButtonBase)>
+                  </IconButton>
+                </WithStyles(IconButton)>
+              </div>
+              <CustomTableRow
+                columns={
+                  Array [
+                    Object {
+                      "customRenderer": [Function],
+                      "flex": 1,
+                      "label": "Name",
+                      "sortKey": "name",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Version",
+                      "sortKey": "version",
+                    },
+                    Object {
+                      "flex": 2,
+                      "label": "Type",
+                      "sortKey": "type",
+                    },
+                    Object {
+                      "flex": 2,
+                      "label": "URI",
+                      "sortKey": "uri",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Workspace",
+                      "sortKey": "workspace",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Created at",
+                      "sortKey": "created_at",
+                    },
+                  ]
+                }
+                row={
+                  Object {
+                    "id": "kubeflow.org/alpha/model:5",
+                    "otherFields": Array [
+                      "model",
+                      "v1",
+                      "kubeflow.org/alpha/model",
+                      "gs://my-bucket/mnist",
+                      "workspace-1",
+                      "6/30/2019, 8:00:00 PM",
+                    ],
+                  }
+                }
+              >
+                <div
+                  className="cell"
+                  key="0"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  <Link
+                    className="link"
+                    onClick={[Function]}
+                    replace={false}
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
+                  >
+                    <a
+                      className="link"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
+                      onClick={[Function]}
+                    >
+                      model
+                    </a>
+                  </Link>
+                </div>
+                <div
+                  className="cell"
+                  key="1"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  v1
+                </div>
+                <div
+                  className="cell"
+                  key="2"
+                  style={
+                    Object {
+                      "width": "25%",
+                    }
+                  }
+                >
+                  kubeflow.org/alpha/model
+                </div>
+                <div
+                  className="cell"
+                  key="3"
+                  style={
+                    Object {
+                      "width": "25%",
+                    }
+                  }
+                >
+                  gs://my-bucket/mnist
+                </div>
+                <div
+                  className="cell"
+                  key="4"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  workspace-1
+                </div>
+                <div
+                  className="cell"
+                  key="5"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  6/30/2019, 8:00:00 PM
+                </div>
+              </CustomTableRow>
+            </div>
+          </div>
+          <div
+            className="expandableContainer"
+            key="2"
           >
             <div
               className="tableRow row"
@@ -16150,302 +16446,6 @@ exports[`ArtifactList Renders and sorts Artifacts in descending order by created
               </CustomTableRow>
             </div>
           </div>
-          <div
-            className="expandableContainer"
-            key="2"
-          >
-            <div
-              className="tableRow row"
-              onClick={[Function]}
-              role="checkbox"
-              tabIndex={-1}
-            >
-              <div
-                className="cell selectionToggle"
-              >
-                <WithStyles(IconButton)
-                  className="expandButton"
-                  onClick={[Function]}
-                >
-                  <IconButton
-                    className="expandButton"
-                    classes={
-                      Object {
-                        "colorInherit": "MuiIconButton-colorInherit-437",
-                        "colorPrimary": "MuiIconButton-colorPrimary-438",
-                        "colorSecondary": "MuiIconButton-colorSecondary-439",
-                        "disabled": "MuiIconButton-disabled-440",
-                        "label": "MuiIconButton-label-441",
-                        "root": "MuiIconButton-root-436",
-                      }
-                    }
-                    color="default"
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    <WithStyles(ButtonBase)
-                      centerRipple={true}
-                      className="MuiIconButton-root-436 expandButton"
-                      disabled={false}
-                      focusRipple={true}
-                      onClick={[Function]}
-                    >
-                      <ButtonBase
-                        centerRipple={true}
-                        className="MuiIconButton-root-436 expandButton"
-                        classes={
-                          Object {
-                            "disabled": "MuiButtonBase-disabled-424",
-                            "focusVisible": "MuiButtonBase-focusVisible-425",
-                            "root": "MuiButtonBase-root-423",
-                          }
-                        }
-                        component="button"
-                        disableRipple={false}
-                        disableTouchRipple={false}
-                        disabled={false}
-                        focusRipple={true}
-                        onClick={[Function]}
-                        tabIndex="0"
-                        type="button"
-                      >
-                        <button
-                          className="MuiButtonBase-root-423 MuiIconButton-root-436 expandButton"
-                          disabled={false}
-                          onBlur={[Function]}
-                          onClick={[Function]}
-                          onContextMenu={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          onKeyUp={[Function]}
-                          onMouseDown={[Function]}
-                          onMouseLeave={[Function]}
-                          onMouseUp={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchMove={[Function]}
-                          onTouchStart={[Function]}
-                          tabIndex="0"
-                          type="button"
-                        >
-                          <span
-                            className="MuiIconButton-label-441"
-                          >
-                            <pure(ArrowRightIcon)>
-                              <ArrowRightIcon>
-                                <WithStyles(SvgIcon)>
-                                  <SvgIcon
-                                    classes={
-                                      Object {
-                                        "colorAction": "MuiSvgIcon-colorAction-404",
-                                        "colorDisabled": "MuiSvgIcon-colorDisabled-406",
-                                        "colorError": "MuiSvgIcon-colorError-405",
-                                        "colorPrimary": "MuiSvgIcon-colorPrimary-402",
-                                        "colorSecondary": "MuiSvgIcon-colorSecondary-403",
-                                        "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-407",
-                                        "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-409",
-                                        "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-408",
-                                        "root": "MuiSvgIcon-root-401",
-                                      }
-                                    }
-                                    color="inherit"
-                                    component="svg"
-                                    fontSize="default"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <svg
-                                      aria-hidden="true"
-                                      className="MuiSvgIcon-root-401"
-                                      focusable="false"
-                                      role="presentation"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        d="M10 17l5-5-5-5v10z"
-                                      />
-                                      <path
-                                        d="M0 24V0h24v24H0z"
-                                        fill="none"
-                                      />
-                                    </svg>
-                                  </SvgIcon>
-                                </WithStyles(SvgIcon)>
-                              </ArrowRightIcon>
-                            </pure(ArrowRightIcon)>
-                          </span>
-                          <NoSsr
-                            defer={false}
-                            fallback={null}
-                          >
-                            <WithStyles(TouchRipple)
-                              center={true}
-                              innerRef={[Function]}
-                            >
-                              <TouchRipple
-                                center={true}
-                                classes={
-                                  Object {
-                                    "child": "MuiTouchRipple-child-446",
-                                    "childLeaving": "MuiTouchRipple-childLeaving-447",
-                                    "childPulsate": "MuiTouchRipple-childPulsate-448",
-                                    "ripple": "MuiTouchRipple-ripple-443",
-                                    "ripplePulsate": "MuiTouchRipple-ripplePulsate-445",
-                                    "rippleVisible": "MuiTouchRipple-rippleVisible-444",
-                                    "root": "MuiTouchRipple-root-442",
-                                  }
-                                }
-                              >
-                                <TransitionGroup
-                                  childFactory={[Function]}
-                                  className="MuiTouchRipple-root-442"
-                                  component="span"
-                                  enter={true}
-                                  exit={true}
-                                >
-                                  <span
-                                    className="MuiTouchRipple-root-442"
-                                  />
-                                </TransitionGroup>
-                              </TouchRipple>
-                            </WithStyles(TouchRipple)>
-                          </NoSsr>
-                        </button>
-                      </ButtonBase>
-                    </WithStyles(ButtonBase)>
-                  </IconButton>
-                </WithStyles(IconButton)>
-              </div>
-              <CustomTableRow
-                columns={
-                  Array [
-                    Object {
-                      "customRenderer": [Function],
-                      "flex": 1,
-                      "label": "Name",
-                      "sortKey": "name",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Version",
-                      "sortKey": "version",
-                    },
-                    Object {
-                      "flex": 2,
-                      "label": "Type",
-                      "sortKey": "type",
-                    },
-                    Object {
-                      "flex": 2,
-                      "label": "URI",
-                      "sortKey": "uri",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Workspace",
-                      "sortKey": "workspace",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Created at",
-                      "sortKey": "created_at",
-                    },
-                  ]
-                }
-                row={
-                  Object {
-                    "id": "kubeflow.org/alpha/model:5",
-                    "otherFields": Array [
-                      "model",
-                      "v2",
-                      "kubeflow.org/alpha/model",
-                      "gs://my-bucket/mnist",
-                      "workspace-1",
-                      "6/30/2019, 8:00:00 PM",
-                    ],
-                  }
-                }
-              >
-                <div
-                  className="cell"
-                  key="0"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  <Link
-                    className="link"
-                    onClick={[Function]}
-                    replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
-                  >
-                    <a
-                      className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
-                      onClick={[Function]}
-                    >
-                      model
-                    </a>
-                  </Link>
-                </div>
-                <div
-                  className="cell"
-                  key="1"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  v2
-                </div>
-                <div
-                  className="cell"
-                  key="2"
-                  style={
-                    Object {
-                      "width": "25%",
-                    }
-                  }
-                >
-                  kubeflow.org/alpha/model
-                </div>
-                <div
-                  className="cell"
-                  key="3"
-                  style={
-                    Object {
-                      "width": "25%",
-                    }
-                  }
-                >
-                  gs://my-bucket/mnist
-                </div>
-                <div
-                  className="cell"
-                  key="4"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  workspace-1
-                </div>
-                <div
-                  className="cell"
-                  key="5"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  6/30/2019, 8:00:00 PM
-                </div>
-              </CustomTableRow>
-            </div>
-          </div>
         </div>
       </div>
     </CustomTable>
@@ -16573,6 +16573,17 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
               "kubeflow.org/alpha/data_set",
               "gs://my-bucket/dataset2",
               "workspace-1",
+              "6/30/2019, 9:00:00 PM",
+            ],
+          },
+          Object {
+            "id": "kubeflow.org/alpha/model:5",
+            "otherFields": Array [
+              "model",
+              "v1",
+              "kubeflow.org/alpha/model",
+              "gs://my-bucket/mnist",
+              "workspace-1",
               "6/30/2019, 8:00:00 PM",
             ],
           },
@@ -16585,17 +16596,6 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
               "gcs://my-bucket/mnist-eval.csv",
               "ws1",
               "6/27/2019, 9:40:11 PM",
-            ],
-          },
-          Object {
-            "id": "kubeflow.org/alpha/model:5",
-            "otherFields": Array [
-              "model",
-              "v2",
-              "kubeflow.org/alpha/model",
-              "gs://my-bucket/mnist",
-              "workspace-1",
-              "6/30/2019, 8:00:00 PM",
             ],
           },
         ]
@@ -21390,7 +21390,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                       "kubeflow.org/alpha/data_set",
                       "gs://my-bucket/dataset2",
                       "workspace-1",
-                      "6/30/2019, 8:00:00 PM",
+                      "6/30/2019, 9:00:00 PM",
                     ],
                   }
                 }
@@ -21472,7 +21472,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     }
                   }
                 >
-                  6/30/2019, 8:00:00 PM
+                  6/30/2019, 9:00:00 PM
                 </div>
               </CustomTableRow>
             </div>
@@ -21480,6 +21480,302 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
           <div
             className="expandableContainer"
             key="1"
+          >
+            <div
+              className="tableRow row"
+              onClick={[Function]}
+              role="checkbox"
+              tabIndex={-1}
+            >
+              <div
+                className="cell selectionToggle"
+              >
+                <WithStyles(IconButton)
+                  className="expandButton"
+                  onClick={[Function]}
+                >
+                  <IconButton
+                    className="expandButton"
+                    classes={
+                      Object {
+                        "colorInherit": "MuiIconButton-colorInherit-96",
+                        "colorPrimary": "MuiIconButton-colorPrimary-97",
+                        "colorSecondary": "MuiIconButton-colorSecondary-98",
+                        "disabled": "MuiIconButton-disabled-99",
+                        "label": "MuiIconButton-label-100",
+                        "root": "MuiIconButton-root-95",
+                      }
+                    }
+                    color="default"
+                    disabled={false}
+                    onClick={[Function]}
+                  >
+                    <WithStyles(ButtonBase)
+                      centerRipple={true}
+                      className="MuiIconButton-root-95 expandButton"
+                      disabled={false}
+                      focusRipple={true}
+                      onClick={[Function]}
+                    >
+                      <ButtonBase
+                        centerRipple={true}
+                        className="MuiIconButton-root-95 expandButton"
+                        classes={
+                          Object {
+                            "disabled": "MuiButtonBase-disabled-83",
+                            "focusVisible": "MuiButtonBase-focusVisible-84",
+                            "root": "MuiButtonBase-root-82",
+                          }
+                        }
+                        component="button"
+                        disableRipple={false}
+                        disableTouchRipple={false}
+                        disabled={false}
+                        focusRipple={true}
+                        onClick={[Function]}
+                        tabIndex="0"
+                        type="button"
+                      >
+                        <button
+                          className="MuiButtonBase-root-82 MuiIconButton-root-95 expandButton"
+                          disabled={false}
+                          onBlur={[Function]}
+                          onClick={[Function]}
+                          onContextMenu={[Function]}
+                          onFocus={[Function]}
+                          onKeyDown={[Function]}
+                          onKeyUp={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseLeave={[Function]}
+                          onMouseUp={[Function]}
+                          onTouchEnd={[Function]}
+                          onTouchMove={[Function]}
+                          onTouchStart={[Function]}
+                          tabIndex="0"
+                          type="button"
+                        >
+                          <span
+                            className="MuiIconButton-label-100"
+                          >
+                            <pure(ArrowRightIcon)>
+                              <ArrowRightIcon>
+                                <WithStyles(SvgIcon)>
+                                  <SvgIcon
+                                    classes={
+                                      Object {
+                                        "colorAction": "MuiSvgIcon-colorAction-63",
+                                        "colorDisabled": "MuiSvgIcon-colorDisabled-65",
+                                        "colorError": "MuiSvgIcon-colorError-64",
+                                        "colorPrimary": "MuiSvgIcon-colorPrimary-61",
+                                        "colorSecondary": "MuiSvgIcon-colorSecondary-62",
+                                        "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-66",
+                                        "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-68",
+                                        "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-67",
+                                        "root": "MuiSvgIcon-root-60",
+                                      }
+                                    }
+                                    color="inherit"
+                                    component="svg"
+                                    fontSize="default"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <svg
+                                      aria-hidden="true"
+                                      className="MuiSvgIcon-root-60"
+                                      focusable="false"
+                                      role="presentation"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        d="M10 17l5-5-5-5v10z"
+                                      />
+                                      <path
+                                        d="M0 24V0h24v24H0z"
+                                        fill="none"
+                                      />
+                                    </svg>
+                                  </SvgIcon>
+                                </WithStyles(SvgIcon)>
+                              </ArrowRightIcon>
+                            </pure(ArrowRightIcon)>
+                          </span>
+                          <NoSsr
+                            defer={false}
+                            fallback={null}
+                          >
+                            <WithStyles(TouchRipple)
+                              center={true}
+                              innerRef={[Function]}
+                            >
+                              <TouchRipple
+                                center={true}
+                                classes={
+                                  Object {
+                                    "child": "MuiTouchRipple-child-105",
+                                    "childLeaving": "MuiTouchRipple-childLeaving-106",
+                                    "childPulsate": "MuiTouchRipple-childPulsate-107",
+                                    "ripple": "MuiTouchRipple-ripple-102",
+                                    "ripplePulsate": "MuiTouchRipple-ripplePulsate-104",
+                                    "rippleVisible": "MuiTouchRipple-rippleVisible-103",
+                                    "root": "MuiTouchRipple-root-101",
+                                  }
+                                }
+                              >
+                                <TransitionGroup
+                                  childFactory={[Function]}
+                                  className="MuiTouchRipple-root-101"
+                                  component="span"
+                                  enter={true}
+                                  exit={true}
+                                >
+                                  <span
+                                    className="MuiTouchRipple-root-101"
+                                  />
+                                </TransitionGroup>
+                              </TouchRipple>
+                            </WithStyles(TouchRipple)>
+                          </NoSsr>
+                        </button>
+                      </ButtonBase>
+                    </WithStyles(ButtonBase)>
+                  </IconButton>
+                </WithStyles(IconButton)>
+              </div>
+              <CustomTableRow
+                columns={
+                  Array [
+                    Object {
+                      "customRenderer": [Function],
+                      "flex": 1,
+                      "label": "Name",
+                      "sortKey": "name",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Version",
+                      "sortKey": "version",
+                    },
+                    Object {
+                      "flex": 2,
+                      "label": "Type",
+                      "sortKey": "type",
+                    },
+                    Object {
+                      "flex": 2,
+                      "label": "URI",
+                      "sortKey": "uri",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Workspace",
+                      "sortKey": "workspace",
+                    },
+                    Object {
+                      "flex": 1,
+                      "label": "Created at",
+                      "sortKey": "created_at",
+                    },
+                  ]
+                }
+                row={
+                  Object {
+                    "id": "kubeflow.org/alpha/model:5",
+                    "otherFields": Array [
+                      "model",
+                      "v1",
+                      "kubeflow.org/alpha/model",
+                      "gs://my-bucket/mnist",
+                      "workspace-1",
+                      "6/30/2019, 8:00:00 PM",
+                    ],
+                  }
+                }
+              >
+                <div
+                  className="cell"
+                  key="0"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  <Link
+                    className="link"
+                    onClick={[Function]}
+                    replace={false}
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
+                  >
+                    <a
+                      className="link"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
+                      onClick={[Function]}
+                    >
+                      model
+                    </a>
+                  </Link>
+                </div>
+                <div
+                  className="cell"
+                  key="1"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  v1
+                </div>
+                <div
+                  className="cell"
+                  key="2"
+                  style={
+                    Object {
+                      "width": "25%",
+                    }
+                  }
+                >
+                  kubeflow.org/alpha/model
+                </div>
+                <div
+                  className="cell"
+                  key="3"
+                  style={
+                    Object {
+                      "width": "25%",
+                    }
+                  }
+                >
+                  gs://my-bucket/mnist
+                </div>
+                <div
+                  className="cell"
+                  key="4"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  workspace-1
+                </div>
+                <div
+                  className="cell"
+                  key="5"
+                  style={
+                    Object {
+                      "width": "12.5%",
+                    }
+                  }
+                >
+                  6/30/2019, 8:00:00 PM
+                </div>
+              </CustomTableRow>
+            </div>
+          </div>
+          <div
+            className="expandableContainer"
+            key="2"
           >
             <div
               className="tableRow row"
@@ -21767,302 +22063,6 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                   }
                 >
                   6/27/2019, 9:40:11 PM
-                </div>
-              </CustomTableRow>
-            </div>
-          </div>
-          <div
-            className="expandableContainer"
-            key="2"
-          >
-            <div
-              className="tableRow row"
-              onClick={[Function]}
-              role="checkbox"
-              tabIndex={-1}
-            >
-              <div
-                className="cell selectionToggle"
-              >
-                <WithStyles(IconButton)
-                  className="expandButton"
-                  onClick={[Function]}
-                >
-                  <IconButton
-                    className="expandButton"
-                    classes={
-                      Object {
-                        "colorInherit": "MuiIconButton-colorInherit-96",
-                        "colorPrimary": "MuiIconButton-colorPrimary-97",
-                        "colorSecondary": "MuiIconButton-colorSecondary-98",
-                        "disabled": "MuiIconButton-disabled-99",
-                        "label": "MuiIconButton-label-100",
-                        "root": "MuiIconButton-root-95",
-                      }
-                    }
-                    color="default"
-                    disabled={false}
-                    onClick={[Function]}
-                  >
-                    <WithStyles(ButtonBase)
-                      centerRipple={true}
-                      className="MuiIconButton-root-95 expandButton"
-                      disabled={false}
-                      focusRipple={true}
-                      onClick={[Function]}
-                    >
-                      <ButtonBase
-                        centerRipple={true}
-                        className="MuiIconButton-root-95 expandButton"
-                        classes={
-                          Object {
-                            "disabled": "MuiButtonBase-disabled-83",
-                            "focusVisible": "MuiButtonBase-focusVisible-84",
-                            "root": "MuiButtonBase-root-82",
-                          }
-                        }
-                        component="button"
-                        disableRipple={false}
-                        disableTouchRipple={false}
-                        disabled={false}
-                        focusRipple={true}
-                        onClick={[Function]}
-                        tabIndex="0"
-                        type="button"
-                      >
-                        <button
-                          className="MuiButtonBase-root-82 MuiIconButton-root-95 expandButton"
-                          disabled={false}
-                          onBlur={[Function]}
-                          onClick={[Function]}
-                          onContextMenu={[Function]}
-                          onFocus={[Function]}
-                          onKeyDown={[Function]}
-                          onKeyUp={[Function]}
-                          onMouseDown={[Function]}
-                          onMouseLeave={[Function]}
-                          onMouseUp={[Function]}
-                          onTouchEnd={[Function]}
-                          onTouchMove={[Function]}
-                          onTouchStart={[Function]}
-                          tabIndex="0"
-                          type="button"
-                        >
-                          <span
-                            className="MuiIconButton-label-100"
-                          >
-                            <pure(ArrowRightIcon)>
-                              <ArrowRightIcon>
-                                <WithStyles(SvgIcon)>
-                                  <SvgIcon
-                                    classes={
-                                      Object {
-                                        "colorAction": "MuiSvgIcon-colorAction-63",
-                                        "colorDisabled": "MuiSvgIcon-colorDisabled-65",
-                                        "colorError": "MuiSvgIcon-colorError-64",
-                                        "colorPrimary": "MuiSvgIcon-colorPrimary-61",
-                                        "colorSecondary": "MuiSvgIcon-colorSecondary-62",
-                                        "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-66",
-                                        "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-68",
-                                        "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-67",
-                                        "root": "MuiSvgIcon-root-60",
-                                      }
-                                    }
-                                    color="inherit"
-                                    component="svg"
-                                    fontSize="default"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <svg
-                                      aria-hidden="true"
-                                      className="MuiSvgIcon-root-60"
-                                      focusable="false"
-                                      role="presentation"
-                                      viewBox="0 0 24 24"
-                                    >
-                                      <path
-                                        d="M10 17l5-5-5-5v10z"
-                                      />
-                                      <path
-                                        d="M0 24V0h24v24H0z"
-                                        fill="none"
-                                      />
-                                    </svg>
-                                  </SvgIcon>
-                                </WithStyles(SvgIcon)>
-                              </ArrowRightIcon>
-                            </pure(ArrowRightIcon)>
-                          </span>
-                          <NoSsr
-                            defer={false}
-                            fallback={null}
-                          >
-                            <WithStyles(TouchRipple)
-                              center={true}
-                              innerRef={[Function]}
-                            >
-                              <TouchRipple
-                                center={true}
-                                classes={
-                                  Object {
-                                    "child": "MuiTouchRipple-child-105",
-                                    "childLeaving": "MuiTouchRipple-childLeaving-106",
-                                    "childPulsate": "MuiTouchRipple-childPulsate-107",
-                                    "ripple": "MuiTouchRipple-ripple-102",
-                                    "ripplePulsate": "MuiTouchRipple-ripplePulsate-104",
-                                    "rippleVisible": "MuiTouchRipple-rippleVisible-103",
-                                    "root": "MuiTouchRipple-root-101",
-                                  }
-                                }
-                              >
-                                <TransitionGroup
-                                  childFactory={[Function]}
-                                  className="MuiTouchRipple-root-101"
-                                  component="span"
-                                  enter={true}
-                                  exit={true}
-                                >
-                                  <span
-                                    className="MuiTouchRipple-root-101"
-                                  />
-                                </TransitionGroup>
-                              </TouchRipple>
-                            </WithStyles(TouchRipple)>
-                          </NoSsr>
-                        </button>
-                      </ButtonBase>
-                    </WithStyles(ButtonBase)>
-                  </IconButton>
-                </WithStyles(IconButton)>
-              </div>
-              <CustomTableRow
-                columns={
-                  Array [
-                    Object {
-                      "customRenderer": [Function],
-                      "flex": 1,
-                      "label": "Name",
-                      "sortKey": "name",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Version",
-                      "sortKey": "version",
-                    },
-                    Object {
-                      "flex": 2,
-                      "label": "Type",
-                      "sortKey": "type",
-                    },
-                    Object {
-                      "flex": 2,
-                      "label": "URI",
-                      "sortKey": "uri",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Workspace",
-                      "sortKey": "workspace",
-                    },
-                    Object {
-                      "flex": 1,
-                      "label": "Created at",
-                      "sortKey": "created_at",
-                    },
-                  ]
-                }
-                row={
-                  Object {
-                    "id": "kubeflow.org/alpha/model:5",
-                    "otherFields": Array [
-                      "model",
-                      "v2",
-                      "kubeflow.org/alpha/model",
-                      "gs://my-bucket/mnist",
-                      "workspace-1",
-                      "6/30/2019, 8:00:00 PM",
-                    ],
-                  }
-                }
-              >
-                <div
-                  className="cell"
-                  key="0"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  <Link
-                    className="link"
-                    onClick={[Function]}
-                    replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
-                  >
-                    <a
-                      className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
-                      onClick={[Function]}
-                    >
-                      model
-                    </a>
-                  </Link>
-                </div>
-                <div
-                  className="cell"
-                  key="1"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  v2
-                </div>
-                <div
-                  className="cell"
-                  key="2"
-                  style={
-                    Object {
-                      "width": "25%",
-                    }
-                  }
-                >
-                  kubeflow.org/alpha/model
-                </div>
-                <div
-                  className="cell"
-                  key="3"
-                  style={
-                    Object {
-                      "width": "25%",
-                    }
-                  }
-                >
-                  gs://my-bucket/mnist
-                </div>
-                <div
-                  className="cell"
-                  key="4"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  workspace-1
-                </div>
-                <div
-                  className="cell"
-                  key="5"
-                  style={
-                    Object {
-                      "width": "12.5%",
-                    }
-                  }
-                >
-                  6/30/2019, 8:00:00 PM
                 </div>
               </CustomTableRow>
             </div>

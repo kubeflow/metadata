@@ -215,8 +215,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
 
     const grouped: Row[] = [];
     const expandedRows = new Map<number, Row[]>();
-    Array.from(flattenedRows.entries())
-      .sort((r1, r2) => r1[0] < r2[0] ? -1 : 1)
+    Array.from(flattenedRows.entries()) // entries() returns in insertion order
       .forEach((r, index) => {
         grouped.push(r[1][0]);
         expandedRows.set(index, r[1].slice(1));
