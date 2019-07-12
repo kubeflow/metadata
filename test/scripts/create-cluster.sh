@@ -30,8 +30,7 @@ gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS
 
 echo "Create cluster"
 gcloud --project ${PROJECT} beta container clusters create ${CLUSTER_NAME} \
-    --zone ${ZONE} \
-    --cluster-version 1.11
+    --zone ${ZONE}
 echo "Configuring kubectl"
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
     --zone ${ZONE}
