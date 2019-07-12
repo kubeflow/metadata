@@ -15,7 +15,10 @@
  */
 
 import * as React from 'react';
-import CustomTable, {CustomRendererProps, Column, Row} from '../components/CustomTable';
+import CustomTable, {
+  css as customTableCss, CustomRendererProps, Column,
+  Row, ExpandState, CustomTableRow
+} from '../components/CustomTable';
 import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
@@ -29,6 +32,7 @@ import {RoutePage, RouteParams} from '../components/Router';
 interface PipelineListState {
   artifacts: MlMetadataArtifact[];
   rows: Row[];
+  expandedRows: Map<number, Row[]>;
   columns: Column[];
 }
 
@@ -69,9 +73,11 @@ class ArtifactList extends Page<{}, PipelineListState> {
         {label: 'Created at', flex: 1, sortKey: 'created_at'},
       ],
       rows: [],
-
+      expandedRows: new Map(),
     };
     this.reload = this.reload.bind(this);
+    this.toggleRowExpand = this.toggleRowExpand.bind(this);
+    this.getExpandedRow = this.getExpandedRow.bind(this);
   }
 
   public getInitialToolbarState(): ToolbarProps {
@@ -92,8 +98,10 @@ class ArtifactList extends Page<{}, PipelineListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
-          initialSortColumn='name'
-          initialSortOrder='asc'
+          initialSortColumn='version'
+          initialSortOrder='desc'
+          getExpandComponent={this.getExpandedRow}
+          toggleExpansion={this.toggleRowExpand}
           emptyMessage='No artifacts found.' />
       </div>
     );
@@ -148,7 +156,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
    * @param request
    */
   private getRowsFromArtifacts(request: ListRequest): Row[] {
-    return this.state.artifacts
+    return this.groupRows(this.state.artifacts
       .filter((a) => !!a.properties) // We can't show much without properties
       .map((a) => { // Flattens
         const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
@@ -184,7 +192,72 @@ class ArtifactList extends Page<{}, PipelineListState> {
         } else {
           return compare ? 1 : -1;
         }
+      }));
+  }
+
+  /**
+   * Groups the incoming rows by name and type pushing all but the first row
+   * of each group to the expandedRows Map.
+   * @param rows
+   */
+  private groupRows(rows: Row[]): Row[] {
+    const flattenedRows = rows.reduce((map, r) => {
+      // Artifact row key is "{artifact_type}/{name}"
+      const stringKey = `${r.otherFields[2]}/${r.otherFields[0]}`;
+      const rows = map.get(stringKey);
+      if (rows) {
+        rows.push(r);
+      } else {
+        map.set(stringKey, [r]);
+      }
+      return map;
+    }, new Map<string, Row[]>());
+
+    const grouped: Row[] = [];
+    const expandedRows = new Map<number, Row[]>();
+    Array.from(flattenedRows.entries()) // entries() returns in insertion order
+      .forEach((r, index) => {
+        grouped.push(r[1][0]);
+        expandedRows.set(index, r[1].slice(1));
       });
+
+    this.setState({expandedRows});
+    return grouped;
+  }
+
+  /**
+   * Toggles the expansion state of a row
+   * @param index
+   */
+  private toggleRowExpand(index: number): void {
+    const {rows} = this.state;
+    if (!rows[index]) return;
+    rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED ?
+      ExpandState.COLLAPSED : ExpandState.EXPANDED;
+    this.setState({rows});
+  }
+
+  /**
+   * Returns a fragment representing the expanded content for the given
+   * row.
+   * @param index
+   */
+  private getExpandedRow(index: number): React.ReactNode {
+    const rows = this.state.expandedRows.get(index) || [];
+    if (!(rows && rows.length)) {
+      return <p className={classes(padding(10, 't'), padding(65, 'l'))}>No other rows in group</p>;
+    }
+    return (
+      <div className={padding(65, 'l')}>
+        {
+          rows.map((r, rindex) => (
+            <div className={classes('tableRow', customTableCss.row)} key={rindex}>
+              <CustomTableRow row={r} columns={this.state.columns} />
+            </div>
+          ))
+        }
+      </div>
+    );
   }
 }
 

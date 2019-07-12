@@ -127,35 +127,30 @@ exports[`CustomTable displays warning icon with tooltip if row has error 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": "dummy error",
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          <WithStyles(Tooltip)
-            title="dummy error"
-          >
-            <pure(WarningRoundedIcon)
-              className="icon"
-            />
-          </WithStyles(Tooltip)>
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -176,28 +171,29 @@ exports[`CustomTable displays warning icon with tooltip if row has error 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -405,28 +401,31 @@ exports[`CustomTable renders a collapsed row 1`] = `
             <pure(ArrowRightIcon) />
           </WithStyles(IconButton)>
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "expandState": 0,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -620,28 +619,31 @@ exports[`CustomTable renders a collapsed row when selection is disabled 1`] = `
             <pure(ArrowRightIcon) />
           </WithStyles(IconButton)>
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "expandState": 0,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -821,28 +823,30 @@ exports[`CustomTable renders a table with sorting disabled 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -863,28 +867,29 @@ exports[`CustomTable renders a table with sorting disabled 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -1082,28 +1087,31 @@ exports[`CustomTable renders an expanded row 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "expandState": 1,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -1311,32 +1319,33 @@ exports[`CustomTable renders an expanded row with expanded component below it 1`
             <pure(ArrowRightIcon) />
           </WithStyles(IconButton)>
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "expandState": 1,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
-      <div
-        className=""
-      >
+      <div>
         <span>
           Hello World
         </span>
@@ -1851,28 +1860,29 @@ exports[`CustomTable renders new rows after clicking next page, and enables prev
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -2070,28 +2080,30 @@ exports[`CustomTable renders new rows after clicking previous page, and enables 
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -2112,28 +2124,29 @@ exports[`CustomTable renders new rows after clicking previous page, and enables 
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -2684,28 +2697,29 @@ exports[`CustomTable renders some rows 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -2726,28 +2740,29 @@ exports[`CustomTable renders some rows 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -2945,30 +2960,29 @@ exports[`CustomTable renders some rows using a custom renderer 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": [Function],
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          <span>
-            this is custom output
-          </span>
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -2989,30 +3003,29 @@ exports[`CustomTable renders some rows using a custom renderer 1`] = `
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": [Function],
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          <span>
-            this is custom output
-          </span>
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -3681,28 +3694,29 @@ exports[`CustomTable renders without the checkboxes if disableSelection is true 
         role="checkbox"
         tabIndex={-1}
       >
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -3715,28 +3729,29 @@ exports[`CustomTable renders without the checkboxes if disableSelection is true 
         role="checkbox"
         tabIndex={-1}
       >
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -3934,28 +3949,30 @@ exports[`CustomTable updates the filter string in state when the filter box inpu
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "error": undefined,
+              "id": "row1",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
     <div
@@ -3976,28 +3993,29 @@ exports[`CustomTable updates the filter string in state when the filter box inpu
             color="primary"
           />
         </div>
-        <div
-          className="cell"
-          key="0"
-          style={
+        <CustomTableRow
+          columns={
+            Array [
+              Object {
+                "customRenderer": undefined,
+                "label": "col1",
+              },
+              Object {
+                "customRenderer": undefined,
+                "label": "col2",
+              },
+            ]
+          }
+          row={
             Object {
-              "width": "50%",
+              "id": "row2",
+              "otherFields": Array [
+                "cell1",
+                "cell2",
+              ],
             }
           }
-        >
-          cell1
-        </div>
-        <div
-          className="cell"
-          key="1"
-          style={
-            Object {
-              "width": "50%",
-            }
-          }
-        >
-          cell2
-        </div>
+        />
       </div>
     </div>
   </div>
@@ -4066,4 +4084,163 @@ exports[`CustomTable updates the filter string in state when the filter box inpu
     </WithStyles(IconButton)>
   </div>
 </div>
+`;
+
+exports[`CustomTableRow Renders cells with equal widths 1`] = `
+<Fragment>
+  <div
+    className="cell"
+    key="0"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    test row
+  </div>
+  <div
+    className="cell"
+    key="1"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    a great value
+  </div>
+  <div
+    className="cell"
+    key="2"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    $56.00
+  </div>
+  <div
+    className="cell"
+    key="3"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    25%
+  </div>
+</Fragment>
+`;
+
+exports[`CustomTableRow Renders cells with explicit widths 1`] = `
+<Fragment>
+  <div
+    className="cell"
+    key="0"
+    style={
+      Object {
+        "width": "20%",
+      }
+    }
+  >
+    test row
+  </div>
+  <div
+    className="cell"
+    key="1"
+    style={
+      Object {
+        "width": "40%",
+      }
+    }
+  >
+    a great value
+  </div>
+  <div
+    className="cell"
+    key="2"
+    style={
+      Object {
+        "width": "20%",
+      }
+    }
+  >
+    $56.00
+  </div>
+  <div
+    className="cell"
+    key="3"
+    style={
+      Object {
+        "width": "20%",
+      }
+    }
+  >
+    25%
+  </div>
+</Fragment>
+`;
+
+exports[`CustomTableRow Renders with an error and custom renderer 1`] = `
+<Fragment>
+  <div
+    className="cell"
+    key="0"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    <WithStyles(Tooltip)
+      title="Something bad happened"
+    >
+      <pure(WarningRoundedIcon)
+        className="icon"
+      />
+    </WithStyles(Tooltip)>
+    <p>
+      custom rendered: 
+      1
+       
+      test row
+    </p>
+  </div>
+  <div
+    className="cell"
+    key="1"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    a great value
+  </div>
+  <div
+    className="cell"
+    key="2"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    $56.00
+  </div>
+  <div
+    className="cell"
+    key="3"
+    style={
+      Object {
+        "width": "25%",
+      }
+    }
+  >
+    25%
+  </div>
+</Fragment>
 `;
