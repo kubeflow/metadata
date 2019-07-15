@@ -172,14 +172,7 @@ func (s *Service) GetArtifactType(ctx context.Context, req *api.GetArtifactTypeR
 
 // ListArtifactTypes lists all artifact types.
 func (s *Service) ListArtifactTypes(ctx context.Context, req *api.ListArtifactTypesRequest) (*api.ListArtifactTypesResponse, error) {
-	// TODO(neuromage): Implement ListArtifactTypes in MLMD ASAP.
-	// Assume at most 1K types (ugh!).
-	var typeIDs []mlmetadata.ArtifactTypeID
-	for i := 0; i < 1000; i++ {
-		typeIDs = append(typeIDs, mlmetadata.ArtifactTypeID(i))
-	}
-
-	aTypes, err := s.store.GetArtifactTypesByID(typeIDs)
+	aTypes, err := s.store.GetArtifactTypes()
 	if err != nil {
 		return nil, err
 	}
@@ -331,13 +324,7 @@ func (s *Service) GetExecutionType(ctx context.Context, req *api.GetExecutionTyp
 
 // ListExecutionTypes lists all execution types.
 func (s *Service) ListExecutionTypes(ctx context.Context, req *api.ListExecutionTypesRequest) (*api.ListExecutionTypesResponse, error) {
-	// Assume at most 1K types (ugh!).
-	var typeIDs []mlmetadata.ExecutionTypeID
-	for i := 0; i < 1000; i++ {
-		typeIDs = append(typeIDs, mlmetadata.ExecutionTypeID(i))
-	}
-
-	eTypes, err := s.store.GetExecutionTypesByID(typeIDs)
+	eTypes, err := s.store.GetExecutionTypes()
 	if err != nil {
 		return nil, err
 	}
