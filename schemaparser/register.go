@@ -46,7 +46,7 @@ func RegisterSchemas(service *service.Service, schemaRootDir string) ([]string, 
 	for id := range ss.Schemas {
 		namespace, typename, err := ss.TypeName(id)
 		if err != nil {
-			glog.Warningf("schema misses 'kind', 'apiversion', or 'namespace'. schema $id = %s: %v", id, err)
+			glog.Warningf("schema has invalid 'kind', 'apiversion', or 'namespace'. schema $id = %s: %v", id, err)
 			continue
 		}
 		category, err := ss.ConstantStringType(id, categoryPropertyName)
@@ -65,7 +65,7 @@ func RegisterSchemas(service *service.Service, schemaRootDir string) ([]string, 
 			}
 			types = append(types, namespace+"/"+typename)
 		default:
-			glog.Errorf("Ignored unknown type %q in %q", typename, id)
+			glog.Errorf("Ignored unknown category %q with type %q in %q", category, typename, id)
 		}
 	}
 	return types, nil
