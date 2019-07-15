@@ -35,12 +35,12 @@
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "react-scripts build",
-    "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -q -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
+    "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
     "eject": "react-scripts eject",
     "postinstall": "cd ./server && npm i",
     "start": "react-scripts start",
-    "test": "react-scripts test --env=jsdom",
-    "test:coverage": "npm test -- --env=jsdom --coverage --watchAll=false"
+    "test": "TZ='America/New_York' react-scripts test --env=jsdom",
+    "test:coverage": "npm test -- --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,6 +61,7 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
+      "!src/apis/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/"
     ],
     "coverageReporters": [

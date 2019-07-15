@@ -105,12 +105,9 @@ export const css = stylesheet({
     transition: 'margin 0.2s',
   },
   expandedContainer: {
-    borderRadius: 10,
-    boxShadow: '0 1px 2px 0 rgba(60,64,67,0.30), 0 1px 3px 1px rgba(60,64,67,0.15)',
     margin: '16px 2px',
   },
   expandedRow: {
-    borderBottom: '1px solid transparent !important',
     boxSizing: 'border-box',
     height: '40px !important',
   },
@@ -206,6 +203,36 @@ interface CustomTableState {
   tokenList: string[];
 }
 
+interface CustomTableRowProps {
+  row: Row;
+  columns: Column[];
+}
+
+function calculateColumnWidths(columns: Column[]): number[] {
+  const totalFlex = columns.reduce((total, c) => total += (c.flex || 1), 0);
+  return columns.map(c => (c.flex || 1) / totalFlex * 100);
+}
+
+export const CustomTableRow: React.FC<CustomTableRowProps> = (props: CustomTableRowProps) => {
+  const {row, columns} = props;
+  const widths = calculateColumnWidths(columns);
+  return (
+    <React.Fragment>
+      {
+        row.otherFields.map((cell, i) => (
+          <div key={i} style={{width: widths[i] + '%'}} className={css.cell}>
+            {i === 0 && row.error && (
+              <Tooltip title={row.error}><WarningIcon className={css.icon} /></Tooltip>
+            )}
+            {columns[i].customRenderer ?
+              columns[i].customRenderer!({value: cell, id: row.id}) : cell}
+          </div>
+        ))
+      }
+    </React.Fragment>
+  );
+};
+
 export default class CustomTable extends React.Component<CustomTableProps, CustomTableState> {
   private _isMounted = true;
 
@@ -280,8 +307,7 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
   public render(): JSX.Element {
     const {filterString, pageSize, sortBy, sortOrder} = this.state;
     const numSelected = (this.props.selectedIds || []).length;
-    const totalFlex = this.props.columns.reduce((total, c) => total += (c.flex || 1), 0);
-    const widths = this.props.columns.map(c => (c.flex || 1) / totalFlex * 100);
+    const widths = calculateColumnWidths(this.props.columns);
 
     return (
       <div className={commonCss.pageOverflowHidden}>
@@ -389,18 +415,10 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                     )}
                   </div>
                 )}
-                {row.otherFields.map((cell, c) => (
-                  <div key={c} style={{width: widths[c] + '%'}} className={css.cell}>
-                    {c === 0 && row.error && (
-                      <Tooltip title={row.error}><WarningIcon className={css.icon} /></Tooltip>
-                    )}
-                    {this.props.columns[c].customRenderer ?
-                      this.props.columns[c].customRenderer!({value: cell, id: row.id}) : cell}
-                  </div>
-                ))}
+                {<CustomTableRow row={row} columns={this.props.columns} />}
               </div>
               {row.expandState === ExpandState.EXPANDED && this.props.getExpandComponent && (
-                <div className={padding(20, 'lrb')}>
+                <div>
                   {this.props.getExpandComponent(i)}
                 </div>
               )}

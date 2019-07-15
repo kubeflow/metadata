@@ -6,7 +6,7 @@ import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import {ApiListArtifactsResponse, ApiListArtifactTypesResponse} from '../apis/service';
-import CustomTable from '../components/CustomTable';
+import CustomTable, {ExpandState} from '../components/CustomTable';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -41,7 +41,7 @@ describe('ArtifactList', () => {
         uri: 'gs://my-bucket/mnist',
         properties: {
           name: {string_value: 'model'},
-          version: {string_value: 'v1'},
+          version: {string_value: 'v0'},
           create_time: {string_value: '2019-06-12T01:21:48.259263Z'},
         },
         custom_properties: {
@@ -54,7 +54,7 @@ describe('ArtifactList', () => {
         uri: 'gs://my-bucket/dataset2',
         properties: {
           name: {string_value: 'dataset'},
-          version: {string_value: 'v2'},
+          version: {string_value: 'v1'},
           create_time: {string_value: '2019-06-16T01:21:48.259263Z'},
         },
         custom_properties: {
@@ -63,6 +63,19 @@ describe('ArtifactList', () => {
       },
       {
         id: '3',
+        type_id: '2',
+        uri: 'gs://my-bucket/dataset2',
+        properties: {
+          name: {string_value: 'dataset'},
+          version: {string_value: 'v2'},
+          create_time: {string_value: '2019-07-01T01:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+      {
+        id: '4',
         type_id: '1',
         uri: 'gcs://my-bucket/mnist-eval.csv',
         properties: {
@@ -81,7 +94,20 @@ describe('ArtifactList', () => {
           __kf_run__: {string_value: 'run-2019-06-28T01:40:11.735816'},
           __kf_workspace__: {string_value: 'ws1'}
         }
-      }
+      },
+      {
+        id: '5',
+        type_id: '3',
+        uri: 'gs://my-bucket/mnist',
+        properties: {
+          name: {string_value: 'model'},
+          version: {string_value: 'v1'},
+          create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
     ]
   };
 
@@ -137,6 +163,26 @@ describe('ArtifactList', () => {
     expect(tree).toMatchSnapshot();
   });
 
+  it('Renders and sorts Artifacts in ascending order by version',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      table.reload({sortBy: 'version', orderAscending: true});
+      tree.update();
+
+      const rows = table.props.rows.map((r) =>
+        r.otherFields.slice(0, 2).join('-'));
+      expect(rows).toEqual(['MNIST-evaluation-', 'model-v0', 'dataset-v1']);
+      expect(tree).toMatchSnapshot();
+    });
+
   it('Renders and sorts Artifacts in descending order by created_at',
     async () => {
       mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
@@ -151,9 +197,64 @@ describe('ArtifactList', () => {
       table.reload({sortBy: 'created_at', orderAscending: false});
       tree.update();
 
-      const rows = table.props.rows.map((r) => r.otherFields[0]);
-      expect(rows).toEqual(['MNIST-evaluation', 'dataset', 'model']);
+      const rows = table.props.rows.map((r) =>
+        r.otherFields.slice(0, 2).join('-'));
+      expect(rows).toEqual(['dataset-v2', 'model-v1', 'MNIST-evaluation-']);
       expect(tree).toMatchSnapshot();
+    });
+
+  it('Renders and expands dataset Artifacts',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      const index = table.props.rows
+        .findIndex((r) => r.otherFields[0] === 'dataset');
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
+      const expandedRows = tree.find('.expandedContainer CustomTableRow');
+      expect(expandedRows.length).toBe(2);
+      expect(expandedRows.get(0).props.row.id)
+        .toBe('kubeflow.org/alpha/data_set:3');
+      expect(expandedRows.get(1).props.row.id)
+        .toBe('kubeflow.org/alpha/data_set:2');
+
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
+      expect(tree.find('.expandedContainer').exists()).toBeFalsy();
+    });
+
+  it('Renders and expands metrics Artifact with no grouped rows',
+    async () => {
+      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+      tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
+
+      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await TestUtils.flushPromises();
+      tree.update();
+
+      const table = tree.find(CustomTable).instance() as CustomTable;
+      const index = table.props.rows
+        .findIndex((r) => r.otherFields[0] === 'MNIST-evaluation');
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
+      const expandedRows = tree.find('.expandedContainer CustomTableRow');
+      expect(expandedRows.length).toBe(1);
+      expect(expandedRows.get(0).props.row.id)
+        .toBe('kubeflow.org/alpha/metrics:4');
+      expect(tree.find('.expandedContainer p').text())
+        .toBe('No other rows in group');
+
+      tree.find('IconButton.expandButton').at(index).simulate('click');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
+      expect(tree.find('.expandedContainer').exists()).toBeFalsy();
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {

@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import CustomTable, {Column, ExpandState, Row, css} from './CustomTable';
+import CustomTable, {Column, ExpandState, Row, css, CustomTableRow, CustomRendererProps} from './CustomTable';
 import * as TestUtils from '../TestUtils';
 import {shallow} from 'enzyme';
 
@@ -59,6 +59,80 @@ class CustomTableTest extends CustomTable {
     return super._requestFilter(filterString);
   }
 }
+
+describe('CustomTableRow', () => {
+
+  it('Renders cells with equal widths', () => {
+    const columns: Column[] = [
+      {label: 'name'},
+      {label: 'description'},
+      {label: 'price'},
+      {label: 'percentage'},
+    ]
+    const row: Row = {
+      id: '1',
+      otherFields: [
+        'test row',
+        'a great value',
+        '$56.00',
+        '25%',
+      ],
+    };
+    const props = {row, columns};
+    const tree = shallow(<CustomTableRow {...props} />);
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('Renders cells with explicit widths', () => {
+    const columns: Column[] = [
+      {label: 'name'},
+      {label: 'description', flex: 2},
+      {label: 'price'},
+      {label: 'percentage'},
+    ]
+    const row: Row = {
+      id: '1',
+      otherFields: [
+        'test row',
+        'a great value',
+        '$56.00',
+        '25%',
+      ],
+    };
+    const props = {row, columns};
+    const tree = shallow(<CustomTableRow {...props} />);
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('Renders with an error and custom renderer', () => {
+    const columns: Column[] = [
+      {
+        label: 'name',
+        flex: 1,
+        customRenderer: (props: CustomRendererProps<string>) => (
+          <p>custom rendered: {props.id} {props.value}</p>
+        )
+      },
+      {label: 'description', flex: 1, },
+      {label: 'price', flex: 1, },
+      {label: 'percentage', flex: 1, },
+    ]
+    const row: Row = {
+      id: '1',
+      error: 'Something bad happened',
+      otherFields: [
+        'test row',
+        'a great value',
+        '$56.00',
+        '25%',
+      ],
+    };
+    const props = {row, columns};
+    const tree = shallow(<CustomTableRow {...props} />);
+    expect(tree).toMatchSnapshot();
+  });
+
+});
 
 describe('CustomTable', () => {
   beforeAll(() => {
