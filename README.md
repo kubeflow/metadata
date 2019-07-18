@@ -1,7 +1,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/metadata)](https://goreportcard.com/report/github.com/kubeflow/metadata)
 
 # Metadata
-Repository for assets related to Metadata.
+Tracking and managing metadata of machine learning workflows in Kubeflow. For more information, you can visit [this page](https://www.kubeflow.org/docs/components/misc/metadata/).
 
 ## Building & Testing
 **Make sure to use the [Bazel 0.24.1](https://github.com/bazelbuild/bazel/releases/tag/0.24.1) version. If not,
