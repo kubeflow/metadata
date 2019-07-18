@@ -20,7 +20,7 @@
             "string_value": "v0.0.1"
         },
         "__ALL_META__": {
-            "string_value": "{\"description\":\"model to recognize handwritten digits\",\"hyperparameters\":{\"early_stop\":true,\"layers\":[10,3,1],\"learning_rate\":0.5},\"model_type\":\"neural network\",\"name\":\"MNIST\",\"owner\":\"someone@kubeflow.org\",\"training_framework\":{\"name\":\"tensorflow\",\"vesrion\":\"v1.0\"},\"uri\":\"gcs://my-bucket/mnist\",\"version\":\"v0.0.1\"}"
+            "string_value": "{\"description\":\"model to recognize handwritten digits\",\"hyperparameters\":{\"early_stop\":true,\"layers\":[10,3,1],\"learning_rate\":0.5},\"model_type\":\"neural network\",\"name\":\"MNIST\",\"owner\":\"someone@kubeflow.org\",\"training_framework\":{\"name\":\"tensorflow\",\"version\":\"v1.0\"},\"uri\":\"gcs://my-bucket/mnist\",\"version\":\"v0.0.1\"}"
         }
     },
     "custom_properties": {

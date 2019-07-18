@@ -1,6 +1,13 @@
-# Python Client
+# Python Library
 
 This directory conatins Python API for logging metadata of machine learning workflows to Kubeflow Metadata service.
+
+## Installation
+
+You can install this Python library for logging metadata via the following command:
+```
+pip install kfmd
+```
 
 ## Concepts
 - _Run_ describes an execution of a machine learning workflow, which can be a pipeline or a notebook.
@@ -9,7 +16,6 @@ This directory conatins Python API for logging metadata of machine learning work
 - _Workspace_ groups a set of runs and related artifacts and executions.
 
 ## Sample Usage
-See ![demo.ipynb](demo.ipynb).
+See ![this notebook](demo.ipynb).
 
 ![Concepts](concepts.png)
-
