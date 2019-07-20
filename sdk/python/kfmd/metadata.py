@@ -162,10 +162,9 @@ class Execution(object):
         "create_time":
             openapi_client.MlMetadataValue(string_value=self.create_time),
         "description":
-            openapi_client.MlMetadataValue(string_value=self.description),
+            _mlMetadataStringValue(self.description),
     })
-    if self.description is None:
-      del execution.properties["description"]
+    _del_none_properties(execution.properties)
 
     execution.custom_properties = {}
     if self.workspace is not None:
@@ -305,16 +304,17 @@ class DataSet(object):
             "create_time":
                 openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                openapi_client.MlMetadataValue(string_value=self.description),
+                _mlMetadataStringValue(self.description),
             "query":
-                openapi_client.MlMetadataValue(string_value=self.query),
+                _mlMetadataStringValue(self.query),
             "version":
-                openapi_client.MlMetadataValue(string_value=self.version),
+                _mlMetadataStringValue(self.version),
             "owner":
-                openapi_client.MlMetadataValue(string_value=self.owner),
+                _mlMetadataStringValue(self.owner),
             ALL_META_PROPERTY_NAME:
-                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
+                _mlMetadataStringValue(json.dumps(self.__dict__)),
         })
+    _del_none_properties(data_set_artifact.properties)
     return data_set_artifact
 
 class Model(object):
@@ -372,16 +372,17 @@ class Model(object):
             "create_time":
                 openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                openapi_client.MlMetadataValue(string_value=self.description),
+                _mlMetadataStringValue(self.description),
             "model_type":
-                openapi_client.MlMetadataValue(string_value=self.model_type),
+                _mlMetadataStringValue(self.model_type),
             "version":
-                openapi_client.MlMetadataValue(string_value=self.version),
+                _mlMetadataStringValue(self.version),
             "owner":
-                openapi_client.MlMetadataValue(string_value=self.owner),
+                _mlMetadataStringValue(self.owner),
             ALL_META_PROPERTY_NAME:
-                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
+                _mlMetadataStringValue(json.dumps(self.__dict__)),
         })
+    _del_none_properties(model_artifact.properties)
     return model_artifact
 
 
@@ -438,7 +439,7 @@ class Metrics(object):
     self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    model_artifact = openapi_client.MlMetadataArtifact(
+    metrics_artifact = openapi_client.MlMetadataArtifact(
         uri=self.uri,
         properties={
             "name":
@@ -446,19 +447,31 @@ class Metrics(object):
             "create_time":
                 openapi_client.MlMetadataValue(string_value=self.create_time),
             "description":
-                openapi_client.MlMetadataValue(string_value=self.description),
+                _mlMetadataStringValue(self.description),
             "metrics_type":
-                openapi_client.MlMetadataValue(string_value=self.metrics_type),
+                _mlMetadataStringValue(self.metrics_type),
             "data_set_id":
-                openapi_client.MlMetadataValue(string_value=self.data_set_id),
+                _mlMetadataStringValue(self.data_set_id),
             "model_id":
-                openapi_client.MlMetadataValue(string_value=self.model_id),
+                _mlMetadataStringValue(self.model_id),
             "owner":
-                openapi_client.MlMetadataValue(string_value=self.owner),
+                _mlMetadataStringValue(self.owner),
             ALL_META_PROPERTY_NAME:
-                openapi_client.MlMetadataValue(string_value=json.dumps(self.__dict__)),
+                _mlMetadataStringValue(json.dumps(self.__dict__)),
         })
-    return model_artifact
+    _del_none_properties(metrics_artifact.properties)
+    return metrics_artifact
 
 def get_rfc3339_time():
       return datetime.datetime.utcnow().isoformat("T") + "Z"
+
+def _mlMetadataStringValue(str):
+      if str is None:
+            return None
+      return openapi_client.MlMetadataValue(string_value=str)
+
+def _del_none_properties(dict):
+      keys = [k for k in dict.keys()]
+      for k in keys:
+            if dict[k] is None:
+                  del(dict[k])
