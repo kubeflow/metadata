@@ -15,7 +15,7 @@
 from setuptools import setup, find_packages
 
 NAME = 'kfmd'
-VERSION = '0.1.7'
+VERSION = '0.1.8'
 
 REQUIRES = [
 ]

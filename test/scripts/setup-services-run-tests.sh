@@ -130,5 +130,11 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 # Run Python tests
 pip install pandas
 cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
+# Test demo notebook
+pip install jupyterlab
+pip install nbconvert
+cd "${SRC_DIR}/sdk/python" && \
+  sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
+  python3 -m nbconvert --to notebook --execute demo.ipynb
 
 exit 0
