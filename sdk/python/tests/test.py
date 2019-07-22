@@ -24,7 +24,7 @@ class TestMetedata(unittest.TestCase):
         run=r,
         description="an execution",
     )
-    assert e.id
+    self.assertIsNotNone(e.id)
 
     data_set = e.log_input(
         metadata.DataSet(
@@ -34,7 +34,7 @@ class TestMetedata(unittest.TestCase):
             uri="file://path/to/dataset",
             version="v1.0.0",
             query="SELECT * FROM mytable"))
-    assert data_set.id
+    self.assertIsNotNone(data_set.id)
 
     metrics = e.log_output(
         metadata.Metrics(
@@ -47,7 +47,7 @@ class TestMetedata(unittest.TestCase):
             metrics_type=metadata.Metrics.VALIDATION,
             values={"accuracy": 0.95},
             labels={"mylabel": "l1"}))
-    assert metrics.id
+    self.assertIsNotNone(metrics.id)
 
     model = e.log_output(
         metadata.Model(
@@ -67,7 +67,7 @@ class TestMetedata(unittest.TestCase):
             },
             version="v0.0.1",
             labels={"mylabel": "l1"}))
-    assert model.id
+    self.assertIsNotNone(model.id)
 
     # Test listing artifacts in a workspace
     self.assertTrue(len(ws1.list()) > 0)
@@ -107,26 +107,26 @@ class TestMetedata(unittest.TestCase):
     ))
     self.assertRaises(ValueError, e.log_output, artifact2)
 
-  def test_log_metadata_successfully_with_minimum_inforamtion(self):
+  def test_log_metadata_successfully_with_minimum_information(self):
     ws1 = metadata.Workspace(backend_url_prefix="127.0.0.1:8080", name="ws_1")
 
     r = metadata.Run(workspace=ws1, name="first run")
 
     e = metadata.Execution(name="test execution", workspace=ws1, run=r)
-    assert e.id
+    self.assertIsNotNone(e.id)
 
     data_set = e.log_input(
         metadata.DataSet(name="mytable-dump", uri="file://path/to/dataset"))
-    assert data_set.id
+    self.assertIsNotNone(data_set.id)
 
     metrics = e.log_output(
         metadata.Metrics(name="MNIST-evaluation",
             uri="gcs://my-bucket/mnist-eval.csv"))
-    assert metrics.id
+    self.assertIsNotNone(metrics.id)
 
     model = e.log_output(
         metadata.Model(name="MNIST", uri="gcs://my-bucket/mnist"))
-    assert model.id
+    self.assertIsNotNone(model.id)
 
 class ArtifactFixture(object):
   ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"

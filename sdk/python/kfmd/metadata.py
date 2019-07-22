@@ -14,8 +14,8 @@
 
 import datetime
 import json
-import kfmd.openapi_client as openapi_client
-from kfmd.openapi_client import Configuration, ApiClient, MetadataServiceApi
+from kfmd import openapi_client
+from openapi_client import Configuration, ApiClient, MetadataServiceApi
 
 """
 This module conatins Python API for logging metadata of machine learning
