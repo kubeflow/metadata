@@ -34,7 +34,8 @@ swagger-py-client:
     java -jar /tmp/swagger/swagger-codegen-cli.jar generate \
     	-i api/service.swagger.json \
     	-g python \
+		--package-name kfmd.openapi_client \
     	-o /tmp/swagger && \
     rm -rf sdk/python/kfmd/swagger_client && \
-    cp -r /tmp/swagger/openapi_client sdk/python/kfmd/ && \
+    cp -r /tmp/swagger/kfmd/openapi_client sdk/python/kfmd/ && \
     rm -rf /tmp/swagger

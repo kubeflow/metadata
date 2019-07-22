@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 NAME = 'kfmd'
-VERSION = '0.1.6'
+VERSION = '0.1.8'
 
 REQUIRES = [
 ]
@@ -26,10 +26,7 @@ setup(
     description='KubeFlow Metadata SDK',
     author='google',
     install_requires=REQUIRES,
-    packages=[
-        'kfmd',
-        'kfmd.openapi_client',
-    ],
+    packages=find_packages(),
     classifiers=[
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
