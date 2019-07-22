@@ -1004,7 +1004,7 @@ func storeArtifact(t *testing.T, store *mlmetadata.Store, typename string, artif
 	return resp
 }
 
-func storeExecution(t *testing.T, store *mlmetadata.Store, typename string, artifacts []*mlpb.Execution) []mlmetadata.ExecutionID {
+func storeExecution(t *testing.T, store *mlmetadata.Store, typename string, executions []*mlpb.Execution) []mlmetadata.ExecutionID {
 	aType := &mlpb.ExecutionType{
 		Name:       proto.String(typename),
 		Properties: map[string]mlpb.PropertyType{"name": mlpb.PropertyType_STRING},
@@ -1015,13 +1015,13 @@ func storeExecution(t *testing.T, store *mlmetadata.Store, typename string, arti
 		t.Fatalf("Failed to create ExecutionType %+v: %v", aType, err)
 	}
 
-	for _, artifact := range artifacts {
-		artifact.TypeId = proto.Int64(int64(typeID))
+	for _, execution := range executions {
+		execution.TypeId = proto.Int64(int64(typeID))
 	}
 
-	resp, err := store.PutExecutions(artifacts)
+	resp, err := store.PutExecutions(executions)
 	if err != nil {
-		t.Fatalf("Failed to put Executions %+v: %v", artifacts, err)
+		t.Fatalf("Failed to put Executions %+v: %v", executions, err)
 	}
 	return resp
 }
