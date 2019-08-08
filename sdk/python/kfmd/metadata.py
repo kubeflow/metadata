@@ -18,8 +18,8 @@ from kfmd import openapi_client
 from kfmd.openapi_client import Configuration, ApiClient, MetadataServiceApi
 
 """
-This module conatins Python API for logging metadata of machine learning
-workflows to Kubeflow Metadata service.
+This module contains the Python API for logging metadata of machine learning
+workflows to the Kubeflow Metadata service.
 """
 
 WORKSPACE_PROPERTY_NAME = '__kf_workspace__'

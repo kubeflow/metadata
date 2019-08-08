@@ -1,6 +1,6 @@
 # Python Library
 
-This directory conatins Python API for logging metadata of machine learning workflows to Kubeflow Metadata service.
+This directory contains the Python API for logging metadata of machine learning workflows to the Kubeflow Metadata service.
 
 ## Installation
 
