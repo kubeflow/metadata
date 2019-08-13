@@ -15,7 +15,7 @@
  */
 
 import {isFunction} from 'lodash';
-import {MlMetadataArtifact} from '../apis/service';
+import {MlMetadataArtifact, MlMetadataValue} from '../apis/service';
 
 export const logger = {
   error: (...args: any[]) => {
@@ -69,4 +69,8 @@ export function getArtifactProperty(artifact: MlMetadataArtifact,
 
   return (props && props[propertyName] && props[propertyName].string_value)
     || null;
+}
+
+export function getMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
+  return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
 }

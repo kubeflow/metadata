@@ -163,7 +163,7 @@ describe('ArtifactList', () => {
     expect(tree).toMatchSnapshot();
   });
 
-  it('Renders and sorts Artifacts in ascending order by version',
+  it('Renders and sorts Artifacts in ascending order by id',
     async () => {
       mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
@@ -174,7 +174,7 @@ describe('ArtifactList', () => {
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      table.reload({sortBy: 'version', orderAscending: true});
+      table.reload({sortBy: 'id', orderAscending: true});
       tree.update();
 
       const rows = table.props.rows.map((r) =>
@@ -183,7 +183,7 @@ describe('ArtifactList', () => {
       expect(tree).toMatchSnapshot();
     });
 
-  it('Renders and sorts Artifacts in descending order by created_at',
+  it('Renders and sorts Artifacts in descending order by name',
     async () => {
       mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
@@ -194,12 +194,12 @@ describe('ArtifactList', () => {
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      table.reload({sortBy: 'created_at', orderAscending: false});
+      table.reload({sortBy: 'name', orderAscending: true});
       tree.update();
 
       const rows = table.props.rows.map((r) =>
         r.otherFields.slice(0, 2).join('-'));
-      expect(rows).toEqual(['dataset-v2', 'model-v1', 'MNIST-evaluation-']);
+      expect(rows).toEqual(['dataset-v2', 'MNIST-evaluation-', 'model-v1']);
       expect(tree).toMatchSnapshot();
     });
 
@@ -230,7 +230,7 @@ describe('ArtifactList', () => {
       expect(tree.find('.expandedContainer').exists()).toBeFalsy();
     });
 
-  it('Renders and expands metrics Artifact with no grouped rows',
+  it('Renders metrics Artifact with no grouped rows with placeholder',
     async () => {
       mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
@@ -241,20 +241,11 @@ describe('ArtifactList', () => {
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      const index = table.props.rows
-        .findIndex((r) => r.otherFields[0] === 'MNIST-evaluation');
-      tree.find('IconButton.expandButton').at(index).simulate('click');
-      expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
-      const expandedRows = tree.find('.expandedContainer CustomTableRow');
-      expect(expandedRows.length).toBe(1);
-      expect(expandedRows.get(0).props.row.id)
-        .toBe('kubeflow.org/alpha/metrics:4');
-      expect(tree.find('.expandedContainer p').text())
-        .toBe('No other rows in group');
-
-      tree.find('IconButton.expandButton').at(index).simulate('click');
-      expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
+      const index = table.props.rows.findIndex((r) => r.otherFields[0] === 'MNIST-evaluation');
+      expect(table.props.rows[index].expandState).toBe(ExpandState.NONE);
+      expect(tree.find('.expandButtonPlaceholder').exists())
       expect(tree.find('.expandedContainer').exists()).toBeFalsy();
+      expect(tree).toMatchSnapshot();
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {

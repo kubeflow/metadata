@@ -109,61 +109,40 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
         <h1
           className="header"
         >
+          Type: 
           Model
-           info
         </h1>
+        <h2
+          className="header2"
+        >
+          Properties
+        </h2>
         <dl
           className="artifactInfo"
         >
           <div
             className="field"
+            key="name"
           >
             <dt
               className="term"
             >
-              Version ID
+              name
             </dt>
             <dd
               className="value"
             >
-              v1
+              test model
             </dd>
           </div>
           <div
             className="field"
+            key="description"
           >
             <dt
               className="term"
             >
-              Workspace
-            </dt>
-            <dd
-              className="value"
-            >
-              workspace-1
-            </dd>
-          </div>
-          <div
-            className="field"
-          >
-            <dt
-              className="term"
-            >
-              Run
-            </dt>
-            <dd
-              className="value"
-            >
-              1
-            </dd>
-          </div>
-          <div
-            className="field"
-          >
-            <dt
-              className="term"
-            >
-              Description
+              description
             </dt>
             <dd
               className="value"
@@ -173,124 +152,73 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
           </div>
           <div
             className="field"
+            key="version"
           >
             <dt
               className="term"
             >
-              Creation time
+              version
             </dt>
             <dd
               className="value"
             >
-              6/11/2019, 9:21:48 PM
+              v1
             </dd>
           </div>
-          <ModelInfo
-            model={
-              Object {
-                "custom_properties": Object {
-                  "__kf_run__": Object {
-                    "string_value": "1",
-                  },
-                  "__kf_workspace__": Object {
-                    "string_value": "workspace-1",
-                  },
-                },
-                "id": "1",
-                "properties": Object {
-                  "__ALL_META__": Object {
-                    "string_value": "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
-                  },
-                  "create_time": Object {
-                    "string_value": "2019-06-12T01:21:48.259263Z",
-                  },
-                  "description": Object {
-                    "string_value": "A really great model",
-                  },
-                  "name": Object {
-                    "string_value": "test model",
-                  },
-                  "version": Object {
-                    "string_value": "v1",
-                  },
-                },
-                "type_id": "1",
-                "uri": "gs://my-bucket/mnist",
-              }
-            }
+          <div
+            className="field"
+            key="create_time"
           >
-            <div
-              className="field"
+            <dt
+              className="term"
             >
-              <dt
-                className="term"
-              >
-                Type
-              </dt>
-              <dd
-                className="value"
-              >
-                neural network
-              </dd>
-            </div>
-            <div
-              className="field"
+              create_time
+            </dt>
+            <dd
+              className="value"
             >
-              <dt
-                className="term"
-              >
-                Hyperparameters
-              </dt>
-              <dd
-                className="value flexColumn"
-              >
-                <span
-                  key="0"
-                >
-                  early_stop: true
-                </span>
-                <span
-                  key="1"
-                >
-                  layers: 10,3,1
-                </span>
-                <span
-                  key="2"
-                >
-                  learning_rate: 0.5
-                </span>
-              </dd>
-            </div>
-            <div
-              className="field"
+              2019-06-12T01:21:48.259263Z
+            </dd>
+          </div>
+        </dl>
+        <h2
+          className="header2"
+        >
+          Custom Properties
+        </h2>
+        <dl
+          className="artifactInfo"
+        >
+          <div
+            className="field"
+            key="__kf_workspace__"
+          >
+            <dt
+              className="term"
             >
-              <dt
-                className="term"
-              >
-                Training data
-              </dt>
-              <dd
-                className="value"
-              >
-                gs://my-bucket/mnist
-              </dd>
-            </div>
-            <div
-              className="field"
+              __kf_workspace__
+            </dt>
+            <dd
+              className="value"
             >
-              <dt
-                className="term"
-              >
-                Training framework
-              </dt>
-              <dd
-                className="value"
-              >
-                tensorflow
-                   v1.0
-              </dd>
-            </div>
-          </ModelInfo>
+              workspace-1
+            </dd>
+          </div>
+          <div
+            className="field"
+            key="__kf_run__"
+          >
+            <dt
+              className="term"
+            >
+              __kf_run__
+            </dt>
+            <dd
+              className="value"
+            >
+              1
+            </dd>
+          </div>
         </dl>
       </section>
     </ArtifactInfo>

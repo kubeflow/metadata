@@ -5,61 +5,40 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
   <h1
     className="header"
   >
+    Type: 
     Model
-     info
   </h1>
+  <h2
+    className="header2"
+  >
+    Properties
+  </h2>
   <dl
     className="artifactInfo"
   >
     <div
       className="field"
+      key="name"
     >
       <dt
         className="term"
       >
-        Version ID
+        name
       </dt>
       <dd
         className="value"
       >
-        v1
+        test model
       </dd>
     </div>
     <div
       className="field"
+      key="description"
     >
       <dt
         className="term"
       >
-        Workspace
-      </dt>
-      <dd
-        className="value"
-      >
-        workspace-1
-      </dd>
-    </div>
-    <div
-      className="field"
-    >
-      <dt
-        className="term"
-      >
-        Run
-      </dt>
-      <dd
-        className="value"
-      >
-        1
-      </dd>
-    </div>
-    <div
-      className="field"
-    >
-      <dt
-        className="term"
-      >
-        Description
+        description
       </dt>
       <dd
         className="value"
@@ -69,88 +48,51 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
     </div>
     <div
       className="field"
+      key="version"
     >
       <dt
         className="term"
       >
-        Creation time
+        version
       </dt>
       <dd
         className="value"
       >
-        6/11/2019, 9:21:48 PM
+        v1
       </dd>
     </div>
-    <ModelInfo
-      model={
-        Object {
-          "custom_properties": Object {
-            "__kf_run__": Object {
-              "string_value": "1",
-            },
-            "__kf_workspace__": Object {
-              "string_value": "workspace-1",
-            },
-          },
-          "id": "1",
-          "properties": Object {
-            "__ALL_META__": Object {
-              "string_value": "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
-            },
-            "create_time": Object {
-              "string_value": "2019-06-12T01:21:48.259263Z",
-            },
-            "description": Object {
-              "string_value": "A really great model",
-            },
-            "name": Object {
-              "string_value": "test model",
-            },
-            "version": Object {
-              "string_value": "v1",
-            },
-          },
-          "type_id": "1",
-          "uri": "gs://my-bucket/mnist",
-        }
-      }
-    />
+    <div
+      className="field"
+      key="create_time"
+    >
+      <dt
+        className="term"
+      >
+        create_time
+      </dt>
+      <dd
+        className="value"
+      >
+        2019-06-12T01:21:48.259263Z
+      </dd>
+    </div>
   </dl>
-</section>
-`;
-
-exports[`ArtifactInfo Renders generic Artifact information 1`] = `
-<section>
-  <h1
-    className="header"
+  <h2
+    className="header2"
   >
-    Data Set
-     info
-  </h1>
+    Custom Properties
+  </h2>
   <dl
     className="artifactInfo"
   >
     <div
       className="field"
+      key="__kf_workspace__"
     >
       <dt
         className="term"
       >
-        Version ID
-      </dt>
-      <dd
-        className="value"
-      >
-        v0.0.1
-      </dd>
-    </div>
-    <div
-      className="field"
-    >
-      <dt
-        className="term"
-      >
-        Workspace
+        __kf_workspace__
       </dt>
       <dd
         className="value"
@@ -160,54 +102,106 @@ exports[`ArtifactInfo Renders generic Artifact information 1`] = `
     </div>
     <div
       className="field"
+      key="__kf_run__"
     >
       <dt
         className="term"
       >
-        Run
+        __kf_run__
       </dt>
       <dd
         className="value"
-      />
+      >
+        1
+      </dd>
     </div>
+  </dl>
+</section>
+`;
+
+exports[`ArtifactInfo Renders generic Artifact information 1`] = `
+<section>
+  <h1
+    className="header"
+  >
+    Type: 
+    Data Set
+  </h1>
+  <h2
+    className="header2"
+  >
+    Properties
+  </h2>
+  <dl
+    className="artifactInfo"
+  >
     <div
       className="field"
+      key="name"
     >
       <dt
         className="term"
       >
-        Description
-      </dt>
-      <dd
-        className="value"
-      />
-    </div>
-    <div
-      className="field"
-    >
-      <dt
-        className="term"
-      >
-        Creation time
+        name
       </dt>
       <dd
         className="value"
       >
-        6/11/2019, 9:21:48 PM
+        test dataset
       </dd>
     </div>
     <div
       className="field"
+      key="version"
     >
       <dt
         className="term"
       >
-        URI
+        version
       </dt>
       <dd
         className="value"
       >
-        gs://my-bucket/dataset
+        v0.0.1
+      </dd>
+    </div>
+    <div
+      className="field"
+      key="create_time"
+    >
+      <dt
+        className="term"
+      >
+        create_time
+      </dt>
+      <dd
+        className="value"
+      >
+        2019-06-12T01:21:48.259263Z
+      </dd>
+    </div>
+  </dl>
+  <h2
+    className="header2"
+  >
+    Custom Properties
+  </h2>
+  <dl
+    className="artifactInfo"
+  >
+    <div
+      className="field"
+      key="__kf_workspace__"
+    >
+      <dt
+        className="term"
+      >
+        __kf_workspace__
+      </dt>
+      <dd
+        className="value"
+      >
+        workspace-1
       </dd>
     </div>
   </dl>

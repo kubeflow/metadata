@@ -40,7 +40,7 @@ if (process.argv.length < 3) {
   console.error(`\
 Usage: node server.js <static-dir> [port].
        You can specify the API server address using the
-       METADATA_SERVICE_HOST and ML_PIPELINE_SERVICE_PORT
+       METADATA_SERVICE_HOST and METADATA_SERVICE_SERVICE_PORT
        env vars.`);
   process.exit(1);
 }
@@ -50,7 +50,7 @@ const staticDir = path.resolve(process.argv[2]);
 const port = process.argv[3] || 3000;
 const apiServerAddress = `http://${METADATA_SERVICE_SERVICE_HOST}:${METADATA_SERVICE_SERVICE_PORT}`;
 
-const v1beta1Prefix = 'api/v1alpha1';
+const v1alpha1Prefix = 'api/v1alpha1';
 
 const clusterNameHandler = async (req, res) => {
   const response = await fetch(
@@ -74,7 +74,7 @@ app.get(BASEPATH + '/system/cluster-name', clusterNameHandler);
 app.get('/system/project-id', projectIdHandler);
 app.get(BASEPATH + '/system/project-id', projectIdHandler);
 
-app.all('/' + v1beta1Prefix + '/*', proxy({
+app.all('/' + v1alpha1Prefix + '/*', proxy({
   changeOrigin: true,
   onProxyReq: proxyReq => {
     console.log('Proxied request: ', (proxyReq as any).path);
@@ -82,7 +82,7 @@ app.all('/' + v1beta1Prefix + '/*', proxy({
   target: apiServerAddress,
 }));
 
-app.all(BASEPATH  + '/' + v1beta1Prefix + '/*', proxy({
+app.all(BASEPATH  + '/' + v1alpha1Prefix + '/*', proxy({
   changeOrigin: true,
   onProxyReq: proxyReq => {
     console.log('Proxied request: ', (proxyReq as any).path);

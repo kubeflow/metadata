@@ -82,8 +82,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
 
   private async load(): Promise<void> {
     try {
-      const {artifact} = await this.api.metadataService
-        .getArtifact(this.id, this.fullTypeName);
+      const {artifact} = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
       if (!artifact) {
         throw new Error(
           `No ${this.fullTypeName} identified by id: ${this.id}`);

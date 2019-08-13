@@ -23,7 +23,7 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {formatDateString, getArtifactProperty} from '../lib/Utils';
+import {getArtifactProperty} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
@@ -66,11 +66,13 @@ class ArtifactList extends Page<{}, PipelineListState> {
           customRenderer: this.nameCustomRenderer,
           sortKey: 'name',
         },
-        {label: 'Version', flex: 1, sortKey: 'version'},
+        // TODO: change references to this to use ID rather than version
+        {label: 'ID', flex: 1, sortKey: 'id'},
         {label: 'Type', flex: 2, sortKey: 'type'},
         {label: 'URI', flex: 2, sortKey: 'uri', },
         {label: 'Workspace', flex: 1, sortKey: 'workspace'},
-        {label: 'Created at', flex: 1, sortKey: 'created_at'},
+        // TODO: Get timestamp from the event that created this artifact.
+        // {label: 'Created at', flex: 1, sortKey: 'created_at'},
       ],
       rows: [],
       expandedRows: new Map(),
@@ -98,8 +100,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
-          initialSortColumn='version'
-          initialSortOrder='desc'
+          initialSortColumn='name'
+          initialSortOrder='asc'
           getExpandComponent={this.getExpandedRow}
           toggleExpansion={this.toggleRowExpand}
           emptyMessage='No artifacts found.' />
@@ -157,7 +159,6 @@ class ArtifactList extends Page<{}, PipelineListState> {
    */
   private getRowsFromArtifacts(request: ListRequest): Row[] {
     return this.groupRows(this.state.artifacts
-      .filter((a) => !!a.properties) // We can't show much without properties
       .map((a) => { // Flattens
         const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
           this.artifactTypes.get(a.type_id!)!.name : a.type_id;
@@ -169,14 +170,14 @@ class ArtifactList extends Page<{}, PipelineListState> {
             type,
             a.uri,
             getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
-            formatDateString(
-              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
+            // TODO: Get timestamp from the event that created this artifact.
+            // formatDateString(
+            //   getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
           ],
         };
       })
-      .filter((r) => !request.filter || r.otherFields.join('')
-        .toLowerCase()
-        .indexOf(request.filter.toLowerCase()) > -1)
+      .filter((r) => !request.filter
+        || (r.otherFields[0] || '').toLowerCase().indexOf(request.filter.toLowerCase()) > -1)
       .sort((r1, r2) => {
         if (!request.sortBy) return -1;
 
@@ -185,8 +186,8 @@ class ArtifactList extends Page<{}, PipelineListState> {
         const sortIndex = this.state.columns
           .findIndex((c) => sortBy === c.sortKey);
         // Convert null to string to avoid null comparison behavior
-        const compare = (r1.otherFields[sortIndex] || '') <
-          (r2.otherFields[sortIndex] || '');
+        const compare = (r1.otherFields[sortIndex] || '').toLocaleLowerCase() <
+          (r2.otherFields[sortIndex] || '').toLocaleLowerCase();
         if (request.orderAscending) {
           return compare ? -1 : 1;
         } else {
@@ -217,6 +218,9 @@ class ArtifactList extends Page<{}, PipelineListState> {
     const expandedRows = new Map<number, Row[]>();
     Array.from(flattenedRows.entries()) // entries() returns in insertion order
       .forEach((r, index) => {
+        if (r[1].length === 1) {
+          r[1][0].expandState = ExpandState.NONE;
+        }
         grouped.push(r[1][0]);
         expandedRows.set(index, r[1].slice(1));
       });
@@ -244,9 +248,6 @@ class ArtifactList extends Page<{}, PipelineListState> {
    */
   private getExpandedRow(index: number): React.ReactNode {
     const rows = this.state.expandedRows.get(index) || [];
-    if (!(rows && rows.length)) {
-      return <p className={classes(padding(10, 't'), padding(65, 'l'))}>No other rows in group</p>;
-    }
     return (
       <div className={padding(65, 'l')}>
         {

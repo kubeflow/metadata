@@ -101,6 +101,9 @@ export const css = stylesheet({
   expandButtonExpanded: {
     transform: 'rotate(90deg)',
   },
+  expandButtonPlaceholder: {
+    width: 54,
+  },
   expandableContainer: {
     transition: 'margin 0.2s',
   },
@@ -398,7 +401,9 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                   row.expandState === ExpandState.EXPANDED && css.expandedRow
                 )}
                 onClick={e => this.handleClick(e, row.id)}>
-                {(this.props.disableSelection !== true || !!this.props.getExpandComponent) && (
+
+                {/* Expansion toggle button */}
+                {((this.props.disableSelection !== true || !!this.props.getExpandComponent) && row.expandState !== ExpandState.NONE) && (
                   <div className={classes(css.cell, css.selectionToggle)}>
                     {/* If using checkboxes */}
                     {(this.props.disableSelection !== true && this.props.useRadioButtons !== true) && (
@@ -415,6 +420,12 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
                     )}
                   </div>
                 )}
+
+                {/* Placeholder for non-expandable rows */}
+                {row.expandState === ExpandState.NONE && (
+                  <div className={css.expandButtonPlaceholder}></div>
+                )}
+
                 {<CustomTableRow row={row} columns={this.props.columns} />}
               </div>
               {row.expandState === ExpandState.EXPANDED && this.props.getExpandComponent && (
