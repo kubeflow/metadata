@@ -23,7 +23,7 @@ import {MlMetadataArtifact} from '../apis/service';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
-import {titleCase, getArtifactProperty} from '../lib/Utils';
+import {titleCase, getResourceProperty} from '../lib/Utils';
 import {ArtifactInfo} from '../components/ArtifactInfo';
 
 interface ArtifactDetailsState {
@@ -88,8 +88,8 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           `No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
-      let title = getArtifactProperty(artifact, ArtifactProperties.NAME) || '';
-      const version = getArtifactProperty(artifact, ArtifactProperties.VERSION);
+      let title = getResourceProperty(artifact, ArtifactProperties.NAME) || '';
+      const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
       if (version) {
         title += ` (version: ${version})`;
       }

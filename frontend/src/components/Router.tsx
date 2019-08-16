@@ -39,14 +39,15 @@ const css = stylesheet({
 
 export enum RouteParams {
   ARTIFACT_TYPE = 'artifactType',
+  EXECUTION_TYPE = 'executionType',
   ID = 'id',
 }
 
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
-  ARTIFACT_DETAILS:
-    `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
+  ARTIFACT_DETAILS: `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
   EXECUTIONS: '/executions',
+  EXECUTION_DETAILS: `/execution_types/:${RouteParams.EXECUTION_TYPE}+/executions/:${RouteParams.ID}`,
 };
 
 export interface DialogProps {

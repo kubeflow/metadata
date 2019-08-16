@@ -16,21 +16,21 @@
 
 import * as React from 'react';
 import CustomTable, {
-  css as customTableCss, CustomRendererProps, Column,
-  Row, ExpandState, CustomTableRow
+  CustomRendererProps, Column,
+  Row, ExpandState
 } from '../components/CustomTable';
 import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
-import { formatDateString, getArtifactProperty } from '../lib/Utils';
-import { Api, ArtifactProperties, ArtifactCustomProperties, ListRequest } from '../lib/Api';
-import { MlMetadataArtifact, MlMetadataExecutionType } from '../apis/service/api';
+import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
+import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
+import { MlMetadataExecutionType, MlMetadataExecution } from '../apis/service/api';
 import { Link } from 'react-router-dom';
 import { RoutePage, RouteParams } from '../components/Router';
 
 interface ExecutionListState {
-  artifacts: MlMetadataArtifact[];
+  executions: MlMetadataExecution[];
   rows: Row[];
   expandedRows: Map<number, Row[]>;
   columns: Column[];
@@ -42,10 +42,10 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   private executionTypes: Map<string, MlMetadataExecutionType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
-      const [artifactType, artifactId] = props.id.split(':');
-      const link = RoutePage.ARTIFACT_DETAILS
-        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
-        .replace(`:${RouteParams.ID}`, artifactId);
+      const [executionsType, executionsId] = props.id.split(':');
+      const link = RoutePage.EXECUTION_DETAILS
+        .replace(`:${RouteParams.EXECUTION_TYPE}+`, executionsType)
+        .replace(`:${RouteParams.ID}`, executionsId);
       return (
         <Link onClick={(e) => e.stopPropagation()}
           className={commonCss.link}
@@ -58,26 +58,25 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      artifacts: [],
+      executions: [],
       columns: [
+        { label: 'Pipeline/Workspace', flex: 2, sortKey: 'pipelineName' },
         {
           label: 'Name',
           flex: 1,
           customRenderer: this.nameCustomRenderer,
           sortKey: 'name',
         },
-        { label: 'Version', flex: 1, sortKey: 'version' },
+        { label: 'State', flex: 1, sortKey: 'state', },
+        { label: 'ID', flex: 1, sortKey: 'id' },
         { label: 'Type', flex: 2, sortKey: 'type' },
-        { label: 'URI', flex: 2, sortKey: 'uri', },
-        { label: 'Workspace', flex: 1, sortKey: 'workspace' },
-        { label: 'Created at', flex: 1, sortKey: 'created_at' },
       ],
       rows: [],
       expandedRows: new Map(),
     };
     this.reload = this.reload.bind(this);
     this.toggleRowExpand = this.toggleRowExpand.bind(this);
-    this.getExpandedRow = this.getExpandedRow.bind(this);
+    this.getExpandedExecutionsRow = this.getExpandedExecutionsRow.bind(this);
   }
 
   public getInitialToolbarState(): ToolbarProps {
@@ -98,11 +97,11 @@ class ExecutionList extends Page<{}, ExecutionListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
-          initialSortColumn='version'
-          initialSortOrder='desc'
-          getExpandComponent={this.getExpandedRow}
+          initialSortColumn='pipelineName'
+          initialSortOrder='asc'
+          getExpandComponent={this.getExpandedExecutionsRow}
           toggleExpansion={this.toggleRowExpand}
-          emptyMessage='No artifacts found.' />
+          emptyMessage='No executions found.' />
       </div>
     );
   }
@@ -118,18 +117,15 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     if (!this.executionTypes || !this.executionTypes.size) {
       this.executionTypes = await this.getExecutionTypes();
     }
-    const { artifacts } = this.state;
-    if (!artifacts.length) {
-      try {
-        const response = await this.api.metadataService.listArtifacts2();
-        this.setState({ artifacts: (response && response.artifacts) || [] });
-        this.clearBanner();
-      } catch (err) {
-        this.showPageError('Unable to retrieve Artifacts.', err);
-      }
+    try {
+      const response = await this.api.metadataService.listExecutions2();
+      this.setState({ executions: (response && response.executions) || [] });
+      this.clearBanner();
+    } catch (err) {
+      this.showPageError('Unable to retrieve Executions.', err);
     }
     this.setState({
-      rows: this.getRowsFromArtifacts(request),
+      rows: this.getRowsFromExecutions(request),
     });
     return '';
   }
@@ -146,78 +142,32 @@ class ExecutionList extends Page<{}, ExecutionListState> {
 
   /**
    * Temporary solution to apply sorting, filtering, and pagination to the
-   * local list of artifacts until server-side handling is available
+   * local list of executions until server-side handling is available
    * TODO: Replace once https://github.com/kubeflow/metadata/issues/73 is done.
    * @param request
    */
-  private getRowsFromArtifacts(request: ListRequest): Row[] {
-    return this.groupRows(this.state.artifacts
-      .filter((a) => !!a.properties) // We can't show much without properties
-      .map((a) => { // Flattens
-        const type = this.executionTypes && this.executionTypes.get(a.type_id!) ?
-          this.executionTypes.get(a.type_id!)!.name : a.type_id;
+  private getRowsFromExecutions(request: ListRequest): Row[] {
+    const collapsedAndExpandedRows = groupRows(this.state.executions
+      .map((execution) => { // Flattens
+        const type = this.executionTypes && this.executionTypes.get(execution.type_id!) ?
+          this.executionTypes.get(execution.type_id!)!.name : execution.type_id;
         return {
-          id: `${type}:${a.id}`, // Join with colon so we can build the link
+          id: `${type}:${execution.id}`, // Join with colon so we can build the link
           otherFields: [
-            getArtifactProperty(a, ArtifactProperties.NAME),
-            getArtifactProperty(a, ArtifactProperties.VERSION),
+            getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
+            || getResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
+            getResourceProperty(execution, ExecutionProperties.NAME),
+            getResourceProperty(execution, ExecutionProperties.STATE),
+            execution.id,
             type,
-            a.uri,
-            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
-            formatDateString(
-              getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
           ],
         };
       })
-      .filter((r) => !request.filter || r.otherFields.join('')
-        .toLowerCase()
-        .indexOf(request.filter.toLowerCase()) > -1)
-      .sort((r1, r2) => {
-        if (!request.sortBy) return -1;
+      .filter(rowFilterFn(request))
+      .sort(rowCompareFn(request, this.state.columns)));
 
-        const sortBy = request.sortBy.endsWith(' desc') ?
-          request.sortBy.slice(0, request.sortBy.length - 5) : request.sortBy;
-        const sortIndex = this.state.columns
-          .findIndex((c) => sortBy === c.sortKey);
-        // Convert null to string to avoid null comparison behavior
-        const compare = (r1.otherFields[sortIndex] || '') <
-          (r2.otherFields[sortIndex] || '');
-        if (request.orderAscending) {
-          return compare ? -1 : 1;
-        } else {
-          return compare ? 1 : -1;
-        }
-      }));
-  }
-
-  /**
-   * Groups the incoming rows by name and type pushing all but the first row
-   * of each group to the expandedRows Map.
-   * @param rows
-   */
-  private groupRows(rows: Row[]): Row[] {
-    const flattenedRows = rows.reduce((map, r) => {
-      // Artifact row key is "{artifact_type}/{name}"
-      const stringKey = `${r.otherFields[2]}/${r.otherFields[0]}`;
-      const rows = map.get(stringKey);
-      if (rows) {
-        rows.push(r);
-      } else {
-        map.set(stringKey, [r]);
-      }
-      return map;
-    }, new Map<string, Row[]>());
-
-    const grouped: Row[] = [];
-    const expandedRows = new Map<number, Row[]>();
-    Array.from(flattenedRows.entries()) // entries() returns in insertion order
-      .forEach((r, index) => {
-        grouped.push(r[1][0]);
-        expandedRows.set(index, r[1].slice(1));
-      });
-
-    this.setState({ expandedRows });
-    return grouped;
+    this.setState({ expandedRows: collapsedAndExpandedRows.expandedRows });
+    return collapsedAndExpandedRows.collapsedRows;
   }
 
   /**
@@ -226,33 +176,17 @@ class ExecutionList extends Page<{}, ExecutionListState> {
    */
   private toggleRowExpand(index: number): void {
     const { rows } = this.state;
-    if (!rows[index]) return;
-    rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED ?
-      ExpandState.COLLAPSED : ExpandState.EXPANDED;
+    if (!rows[index]) {
+      return;
+    }
+    rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED
+      ? ExpandState.COLLAPSED
+      : ExpandState.EXPANDED;
     this.setState({ rows });
   }
 
-  /**
-   * Returns a fragment representing the expanded content for the given
-   * row.
-   * @param index
-   */
-  private getExpandedRow(index: number): React.ReactNode {
-    const rows = this.state.expandedRows.get(index) || [];
-    if (!(rows && rows.length)) {
-      return <p className={classes(padding(10, 't'), padding(65, 'l'))}>No other rows in group</p>;
-    }
-    return (
-      <div className={padding(65, 'l')}>
-        {
-          rows.map((r, rindex) => (
-            <div className={classes('tableRow', customTableCss.row)} key={rindex}>
-              <CustomTableRow row={r} columns={this.state.columns} />
-            </div>
-          ))
-        }
-      </div>
-    );
+  private getExpandedExecutionsRow(index: number): React.ReactNode {
+    return getExpandedRow(this.state.expandedRows, this.state.columns)(index);
   }
 }
 

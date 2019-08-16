@@ -16,7 +16,7 @@
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {getArtifactProperty, logger} from '../lib/Utils';
+import {getResourceProperty, logger} from '../lib/Utils';
 import {css} from './ArtifactInfo';
 import {MlMetadataArtifact} from '../apis/service';
 import {ArtifactProperties} from '../lib/Api';
@@ -50,7 +50,7 @@ export class ModelInfo extends React.Component<{model: MlMetadataArtifact}, {}> 
     let modelData: ModelSchema = {};
     try {
       modelData = JSON.parse(
-        getArtifactProperty(model, ArtifactProperties.ALL_META) || '{}');
+        getResourceProperty(model, ArtifactProperties.ALL_META) || '{}');
     } catch (err) {
       logger.error(
         `Unable to parse ${ArtifactProperties.ALL_META} property`, err);
