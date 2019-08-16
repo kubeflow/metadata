@@ -16,6 +16,18 @@ export enum ArtifactCustomProperties {
   RUN = '__kf_run__',
 }
 
+/** Known Execution properties */
+export enum ExecutionProperties {
+  NAME = 'name',
+  PIPELINE_NAME = 'pipeline_name',
+  STATE = 'state',
+}
+
+/** Known Execution custom properties */
+export enum ExecutionCustomProperties {
+  WORKSPACE = '__kf_workspace__',
+}
+
 /** Format for a List request */
 export interface ListRequest {
   filter?: string;

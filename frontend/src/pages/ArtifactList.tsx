@@ -16,14 +16,13 @@
 
 import * as React from 'react';
 import CustomTable, {
-  css as customTableCss, CustomRendererProps, Column,
-  Row, ExpandState, CustomTableRow
-} from '../components/CustomTable';
+  CustomRendererProps, Column,
+  Row, ExpandState} from '../components/CustomTable';
 import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {getArtifactProperty} from '../lib/Utils';
+import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
@@ -78,7 +77,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     };
     this.reload = this.reload.bind(this);
     this.toggleRowExpand = this.toggleRowExpand.bind(this);
-    this.getExpandedRow = this.getExpandedRow.bind(this);
+    this.getExpandedArtifactsRow = this.getExpandedArtifactsRow.bind(this);
   }
 
   public getInitialToolbarState(): ToolbarProps {
@@ -101,7 +100,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
           reload={this.reload}
           initialSortColumn='pipelineName'
           initialSortOrder='asc'
-          getExpandComponent={this.getExpandedRow}
+          getExpandComponent={this.getExpandedArtifactsRow}
           toggleExpansion={this.toggleRowExpand}
           emptyMessage='No artifacts found.' />
       </div>
@@ -154,16 +153,16 @@ class ArtifactList extends Page<{}, ArtifactListState> {
    * @param request
    */
   private getRowsFromArtifacts(request: ListRequest): Row[] {
-    return this.groupRows(this.state.artifacts
+    const collapsedAndExpandedRows = groupRows(this.state.artifacts
       .map((a) => { // Flattens
         const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
           this.artifactTypes.get(a.type_id!)!.name : a.type_id;
         return {
           id: `${type}:${a.id}`, // Join with colon so we can build the link
           otherFields: [
-            getArtifactProperty(a, ArtifactProperties.PIPELINE_NAME)
-              || getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
-            getArtifactProperty(a, ArtifactProperties.NAME),
+            getResourceProperty(a, ArtifactProperties.PIPELINE_NAME)
+              || getResourceProperty(a, ArtifactCustomProperties.WORKSPACE, true),
+            getResourceProperty(a, ArtifactProperties.NAME),
             a.id,
             type,
             a.uri,
@@ -171,73 +170,13 @@ class ArtifactList extends Page<{}, ArtifactListState> {
             // formatDateString(
             //   getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
           ],
-        };
+        } as Row;
       })
-      // TODO: We are currently searching across all properties of all artifacts. We should figure
-      // what the most useful fields are and limit filtering to those.
-      .filter((r) => !request.filter
-        || r.otherFields.join('').toLowerCase().indexOf(request.filter.toLowerCase()) > -1)
-      .sort((r1, r2) => {
-        if (!request.sortBy) return -1;
+      .filter(rowFilterFn(request))
+      .sort(rowCompareFn(request, this.state.columns)));
 
-        const sortBy = request.sortBy.endsWith(' desc') ?
-          request.sortBy.slice(0, request.sortBy.length - 5) : request.sortBy;
-        const sortIndex = this.state.columns
-          .findIndex((c) => sortBy === c.sortKey);
-        // Convert null to string to avoid null comparison behavior
-        const compare = (r1.otherFields[sortIndex] || '').toLocaleLowerCase() <
-          (r2.otherFields[sortIndex] || '').toLocaleLowerCase();
-        if (request.orderAscending) {
-          return compare ? -1 : 1;
-        } else {
-          return compare ? 1 : -1;
-        }
-      }));
-  }
-
-  /**
-   * Groups the incoming rows by name and type pushing all but the first row
-   * of each group to the expandedRows Map.
-   * @param rows
-   */
-  private groupRows(rows: Row[]): Row[] {
-    const flattenedRows = rows.reduce((map, r) => {
-      const stringKey = r.otherFields[0];
-      const rows = map.get(stringKey);
-      if (rows) {
-        rows.push(r);
-      } else {
-        map.set(stringKey, [r]);
-      }
-      return map;
-    }, new Map<string, Row[]>());
-
-    const grouped: Row[] = [];
-    const expandedRows = new Map<number, Row[]>();
-    Array.from(flattenedRows.entries()) // entries() returns in insertion order
-      .forEach((entry, index) => {
-        // entry[0] is a grouping key, entry[1] is a list of rows
-        const rows = entry[1];
-
-        // If there is only one row in the group, don't allow expansion
-        if (rows.length === 1) {
-          rows[0].expandState = ExpandState.NONE;
-        }
-
-        // Add the first row in this group to be displayed as collapsed row
-        grouped.push(rows[0]);
-
-        // Remove the grouping column text for all but the first row in the group because it will be
-        // redundant within an expanded group.
-        const hiddenRows = rows.slice(1);
-        hiddenRows.forEach(row => row.otherFields[0] = '');
-
-        // Add this group of rows sharing a pipeline to the list of grouped rows
-        expandedRows.set(index, hiddenRows);
-      });
-
-    this.setState({expandedRows});
-    return grouped;
+    this.setState({ expandedRows: collapsedAndExpandedRows.expandedRows });
+    return collapsedAndExpandedRows.collapsedRows;
   }
 
   /**
@@ -246,30 +185,16 @@ class ArtifactList extends Page<{}, ArtifactListState> {
    */
   private toggleRowExpand(index: number): void {
     const {rows} = this.state;
-    if (!rows[index]) return;
+    if (!rows[index]) {
+      return;
+    }
     rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED ?
       ExpandState.COLLAPSED : ExpandState.EXPANDED;
     this.setState({rows});
   }
 
-  /**
-   * Returns a fragment representing the expanded content for the given
-   * row.
-   * @param index
-   */
-  private getExpandedRow(index: number): React.ReactNode {
-    const rows = this.state.expandedRows.get(index) || [];
-    return (
-      <div className={padding(65, 'l')}>
-        {
-          rows.map((r, rindex) => (
-            <div className={classes('tableRow', customTableCss.row)} key={rindex}>
-              <CustomTableRow row={r} columns={this.state.columns} />
-            </div>
-          ))
-        }
-      </div>
-    );
+  private getExpandedArtifactsRow(index: number): React.ReactNode {
+    return getExpandedRow(this.state.expandedRows, this.state.columns)(index);
   }
 }
 
