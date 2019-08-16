@@ -35,6 +35,24 @@ message CreateArtifactTypeResponse {
   ml_metadata.ArtifactType artifact_type = 1;
 }
 
+message PutTypeOptions {
+  // defines options for put type request.
+  bool CanAddFields = 1;
+  bool CanDeleteFields = 2;
+  bool AllFieldsMustMatch = 3;
+}
+
+message UpdateArtifactTypeRequest {
+  ml_metadata.ArtifactType artifact_type = 1;
+  // The option of put artifact type. Only CanAddFields can be configured for now.
+  PutTypeOptions putTypeOptions = 2;
+}
+
+message UpdateArtifactTypeResponse {
+  // Updated artifact type with id.
+  ml_metadata.ArtifactType artifact_type = 1;
+}
+
 message GetArtifactTypeRequest {
   // ArtifactType names are of the form `artifact_types/{namespace}/{name}`.
   string name = 1;
@@ -96,6 +114,17 @@ message CreateExecutionTypeRequest {
 
 message CreateExecutionTypeResponse {
   // Newly created execution type with id.
+  ml_metadata.ExecutionType execution_type = 1;
+}
+
+message UpdateExecutionTypeRequest {
+  ml_metadata.ExecutionType execution_type = 1;
+  // The option of put execution type. Only CanAddFields field can be configured for now.
+  PutTypeOptions putTypeOptions = 2;
+}
+
+message UpdateExecutionTypeResponse {
+  // Update execution type with id.
   ml_metadata.ExecutionType execution_type = 1;
 }
 
@@ -270,7 +299,6 @@ service MetadataService {
       delete: "/api/v1alpha1/{name=artifact_types/**}"
     };
   }
-
 
   rpc CreateExecutionType(CreateExecutionTypeRequest)
       returns (CreateExecutionTypeResponse) {
