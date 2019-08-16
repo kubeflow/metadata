@@ -673,7 +673,7 @@ func TestCreateExecutionType(t *testing.T) {
 
 		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
 			t.Errorf("Test case %d\nCreateExecutionType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
-				i, req, got, want, cmp.Diff(want, got, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")))
+				i, req, got, want, cmp.Diff(want, got))
 		}
 	}
 }
