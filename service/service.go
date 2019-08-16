@@ -158,6 +158,51 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *api.CreateArtifac
 	}, nil
 }
 
+// UpdateArtifactType update specified artifact type.
+// Currently, this function is used to add new fields to artifact type.
+// Deleting field is not supported and all fields must be matched.
+func (s *Service) UpdateArtifactType(ctx context.Context, req *api.UpdateArtifactTypeRequest) (*api.UpdateArtifactTypeResponse, error) {
+	var putTypeOptions mlmetadata.PutTypeOptions
+
+	if req.ArtifactType == nil {
+		return nil, errors.New("no ArtifactType specified")
+	}
+
+	if req.PutTypeOptions == nil {
+		return nil, errors.New("no PutTypeOptions specified")
+	}
+
+	if req.PutTypeOptions.CanDeleteFields {
+		return nil, errors.New("deleting fields for ArtifactType is not supported")
+	}
+
+	if !req.PutTypeOptions.AllFieldsMustMatch {
+		return nil, errors.New("all given properties must match with the stored type")
+	}
+
+	if !req.PutTypeOptions.CanAddFields {
+		return nil, errors.New("adding field to artifact type should be enabled")
+	}
+
+	putTypeOptions.CanDeleteFields = req.PutTypeOptions.CanDeleteFields
+	putTypeOptions.AllFieldsMustMatch = req.PutTypeOptions.AllFieldsMustMatch
+	putTypeOptions.CanAddFields = req.PutTypeOptions.CanAddFields
+
+	_, err := s.store.PutArtifactType(req.ArtifactType, &putTypeOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	aType, err := s.getArtifactType(req.ArtifactType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.UpdateArtifactTypeResponse{
+		ArtifactType: aType,
+	}, nil
+}
+
 // GetArtifactType returns the requested artifact type.
 func (s *Service) GetArtifactType(ctx context.Context, req *api.GetArtifactTypeRequest) (*api.GetArtifactTypeResponse, error) {
 	aType, err := s.getArtifactType(req.GetName())
@@ -308,6 +353,51 @@ func (s *Service) CreateExecutionType(ctx context.Context, req *api.CreateExecut
 	}
 
 	return &api.CreateExecutionTypeResponse{ExecutionType: eType}, nil
+}
+
+// UpdateExecutionType update specified execution type.
+// Currently, this function is used to add new field to execution type.
+// Deleting field is not supported and all fields must be matched.
+func (s *Service) UpdateExecutionType(ctx context.Context, req *api.UpdateExecutionTypeRequest) (*api.UpdateExecutionTypeResponse, error) {
+	var putTypeOptions mlmetadata.PutTypeOptions
+
+	if req.ExecutionType == nil {
+		return nil, errors.New("no ExecutionType specified")
+	}
+
+	if req.PutTypeOptions == nil {
+		return nil, errors.New("no PutTypeOptions specified")
+	}
+
+	if req.PutTypeOptions.CanDeleteFields {
+		return nil, errors.New("deleting fields for ExecutionType is not supported")
+	}
+
+	if !req.PutTypeOptions.AllFieldsMustMatch {
+		return nil, errors.New("all given properties must match with the stored type")
+	}
+
+	if !req.PutTypeOptions.CanAddFields {
+		return nil, errors.New("adding field to execution type should be enabled")
+	}
+
+	putTypeOptions.CanDeleteFields = req.PutTypeOptions.CanDeleteFields
+	putTypeOptions.AllFieldsMustMatch = req.PutTypeOptions.AllFieldsMustMatch
+	putTypeOptions.CanAddFields = req.PutTypeOptions.CanAddFields
+
+	_, err := s.store.PutExecutionType(req.ExecutionType, &putTypeOptions)
+	if err != nil {
+		return nil, err
+	}
+
+	eType, err := s.getExecutionType(req.ExecutionType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.UpdateExecutionTypeResponse{
+		ExecutionType: eType,
+	}, nil
 }
 
 // GetExecutionType return the specified execution type.
