@@ -221,6 +221,32 @@ export interface ApiListArtifactsResponse {
 /**
  * 
  * @export
+ * @interface ApiListEventsResponse
+ */
+export interface ApiListEventsResponse {
+    /**
+     * 
+     * @type {Array<MlMetadataEvent>}
+     * @memberof ApiListEventsResponse
+     */
+    events?: Array<MlMetadataEvent>;
+    /**
+     * 
+     * @type {{ [key: string]: MlMetadataArtifact; }}
+     * @memberof ApiListEventsResponse
+     */
+    artifacts?: { [key: string]: MlMetadataArtifact; };
+    /**
+     * 
+     * @type {{ [key: string]: MlMetadataExecution; }}
+     * @memberof ApiListEventsResponse
+     */
+    executions?: { [key: string]: MlMetadataExecution; };
+}
+
+/**
+ * 
+ * @export
  * @interface ApiListExecutionTypesResponse
  */
 export interface ApiListExecutionTypesResponse {
@@ -244,6 +270,20 @@ export interface ApiListExecutionsResponse {
      * @memberof ApiListExecutionsResponse
      */
     executions?: Array<MlMetadataExecution>;
+}
+
+/**
+ * A simple path (e.g. {step{key:\"foo\"}}) can name an artifact in the context of an execution.
+ * @export
+ * @interface EventPath
+ */
+export interface EventPath {
+    /**
+     * A simple path (e.g. {step{key:\"foo\"}}) can name an artifact in the context of an execution.
+     * @type {Array<PathStep>}
+     * @memberof EventPath
+     */
+    steps?: Array<PathStep>;
 }
 
 /**
@@ -398,6 +438,57 @@ export interface MlMetadataDictArtifactStructType {
      * @memberof MlMetadataDictArtifactStructType
      */
     extra_properties_type?: MlMetadataArtifactStructType;
+}
+
+/**
+ * An event represents a relationship between an artifact ID and an execution. There are four kinds of events, relating to both input and output, as well as declared versus undeclared. For example, the DECLARED_INPUT events are part of the signature of an execution. For example, consider: my_execution({\"data\":[3,7],\"schema\":8}) Where 3, 7, and 8 are artifact_ids. Assuming execution_id is 12, this becomes: {artifact_id:3, execution_id: 12, type:DECLARED_INPUT,  path:{step:[{\"key\":\"data\"},{\"index\":0}]}} {artifact_id:7, execution_id: 12, type:DECLARED_INPUT,  path:{step:[{\"key\":\"data\"},{\"index\":1}]}} {artifact_id:8, execution_id: 12, type:DECLARED_INPUT,  path:{step:[{\"key\":\"schema\"}]}} The INPUT is an artifact actually read by the execution. The OUTPUT is an artifact actually written by the execution. The DECLARED_OUTPUT are the artifacts that are the \"official\" output. For example, the trainer may output multiple caches of the parameters (as OUTPUT objects), but then finally write the SavedModel as a DECLARED_OUTPUT. TODO(martinz): add a type for Event, similar to ArtifactType.
+ * @export
+ * @interface MlMetadataEvent
+ */
+export interface MlMetadataEvent {
+    /**
+     * The artifact id is required for an event, and should refer to an existing artifact.
+     * @type {string}
+     * @memberof MlMetadataEvent
+     */
+    artifact_id?: string;
+    /**
+     * The execution_id is required for an event, and should refer to an existing execution.
+     * @type {string}
+     * @memberof MlMetadataEvent
+     */
+    execution_id?: string;
+    /**
+     * The path in an artifact struct, or the name of an artifact.
+     * @type {EventPath}
+     * @memberof MlMetadataEvent
+     */
+    path?: EventPath;
+    /**
+     * The type of an event.
+     * @type {MlMetadataEventType}
+     * @memberof MlMetadataEvent
+     */
+    type?: MlMetadataEventType;
+    /**
+     * 
+     * @type {string}
+     * @memberof MlMetadataEvent
+     */
+    milliseconds_since_epoch?: string;
+}
+
+/**
+ * Events distinguish between an artifact that is written by the execution (possibly as a cache), versus artifacts that are part of the declared output of the Execution. For more information on what DECLARED_ means, see the comment on the message.
+ * @export
+ * @enum {string}
+ */
+export enum MlMetadataEventType {
+    UNKNOWN = <any> 'UNKNOWN',
+    DECLAREDOUTPUT = <any> 'DECLARED_OUTPUT',
+    DECLAREDINPUT = <any> 'DECLARED_INPUT',
+    INPUT = <any> 'INPUT',
+    OUTPUT = <any> 'OUTPUT'
 }
 
 /**
@@ -591,6 +682,26 @@ export interface MlMetadataValue {
     string_value?: string;
 }
 
+/**
+ * 
+ * @export
+ * @interface PathStep
+ */
+export interface PathStep {
+    /**
+     * 
+     * @type {string}
+     * @memberof PathStep
+     */
+    index?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof PathStep
+     */
+    key?: string;
+}
+
 
 /**
  * MetadataServiceApi - fetch parameter creator
@@ -660,6 +771,37 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
             const needsSerialization = (<any>"MlMetadataArtifactType" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {MlMetadataEvent} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEvent(body: MlMetadataEvent, options: any = {}): FetchArgs {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createEvent.');
+            }
+            const localVarPath = `/api/v1alpha1/events`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+            const needsSerialization = (<any>"MlMetadataEvent" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
@@ -1062,6 +1204,64 @@ export const MetadataServiceApiFetchParamCreator = function (configuration?: Con
         },
         /**
          * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling listEvents.');
+            }
+            const localVarPath = `/api/v1alpha1/events/executions/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents2(name: string, options: any = {}): FetchArgs {
+            // verify required parameter 'name' is not null or undefined
+            if (name === null || name === undefined) {
+                throw new RequiredError('name','Required parameter name was null or undefined when calling listEvents2.');
+            }
+            const localVarPath = `/api/v1alpha1/events/artifacts/{name}`
+                .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1174,6 +1374,24 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
          */
         createArtifactType(body: MlMetadataArtifactType, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiCreateArtifactTypeResponse> {
             const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).createArtifactType(body, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @param {MlMetadataEvent} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEvent(body: MlMetadataEvent, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<any> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).createEvent(body, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -1424,6 +1642,44 @@ export const MetadataServiceApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiListEventsResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).listEvents(name, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents2(name: string, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<ApiListEventsResponse> {
+            const localVarFetchArgs = MetadataServiceApiFetchParamCreator(configuration).listEvents2(name, options);
+            return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1503,6 +1759,15 @@ export const MetadataServiceApiFactory = function (configuration?: Configuration
          */
         createArtifactType(body: MlMetadataArtifactType, options?: any) {
             return MetadataServiceApiFp(configuration).createArtifactType(body, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {MlMetadataEvent} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEvent(body: MlMetadataEvent, options?: any) {
+            return MetadataServiceApiFp(configuration).createEvent(body, options)(fetch, basePath);
         },
         /**
          * 
@@ -1627,6 +1892,26 @@ export const MetadataServiceApiFactory = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).listEvents(name, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @summary List events based on an artifact or execution id.
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listEvents2(name: string, options?: any) {
+            return MetadataServiceApiFp(configuration).listEvents2(name, options)(fetch, basePath);
+        },
+        /**
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -1683,6 +1968,17 @@ export class MetadataServiceApi extends BaseAPI {
      */
     public createArtifactType(body: MlMetadataArtifactType, options?: any) {
         return MetadataServiceApiFp(this.configuration).createArtifactType(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {MlMetadataEvent} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetadataServiceApi
+     */
+    public createEvent(body: MlMetadataEvent, options?: any) {
+        return MetadataServiceApiFp(this.configuration).createEvent(body, options)(this.fetch, this.basePath);
     }
 
     /**
@@ -1830,6 +2126,30 @@ export class MetadataServiceApi extends BaseAPI {
      */
     public listArtifacts2(name?: string, options?: any) {
         return MetadataServiceApiFp(this.configuration).listArtifacts2(name, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List events based on an artifact or execution id.
+     * @param {string} name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetadataServiceApi
+     */
+    public listEvents(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).listEvents(name, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @summary List events based on an artifact or execution id.
+     * @param {string} name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MetadataServiceApi
+     */
+    public listEvents2(name: string, options?: any) {
+        return MetadataServiceApiFp(this.configuration).listEvents2(name, options)(this.fetch, this.basePath);
     }
 
     /**
