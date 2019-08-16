@@ -29,14 +29,14 @@ import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
 
-interface PipelineListState {
+interface ArtifactListState {
   artifacts: MlMetadataArtifact[];
   rows: Row[];
   expandedRows: Map<number, Row[]>;
   columns: Column[];
 }
 
-class ArtifactList extends Page<{}, PipelineListState> {
+class ArtifactList extends Page<{}, ArtifactListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private artifactTypes: Map<string, MlMetadataArtifactType>;
@@ -67,7 +67,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
           customRenderer: this.nameCustomRenderer,
           sortKey: 'name',
         },
-        {label: 'Version', flex: 1, sortKey: 'version'},
+        {label: 'Id', flex: 1, sortKey: 'id'},
         {label: 'Type', flex: 2, sortKey: 'type'},
         {label: 'URI', flex: 2, sortKey: 'uri', },
         // TODO: Get timestamp from the event that created this artifact.
@@ -139,9 +139,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
     Promise<Map<string, MlMetadataArtifactType>> {
     try {
       const response = await this.api.metadataService.listArtifactTypes();
-      return new Map(
-        response.artifact_types!.map((at) => [at.id!, at])
-      );
+      return new Map(response.artifact_types!.map((at) => [at.id!, at]));
     } catch (err) {
       this.showPageError(
         'Unable to retrieve Artifact Types, some features may not work.', err);
@@ -205,8 +203,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
    */
   private groupRows(rows: Row[]): Row[] {
     const flattenedRows = rows.reduce((map, r) => {
-      // Artifact row key is "{pipelineName}"
-      const stringKey = `${r.otherFields[0]}`;
+      const stringKey = r.otherFields[0];
       const rows = map.get(stringKey);
       if (rows) {
         rows.push(r);
