@@ -203,6 +203,95 @@ func TestCreateArtifactType(t *testing.T) {
 	}
 }
 
+func TestUpdateArtifactType(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	tests := []struct {
+		createRequest string
+		updateRequest string
+		wantResponse  string
+		wantErr       bool
+	}{
+		{
+			createRequest: ` artifact_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }}`,
+			updateRequest: ` artifact_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }}
+				putTypeOptions {
+					CanAddFields:       true
+					CanDeleteFields:    false
+					AllFieldsMustMatch: true}`,
+			wantResponse: ` artifact_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }}`,
+			wantErr: false,
+		},
+		{
+			createRequest: ``,
+			updateRequest: ``,
+			wantResponse:  ``,
+			wantErr:       true,
+		},
+	}
+
+	ctx := context.Background()
+	for i, test := range tests {
+		crtReq := &api.CreateArtifactTypeRequest{}
+		if err := proto.UnmarshalText(test.createRequest, crtReq); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		crtRes, err := svc.CreateArtifactType(ctx, crtReq)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Test case %d\nCreateArtifactType\nCreate Request:\n%+v\nGot error:\n%v\nWant nil error",
+					i, crtReq, err)
+			}
+			continue
+		}
+
+		updReq := &api.UpdateArtifactTypeRequest{}
+		if err := proto.UnmarshalText(test.updateRequest, updReq); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		updRes, err := svc.UpdateArtifactType(ctx, updReq)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Test case %d\nUpdateArtifactType\nUpdate Request:\n%+v\nGot error:\n%v\nWant nil error",
+					i, updReq, err)
+			}
+			continue
+		}
+
+		want := &api.UpdateArtifactTypeResponse{}
+		if err := proto.UnmarshalText(test.wantResponse, want); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		if crtRes.ArtifactType.GetId() != updRes.ArtifactType.GetId() {
+			t.Errorf("Test case %d\nUpdateArtifactType\nCreate artifict Id:\n%v\nUpdate artifict Id:\n%v\n",
+				i, crtRes.ArtifactType.GetId(), updRes.ArtifactType.GetId())
+		}
+
+		if !cmp.Equal(updRes, want, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")) {
+			t.Errorf("Test case %d\nUpdateArtifactType\nCreate:\n%+v\nUpdate:\n%+v\nWant:\n%+v\nDiff\n%v\n",
+				i, crtRes, updRes, want, cmp.Diff(want, updRes, cmpopts.IgnoreFields(mlpb.ArtifactType{}, "Id")))
+		}
+	}
+}
+
 func TestGetArtifactType(t *testing.T) {
 	store := testMLMDStore(t)
 	svc := New(store)
@@ -584,7 +673,96 @@ func TestCreateExecutionType(t *testing.T) {
 
 		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
 			t.Errorf("Test case %d\nCreateExecutionType\nRequest:\n%v\nGot:\n%+v\nWant:\n%+v\nDiff\n%v\n",
-				i, req, got, want, cmp.Diff(want, got))
+				i, req, got, want, cmp.Diff(want, got, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")))
+		}
+	}
+}
+
+func TestUpdateExecutionType(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	tests := []struct {
+		createRequest string
+		updateRequest string
+		wantResponse  string
+		wantErr       bool
+	}{
+		{
+			createRequest: ` execution_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }}`,
+			updateRequest: ` execution_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }}
+				putTypeOptions {
+					CanAddFields:       true
+					CanDeleteFields:    false
+					AllFieldsMustMatch: true}`,
+			wantResponse: ` execution_type {
+				name:      "my_namespace/Model"
+				properties { key: "string_field" value: STRING }
+				properties { key: "int_field" value: INT }
+				properties { key: "double_field" value: DOUBLE }}`,
+			wantErr: false,
+		},
+		{
+			createRequest: ``,
+			updateRequest: ``,
+			wantResponse:  ``,
+			wantErr:       true,
+		},
+	}
+
+	ctx := context.Background()
+	for i, test := range tests {
+		crtReq := &api.CreateExecutionTypeRequest{}
+		if err := proto.UnmarshalText(test.createRequest, crtReq); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		crtRes, err := svc.CreateExecutionType(ctx, crtReq)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Test case %d\nCreateExecutionType\nCreate Request:\n%+v\nGot error:\n%v\nWant nil error",
+					i, crtReq, err)
+			}
+			continue
+		}
+
+		updReq := &api.UpdateExecutionTypeRequest{}
+		if err := proto.UnmarshalText(test.updateRequest, updReq); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		updRes, err := svc.UpdateExecutionType(ctx, updReq)
+		if err != nil {
+			if !test.wantErr {
+				t.Errorf("Test case %d\nUpdateExecutionType\nUpdate Request:\n%+v\nGot error:\n%v\nWant nil error",
+					i, updReq, err)
+			}
+			continue
+		}
+
+		want := &api.UpdateExecutionTypeResponse{}
+		if err := proto.UnmarshalText(test.wantResponse, want); err != nil {
+			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v", i, err)
+			continue
+		}
+
+		if crtRes.ExecutionType.GetId() != updRes.ExecutionType.GetId() {
+			t.Errorf("Test case %d\nUpdateExecutionType\nCreate execution Id:\n%v\nUpdate execution Id:\n%v\n",
+				i, crtRes.ExecutionType.GetId(), updRes.ExecutionType.GetId())
+		}
+
+		if !cmp.Equal(updRes, want, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")) {
+			t.Errorf("Test case %d\nUpdateExecutionType\nCreate:\n%+v\nUpdate:\n%+v\nWant:\n%+v\nDiff\n%v\n",
+				i, crtRes, updRes, want, cmp.Diff(want, updRes, cmpopts.IgnoreFields(mlpb.ExecutionType{}, "Id")))
 		}
 	}
 }

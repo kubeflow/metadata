@@ -792,7 +792,7 @@
         },
         "name": {
           "type": "string",
-          "description": "The name of the type."
+          "description": "The name of the type. It must be unique among ArtifactTypes within a\ndatabase instance."
         },
         "properties": {
           "type": "object",
@@ -906,10 +906,11 @@
         "NEW",
         "RUNNING",
         "COMPLETE",
-        "FAILED"
+        "FAILED",
+        "CACHED"
       ],
       "default": "UNKNOWN",
-      "description": "TODO(martinz): consider adding INVALIDATED as a state."
+      "description": "The state of the Execution. The state transitions are\n  NEW -\u003e RUNNING -\u003e COMPLETE | CACHED | FAILED\nCACHED means the execution is skipped due to cached results."
     },
     "ml_metadataExecutionType": {
       "type": "object",
@@ -921,7 +922,7 @@
         },
         "name": {
           "type": "string",
-          "description": "The name of the type."
+          "description": "The name of the type. It must be unique among ExecutionTypes within a\ndatabase instance."
         },
         "properties": {
           "type": "object",
@@ -989,7 +990,7 @@
           "collectionFormat": "multi"
         }
       },
-      "description": "An ordered list of heterogenous artifact structs.\nThe length of the list is fixed.\nEach position in the list can have a different type."
+      "description": "An ordered list of heterogeneous artifact structs.\nThe length of the list is fixed.\nEach position in the list can have a different type."
     },
     "ml_metadataUnionArtifactStructType": {
       "type": "object",

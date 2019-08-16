@@ -62,12 +62,15 @@ load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_depen
 
 buildifier_dependencies()
 
+_TENSORFLOW_GIT_COMMIT = "f5ce1c00d4397875ff3d706881bd46430f4a9667"
+
 http_archive(
     name = "org_tensorflow",
-    # sha256 = "24570d860d87dcfb936f53fb8dd30302452d0aa6b8b8537e4555c1bf839121a6",
-    strip_prefix = "tensorflow-1.13.1",
+    sha256 = "1bc357f72d6582351cfb3eb6a340aa496539277b2177a641dd203b40ac54fc27",
+    strip_prefix = "tensorflow-%s" % _TENSORFLOW_GIT_COMMIT,
     urls = [
-        "https://github.com/tensorflow/tensorflow/archive/v1.13.1.tar.gz",
+        "https://mirror.bazel.build/github.com/tensorflow/tensorflow/archive/%s.tar.gz" % _TENSORFLOW_GIT_COMMIT,
+        "https://github.com/tensorflow/tensorflow/archive/%s.tar.gz" % _TENSORFLOW_GIT_COMMIT,
     ],
 )
 
@@ -89,7 +92,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 
 go_repository(
     name = "google_ml_metadata",
-    commit = "9e62f95133f28d0733ab55f5d113d21744708795",
+    commit = "d2f5faa480272091ddbaa6b39b2bad23ed0cf76e",
     importpath = "github.com/google/ml-metadata",
 )
 
