@@ -29,6 +29,7 @@ import {classes, stylesheet} from 'typestyle';
 import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
 import ArtifactDetails from '../pages/ArtifactDetails';
+import ExecutionList from '../pages/ExecutionList';
 
 const css = stylesheet({
   dialog: {
@@ -45,6 +46,7 @@ export const RoutePage = {
   ARTIFACTS: '/artifacts',
   ARTIFACT_DETAILS:
     `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
+  EXECUTIONS: '/executions',
 };
 
 export interface DialogProps {
@@ -74,6 +76,7 @@ class Router extends React.Component<{}, RouteComponentState> {
   private routes: RouteConfig[] = [
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
     {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
+    {path: RoutePage.EXECUTIONS, Component: ExecutionList},
   ];
 
   constructor(props: any) {
