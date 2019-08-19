@@ -53,6 +53,30 @@
         "tags": [
           "MetadataService"
         ]
+      },
+      "patch": {
+        "operationId": "UpdateArtifactType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateArtifactTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ml_metadataArtifactType"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
       }
     },
     "/api/v1alpha1/artifacts": {
@@ -177,6 +201,30 @@
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/apiCreateExecutionTypeResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ml_metadataExecutionType"
+            }
+          }
+        ],
+        "tags": [
+          "MetadataService"
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateExecutionType",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateExecutionTypeResponse"
             }
           }
         },
@@ -712,6 +760,24 @@
             "$ref": "#/definitions/ml_metadataExecution"
           },
           "collectionFormat": "multi"
+        }
+      }
+    },
+    "apiUpdateArtifactTypeResponse": {
+      "type": "object",
+      "properties": {
+        "artifact_type": {
+          "$ref": "#/definitions/ml_metadataArtifactType",
+          "description": "Updated artifact type with id."
+        }
+      }
+    },
+    "apiUpdateExecutionTypeResponse": {
+      "type": "object",
+      "properties": {
+        "execution_type": {
+          "$ref": "#/definitions/ml_metadataExecutionType",
+          "description": "Update execution type with id."
         }
       }
     },
