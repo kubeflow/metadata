@@ -17,13 +17,11 @@
 import * as React from 'react';
 import { isFunction } from 'lodash';
 import { MlMetadataArtifact, MlMetadataExecution, MlMetadataValue } from '../apis/service';
-import { css as customTableCss, CustomRendererProps } from '../components/CustomTable';
+import { css as customTableCss } from '../components/CustomTable';
 import { classes } from 'typestyle';
 import { Row, Column, ExpandState, CustomTableRow } from '../components/CustomTable';
 import { ListRequest } from './Api';
-import { padding, commonCss } from '../Css';
-import { RoutePage, RouteParams } from '../components/Router';
-import { Link } from 'react-router-dom';
+import { padding } from '../Css';
 
 export const logger = {
   error: (...args: any[]) => {
@@ -198,18 +196,3 @@ export function getExpandedRow(expandedRows: Map<number, Row[]>, columns: Column
     );
   }
 }
-
-export const nameCustomRenderer: React.FC<CustomRendererProps<string>> =
-  (props: CustomRendererProps<string>) => {
-    const [artifactType, artifactId] = props.id.split(':');
-    const link = RoutePage.ARTIFACT_DETAILS
-      .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
-      .replace(`:${RouteParams.ID}`, artifactId);
-    return (
-      <Link onClick={(e) => e.stopPropagation()}
-        className={commonCss.link}
-        to={link}>
-        {props.value}
-      </Link>
-    );
-  }
