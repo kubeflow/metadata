@@ -15,18 +15,14 @@
  */
 
 import * as React from 'react';
-import CustomTable, {
-  CustomRendererProps, Column,
-  Row, ExpandState} from '../components/CustomTable';
+import CustomTable, { Column, Row, ExpandState } from '../components/CustomTable';
 import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
+import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow, nameCustomRenderer} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
-import {Link} from 'react-router-dom';
-import {RoutePage, RouteParams} from '../components/Router';
 
 interface ArtifactListState {
   artifacts: MlMetadataArtifact[];
@@ -39,31 +35,22 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private artifactTypes: Map<string, MlMetadataArtifactType>;
-  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
-    (props: CustomRendererProps<string>) => {
-      const [artifactType, artifactId] = props.id.split(':');
-      const link = RoutePage.ARTIFACT_DETAILS
-        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
-        .replace(`:${RouteParams.ID}`, artifactId);
-      return (
-        <Link onClick={(e) => e.stopPropagation()}
-          className={commonCss.link}
-          to={link}>
-          {props.value}
-        </Link>
-      );
-    }
 
   constructor(props: any) {
     super(props);
     this.state = {
       artifacts: [],
       columns: [
-        {label: 'Pipeline/Workspace', flex: 1, sortKey: 'pipelineName'},
+        {
+          label: 'Pipeline/Workspace',
+          flex: 2,
+          customRenderer: nameCustomRenderer,
+          sortKey: 'pipelineName'
+        },
         {
           label: 'Name',
           flex: 1,
-          customRenderer: this.nameCustomRenderer,
+          customRenderer: nameCustomRenderer,
           sortKey: 'name',
         },
         {label: 'ID', flex: 1, sortKey: 'id'},

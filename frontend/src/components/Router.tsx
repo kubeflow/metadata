@@ -78,6 +78,7 @@ class Router extends React.Component<{}, RouteComponentState> {
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
     {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
     {path: RoutePage.EXECUTIONS, Component: ExecutionList},
+    {path: RoutePage.EXECUTION_DETAILS, Component: ArtifactDetails},
   ];
 
   constructor(props: any) {
