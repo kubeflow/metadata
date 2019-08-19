@@ -168,25 +168,8 @@ func (s *Service) UpdateArtifactType(ctx context.Context, req *api.UpdateArtifac
 		return nil, errors.New("no ArtifactType specified")
 	}
 
-	if req.PutTypeOptions == nil {
-		return nil, errors.New("no PutTypeOptions specified")
-	}
-
-	if req.PutTypeOptions.CanDeleteFields {
-		return nil, errors.New("deleting fields for ArtifactType is not supported")
-	}
-
-	if !req.PutTypeOptions.AllFieldsMustMatch {
-		return nil, errors.New("all given properties must match with the stored type")
-	}
-
-	if !req.PutTypeOptions.CanAddFields {
-		return nil, errors.New("adding field to artifact type should be enabled")
-	}
-
-	putTypeOptions.CanDeleteFields = req.PutTypeOptions.CanDeleteFields
-	putTypeOptions.AllFieldsMustMatch = req.PutTypeOptions.AllFieldsMustMatch
-	putTypeOptions.CanAddFields = req.PutTypeOptions.CanAddFields
+	putTypeOptions.AllFieldsMustMatch = true
+	putTypeOptions.CanAddFields = true
 
 	_, err := s.store.PutArtifactType(req.ArtifactType, &putTypeOptions)
 	if err != nil {
@@ -365,25 +348,8 @@ func (s *Service) UpdateExecutionType(ctx context.Context, req *api.UpdateExecut
 		return nil, errors.New("no ExecutionType specified")
 	}
 
-	if req.PutTypeOptions == nil {
-		return nil, errors.New("no PutTypeOptions specified")
-	}
-
-	if req.PutTypeOptions.CanDeleteFields {
-		return nil, errors.New("deleting fields for ExecutionType is not supported")
-	}
-
-	if !req.PutTypeOptions.AllFieldsMustMatch {
-		return nil, errors.New("all given properties must match with the stored type")
-	}
-
-	if !req.PutTypeOptions.CanAddFields {
-		return nil, errors.New("adding field to execution type should be enabled")
-	}
-
-	putTypeOptions.CanDeleteFields = req.PutTypeOptions.CanDeleteFields
-	putTypeOptions.AllFieldsMustMatch = req.PutTypeOptions.AllFieldsMustMatch
-	putTypeOptions.CanAddFields = req.PutTypeOptions.CanAddFields
+	putTypeOptions.AllFieldsMustMatch = true
+	putTypeOptions.CanAddFields = true
 
 	_, err := s.store.PutExecutionType(req.ExecutionType, &putTypeOptions)
 	if err != nil {

@@ -35,17 +35,8 @@ message CreateArtifactTypeResponse {
   ml_metadata.ArtifactType artifact_type = 1;
 }
 
-message PutTypeOptions {
-  // defines options for put type request.
-  bool CanAddFields = 1;
-  bool CanDeleteFields = 2;
-  bool AllFieldsMustMatch = 3;
-}
-
 message UpdateArtifactTypeRequest {
   ml_metadata.ArtifactType artifact_type = 1;
-  // The option of put artifact type. Only CanAddFields can be configured for now.
-  PutTypeOptions putTypeOptions = 2;
 }
 
 message UpdateArtifactTypeResponse {
@@ -119,8 +110,6 @@ message CreateExecutionTypeResponse {
 
 message UpdateExecutionTypeRequest {
   ml_metadata.ExecutionType execution_type = 1;
-  // The option of put execution type. Only CanAddFields field can be configured for now.
-  PutTypeOptions putTypeOptions = 2;
 }
 
 message UpdateExecutionTypeResponse {
@@ -271,6 +260,14 @@ service MetadataService {
     };
   }
 
+  rpc UpdateArtifactType(UpdateArtifactTypeRequest)
+      returns (UpdateArtifactTypeResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1alpha1/artifact_types"
+      body:  "artifact_type"
+    };
+  }
+
   rpc CreateArtifactType(CreateArtifactTypeRequest)
       returns (CreateArtifactTypeResponse) {
     option (google.api.http) = {
@@ -297,6 +294,14 @@ service MetadataService {
       returns (google.protobuf.Empty) {
     option (google.api.http) = {
       delete: "/api/v1alpha1/{name=artifact_types/**}"
+    };
+  }
+
+  rpc UpdateExecutionType(UpdateExecutionTypeRequest)
+      returns (UpdateExecutionTypeResponse) {
+    option (google.api.http) = {
+      patch: "/api/v1alpha1/execution_types"
+      body:  "execution_type"
     };
   }
 

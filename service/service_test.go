@@ -222,11 +222,7 @@ func TestUpdateArtifactType(t *testing.T) {
 				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
-				properties { key: "double_field" value: DOUBLE }}
-				putTypeOptions {
-					CanAddFields:       true
-					CanDeleteFields:    false
-					AllFieldsMustMatch: true}`,
+				properties { key: "double_field" value: DOUBLE }}`,
 			wantResponse: ` artifact_type {
 				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }
@@ -697,11 +693,7 @@ func TestUpdateExecutionType(t *testing.T) {
 				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }
 				properties { key: "int_field" value: INT }
-				properties { key: "double_field" value: DOUBLE }}
-				putTypeOptions {
-					CanAddFields:       true
-					CanDeleteFields:    false
-					AllFieldsMustMatch: true}`,
+				properties { key: "double_field" value: DOUBLE }}`,
 			wantResponse: ` execution_type {
 				name:      "my_namespace/Model"
 				properties { key: "string_field" value: STRING }

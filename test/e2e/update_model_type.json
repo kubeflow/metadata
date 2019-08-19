@@ -1,0 +1,13 @@
+{
+    "name": "kubeflow.org/alpha/model",
+    "properties": {
+        "name": "STRING",
+        "create_time": "STRING",
+        "description": "STRING",
+        "model_type": "STRING",
+        "owner": "STRING",
+        "version": "STRING",
+        "export_dir": "STRING",
+        "__ALL_META__": "STRING"
+    }
+}
