@@ -16,10 +16,8 @@
 import * as React from 'react';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
-import {formatDateString, getArtifactProperty} from '../lib/Utils';
 import {MlMetadataArtifact} from '../apis/service';
-import {ArtifactProperties, ArtifactCustomProperties} from '../lib/Api';
-import {ModelInfo} from './ModelInfo';
+import { getMetadataValue } from '../lib/Utils';
 
 export const css = stylesheet({
   artifactInfo: {
@@ -54,49 +52,34 @@ export class ArtifactInfo extends React.Component<ArtifactInfoProps, {}> {
 
   public render(): JSX.Element {
     const {artifact} = this.props;
-    const createTime = formatDateString(
-      getArtifactProperty(artifact, ArtifactProperties.CREATE_TIME) || '');
     return (
       <section>
-        <h1 className={commonCss.header}>{this.props.typeName} info</h1>
+        <h1 className={commonCss.header}>Type: {this.props.typeName}</h1>
+        <h2 className={commonCss.header2}>Properties</h2>
         <dl className={css.artifactInfo}>
-          <div className={css.field}>
-            <dt className={css.term}>Version ID</dt>
-            <dd className={css.value}>
-              {getArtifactProperty(artifact, ArtifactProperties.VERSION)}
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Workspace</dt>
-            <dd className={css.value}>
-              {getArtifactProperty(artifact, ArtifactCustomProperties.WORKSPACE,
-                true)}
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Run</dt>
-            <dd className={css.value}>
-              {getArtifactProperty(artifact, ArtifactCustomProperties.RUN,
-                true)}
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Description</dt>
-            <dd className={css.value}>
-              {getArtifactProperty(artifact, ArtifactProperties.DESCRIPTION)}
-            </dd>
-          </div>
-          <div className={css.field}>
-            <dt className={css.term}>Creation time</dt>
-            <dd className={css.value}>{createTime}</dd>
-          </div>
-          {this.props.typeName === 'Model' ?
-            <ModelInfo model={artifact} /> :
-            <div className={css.field}>
-              <dt className={css.term}>URI</dt>
-              <dd className={css.value}>{artifact.uri}</dd>
-            </div>
+          {Object.keys(artifact.properties || {})
+            // TODO: __ALL_META__ is something of a hack, is redundant, and can be ignored
+            .filter(k => k !== '__ALL_META__')
+            .map(k =>
+              <div className={css.field} key={k}>
+                <dt className={css.term}>{k}</dt>
+                <dd className={css.value}>
+                  {artifact.properties && getMetadataValue(artifact.properties[k])}
+                </dd>
+              </div>
+            )
           }
+        </dl>
+        <h2 className={commonCss.header2}>Custom Properties</h2>
+        <dl className={css.artifactInfo}>
+          {Object.keys(artifact.custom_properties || {}).map(k =>
+            <div className={css.field} key={k}>
+              <dt className={css.term}>{k}</dt>
+              <dd className={css.value}>
+                {artifact.custom_properties && getMetadataValue(artifact.custom_properties[k])}
+              </dd>
+            </div>
+          )}
         </dl>
       </section>
     );
