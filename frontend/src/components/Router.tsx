@@ -30,6 +30,7 @@ import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
 import ArtifactDetails from '../pages/ArtifactDetails';
 import ExecutionList from '../pages/ExecutionList';
+import SideNav from '../pages/SideNav';
 
 const css = stylesheet({
   dialog: {
@@ -103,6 +104,7 @@ class Router extends React.Component<{}, RouteComponentState> {
       <HashRouter>
         <div className={commonCss.page}>
           <div className={commonCss.flexGrow}>
+          <Route render={({ ...props }) => (<SideNav page={props.location.pathname} {...props} />)} />
             <div className={classes(commonCss.page)}>
               <Route render={({...props}) => (<Toolbar {...this.state.toolbarProps} {...props} />)} />
               {this.state.bannerProps.message

@@ -15,14 +15,16 @@
  */
 
 import * as React from 'react';
-import CustomTable, { Column, Row, ExpandState } from '../components/CustomTable';
+import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
 import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
-import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow, nameCustomRenderer } from '../lib/Utils';
+import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
 import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
 import { MlMetadataExecutionType, MlMetadataExecution } from '../apis/service/api';
+import { Link } from 'react-router-dom';
+import { RoutePage, RouteParams } from '../components/Router';
 
 interface ExecutionListState {
   executions: MlMetadataExecution[];
@@ -35,6 +37,21 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private executionTypes: Map<string, MlMetadataExecutionType>;
+  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
+    (props: CustomRendererProps<string>) => {
+      const [executionType, executionId] = props.id.split(':');
+      const link = RoutePage.EXECUTION_DETAILS
+        .replace(`:${RouteParams.EXECUTION_TYPE}+`, executionType)
+        .replace(`:${RouteParams.ID}`, executionId);
+      return (
+        <Link onClick={(e) => e.stopPropagation()}
+          className={commonCss.link}
+          to={link}>
+          {props.value}
+        </Link>
+      );
+  }
+
 
   constructor(props: any) {
     super(props);
@@ -44,13 +61,13 @@ class ExecutionList extends Page<{}, ExecutionListState> {
         {
           label: 'Pipeline/Workspace',
           flex: 2,
-          customRenderer: nameCustomRenderer,
+          customRenderer: this.nameCustomRenderer,
           sortKey: 'pipelineName'
         },
         {
           label: 'Name',
           flex: 1,
-          customRenderer: nameCustomRenderer,
+          customRenderer: this.nameCustomRenderer,
           sortKey: 'name',
         },
         { label: 'State', flex: 1, sortKey: 'state', },

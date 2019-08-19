@@ -1,0 +1,499 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SideNav renders artifacts as active page 1`] = `
+<div
+  className="root flexColumn noShrink"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button active"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator"
+    />
+    <WithStyles(IconButton)
+      className="chevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;
+
+exports[`SideNav renders artifacts as active when on ArtifactsDetails page 1`] = `
+<div
+  className="root flexColumn noShrink"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button active"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator"
+    />
+    <WithStyles(IconButton)
+      className="chevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;
+
+exports[`SideNav renders collapsed state 1`] = `
+<div
+  className="root flexColumn noShrink collapsedRoot"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={false}
+      disableHoverListener={false}
+      disableTouchListener={false}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button active collapsedButton"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="collapsedLabel label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={false}
+      disableHoverListener={false}
+      disableTouchListener={false}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button collapsedButton"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="collapsedLabel label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator collapsedSeparator"
+    />
+    <WithStyles(IconButton)
+      className="chevron collapsedChevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;
+
+exports[`SideNav renders executions as active page 1`] = `
+<div
+  className="root flexColumn noShrink"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button active"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator"
+    />
+    <WithStyles(IconButton)
+      className="chevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;
+
+exports[`SideNav renders executions as active when on ExecutionDetails page 1`] = `
+<div
+  className="root flexColumn noShrink"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button active"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator"
+    />
+    <WithStyles(IconButton)
+      className="chevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;
+
+exports[`SideNav renders expanded state 1`] = `
+<div
+  className="root flexColumn noShrink"
+  id="sideNav"
+>
+  <div
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  >
+    <div
+      className="indicator"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Artifacts List"
+    >
+      <Link
+        className="unstyled"
+        id="artifactsBtn"
+        replace={false}
+        to="/artifacts"
+      >
+        <WithStyles(Button)
+          className="button active"
+        >
+          <pure(BubbleChartIcon) />
+          <span
+            className="label"
+          >
+            Artifacts
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <div
+      className="indicator indicatorHidden"
+    />
+    <WithStyles(Tooltip)
+      disableFocusListener={true}
+      disableHoverListener={true}
+      disableTouchListener={true}
+      enterDelay={300}
+      placement="right-start"
+      title="Execution List"
+    >
+      <Link
+        className="unstyled"
+        id="executionsBtn"
+        replace={false}
+        to="/executions"
+      >
+        <WithStyles(Button)
+          className="button"
+        >
+          <pure(PlayArrowIcon) />
+          <span
+            className="label"
+          >
+            Executions
+          </span>
+        </WithStyles(Button)>
+      </Link>
+    </WithStyles(Tooltip)>
+    <hr
+      className="separator"
+    />
+    <WithStyles(IconButton)
+      className="chevron"
+      onClick={[Function]}
+    >
+      <pure(ChevronLeftIcon) />
+    </WithStyles(IconButton)>
+  </div>
+</div>
+`;

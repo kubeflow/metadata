@@ -8,6 +8,9 @@ exports[`Router initial render 1`] = `
     <div
       className="flexGrow"
     >
+      <Route
+        render={[Function]}
+      />
       <div
         className="page"
       >
@@ -30,6 +33,18 @@ exports[`Router initial render 1`] = `
             exact={true}
             key="1"
             path="/artifact_types/:artifactType+/artifacts/:id"
+            render={[Function]}
+          />
+          <Route
+            exact={true}
+            key="2"
+            path="/executions"
+            render={[Function]}
+          />
+          <Route
+            exact={true}
+            key="3"
+            path="/execution_types/:executionType+/executions/:id"
             render={[Function]}
           />
           <Route

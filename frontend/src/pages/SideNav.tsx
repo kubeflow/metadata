@@ -1,0 +1,267 @@
+/*
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ArtifactsIcon from '@material-ui/icons/BubbleChart';
+import ExecutionsIcon from '@material-ui/icons/PlayArrow';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
+import { Link } from 'react-router-dom';
+import { LocalStorage, LocalStorageKey } from '../lib/LocalStorage';
+import { RoutePage } from '../components/Router';
+import { RouterProps } from 'react-router';
+import { classes, stylesheet } from 'typestyle';
+import { fontsize, commonCss } from '../Css';
+
+export const sideNavColors = {
+  bg: '#f8fafb',
+  fgActive: '#0d6de7',
+  fgActiveInvisible: 'rgb(227, 233, 237, 0)',
+  fgDefault: '#9aa0a6',
+  hover: '#f1f3f4',
+  separator: '#bdc1c6',
+  sideNavBorder: '#e8eaed',
+};
+
+const COLLAPSED_SIDE_NAV_SIZE = 72;
+const EXPANDED_SIDE_NAV_SIZE = 220;
+
+export const css = stylesheet({
+  active: {
+    color: sideNavColors.fgActive + ' !important',
+  },
+  buildInfo: {
+    color: sideNavColors.fgDefault,
+    marginBottom: 16,
+    marginLeft: 30,
+  },
+  button: {
+    borderRadius: 0,
+    color: sideNavColors.fgDefault,
+    display: 'block',
+    fontSize: fontsize.medium,
+    fontWeight: 'bold',
+    height: 44,
+    marginBottom: 16,
+    maxWidth: EXPANDED_SIDE_NAV_SIZE,
+    overflow: 'hidden',
+    padding: '12px 10px 10px 26px',
+    textAlign: 'left',
+    textTransform: 'none',
+    transition: 'max-width 0.3s',
+    whiteSpace: 'nowrap',
+    width: EXPANDED_SIDE_NAV_SIZE,
+  },
+  chevron: {
+    color: sideNavColors.fgDefault,
+    marginLeft: 16,
+    padding: 6,
+    transition: 'transform 0.3s',
+  },
+  collapsedButton: {
+    maxWidth: COLLAPSED_SIDE_NAV_SIZE,
+    minWidth: COLLAPSED_SIDE_NAV_SIZE,
+    padding: '12px 10px 10px 26px',
+  },
+  collapsedChevron: {
+    transform: 'rotate(180deg)',
+  },
+  collapsedLabel: {
+    // Hide text when collapsing, but do it with a transition
+    opacity: 0,
+  },
+  collapsedRoot: {
+    width: `${COLLAPSED_SIDE_NAV_SIZE}px !important`,
+  },
+  collapsedSeparator: {
+    margin: '20px !important',
+  },
+  colorActive: {
+    background: sideNavColors.fgActive,
+  },
+  colorInactive: {
+    background: sideNavColors.fgDefault,
+  },
+  indicator: {
+    borderBottom: '3px solid transparent',
+    borderLeft: `3px solid ${sideNavColors.fgActive}`,
+    borderTop: '3px solid transparent',
+    height: 38,
+    left: 0,
+    position: 'absolute',
+    zIndex: 1,
+  },
+  indicatorHidden: {
+    opacity: 0,
+  },
+  infoHidden: {
+    opacity: 0,
+    transition: 'opacity 0s',
+    transitionDelay: '0s',
+  },
+  infoVisible: {
+    opacity: 'initial',
+    transition: 'opacity 0.2s',
+    transitionDelay: '0.3s',
+  },
+  label: {
+    fontSize: fontsize.base,
+    letterSpacing: 0.25,
+    marginLeft: 20,
+    transition: 'opacity 0.3s',
+    verticalAlign: 'super',
+  },
+  link: {
+    color: '#77abda'
+  },
+  openInNewTabIcon: {
+    height: 12,
+    marginBottom: 8,
+    marginLeft: 5,
+    width: 12,
+  },
+  root: {
+    background: sideNavColors.bg,
+    borderRight: `1px ${sideNavColors.sideNavBorder} solid`,
+    paddingTop: 15,
+    transition: 'width 0.3s',
+    width: EXPANDED_SIDE_NAV_SIZE,
+  },
+  separator: {
+    border: '0px none transparent',
+    borderTop: `1px solid ${sideNavColors.separator}`,
+    margin: 20,
+  },
+});
+
+interface DisplayBuildInfo {
+  commitHash: string;
+  commitUrl: string;
+  date: string;
+}
+
+interface SideNavProps extends RouterProps {
+  page: string;
+}
+
+interface SideNavState {
+  displayBuildInfo?: DisplayBuildInfo;
+  collapsed: boolean;
+  manualCollapseState: boolean;
+}
+
+export default class SideNav extends React.Component<SideNavProps, SideNavState> {
+  private _isMounted = true;
+  private readonly _AUTO_COLLAPSE_WIDTH = 800;
+
+  constructor(props: any) {
+    super(props);
+
+    const collapsed = LocalStorage.isNavbarCollapsed();
+
+    this.state = {
+      collapsed,
+      manualCollapseState: LocalStorage.hasKey(LocalStorageKey.navbarCollapsed),
+    };
+  }
+
+  public async componentDidMount(): Promise<void> {
+    window.addEventListener('resize', this._maybeResize.bind(this));
+    this._maybeResize();
+  }
+
+  public componentWillUnmount(): void {
+    this._isMounted = false;
+  }
+
+  public render(): JSX.Element {
+    const page = this.props.page;
+    const { collapsed } = this.state;
+
+    return (
+      <div id='sideNav' className={classes(css.root, commonCss.flexColumn, commonCss.noShrink, collapsed && css.collapsedRoot)}>
+        <div style={{ flexGrow: 1 }}>
+          <div className={classes(css.indicator, !page.startsWith(RoutePage.ARTIFACTS) && css.indicatorHidden)} />
+          <Tooltip title={'Artifacts List'} enterDelay={300} placement={'right-start'}
+            disableFocusListener={!collapsed} disableHoverListener={!collapsed}
+            disableTouchListener={!collapsed}>
+            <Link id='artifactsBtn' to={RoutePage.ARTIFACTS} className={commonCss.unstyled}>
+              <Button className={classes(css.button,
+                this._highlightArtifactsButton(page) && css.active,
+                collapsed && css.collapsedButton)}>
+                <ArtifactsIcon />
+                <span className={classes(collapsed && css.collapsedLabel, css.label)}>Artifacts</span>
+              </Button>
+            </Link>
+          </Tooltip>
+          <div className={classes(css.indicator, this._highlightArtifactsButton(page) && css.indicatorHidden)} />
+          <Tooltip title={'Execution List'} enterDelay={300} placement={'right-start'}
+            disableFocusListener={!collapsed} disableHoverListener={!collapsed}
+            disableTouchListener={!collapsed}>
+            <Link id='executionsBtn' to={RoutePage.EXECUTIONS} className={commonCss.unstyled}>
+              <Button className={
+                classes(
+                  css.button,
+                  !this._highlightArtifactsButton(page) && css.active,
+                  collapsed && css.collapsedButton)}>
+                <ExecutionsIcon />
+                <span className={classes(collapsed && css.collapsedLabel, css.label)}>Executions</span>
+              </Button>
+            </Link>
+          </Tooltip>
+          <hr className={classes(css.separator, collapsed && css.collapsedSeparator)} />
+          <IconButton className={classes(css.chevron, collapsed && css.collapsedChevron)}
+            onClick={this._toggleNavClicked.bind(this)}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+      </div >
+    );
+  }
+
+  private _highlightArtifactsButton(page: string): boolean {
+    // TODO: Router should have a constant for this, but it doesn't follow a naming convention
+    return page.startsWith('/artifact');
+  }
+
+  private _toggleNavClicked(): void {
+    this.setStateSafe({
+      collapsed: !this.state.collapsed,
+      manualCollapseState: true,
+    }, () => LocalStorage.saveNavbarCollapsed(this.state.collapsed));
+    this._toggleNavCollapsed();
+  }
+
+  private _toggleNavCollapsed(shouldCollapse?: boolean): void {
+    this.setStateSafe({
+      collapsed: shouldCollapse !== undefined ? shouldCollapse : !this.state.collapsed,
+    });
+  }
+
+  private _maybeResize(): void {
+    if (!this.state.manualCollapseState) {
+      this._toggleNavCollapsed(window.innerWidth < this._AUTO_COLLAPSE_WIDTH);
+    }
+  }
+
+  private setStateSafe(newState: Partial<SideNavState>, cb?: () => void): void {
+    if (this._isMounted) {
+      this.setState(newState as any, cb);
+    }
+  }
+}
