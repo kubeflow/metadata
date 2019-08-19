@@ -4,9 +4,10 @@ import {MetadataServiceApi} from '../apis/service';
 export enum ArtifactProperties {
   ALL_META = '__ALL_META__',
   CREATE_TIME = 'create_time',
-  NAME = 'name',
-  VERSION = 'version',
   DESCRIPTION = 'description',
+  NAME = 'name',
+  PIPELINE_NAME = 'pipeline_name',
+  VERSION = 'version',
 }
 
 /** Known Artifact custom properties */

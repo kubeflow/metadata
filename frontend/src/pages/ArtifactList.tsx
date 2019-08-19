@@ -29,14 +29,14 @@ import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
 import {Link} from 'react-router-dom';
 import {RoutePage, RouteParams} from '../components/Router';
 
-interface PipelineListState {
+interface ArtifactListState {
   artifacts: MlMetadataArtifact[];
   rows: Row[];
   expandedRows: Map<number, Row[]>;
   columns: Column[];
 }
 
-class ArtifactList extends Page<{}, PipelineListState> {
+class ArtifactList extends Page<{}, ArtifactListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private artifactTypes: Map<string, MlMetadataArtifactType>;
@@ -60,17 +60,16 @@ class ArtifactList extends Page<{}, PipelineListState> {
     this.state = {
       artifacts: [],
       columns: [
+        {label: 'Pipeline/Workspace', flex: 1, sortKey: 'pipelineName'},
         {
           label: 'Name',
           flex: 1,
           customRenderer: this.nameCustomRenderer,
           sortKey: 'name',
         },
-        // TODO: change references to this to use ID rather than version
         {label: 'ID', flex: 1, sortKey: 'id'},
         {label: 'Type', flex: 2, sortKey: 'type'},
         {label: 'URI', flex: 2, sortKey: 'uri', },
-        {label: 'Workspace', flex: 1, sortKey: 'workspace'},
         // TODO: Get timestamp from the event that created this artifact.
         // {label: 'Created at', flex: 1, sortKey: 'created_at'},
       ],
@@ -100,7 +99,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
           disablePaging={true}
           disableSelection={true}
           reload={this.reload}
-          initialSortColumn='name'
+          initialSortColumn='pipelineName'
           initialSortOrder='asc'
           getExpandComponent={this.getExpandedRow}
           toggleExpansion={this.toggleRowExpand}
@@ -140,9 +139,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
     Promise<Map<string, MlMetadataArtifactType>> {
     try {
       const response = await this.api.metadataService.listArtifactTypes();
-      return new Map(
-        response.artifact_types!.map((at) => [at.id!, at])
-      );
+      return new Map(response.artifact_types!.map((at) => [at.id!, at]));
     } catch (err) {
       this.showPageError(
         'Unable to retrieve Artifact Types, some features may not work.', err);
@@ -154,7 +151,6 @@ class ArtifactList extends Page<{}, PipelineListState> {
    * Temporary solution to apply sorting, filtering, and pagination to the
    * local list of artifacts until server-side handling is available
    * TODO: Replace once https://github.com/kubeflow/metadata/issues/73 is done.
-   * @param artifacts
    * @param request
    */
   private getRowsFromArtifacts(request: ListRequest): Row[] {
@@ -165,19 +161,22 @@ class ArtifactList extends Page<{}, PipelineListState> {
         return {
           id: `${type}:${a.id}`, // Join with colon so we can build the link
           otherFields: [
+            getArtifactProperty(a, ArtifactProperties.PIPELINE_NAME)
+              || getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
             getArtifactProperty(a, ArtifactProperties.NAME),
-            getArtifactProperty(a, ArtifactProperties.VERSION),
+            a.id,
             type,
             a.uri,
-            getArtifactProperty(a, ArtifactCustomProperties.WORKSPACE, true),
             // TODO: Get timestamp from the event that created this artifact.
             // formatDateString(
             //   getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
           ],
         };
       })
+      // TODO: We are currently searching across all properties of all artifacts. We should figure
+      // what the most useful fields are and limit filtering to those.
       .filter((r) => !request.filter
-        || (r.otherFields[0] || '').toLowerCase().indexOf(request.filter.toLowerCase()) > -1)
+        || r.otherFields.join('').toLowerCase().indexOf(request.filter.toLowerCase()) > -1)
       .sort((r1, r2) => {
         if (!request.sortBy) return -1;
 
@@ -203,8 +202,7 @@ class ArtifactList extends Page<{}, PipelineListState> {
    */
   private groupRows(rows: Row[]): Row[] {
     const flattenedRows = rows.reduce((map, r) => {
-      // Artifact row key is "{artifact_type}/{name}"
-      const stringKey = `${r.otherFields[2]}/${r.otherFields[0]}`;
+      const stringKey = r.otherFields[0];
       const rows = map.get(stringKey);
       if (rows) {
         rows.push(r);
@@ -217,12 +215,25 @@ class ArtifactList extends Page<{}, PipelineListState> {
     const grouped: Row[] = [];
     const expandedRows = new Map<number, Row[]>();
     Array.from(flattenedRows.entries()) // entries() returns in insertion order
-      .forEach((r, index) => {
-        if (r[1].length === 1) {
-          r[1][0].expandState = ExpandState.NONE;
+      .forEach((entry, index) => {
+        // entry[0] is a grouping key, entry[1] is a list of rows
+        const rows = entry[1];
+
+        // If there is only one row in the group, don't allow expansion
+        if (rows.length === 1) {
+          rows[0].expandState = ExpandState.NONE;
         }
-        grouped.push(r[1][0]);
-        expandedRows.set(index, r[1].slice(1));
+
+        // Add the first row in this group to be displayed as collapsed row
+        grouped.push(rows[0]);
+
+        // Remove the grouping column text for all but the first row in the group because it will be
+        // redundant within an expanded group.
+        const hiddenRows = rows.slice(1);
+        hiddenRows.forEach(row => row.otherFields[0] = '');
+
+        // Add this group of rows sharing a pipeline to the list of grouped rows
+        expandedRows.set(index, hiddenRows);
       });
 
     this.setState({expandedRows});
