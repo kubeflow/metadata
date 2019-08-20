@@ -1,0 +1,13 @@
+{
+    "name": "kubeflow.org/alpha/execution",
+    "properties": {
+        "name": "STRING",
+        "create_time": "STRING",
+        "description": "STRING",
+        "executable_id": "STRING",
+        "owner": "STRING",
+        "input":  "STRING",
+        "output": "STRING",
+        "__ALL_META__": "STRING"
+    }
+}
