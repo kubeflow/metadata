@@ -162,16 +162,13 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *api.CreateArtifac
 // Currently, this function is used to add new fields to artifact type.
 // Deleting field is not supported and all fields must be matched.
 func (s *Service) UpdateArtifactType(ctx context.Context, req *api.UpdateArtifactTypeRequest) (*api.UpdateArtifactTypeResponse, error) {
-	var putTypeOptions mlmetadata.PutTypeOptions
-
 	if req.ArtifactType == nil {
 		return nil, errors.New("no ArtifactType specified")
 	}
-
-	putTypeOptions.AllFieldsMustMatch = true
-	putTypeOptions.CanAddFields = true
-
-	_, err := s.store.PutArtifactType(req.ArtifactType, &putTypeOptions)
+	_, err := s.store.PutArtifactType(req.ArtifactType, &mlmetadata.PutTypeOptions{
+		AllFieldsMustMatch: true,
+		CanAddFields:       true,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -342,16 +339,13 @@ func (s *Service) CreateExecutionType(ctx context.Context, req *api.CreateExecut
 // Currently, this function is used to add new field to execution type.
 // Deleting field is not supported and all fields must be matched.
 func (s *Service) UpdateExecutionType(ctx context.Context, req *api.UpdateExecutionTypeRequest) (*api.UpdateExecutionTypeResponse, error) {
-	var putTypeOptions mlmetadata.PutTypeOptions
-
 	if req.ExecutionType == nil {
 		return nil, errors.New("no ExecutionType specified")
 	}
-
-	putTypeOptions.AllFieldsMustMatch = true
-	putTypeOptions.CanAddFields = true
-
-	_, err := s.store.PutExecutionType(req.ExecutionType, &putTypeOptions)
+	_, err := s.store.PutExecutionType(req.ExecutionType, &mlmetadata.PutTypeOptions{
+		AllFieldsMustMatch: true,
+		CanAddFields:       true,
+	})
 	if err != nil {
 		return nil, err
 	}
