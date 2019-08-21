@@ -69,15 +69,18 @@ export function titleCase(str: string): string {
  * @param fromCustomProperties
  */
 export function getResourceProperty(resource: MlMetadataArtifact | MlMetadataExecution,
-  propertyName: string, fromCustomProperties = false): string | null {
-  const props = fromCustomProperties ?
-    resource.custom_properties : resource.properties;
+  propertyName: string, fromCustomProperties = false): string | number | null {
+  const props = fromCustomProperties
+    ? resource.custom_properties
+    : resource.properties;
 
-  return (props && props[propertyName] && props[propertyName].string_value)
+  return (props && props[propertyName] && getMetadataValue(props[propertyName]))
     || null;
 }
 
 export function getMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
+  // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
+  // int_value has type string.
   return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
 }
 
@@ -99,10 +102,7 @@ export function rowCompareFn(request: ListRequest, columns: Column[]): (r1: Row,
       return -1;
     }
 
-    const sortBy = request.sortBy.endsWith(' desc')
-      ? request.sortBy.slice(0, request.sortBy.length - 5)
-      : request.sortBy;
-    const sortIndex = columns.findIndex((c) => sortBy === c.sortKey);
+    const sortIndex = columns.findIndex((c) => request.sortBy === c.sortKey);
 
     // Convert null to string to avoid null comparison behavior
     const compare = (r1.otherFields[sortIndex] || '') < (r2.otherFields[sortIndex] || '');

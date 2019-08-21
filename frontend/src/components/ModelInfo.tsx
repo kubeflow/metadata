@@ -48,9 +48,9 @@ export class ModelInfo extends React.Component<{model: MlMetadataArtifact}, {}> 
   public render(): JSX.Element {
     const {model} = this.props;
     let modelData: ModelSchema = {};
+    const modelDataJSON = getResourceProperty(model, ArtifactProperties.ALL_META);
     try {
-      modelData = JSON.parse(
-        getResourceProperty(model, ArtifactProperties.ALL_META) || '{}');
+      modelData = JSON.parse(modelDataJSON ? modelDataJSON.toString() : '{}');
     } catch (err) {
       logger.error(
         `Unable to parse ${ArtifactProperties.ALL_META} property`, err);

@@ -88,7 +88,8 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           `No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
-      let title = getResourceProperty(artifact, ArtifactProperties.NAME) || '';
+      const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
+      let title = artifactName ? artifactName.toString() : '';
       const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
       if (version) {
         title += ` (version: ${version})`;

@@ -483,10 +483,6 @@ export default class CustomTable extends React.Component<CustomTableProps, Custo
         sortOrder: request.orderAscending ? 'asc' : 'desc',
       });
 
-      if (request.sortBy && !request.orderAscending) {
-        request.sortBy += ' desc';
-      }
-
       result = await this.props.reload(request);
     } finally {
       this.setStateSafe({isBusy: false});
