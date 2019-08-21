@@ -31,6 +31,10 @@ curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types
 # List the predefined model type.
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model
 
+# Update the specified model type.
+curl -X PATCH -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types -d @update_model_type.json
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model
+
 # Add a model artifact
 curl -X POST -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/kubeflow.org/alpha/model/artifacts -d @artifact_model_1.json
 
@@ -46,5 +50,9 @@ curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/artifact_types/
 # List all execution types.
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types
 
-# List the predefined model type.
+# List the predefined execution type.
+curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution
+
+# Update the the specified execution type.
+curl -X PATCH -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types -d @update_execution_type.json
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution

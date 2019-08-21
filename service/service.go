@@ -158,6 +158,31 @@ func (s *Service) CreateArtifactType(ctx context.Context, req *api.CreateArtifac
 	}, nil
 }
 
+// UpdateArtifactType update specified artifact type.
+// Currently, this function is used to add new fields to artifact type.
+// Deleting field is not supported and all fields must be matched.
+func (s *Service) UpdateArtifactType(ctx context.Context, req *api.UpdateArtifactTypeRequest) (*api.UpdateArtifactTypeResponse, error) {
+	if req.ArtifactType == nil {
+		return nil, errors.New("no ArtifactType specified")
+	}
+	_, err := s.store.PutArtifactType(req.ArtifactType, &mlmetadata.PutTypeOptions{
+		AllFieldsMustMatch: true,
+		CanAddFields:       true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	aType, err := s.getArtifactType(req.ArtifactType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.UpdateArtifactTypeResponse{
+		ArtifactType: aType,
+	}, nil
+}
+
 // GetArtifactType returns the requested artifact type.
 func (s *Service) GetArtifactType(ctx context.Context, req *api.GetArtifactTypeRequest) (*api.GetArtifactTypeResponse, error) {
 	aType, err := s.getArtifactType(req.GetName())
@@ -308,6 +333,31 @@ func (s *Service) CreateExecutionType(ctx context.Context, req *api.CreateExecut
 	}
 
 	return &api.CreateExecutionTypeResponse{ExecutionType: eType}, nil
+}
+
+// UpdateExecutionType update specified execution type.
+// Currently, this function is used to add new field to execution type.
+// Deleting field is not supported and all fields must be matched.
+func (s *Service) UpdateExecutionType(ctx context.Context, req *api.UpdateExecutionTypeRequest) (*api.UpdateExecutionTypeResponse, error) {
+	if req.ExecutionType == nil {
+		return nil, errors.New("no ExecutionType specified")
+	}
+	_, err := s.store.PutExecutionType(req.ExecutionType, &mlmetadata.PutTypeOptions{
+		AllFieldsMustMatch: true,
+		CanAddFields:       true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	eType, err := s.getExecutionType(req.ExecutionType.GetName())
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.UpdateExecutionTypeResponse{
+		ExecutionType: eType,
+	}, nil
 }
 
 // GetExecutionType return the specified execution type.
