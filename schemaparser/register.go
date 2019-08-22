@@ -43,7 +43,18 @@ func RegisterSchemas(service *service.Service, schemaRootDir string) ([]string, 
 		return nil, err
 	}
 	var types []string
+
+	inLoopResult, err := ss.CheckClosedLoop()
+	if err != nil {
+		return nil, err
+	}
+
 	for id := range ss.Schemas {
+		if inLoopResult[id] {
+			glog.Warningf("schema is in invalid closed loop. schema $id = %s", id)
+			continue
+		}
+
 		namespace, typename, err := ss.TypeName(id)
 		if err != nil {
 			glog.Warningf("schema has invalid 'kind', 'apiversion', or 'namespace'. schema $id = %s: %v", id, err)

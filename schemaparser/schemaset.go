@@ -30,7 +30,7 @@ const (
 	versionPropertyName   = "apiversion"
 	idPropertyName        = "id"
 	namePropertyName      = "name"
-	uriPropertyName      = "uri"
+	uriPropertyName       = "uri"
 )
 
 // SimpleProperties are properties of type integer, double and string. The map is from property name to its type.
@@ -49,6 +49,10 @@ type SchemaSet struct {
 	loader  *gojsonschema.SchemaLoader
 	Schemas map[string]*Schema
 }
+
+// CheckResult are the checking result of whether the schema is in a closed loop.
+// The value is true means the schema is in a closed loop
+type CheckResult map[string]bool
 
 // NewSchemaSetFromADir create a SchemaSet from all schema files under a directory and its descendant directories.
 func NewSchemaSetFromADir(dir string) (*SchemaSet, error) {
@@ -237,4 +241,94 @@ func schemaJSON(file string) (*SchemaJSON, error) {
 		return nil, fmt.Errorf("missing $id in file %s", file)
 	}
 	return schemajson, nil
+}
+
+// CheckClosedLoop returns a map of the checking closed loop result for each schema.
+func (ss *SchemaSet) CheckClosedLoop() (CheckResult, error) {
+	checkMap := make(map[string]map[string]bool)
+	inLoopResult := make(CheckResult)
+	for id := range ss.Schemas {
+		checkMap[id] = make(map[string]bool)
+		inLoopResult[id] = false
+		schema := ss.Schemas[id]
+		for _, parent := range schema.JSON.AllOf {
+			if parent.Ref != nil {
+				checkMap[id][(string)(*parent.Ref)] = false
+			}
+		}
+	}
+
+	for id := range ss.Schemas {
+		if inLoopResult[id] {
+			continue
+		}
+
+		_, err := DeepSearchClosedLoop(id, id, checkMap, inLoopResult, checkMap[id])
+		if err != nil {
+			return nil, fmt.Errorf("failed to check parent reference in %s: %s", id, err)
+		}
+	}
+
+	return inLoopResult, nil
+}
+
+// DeepSearchClosedLoop recursively check the parent reference to find whether there is a closed loop.
+func DeepSearchClosedLoop(id string, currId string, checkMap map[string]map[string]bool, inLoopResult map[string]bool, visit map[string]bool) (bool, error) {
+	if checkMap == nil || inLoopResult == nil || visit == nil {
+		return false, fmt.Errorf("DeepSearchClosedLoop: invaid argument")
+	}
+
+	for parentId, _ := range checkMap[currId] {
+		if id == parentId {
+			inLoopResult[id] = true
+
+			err := MarkFlagInLoop(id, checkMap, inLoopResult)
+			if err != nil {
+				return false, err
+			}
+			return true, nil
+		}
+
+		_, ok := visit[parentId]
+		if ok && visit[parentId] {
+			continue
+		}
+		visit[parentId] = true
+
+		isInLoop, err := DeepSearchClosedLoop(id, parentId, checkMap, inLoopResult, visit)
+
+		if err != nil {
+			return false, err
+		}
+
+		if isInLoop {
+			return true, nil
+		}
+	}
+
+	return false, nil
+}
+
+// MarkFlagInLoop recursively mark all the offspring of which is in a closed loop in a closed loop .
+func MarkFlagInLoop(id string, checkMap map[string]map[string]bool, inLoopResult map[string]bool) error {
+	if checkMap == nil || inLoopResult == nil {
+		return fmt.Errorf("MarkFlagInLoop: invaid argument")
+	}
+
+	for schemaId, parentMap := range checkMap {
+		if schemaId == id || inLoopResult[schemaId] {
+			continue
+		}
+
+		_, ok := parentMap[id]
+		if ok {
+			inLoopResult[schemaId] = true
+			err := MarkFlagInLoop(schemaId, checkMap, inLoopResult)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
