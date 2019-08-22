@@ -236,7 +236,7 @@ describe('CustomTable', () => {
       orderAscending: false,
       pageSize: 10,
       pageToken: '',
-      sortBy: 'col1sortkey desc',
+      sortBy: 'col1sortkey',
     });
 
     tree.find('WithStyles(TableSortLabel)').at(1).simulate('click');
@@ -266,7 +266,7 @@ describe('CustomTable', () => {
       orderAscending: false,
       pageSize: 10,
       pageToken: '',
-      sortBy: 'col1sortkey desc',
+      sortBy: 'col1sortkey',
     });
 
     tree.find('WithStyles(TableSortLabel)').at(1).simulate('click');
@@ -284,7 +284,7 @@ describe('CustomTable', () => {
       orderAscending: false,
       pageSize: 10,
       pageToken: '',
-      sortBy: 'col2sortkey desc',
+      sortBy: 'col2sortkey',
     });
   });
 

@@ -17,7 +17,7 @@ import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
 import {getResourceProperty, logger} from '../lib/Utils';
-import {css} from './ArtifactInfo';
+import {css} from './ResourceInfo';
 import {MlMetadataArtifact} from '../apis/service';
 import {ArtifactProperties} from '../lib/Api';
 
