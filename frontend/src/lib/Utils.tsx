@@ -179,10 +179,6 @@ export function getExpandedRow(expandedRows: Map<number, Row[]>, columns: Column
   return (index: number) => {
     const rows = expandedRows.get(index) || [];
 
-    if (!(rows && rows.length)) {
-      return <p className={classes(padding(10, 't'), padding(65, 'l'))}>No other rows in group</p>;
-    }
-
     return (
       <div className={padding(65, 'l')}>
         {
