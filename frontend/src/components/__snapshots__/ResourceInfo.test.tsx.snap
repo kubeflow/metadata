@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
+exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
 <section>
   <h1
     className="header"
@@ -14,7 +14,7 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
     Properties
   </h2>
   <dl
-    className="artifactInfo"
+    className="resourceInfo"
   >
     <div
       className="field"
@@ -83,7 +83,7 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
     Custom Properties
   </h2>
   <dl
-    className="artifactInfo"
+    className="resourceInfo"
   >
     <div
       className="field"
@@ -119,7 +119,7 @@ exports[`ArtifactInfo Renders Artifact information for a Model 1`] = `
 </section>
 `;
 
-exports[`ArtifactInfo Renders generic Artifact information 1`] = `
+exports[`ResourceInfo Renders generic Artifact information 1`] = `
 <section>
   <h1
     className="header"
@@ -133,7 +133,7 @@ exports[`ArtifactInfo Renders generic Artifact information 1`] = `
     Properties
   </h2>
   <dl
-    className="artifactInfo"
+    className="resourceInfo"
   >
     <div
       className="field"
@@ -187,7 +187,7 @@ exports[`ArtifactInfo Renders generic Artifact information 1`] = `
     Custom Properties
   </h2>
   <dl
-    className="artifactInfo"
+    className="resourceInfo"
   >
     <div
       className="field"

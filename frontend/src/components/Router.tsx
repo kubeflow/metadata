@@ -29,6 +29,8 @@ import {classes, stylesheet} from 'typestyle';
 import {commonCss} from '../Css';
 import ArtifactList from '../pages/ArtifactList';
 import ArtifactDetails from '../pages/ArtifactDetails';
+import ExecutionList from '../pages/ExecutionList';
+import SideNav from '../pages/SideNav';
 
 const css = stylesheet({
   dialog: {
@@ -38,13 +40,15 @@ const css = stylesheet({
 
 export enum RouteParams {
   ARTIFACT_TYPE = 'artifactType',
+  EXECUTION_TYPE = 'executionType',
   ID = 'id',
 }
 
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
-  ARTIFACT_DETAILS:
-    `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
+  ARTIFACT_DETAILS: `/artifact_types/:${RouteParams.ARTIFACT_TYPE}+/artifacts/:${RouteParams.ID}`,
+  EXECUTIONS: '/executions',
+  EXECUTION_DETAILS: `/execution_types/:${RouteParams.EXECUTION_TYPE}+/executions/:${RouteParams.ID}`,
 };
 
 export interface DialogProps {
@@ -74,6 +78,8 @@ class Router extends React.Component<{}, RouteComponentState> {
   private routes: RouteConfig[] = [
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
     {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
+    {path: RoutePage.EXECUTIONS, Component: ExecutionList},
+    {path: RoutePage.EXECUTION_DETAILS, Component: ArtifactDetails},
   ];
 
   constructor(props: any) {
@@ -98,6 +104,7 @@ class Router extends React.Component<{}, RouteComponentState> {
       <HashRouter>
         <div className={commonCss.page}>
           <div className={commonCss.flexGrow}>
+          <Route render={({ ...props }) => (<SideNav page={props.location.pathname} {...props} />)} />
             <div className={classes(commonCss.page)}>
               <Route render={({...props}) => (<Toolbar {...this.state.toolbarProps} {...props} />)} />
               {this.state.bannerProps.message

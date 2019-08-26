@@ -70,8 +70,8 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
   <div
     className="page"
   >
-    <ArtifactInfo
-      artifact={
+    <ResourceInfo
+      resource={
         Object {
           "custom_properties": Object {
             "__kf_run__": Object {
@@ -118,7 +118,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
           Properties
         </h2>
         <dl
-          className="artifactInfo"
+          className="resourceInfo"
         >
           <div
             className="field"
@@ -187,7 +187,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
           Custom Properties
         </h2>
         <dl
-          className="artifactInfo"
+          className="resourceInfo"
         >
           <div
             className="field"
@@ -221,7 +221,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
           </div>
         </dl>
       </section>
-    </ArtifactInfo>
+    </ResourceInfo>
   </div>
 </ArtifactDetails>
 `;

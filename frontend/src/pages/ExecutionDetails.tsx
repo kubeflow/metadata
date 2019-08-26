@@ -15,22 +15,22 @@
  */
 
 import * as React from 'react';
-import {Page} from './Page';
-import {ToolbarProps} from '../components/Toolbar';
-import {RoutePage, RouteParams} from '../components/Router';
-import {Api, ArtifactProperties} from '../lib/Api';
-import {MlMetadataArtifact} from '../apis/service';
-import {classes} from 'typestyle';
-import {commonCss, padding} from '../Css';
-import {CircularProgress} from '@material-ui/core';
-import {titleCase, getResourceProperty} from '../lib/Utils';
-import {ResourceInfo} from '../components/ResourceInfo';
+import { Page } from './Page';
+import { ToolbarProps } from '../components/Toolbar';
+import { RoutePage, RouteParams } from '../components/Router';
+import { Api, ExecutionProperties } from '../lib/Api';
+import { MlMetadataExecution } from '../apis/service';
+import { classes } from 'typestyle';
+import { commonCss, padding } from '../Css';
+import { CircularProgress } from '@material-ui/core';
+import { titleCase, getResourceProperty } from '../lib/Utils';
+import { ResourceInfo } from '../components/ResourceInfo';
 
-interface ArtifactDetailsState {
-  artifact?: MlMetadataArtifact;
+interface ExecutionDetailsState {
+  execution?: MlMetadataExecution;
 }
 
-export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
+export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
   private api = Api.getInstance();
 
   constructor(props: {}) {
@@ -40,7 +40,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   }
 
   private get fullTypeName(): string {
-    return this.props.match.params[RouteParams.ARTIFACT_TYPE] || '';
+    return this.props.match.params[RouteParams.EXECUTION_TYPE] || '';
   }
 
   private get properTypeName(): string {
@@ -59,11 +59,11 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   }
 
   public render(): JSX.Element {
-    if (!this.state.artifact) return <CircularProgress />;
+    if (!this.state.execution) return <CircularProgress />;
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
         {<ResourceInfo typeName={this.properTypeName}
-          resource={this.state.artifact} />}
+          resource={this.state.execution} />}
       </div >
     );
   }
@@ -71,7 +71,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   public getInitialToolbarState(): ToolbarProps {
     return {
       actions: [],
-      breadcrumbs: [{displayName: 'Artifacts', href: RoutePage.ARTIFACTS}],
+      breadcrumbs: [{ displayName: 'Executions', href: RoutePage.EXECUTIONS }],
       pageTitle: `${this.properTypeName} ${this.id} details`
     };
   }
@@ -82,22 +82,17 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
 
   private async load(): Promise<void> {
     try {
-      const {artifact} = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
-      if (!artifact) {
+      const { execution } = await this.api.metadataService.getExecution(this.id, this.fullTypeName);
+      if (!execution) {
         throw new Error(
           `No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
-      const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
-      let title = artifactName ? artifactName.toString() : '';
-      const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
-      if (version) {
-        title += ` (version: ${version})`;
-      }
+      const executionName = getResourceProperty(execution, ExecutionProperties.NAME);
       this.props.updateToolbar({
-        pageTitle: title
+        pageTitle: executionName ? executionName.toString() : ''
       });
-      this.setState({artifact});
+      this.setState({ execution });
     } catch (err) {
       this.showPageError(
         `Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);

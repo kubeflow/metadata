@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {ArtifactInfo} from './ArtifactInfo';
+import {ResourceInfo} from './ResourceInfo';
 import {shallow, ShallowWrapper} from 'enzyme';
 import {MlMetadataArtifact} from '../apis/service';
 
-describe('ArtifactInfo', () => {
+describe('ResourceInfo', () => {
   let tree: ShallowWrapper;
 
   afterEach(() => tree.unmount());
@@ -22,7 +22,7 @@ describe('ArtifactInfo', () => {
         __kf_workspace__: {string_value: 'workspace-1'},
       },
     };
-    tree = shallow(<ArtifactInfo typeName='Data Set' artifact={dataset} />);
+    tree = shallow(<ResourceInfo typeName='Data Set' resource={dataset} />);
 
     expect(tree).toMatchSnapshot();
   });
@@ -49,7 +49,7 @@ describe('ArtifactInfo', () => {
         __kf_run__: {string_value: '1'},
       },
     };
-    tree = shallow(<ArtifactInfo typeName='Model' artifact={model} />);
+    tree = shallow(<ResourceInfo typeName='Model' resource={model} />);
 
     expect(tree).toMatchSnapshot();
   });

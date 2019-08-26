@@ -16,11 +16,11 @@
 import * as React from 'react';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
-import {MlMetadataArtifact} from '../apis/service';
+import {MlMetadataArtifact, MlMetadataExecution} from '../apis/service';
 import { getMetadataValue } from '../lib/Utils';
 
 export const css = stylesheet({
-  artifactInfo: {
+  resourceInfo: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -43,40 +43,40 @@ export const css = stylesheet({
   }
 });
 
-export interface ArtifactInfoProps {
+export interface ResourceInfoProps {
   typeName: string;
-  artifact: MlMetadataArtifact;
+  resource: MlMetadataArtifact | MlMetadataExecution;
 }
 
-export class ArtifactInfo extends React.Component<ArtifactInfoProps, {}> {
+export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
 
   public render(): JSX.Element {
-    const {artifact} = this.props;
+    const { resource } = this.props;
     return (
       <section>
         <h1 className={commonCss.header}>Type: {this.props.typeName}</h1>
         <h2 className={commonCss.header2}>Properties</h2>
-        <dl className={css.artifactInfo}>
-          {Object.keys(artifact.properties || {})
+        <dl className={css.resourceInfo}>
+          {Object.keys(resource.properties || {})
             // TODO: __ALL_META__ is something of a hack, is redundant, and can be ignored
             .filter(k => k !== '__ALL_META__')
             .map(k =>
               <div className={css.field} key={k}>
                 <dt className={css.term}>{k}</dt>
                 <dd className={css.value}>
-                  {artifact.properties && getMetadataValue(artifact.properties[k])}
+                  {resource.properties && getMetadataValue(resource.properties[k])}
                 </dd>
               </div>
             )
           }
         </dl>
         <h2 className={commonCss.header2}>Custom Properties</h2>
-        <dl className={css.artifactInfo}>
-          {Object.keys(artifact.custom_properties || {}).map(k =>
+        <dl className={css.resourceInfo}>
+          {Object.keys(resource.custom_properties || {}).map(k =>
             <div className={css.field} key={k}>
               <dt className={css.term}>{k}</dt>
               <dd className={css.value}>
-                {artifact.custom_properties && getMetadataValue(artifact.custom_properties[k])}
+                {resource.custom_properties && getMetadataValue(resource.custom_properties[k])}
               </dd>
             </div>
           )}
