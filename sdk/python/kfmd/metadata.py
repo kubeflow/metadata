@@ -46,6 +46,12 @@ class Workspace(object):
       labels {object} Optional key/value string pairs to label the workspace.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
+    if backend_url_prefix is None and type(backend_url_prefix) != str:
+          raise ValueError("'backend_url_prefix' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
+    if labels is None:
+          raise ValueError("'labels' must be set.")
     self.backend_url_prefix = backend_url_prefix
     self.name = name
     self.description = description
@@ -75,6 +81,8 @@ class Workspace(object):
     return results
 
   def _flat(self, artifact):
+    if artifact is None:
+          raise ValueError("'artifact' must be set.")
     result = {
       "id": artifact.id,
     }
@@ -115,6 +123,10 @@ class Run(object):
       description {str} -- Optional description.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
+    if workspace is None and type(workspace) != str:
+          raise ValueError("'workspace' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
@@ -140,10 +152,12 @@ class Execution(object):
     Returns an execution object for logging.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
+    if workspace is None and type(workspace) != str:
+          raise ValueError("'workspace' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
     self.id = None
     self.name = name
-    if workspace is None:
-      raise ValueError("'workspace' must be set.")
     self.workspace = workspace
     self.run = run
     self.description = description
@@ -188,6 +202,8 @@ class Execution(object):
 
     This method will set artifact.id.
     """
+    if artifact is None:
+          raise ValueError("'artifact' must be set.")
     self._log(artifact)
     input_event = openapi_client.MlMetadataEvent(
       artifact_id=artifact.id,
@@ -208,6 +224,8 @@ class Execution(object):
 
     This method will set artifact.id.
     """
+    if artifact is None:
+          raise ValueError("'artifact' must be set.")
     self._log(artifact)
     output_event = openapi_client.MlMetadataEvent(
       artifact_id=artifact.id,
@@ -229,6 +247,8 @@ class Execution(object):
 
     This method will set artifact.id.
     """
+    if artifact is None:
+          raise ValueError("'artifact' must be set.")
     serialization = artifact.serialization()
     if serialization.custom_properties is None:
           serialization.custom_properties = {}
@@ -284,6 +304,10 @@ class DataSet(object):
     dataset.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
+    if uri is None and type(uri) != str:
+          raise ValueError("'uri' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
@@ -350,6 +374,10 @@ class Model(object):
     Addtional keyword arguments are saved as addtional properties of this model.
     """
     # TODO(zhenghuiwang): check each field's type and whether set.
+    if uri is None and type(uri) != str:
+          raise ValueError("'uri' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
@@ -425,6 +453,10 @@ class Metrics(object):
     metrics.
     """
     # TODO(zhenghuiwang): check each field's type and whether it is set.
+    if uri is None and type(uri) != str:
+          raise ValueError("'uri' must be set and in string type.")
+    if name is None and type(name) != str:
+          raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
