@@ -50,8 +50,6 @@ class Workspace(object):
           raise ValueError("'backend_url_prefix' must be set and in string type.")
     if name is None and type(name) != str:
           raise ValueError("'name' must be set and in string type.")
-    if labels is None:
-          raise ValueError("'labels' must be set.")
     self.backend_url_prefix = backend_url_prefix
     self.name = name
     self.description = description
