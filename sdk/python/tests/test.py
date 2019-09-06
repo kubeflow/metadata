@@ -128,6 +128,20 @@ class TestMetedata(unittest.TestCase):
         metadata.Model(name="MNIST", uri="gcs://my-bucket/mnist"))
     self.assertIsNotNone(model.id)
 
+  def test_invalid_workspace_should_fail(self):
+    with self.assertRaises(ValueError):
+        ws1 = metadata.Workspace(
+                name="ws_1",
+                description="a workspace for testing",
+                labels={"n1": "v1"})
+
+    with self.assertRaises(ValueError):
+        ws1 = metadata.Workspace(
+                backend_url_prefix=127,
+                name="ws_1",
+                description="a workspace for testing",
+                labels={"n1": "v1"})
+
 class ArtifactFixture(object):
   ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"
 

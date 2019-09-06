@@ -45,10 +45,9 @@ class Workspace(object):
       description {str} -- Optional string for description of the workspace.
       labels {object} Optional key/value string pairs to label the workspace.
     """
-    # TODO(zhenghuiwang): check each field's type and whether set.
-    if backend_url_prefix is None and type(backend_url_prefix) != str:
+    if backend_url_prefix is None or type(backend_url_prefix) != str:
           raise ValueError("'backend_url_prefix' must be set and in string type.")
-    if name is None and type(name) != str:
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.backend_url_prefix = backend_url_prefix
     self.name = name
@@ -120,10 +119,9 @@ class Run(object):
       name {str} -- Required name of this run.
       description {str} -- Optional description.
     """
-    # TODO(zhenghuiwang): check each field's type and whether set.
-    if workspace is None and type(workspace) != str:
-          raise ValueError("'workspace' must be set and in string type.")
-    if name is None and type(name) != str:
+    if workspace is None:
+          raise ValueError("'workspace' must be set.")
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
@@ -149,10 +147,9 @@ class Execution(object):
 
     Returns an execution object for logging.
     """
-    # TODO(zhenghuiwang): check each field's type and whether set.
-    if workspace is None and type(workspace) != str:
-          raise ValueError("'workspace' must be set and in string type.")
-    if name is None and type(name) != str:
+    if workspace is None:
+          raise ValueError("'workspace' must be set.")
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.id = None
     self.name = name
@@ -301,10 +298,9 @@ class DataSet(object):
     Addtional keyword arguments are saved as addtional properties of this
     dataset.
     """
-    # TODO(zhenghuiwang): check each field's type and whether set.
-    if uri is None and type(uri) != str:
+    if uri is None or type(uri) != str:
           raise ValueError("'uri' must be set and in string type.")
-    if name is None and type(name) != str:
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
@@ -371,10 +367,9 @@ class Model(object):
       labels {object} -- Optional string key value pairs for labels.
     Addtional keyword arguments are saved as addtional properties of this model.
     """
-    # TODO(zhenghuiwang): check each field's type and whether set.
-    if uri is None and type(uri) != str:
+    if uri is None or type(uri) != str:
           raise ValueError("'uri' must be set and in string type.")
-    if name is None and type(name) != str:
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
@@ -450,10 +445,9 @@ class Metrics(object):
     Addtional keyword arguments are saved as addtional properties of this
     metrics.
     """
-    # TODO(zhenghuiwang): check each field's type and whether it is set.
-    if uri is None and type(uri) != str:
+    if uri is None or type(uri) != str:
           raise ValueError("'uri' must be set and in string type.")
-    if name is None and type(name) != str:
+    if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
