@@ -109,11 +109,11 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
       rows={
         Array [
           Object {
-            "id": "kubeflow.org/alpha/model:1",
+            "id": "kubeflow.org/alpha/model:5",
             "otherFields": Array [
               "pipeline-1",
               "model",
-              "1",
+              "5",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -4325,11 +4325,11 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/model:1",
+                    "id": "kubeflow.org/alpha/model:5",
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      "1",
+                      "5",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -4349,11 +4349,11 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       pipeline-1
@@ -4373,11 +4373,11 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       model
@@ -4393,7 +4393,7 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                     }
                   }
                 >
-                  1
+                  5
                 </div>
                 <div
                   className="cell"
@@ -13652,11 +13652,11 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
       rows={
         Array [
           Object {
-            "id": "kubeflow.org/alpha/model:1",
+            "id": "kubeflow.org/alpha/model:5",
             "otherFields": Array [
               "pipeline-1",
               "model",
-              "1",
+              "5",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -17936,11 +17936,11 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/model:1",
+                    "id": "kubeflow.org/alpha/model:5",
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      "1",
+                      "5",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -17960,11 +17960,11 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       pipeline-1
@@ -17984,11 +17984,11 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       model
@@ -18004,7 +18004,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                     }
                   }
                 >
-                  1
+                  5
                 </div>
                 <div
                   className="cell"
@@ -18290,11 +18290,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
       rows={
         Array [
           Object {
-            "id": "kubeflow.org/alpha/model:1",
+            "id": "kubeflow.org/alpha/model:5",
             "otherFields": Array [
               "pipeline-1",
               "model",
-              "1",
+              "5",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -22506,11 +22506,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                 }
                 row={
                   Object {
-                    "id": "kubeflow.org/alpha/model:1",
+                    "id": "kubeflow.org/alpha/model:5",
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      "1",
+                      "5",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -22530,11 +22530,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       pipeline-1
@@ -22554,11 +22554,11 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     className="link"
                     onClick={[Function]}
                     replace={false}
-                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                    to="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                   >
                     <a
                       className="link"
-                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/1"
+                      href="/artifact_types/kubeflow.org/alpha/model/artifacts/5"
                       onClick={[Function]}
                     >
                       model
@@ -22574,7 +22574,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     }
                   }
                 >
-                  1
+                  5
                 </div>
                 <div
                   className="cell"
