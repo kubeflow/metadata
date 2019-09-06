@@ -31,6 +31,7 @@ import ArtifactList from '../pages/ArtifactList';
 import ArtifactDetails from '../pages/ArtifactDetails';
 import ExecutionList from '../pages/ExecutionList';
 import SideNav from '../pages/SideNav';
+import ExecutionDetails from '../pages/ExecutionDetails';
 
 const css = stylesheet({
   dialog: {
@@ -79,7 +80,7 @@ class Router extends React.Component<{}, RouteComponentState> {
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
     {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
     {path: RoutePage.EXECUTIONS, Component: ExecutionList},
-    {path: RoutePage.EXECUTION_DETAILS, Component: ArtifactDetails},
+    {path: RoutePage.EXECUTION_DETAILS, Component: ExecutionDetails},
   ];
 
   constructor(props: any) {
