@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"time"
 
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	toolscache "k8s.io/client-go/tools/cache"
@@ -58,31 +59,33 @@ func main() {
 		klog.Fatalf("error registering metadata types: %s", err)
 	}
 
-	podGVK := schema.GroupVersionKind{
-		Version: "v1",
-		Kind:    "Pod",
-	}
-
 	stopper := make(chan struct{})
 	defer close(stopper)
-	informerPod, err := c.GetInformerForKind(podGVK)
-	if err != nil {
-		klog.Fatalf("failed to create informer: %s", err)
-	}
-	informerPod.AddEventHandler(toolscache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
-			// "k8s.io/apimachinery/pkg/apis/meta/v1" provides an Object
-			// interface that allows us to get metadata easily
-			log.Printf("New Pod object %s", obj)
-		},
-	})
+	// podGVK := schema.GroupVersionKind{
+	// 	Version: "v1",
+	// 	Kind:    "Pod",
+	// }
+	// informerPod, err := c.GetInformerForKind(podGVK)
+	// if err != nil {
+	// 	klog.Fatalf("failed to create informer: %s", err)
+	// }
+	// informerPod.AddEventHandler(toolscache.ResourceEventHandlerFuncs{
+	// 	AddFunc: func(obj interface{}) {
+	// 		// "k8s.io/apimachinery/pkg/apis/meta/v1" provides an Object
+	// 		// interface that allows us to get metadata easily
+	// 		log.Printf("New Pod object %s", obj)
+	// 	},
+	// })
 
 	fooGVK := schema.GroupVersionKind{
-		Group:   "kubeflow.org",
-		Version: "v1",
-		Kind:    "TFJob",
+		Group:   "samplecontroller.k8s.io",
+		Version: "v1alpha1",
+		Kind:    "Foo",
 	}
-	informerFoo, err := c.GetInformerForKind(fooGVK)
+	unstructuredJob := &unstructured.Unstructured{}
+	unstructuredJob.SetGroupVersionKind(fooGVK)
+
+	informerFoo, err := c.GetInformer(unstructuredJob)
 	if err != nil {
 		klog.Fatalf("failed to create informer: %s", err)
 	}
