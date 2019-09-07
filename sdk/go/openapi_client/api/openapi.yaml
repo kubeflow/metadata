@@ -1,0 +1,1410 @@
+openapi: 3.0.1
+info:
+  title: api/service.proto
+  version: version not set
+servers:
+- url: /
+paths:
+  /api/v1alpha1/artifact_types:
+    get:
+      operationId: ListArtifactTypes
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListArtifactTypesResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+    post:
+      operationId: CreateArtifactType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_metadataArtifactType'
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiCreateArtifactTypeResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+      x-codegen-request-body-name: body
+  /api/v1alpha1/artifacts:
+    get:
+      operationId: ListArtifacts2
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListArtifactsResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/events:
+    post:
+      operationId: CreateEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_metadataEvent'
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: A successful response.
+      tags:
+      - MetadataService
+      x-codegen-request-body-name: body
+  /api/v1alpha1/events/artifacts/{name}:
+    get:
+      operationId: ListEvents2
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListEventsResponse'
+          description: A successful response.
+      summary: List events based on an artifact or execution id.
+      tags:
+      - MetadataService
+  /api/v1alpha1/events/executions/{name}:
+    get:
+      operationId: ListEvents
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListEventsResponse'
+          description: A successful response.
+      summary: List events based on an artifact or execution id.
+      tags:
+      - MetadataService
+  /api/v1alpha1/execution_types:
+    get:
+      operationId: ListExecutionTypes
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListExecutionTypesResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+    post:
+      operationId: CreateExecutionType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_metadataExecutionType'
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiCreateExecutionTypeResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+      x-codegen-request-body-name: body
+  /api/v1alpha1/executions:
+    get:
+      operationId: ListExecutions2
+      parameters:
+      - in: query
+        name: name
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListExecutionsResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/artifact_types/{name}/artifacts/{id}:
+    delete:
+      operationId: DeleteArtifact
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: A successful response.
+      tags:
+      - MetadataService
+    get:
+      operationId: GetArtifact
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: |-
+          Artifact name is like
+          `artifact_types/{namespace}/{typename}/artifact/{id}`.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiGetArtifactResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/artifact_types/{name}:
+    delete:
+      operationId: DeleteArtifactType
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: A successful response.
+      tags:
+      - MetadataService
+    get:
+      operationId: GetArtifactType
+      parameters:
+      - description: ArtifactType names are of the form `artifact_types/{namespace}/{name}`.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiGetArtifactTypeResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/artifact_types/{name}/artifacts:
+    get:
+      operationId: ListArtifacts
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListArtifactsResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/execution_types/{name}/executions/{id}:
+    delete:
+      operationId: DeleteExecution
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: A successful response.
+      tags:
+      - MetadataService
+    get:
+      operationId: GetExecution
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - description: |-
+          Execution name is like
+          `execution_types/{namespace}/{typename}/execution/{id}`.
+        in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiGetExecutionResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/execution_types/{name}:
+    delete:
+      operationId: DeleteExecutionType
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: A successful response.
+      tags:
+      - MetadataService
+    get:
+      operationId: GetExecutionType
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiGetExecutionTypeResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/execution_types/{name}/executions:
+    get:
+      operationId: ListExecutions
+      parameters:
+      - in: path
+        name: name
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiListExecutionsResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+  /api/v1alpha1/artifact_types/{parent}/artifacts:
+    post:
+      operationId: CreateArtifact
+      parameters:
+      - description: |-
+          Creates the specified artifact as an instance of ArtifactType with this
+          fully qualified name. |parent| takes the form
+          `artifact_types/{namespace}/{name>}`.
+        in: path
+        name: parent
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_metadataArtifact'
+        description: The Artifact to create. Note that Artifact.type_id is ignored.
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiCreateArtifactResponse'
+          description: A successful response.
+      summary: |-
+        NOTE:
+        The order of the following RPC methods affects the order of matching
+        a particular HTTP path. So put a more specific path pattern before
+        a generic one. For example,
+        GET /api/v1alpha1/artifact_types/{parent}/artifacts
+        should appear before
+        GET /api/v1alpha1/artifact_types/{name} to be possibly matched.
+      tags:
+      - MetadataService
+      x-codegen-request-body-name: body
+  /api/v1alpha1/execution_types/{parent}/executions:
+    post:
+      operationId: CreateExecution
+      parameters:
+      - description: |-
+          Creates the specified artifact as an instance of ExecutionType with this
+          fully qualified name. |parent| takes the form
+          `execution_types/{namespace}/{name>}`.
+        in: path
+        name: parent
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ml_metadataExecution'
+        description: The Execution to create. Note that Execution.type_id is ignored.
+        required: true
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/apiCreateExecutionResponse'
+          description: A successful response.
+      tags:
+      - MetadataService
+      x-codegen-request-body-name: body
+components:
+  schemas:
+    EventPath:
+      description: |-
+        A simple path (e.g. {step{key:"foo"}}) can name an artifact in the context
+        of an execution.
+      example:
+        steps:
+        - index: index
+          key: key
+        - index: index
+          key: key
+      properties:
+        steps:
+          description: |-
+            A simple path (e.g. {step{key:"foo"}}) can name an artifact in the
+            context of an execution.
+          items:
+            $ref: '#/components/schemas/PathStep'
+          type: array
+      type: object
+    PathStep:
+      example:
+        index: index
+        key: key
+      properties:
+        index:
+          format: int64
+          type: string
+        key:
+          type: string
+      type: object
+    apiCreateArtifactResponse:
+      example:
+        artifact:
+          type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          uri: uri
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        artifact:
+          $ref: '#/components/schemas/ml_metadataArtifact'
+      type: object
+    apiCreateArtifactTypeResponse:
+      example:
+        artifact_type:
+          name: name
+          id: id
+          properties: {}
+      properties:
+        artifact_type:
+          $ref: '#/components/schemas/ml_metadataArtifactType'
+      type: object
+    apiCreateExecutionResponse:
+      example:
+        execution:
+          type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        execution:
+          $ref: '#/components/schemas/ml_metadataExecution'
+      type: object
+    apiCreateExecutionTypeResponse:
+      example:
+        execution_type:
+          output_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          name: name
+          input_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          id: id
+          properties: {}
+      properties:
+        execution_type:
+          $ref: '#/components/schemas/ml_metadataExecutionType'
+      type: object
+    apiGetArtifactResponse:
+      example:
+        artifact:
+          type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          uri: uri
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        artifact:
+          $ref: '#/components/schemas/ml_metadataArtifact'
+      type: object
+    apiGetArtifactTypeResponse:
+      example:
+        artifact_type:
+          name: name
+          id: id
+          properties: {}
+      properties:
+        artifact_type:
+          $ref: '#/components/schemas/ml_metadataArtifactType'
+      type: object
+    apiGetExecutionResponse:
+      example:
+        execution:
+          type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        execution:
+          $ref: '#/components/schemas/ml_metadataExecution'
+      type: object
+    apiGetExecutionTypeResponse:
+      example:
+        execution_type:
+          output_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          name: name
+          input_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          id: id
+          properties: {}
+      properties:
+        execution_type:
+          $ref: '#/components/schemas/ml_metadataExecutionType'
+      type: object
+    apiListArtifactTypesResponse:
+      example:
+        artifact_types:
+        - name: name
+          id: id
+          properties: {}
+        - name: name
+          id: id
+          properties: {}
+      properties:
+        artifact_types:
+          items:
+            $ref: '#/components/schemas/ml_metadataArtifactType'
+          type: array
+      type: object
+    apiListArtifactsResponse:
+      example:
+        artifacts:
+        - type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          uri: uri
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+        - type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          uri: uri
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        artifacts:
+          items:
+            $ref: '#/components/schemas/ml_metadataArtifact'
+          type: array
+      type: object
+    apiListEventsResponse:
+      example:
+        executions:
+          key:
+            type_id: type_id
+            id: id
+            custom_properties:
+              key:
+                string_value: string_value
+                double_value: 0.8008281904610115
+                int_value: int_value
+            properties:
+              key:
+                string_value: string_value
+                double_value: 0.8008281904610115
+                int_value: int_value
+        events:
+        - execution_id: execution_id
+          path:
+            steps:
+            - index: index
+              key: key
+            - index: index
+              key: key
+          milliseconds_since_epoch: milliseconds_since_epoch
+          artifact_id: artifact_id
+        - execution_id: execution_id
+          path:
+            steps:
+            - index: index
+              key: key
+            - index: index
+              key: key
+          milliseconds_since_epoch: milliseconds_since_epoch
+          artifact_id: artifact_id
+        artifacts:
+          key:
+            type_id: type_id
+            id: id
+            custom_properties:
+              key:
+                string_value: string_value
+                double_value: 0.8008281904610115
+                int_value: int_value
+            uri: uri
+            properties:
+              key:
+                string_value: string_value
+                double_value: 0.8008281904610115
+                int_value: int_value
+      properties:
+        events:
+          items:
+            $ref: '#/components/schemas/ml_metadataEvent'
+          type: array
+        artifacts:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataArtifact'
+          type: object
+        executions:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataExecution'
+          type: object
+      type: object
+    apiListExecutionTypesResponse:
+      example:
+        execution_types:
+        - output_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          name: name
+          input_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          id: id
+          properties: {}
+        - output_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          name: name
+          input_type:
+            tuple:
+              elements:
+              - null
+              - null
+            union_type:
+              candidates:
+              - null
+              - null
+            intersection:
+              constraints:
+              - null
+              - null
+            dict:
+              none_type_not_required: true
+              properties: {}
+            simple:
+              name: name
+              id: id
+              properties: {}
+            none: '{}'
+            list: {}
+            any: '{}'
+          id: id
+          properties: {}
+      properties:
+        execution_types:
+          items:
+            $ref: '#/components/schemas/ml_metadataExecutionType'
+          type: array
+      type: object
+    apiListExecutionsResponse:
+      example:
+        executions:
+        - type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+        - type_id: type_id
+          id: id
+          custom_properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+          properties:
+            key:
+              string_value: string_value
+              double_value: 0.8008281904610115
+              int_value: int_value
+      properties:
+        executions:
+          items:
+            $ref: '#/components/schemas/ml_metadataExecution'
+          type: array
+      type: object
+    ml_metadataAnyArtifactStructType:
+      description: Every ArtifactStruct is a member of this type.
+      type: object
+    ml_metadataArtifact:
+      example:
+        type_id: type_id
+        id: id
+        custom_properties:
+          key:
+            string_value: string_value
+            double_value: 0.8008281904610115
+            int_value: int_value
+        uri: uri
+        properties:
+          key:
+            string_value: string_value
+            double_value: 0.8008281904610115
+            int_value: int_value
+      properties:
+        id:
+          description: The id of the artifact.
+          format: int64
+          type: string
+        type_id:
+          description: |-
+            The id of an ArtifactType.
+            Type must be specified when an artifact is created, and it cannot be
+            changed.
+          format: int64
+          type: string
+        uri:
+          description: |-
+            The uniform resource identifier of the physical artifact.
+            May be empty if there is no physical artifact.
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataValue'
+          description: |-
+            Properties of the artifact.
+            Properties must be specified in the ArtifactType.
+          type: object
+        custom_properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataValue'
+          description: User provided custom properties which are not defined by its
+            type.
+          type: object
+      type: object
+    ml_metadataArtifactStructType:
+      description: |-
+        The type of an ArtifactStruct.
+        An artifact struct type represents an infinite set of artifact structs.
+        It can specify the input or output type of an ExecutionType.
+        See the more specific types referenced in the message for more details.
+      example:
+        tuple:
+          elements:
+          - null
+          - null
+        union_type:
+          candidates:
+          - null
+          - null
+        intersection:
+          constraints:
+          - null
+          - null
+        dict:
+          none_type_not_required: true
+          properties: {}
+        simple:
+          name: name
+          id: id
+          properties: {}
+        none: '{}'
+        list: {}
+        any: '{}'
+      properties:
+        simple:
+          $ref: '#/components/schemas/ml_metadataArtifactType'
+        union_type:
+          $ref: '#/components/schemas/ml_metadataUnionArtifactStructType'
+        intersection:
+          $ref: '#/components/schemas/ml_metadataIntersectionArtifactStructType'
+        list:
+          $ref: '#/components/schemas/ml_metadataListArtifactStructType'
+        none:
+          title: |-
+            The only member of this type is a None artifact.
+            Note: ArtifactStruct{} is a None artifact.
+            This can represent an execution that has no outputs (or inputs),
+            or can be part of a UnionArtifactStructType to represent an optional
+            input.
+            For example, StatsGen has an "optional" schema input.
+            A practical example of this is:
+            stats_gen_type = {
+                "dict":{
+                   "properties":{
+                     "schema":{
+                       "union_type":{
+                         "none":{},
+                         "simple":{...schema type...}
+                        },
+                     },
+                     "data":{
+                       "simple":{...data_type...}
+                     }
+                  }
+                }
+            };
+          type: object
+        any:
+          description: Every ArtifactStruct is a member of this type.
+          type: object
+        tuple:
+          $ref: '#/components/schemas/ml_metadataTupleArtifactStructType'
+        dict:
+          $ref: '#/components/schemas/ml_metadataDictArtifactStructType'
+      type: object
+    ml_metadataArtifactType:
+      example:
+        name: name
+        id: id
+        properties: {}
+      properties:
+        id:
+          description: The id of the type. 1-1 relationship between type names and
+            IDs.
+          format: int64
+          type: string
+        name:
+          description: The name of the type.
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataPropertyType'
+          description: |-
+            The schema of the type.
+            Properties are always optional in the artifact.
+            Properties of an artifact type can be expanded but not contracted (i.e.,
+            you can add columns but not remove them).
+          type: object
+      type: object
+    ml_metadataDictArtifactStructType:
+      example:
+        none_type_not_required: true
+        properties: {}
+      properties:
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataArtifactStructType'
+          description: Underlying properties for the type.
+          type: object
+        none_type_not_required:
+          description: |-
+            If true, then if properties["foo"] can be None, then that key is not
+            required.
+          format: boolean
+          type: boolean
+        extra_properties_type:
+          $ref: '#/components/schemas/ml_metadataArtifactStructType'
+      title: |-
+        A artifact struct type that represents a record or struct-like dictionary.
+        ArtifactStruct would be map (i.e. ArtifactStructMap)
+      type: object
+    ml_metadataEvent:
+      description: |-
+        An event represents a relationship between an artifact ID and an
+        execution.
+        There are four kinds of events, relating to both input and output, as
+        well as declared versus undeclared.
+        For example, the DECLARED_INPUT events are part of the signature of an
+        execution. For example, consider:
+        my_execution({"data":[3,7],"schema":8})
+        Where 3, 7, and 8 are artifact_ids. Assuming execution_id is 12, this
+        becomes:
+        {artifact_id:3, execution_id: 12, type:DECLARED_INPUT,
+         path:{step:[{"key":"data"},{"index":0}]}}
+        {artifact_id:7, execution_id: 12, type:DECLARED_INPUT,
+         path:{step:[{"key":"data"},{"index":1}]}}
+        {artifact_id:8, execution_id: 12, type:DECLARED_INPUT,
+         path:{step:[{"key":"schema"}]}}
+        The INPUT is an artifact actually read by the execution.
+        The OUTPUT is an artifact actually written by the execution.
+        The DECLARED_OUTPUT are the artifacts that are the "official" output.
+        For example, the trainer may output multiple caches of the parameters
+        (as OUTPUT objects),
+        but then finally write the SavedModel as a DECLARED_OUTPUT.
+        TODO(martinz): add a type for Event, similar to ArtifactType.
+      example:
+        execution_id: execution_id
+        path:
+          steps:
+          - index: index
+            key: key
+          - index: index
+            key: key
+        milliseconds_since_epoch: milliseconds_since_epoch
+        artifact_id: artifact_id
+      properties:
+        artifact_id:
+          description: |-
+            The artifact id is required for an event, and should refer to an
+            existing artifact.
+          format: int64
+          type: string
+        execution_id:
+          description: |-
+            The execution_id is required for an event, and should refer to an
+            existing execution.
+          format: int64
+          type: string
+        path:
+          $ref: '#/components/schemas/EventPath'
+        type:
+          $ref: '#/components/schemas/ml_metadataEventType'
+        milliseconds_since_epoch:
+          format: int64
+          title: |-
+            Time the event occurred
+            Epoch is Jan 1, 1970, UTC
+          type: string
+      type: object
+    ml_metadataEventType:
+      default: UNKNOWN
+      description: |-
+        Events distinguish between an artifact that is written by the execution
+        (possibly as a cache), versus artifacts that are part of the declared
+        output of the Execution. For more information on what DECLARED_ means,
+        see the comment on the message.
+      enum:
+      - UNKNOWN
+      - DECLARED_OUTPUT
+      - DECLARED_INPUT
+      - INPUT
+      - OUTPUT
+      type: string
+    ml_metadataExecution:
+      example:
+        type_id: type_id
+        id: id
+        custom_properties:
+          key:
+            string_value: string_value
+            double_value: 0.8008281904610115
+            int_value: int_value
+        properties:
+          key:
+            string_value: string_value
+            double_value: 0.8008281904610115
+            int_value: int_value
+      properties:
+        id:
+          description: The id of the execution.
+          format: int64
+          type: string
+        type_id:
+          description: |-
+            The id of an ExecutionType.
+            The ExecutionType must be specified and cannot be changed.
+          format: int64
+          type: string
+        last_known_state:
+          $ref: '#/components/schemas/ml_metadataExecutionState'
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataValue'
+          description: |-
+            Properties of the Execution.
+            Properties must be specified in the ExecutionType.
+          type: object
+        custom_properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataValue'
+          description: User provided custom properties which are not defined by its
+            type.
+          type: object
+      type: object
+    ml_metadataExecutionState:
+      default: UNKNOWN
+      description: 'TODO(martinz): consider adding INVALIDATED as a state.'
+      enum:
+      - UNKNOWN
+      - NEW
+      - RUNNING
+      - COMPLETE
+      - FAILED
+      type: string
+    ml_metadataExecutionType:
+      example:
+        output_type:
+          tuple:
+            elements:
+            - null
+            - null
+          union_type:
+            candidates:
+            - null
+            - null
+          intersection:
+            constraints:
+            - null
+            - null
+          dict:
+            none_type_not_required: true
+            properties: {}
+          simple:
+            name: name
+            id: id
+            properties: {}
+          none: '{}'
+          list: {}
+          any: '{}'
+        name: name
+        input_type:
+          tuple:
+            elements:
+            - null
+            - null
+          union_type:
+            candidates:
+            - null
+            - null
+          intersection:
+            constraints:
+            - null
+            - null
+          dict:
+            none_type_not_required: true
+            properties: {}
+          simple:
+            name: name
+            id: id
+            properties: {}
+          none: '{}'
+          list: {}
+          any: '{}'
+        id: id
+        properties: {}
+      properties:
+        id:
+          description: The id of the type. 1-1 relationship between type names and
+            IDs.
+          format: int64
+          type: string
+        name:
+          description: The name of the type.
+          type: string
+        properties:
+          additionalProperties:
+            $ref: '#/components/schemas/ml_metadataPropertyType'
+          description: |-
+            The schema of the type.
+            Properties are always optional in the execution.
+          type: object
+        input_type:
+          $ref: '#/components/schemas/ml_metadataArtifactStructType'
+        output_type:
+          $ref: '#/components/schemas/ml_metadataArtifactStructType'
+      type: object
+    ml_metadataIntersectionArtifactStructType:
+      description: |-
+        A member of this type must satisfy all constraints.
+        This primarily useful not as an end-user type, but something calculated
+        as an intermediate type in the system.
+
+        For example, suppose you have a method:
+        def infer_my_input_type(a): # try to infer the input type of this method.
+          use_in_method_x(a) # with input type x_input
+          use_in_method_y(a) # with input type y_input
+
+        Given this information, you know that infer_my_input_type has
+        type {"intersection":{"constraints":[x_input, y_input]}}.
+
+        IntersectionArtifactStructType intersection_type = {"constraints":[
+            {"dict":{"properties":{"schema":{"any":{}}},
+                     "extra_properties":{"any":{}}}},
+            {"dict":{"properties":{"data":{"any":{}}},
+                     "extra_properties":{"any":{}}}}]}
+        Since the first constraint requires the dictionary to have a schema
+        property, and the second constraint requires it to have a data property, this
+        is equivalent to:
+        ArtifactStructType other_type =
+             {"dict":{"properties":{"schema":{"any":{}},"data":{"any":{}}}},
+              "extra_properties":{"any":{}}}
+      example:
+        constraints:
+        - null
+        - null
+      properties:
+        constraints:
+          items:
+            $ref: '#/components/schemas/ml_metadataArtifactStructType'
+          type: array
+      type: object
+    ml_metadataListArtifactStructType:
+      description: Represents an ArtifactStruct list type with homogeneous elements.
+      example: {}
+      properties:
+        element:
+          $ref: '#/components/schemas/ml_metadataArtifactStructType'
+      type: object
+    ml_metadataNoneArtifactStructType:
+      title: |-
+        The only member of this type is a None artifact.
+        Note: ArtifactStruct{} is a None artifact.
+        This can represent an execution that has no outputs (or inputs),
+        or can be part of a UnionArtifactStructType to represent an optional
+        input.
+        For example, StatsGen has an "optional" schema input.
+        A practical example of this is:
+        stats_gen_type = {
+            "dict":{
+               "properties":{
+                 "schema":{
+                   "union_type":{
+                     "none":{},
+                     "simple":{...schema type...}
+                    },
+                 },
+                 "data":{
+                   "simple":{...data_type...}
+                 }
+              }
+            }
+        };
+      type: object
+    ml_metadataPropertyType:
+      default: UNKNOWN
+      description: |-
+        TODO(martinz): consider moving this inside some message, to avoid having
+        literals directly in apo package.
+      enum:
+      - UNKNOWN
+      - INT
+      - DOUBLE
+      - STRING
+      type: string
+    ml_metadataTupleArtifactStructType:
+      description: |-
+        An ordered list of heterogenous artifact structs.
+        The length of the list is fixed.
+        Each position in the list can have a different type.
+      example:
+        elements:
+        - null
+        - null
+      properties:
+        elements:
+          items:
+            $ref: '#/components/schemas/ml_metadataArtifactStructType'
+          type: array
+      type: object
+    ml_metadataUnionArtifactStructType:
+      description: Represents a union of types.
+      example:
+        candidates:
+        - null
+        - null
+      properties:
+        candidates:
+          description: |-
+            An artifact struct matches this type if it matches any of the candidates.
+            If candidates is empty, this is a bottom type (matches no artifacts).
+          items:
+            $ref: '#/components/schemas/ml_metadataArtifactStructType'
+          type: array
+      type: object
+    ml_metadataValue:
+      description: A value in properties.
+      example:
+        string_value: string_value
+        double_value: 0.8008281904610115
+        int_value: int_value
+      properties:
+        int_value:
+          format: int64
+          type: string
+        double_value:
+          format: double
+          type: number
+        string_value:
+          type: string
+      type: object
