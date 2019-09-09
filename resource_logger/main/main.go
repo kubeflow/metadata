@@ -17,7 +17,9 @@ limitations under the License.
 package main
 
 import (
+	"encoding/json"
 	"flag"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"os/signal"
@@ -39,6 +41,7 @@ var (
 	masterURL          string
 	kubeconfig         string
 	metadataServiceURL string
+	resourcelist       string
 )
 
 func main() {
@@ -54,29 +57,41 @@ func main() {
 		klog.Fatalf("Error building kubernetes cache: %s", err.Error())
 	}
 
-	kfmdClient := kfmdClient()
-	fooGVK := schema.GroupVersionKind{
-		Group:   "samplecontroller.k8s.io",
-		Version: "v1alpha1",
-		Kind:    "Foo",
+	gvks, err := readGVKsFromFile(resourcelist)
+	if err != nil {
+		klog.Fatalf("Failed to get a list of GroupVersionKind from file %s: %s", resourcelist, err)
 	}
 
-	gvks := []schema.GroupVersionKind{fooGVK}
+	kfmdClient := kfmdClient()
+
 	for _, gvk := range gvks {
 		unstructuredJob := &unstructured.Unstructured{}
 		unstructuredJob.SetGroupVersionKind(gvk)
 		informer, err := c.GetInformer(unstructuredJob)
 		if err != nil {
-			klog.Fatalf("failed to create informer for %s: %s", informer, err)
+			klog.Fatalf("Failed to create informer for %s: %s", gvk, err)
 		}
 		l, err := resource_logger.New(kfmdClient, gvk)
 		if err != nil {
-			klog.Fatalf("failed to create logger for %s: %s", gvk, err)
+			klog.Fatalf("Failed to create logger for %s: %s", gvk, err)
 		}
 		informer.AddEventHandler(l)
 	}
 	klog.Infof("Start all informers...\n")
 	c.Start(SetupSignalHandler())
+}
+
+func readGVKsFromFile(filepath string) ([]schema.GroupVersionKind, error) {
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, err
+	}
+	var gvks []schema.GroupVersionKind
+	err = json.Unmarshal(b, &gvks)
+	if err != nil {
+		return nil, err
+	}
+	return gvks, nil
 }
 
 func kfmdClient() *kfmd.APIClient {
@@ -115,4 +130,5 @@ func init() {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&masterURL, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&metadataServiceURL, "metadata_service", "http://0.0.0.0:8080", "The address of the Kubeflow Metadata service.")
+	flag.StringVar(&resourcelist, "resourcelist", "", "Path to a json file with a list of Kubernets GroupVersionKind to be watched.")
 }

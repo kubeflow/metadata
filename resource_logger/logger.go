@@ -36,7 +36,7 @@ func New(kfmdClient *kfmd.APIClient, gvk schema.GroupVersionKind) (*Logger, erro
 
 // MetadataArtifactType returns the metadata artifact type for the logger's GroupVerionKind
 func (l *Logger) MetadataArtifactType() string {
-	return fmt.Sprintf("kubeflow.org/%s.%s/%s", l.resource.Group, l.resource.Kind, l.resource.Version)
+	return fmt.Sprintf("kubeflow.org/%s/%s", l.resource.GroupKind(), l.resource.Version)
 }
 
 // OnAdd handles Kubernetes resouce instance creates event.
