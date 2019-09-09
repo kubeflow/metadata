@@ -19,6 +19,9 @@ package main
 import (
 	"flag"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -52,10 +55,6 @@ func main() {
 	}
 
 	kfmdClient := kfmdClient()
-
-	stopper := make(chan struct{})
-	defer close(stopper)
-
 	fooGVK := schema.GroupVersionKind{
 		Group:   "samplecontroller.k8s.io",
 		Version: "v1alpha1",
@@ -77,7 +76,7 @@ func main() {
 		informer.AddEventHandler(l)
 	}
 	klog.Infof("Start all informers...\n")
-	c.Start(stopper)
+	c.Start(SetupSignalHandler())
 }
 
 func kfmdClient() *kfmd.APIClient {
@@ -94,6 +93,22 @@ func kfmdClient() *kfmd.APIClient {
 		HTTPClient:    httpclient,
 	}
 	return kfmd.NewAPIClient(cfg)
+}
+
+// SetupSignalHandler registered for SIGTERM and SIGINT. A stop channel is returned
+// which is closed on one of these signals. If a second signal is caught, the program
+// is terminated with exit code 1.
+func SetupSignalHandler() (stopCh <-chan struct{}) {
+	stop := make(chan struct{})
+	c := make(chan os.Signal, 2)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		close(stop)
+		<-c
+		os.Exit(1) // second signal. Exit directly.
+	}()
+	return stop
 }
 
 func init() {
