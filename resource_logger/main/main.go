@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -47,6 +48,7 @@ var (
 func main() {
 	klog.InitFlags(nil)
 	flag.Parse()
+	stopCh := SetupSignalHandler()
 
 	cfg, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfig)
 	if err != nil {
@@ -56,6 +58,9 @@ func main() {
 	if err != nil {
 		klog.Fatalf("Error building kubernetes cache: %s", err.Error())
 	}
+	cacheSynced := func() bool {
+		return c.WaitForCacheSync(stopCh)
+	}
 
 	gvks, err := readGVKsFromFile(resourcelist)
 	if err != nil {
@@ -63,6 +68,7 @@ func main() {
 	}
 
 	kfmdClient := kfmdClient()
+	kfmdClientMutex := new(sync.Mutex)
 
 	for _, gvk := range gvks {
 		unstructuredJob := &unstructured.Unstructured{}
@@ -71,14 +77,19 @@ func main() {
 		if err != nil {
 			klog.Fatalf("Failed to create informer for %s: %s", gvk, err)
 		}
-		l, err := resource_logger.New(kfmdClient, gvk)
+		l, err := resource_logger.New(kfmdClient, kfmdClientMutex, gvk)
 		if err != nil {
 			klog.Fatalf("Failed to create logger for %s: %s", gvk, err)
 		}
 		informer.AddEventHandler(l)
+		go func(gvk schema.GroupVersionKind) {
+			if err := l.Run(stopCh, cacheSynced); err != nil {
+				klog.Fatalf("Failed to run watcher for %s: %s", gvk, err)
+			}
+		}(gvk)
 	}
 	klog.Infof("Start all informers...\n")
-	c.Start(SetupSignalHandler())
+	c.Start(stopCh)
 }
 
 func readGVKsFromFile(filepath string) ([]schema.GroupVersionKind, error) {

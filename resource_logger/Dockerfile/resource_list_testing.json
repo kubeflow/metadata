@@ -4,6 +4,10 @@
         "Kind":    "Service"
     },
     {
+        "Version": "v1",
+        "Kind":    "Pod"
+    },
+    {
         "Group":   "samplecontroller.k8s.io",
         "Version": "v1alpha1",
         "Kind":    "Foo"
