@@ -8,9 +8,12 @@ import (
 	"time"
 
 	kfmd "github.com/kubeflow/metadata/sdk/go/openapi_client"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog"
 )
@@ -104,13 +107,11 @@ func (l *Logger) Run(stopCh <-chan struct{}, hasSynced func() bool) error {
 		return fmt.Errorf("failed to wait for caches to sync")
 	}
 
-	klog.Info("Starting workers")
+	klog.Infof("Starting workers for %s\n", l.resource)
 	go wait.Until(l.processNextWorkItem, 50*time.Millisecond, stopCh)
-
-	klog.Info("Started workers")
+	klog.Infof("Started workers for %s\n", l.resource)
 	<-stopCh
-	klog.Info("Shutting down workers")
-
+	klog.Infof("Shutting down workers for \n", l.resource)
 	return nil
 }
 
@@ -162,6 +163,28 @@ func (l *Logger) handleEvent(e event) error {
 }
 
 func (l *Logger) handleAddEvent(e event) error {
+	var object metav1.Object
+	var ok bool
+	obj := e.newVal
+	if object, ok = obj.(metav1.Object); !ok {
+		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
+		if !ok {
+			return fmt.Errorf("error decoding object, invalid type")
+		}
+		object, ok = tombstone.Obj.(metav1.Object)
+		if !ok {
+			return fmt.Errorf("error decoding object tombstone, invalid type")
+		}
+	}
+	exists, err := l.ifExists(object.GetUID())
+	if err != nil {
+		klog.Errorf("failed to check if object of type %s exisits: %s", l.MetadataArtifactType(), err)
+		return err
+	}
+	if exists {
+		klog.Infof("Hanlded OnAdd for %s. Object already exists with UID = %s, name = %s.\n", l.MetadataArtifactType(), object.GetUID(), object.GetName())
+		return nil
+	}
 	b, err := json.Marshal(e.newVal)
 	if err != nil {
 		klog.Errorf("failed to convert %s object to bytes: %s", l.MetadataArtifactType(), err)
@@ -173,6 +196,8 @@ func (l *Logger) handleAddEvent(e event) error {
 		l.MetadataArtifactType(),
 		kfmd.MlMetadataArtifact{
 			Properties: map[string]kfmd.MlMetadataValue{
+				"uid":    kfmd.MlMetadataValue{StringValue: string(object.GetUID())},
+				"name":   kfmd.MlMetadataValue{StringValue: string(object.GetName())},
 				"object": kfmd.MlMetadataValue{StringValue: string(b)},
 			},
 		},
@@ -192,4 +217,19 @@ func (l *Logger) handleUpdateEvent(e event) error {
 
 func (l *Logger) handleDeleteEvent(e event) error {
 	return nil
+}
+
+func (l *Logger) ifExists(uid types.UID) (bool, error) {
+	l.kfmdClientMutex.Lock()
+	resp, _, err := l.kfmdClient.MetadataServiceApi.ListArtifacts(context.Background(), l.MetadataArtifactType())
+	l.kfmdClientMutex.Unlock()
+	if err != nil {
+		return false, fmt.Errorf("failed to get list of artifacts for %s: error = %s, response = %v", l.MetadataArtifactType(), err, resp)
+	}
+	for _, artifact := range resp.Artifacts {
+		if artifact.Properties["uid"].StringValue == string(uid) {
+			return true, nil
+		}
+	}
+	return false, nil
 }
