@@ -18,13 +18,17 @@ import (
 	"k8s.io/klog"
 )
 
-// Watcher listens events related to resource changes by implementing the toolscache.ResourceEventHandler interfacae to log
+// Watcher listens events related to a resource by implementing the toolscache.ResourceEventHandler interfacae to log
 // metadata into Kubeflow metadata service.
 type Watcher struct {
-	kfmdClient      *kfmd.APIClient
+	kfmdClient *kfmd.APIClient
+	// Mutex is used to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
 	kfmdClientMutex *sync.Mutex
-	resource        schema.GroupVersionKind
-	workqueue       workqueue.RateLimitingInterface
+	// GroupVerionKind of the resource being watched.
+	resource schema.GroupVersionKind
+	// workqueue for handling events at our own pace instead of when they are happenning.
+	// It also guarantees we process one event at a time.
+	workqueue workqueue.RateLimitingInterface
 }
 
 // New creates a resouce Watcher for given resource GroupVersionKind and creates
