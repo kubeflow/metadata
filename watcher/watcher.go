@@ -20,9 +20,10 @@ import (
 
 // Watcher listens events related to a resource by implementing the toolscache.ResourceEventHandler interfacae to log
 // metadata into Kubeflow metadata service.
+// TODO(zhenghuiwang): Allow toolscache.ResourceEventHandler to be passed in so that other types of watchers don't have to reimplement event queue.
 type Watcher struct {
 	kfmdClient *kfmd.APIClient
-	// Mutex is used to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
+	// Mutex is shared among all watchers to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
 	kfmdClientMutex *sync.Mutex
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind

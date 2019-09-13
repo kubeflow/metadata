@@ -48,7 +48,7 @@ var (
 func main() {
 	klog.InitFlags(nil)
 	flag.Parse()
-	stopCh := SetupSignalHandler()
+	stopCh := setupSignalHandler()
 
 	cfg, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfig)
 	if err != nil {
@@ -88,7 +88,7 @@ func main() {
 			}
 		}(gvk)
 	}
-	klog.Infof("Start all informers...\n")
+	klog.Infof("Started all informers...\n")
 	c.Start(stopCh)
 }
 
@@ -121,10 +121,7 @@ func kfmdClient() *kfmd.APIClient {
 	return kfmd.NewAPIClient(cfg)
 }
 
-// SetupSignalHandler registered for SIGTERM and SIGINT. A stop channel is returned
-// which is closed on one of these signals. If a second signal is caught, the program
-// is terminated with exit code 1.
-func SetupSignalHandler() (stopCh <-chan struct{}) {
+func setupSignalHandler() (stopCh <-chan struct{}) {
 	stop := make(chan struct{})
 	c := make(chan os.Signal, 2)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
@@ -141,5 +138,5 @@ func init() {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&masterURL, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&metadataServiceURL, "metadata_service", "http://0.0.0.0:8080", "The address of the Kubeflow Metadata service.")
-	flag.StringVar(&resourcelist, "resourcelist", "", "Path to a json file with a list of Kubernets GroupVersionKind to be watched.")
+	flag.StringVar(&resourcelist, "resourcelist", "", "Path to a JSON file with a list of Kubernets GroupVersionKind to be watched.")
 }
