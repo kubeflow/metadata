@@ -18,12 +18,15 @@ import (
 	"k8s.io/klog"
 )
 
+const workspace = "resource_watcher"
+
 // Watcher listens events related to a resource by implementing the toolscache.ResourceEventHandler interfacae to log
 // metadata into Kubeflow metadata service.
-// TODO(zhenghuiwang): Allow toolscache.ResourceEventHandler to be passed in so that other types of watchers don't have to reimplement event queue.
+// TODO(zhenghuiwang): Allow a toolscache.ResourceEventHandler to be passed in so that other types of watchers don't have to reimplement event queue.
 type Watcher struct {
 	kfmdClient *kfmd.APIClient
 	// Mutex is shared among all watchers to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
+	// https://github.com/kubeflow/metadata/issues/128
 	kfmdClientMutex *sync.Mutex
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind
@@ -44,8 +47,13 @@ func New(kfmdClient *kfmd.APIClient, kfmdClientMutex *sync.Mutex, gvk schema.Gro
 	resourceArtifactType := kfmd.MlMetadataArtifactType{
 		Name: w.MetadataArtifactType(),
 		Properties: map[string]kfmd.MlMetadataPropertyType{
-			"name":   kfmd.STRING,
-			"uid":    kfmd.STRING,
+			// same as metav1.Object.Name
+			"name": kfmd.STRING,
+			// same as metav1.Object.UID
+			"version": kfmd.STRING,
+			// same as metav1.Object.Time in rfc3339 format
+			"create_time": kfmd.STRING,
+			// stores the metav1.Object
 			"object": kfmd.STRING,
 		},
 	}
@@ -122,33 +130,26 @@ func (w *Watcher) Run(stopCh <-chan struct{}, hasSynced func() bool) error {
 
 func (w *Watcher) processNextWorkItem() {
 	obj, shutdown := w.workqueue.Get()
-
 	if shutdown {
 		return
 	}
 
-	// We wrap this block in a func so we can defer c.workqueue.Done.
-	err := func(obj interface{}) error {
-		defer w.workqueue.Done(obj)
-		var e event
-		var ok bool
-		if e, ok = obj.(event); !ok {
-			// As the item in the workqueue is actually invalid, we call
-			// Forget here else we'd go into a loop of attempting to
-			// process a work item that is invalid.
-			w.workqueue.Forget(obj)
-			utilruntime.HandleError(fmt.Errorf("expected string in workqueue but got %#v", obj))
-			return nil
-		}
-		w.handleEvent(e)
-		// Finally, if no error occurs we Forget this item so it does not
-		// get queued again until another change happens.
+	defer w.workqueue.Done(obj)
+	var e event
+	var ok bool
+	if e, ok = obj.(event); !ok {
+		// As the item in the workqueue is actually invalid, we call
+		// Forget here else we'd go into a loop of attempting to
+		// process a work item that is invalid.
 		w.workqueue.Forget(obj)
-		return nil
-	}(obj)
+		utilruntime.HandleError(fmt.Errorf("expected event in workqueue but got %#v", obj))
+		return
+	}
 
-	if err != nil {
-		utilruntime.HandleError(err)
+	if err := w.handleEvent(e); err != nil {
+		utilruntime.HandleError(fmt.Errorf("error processing object: err = %v, obj = %#v", err, obj))
+		// Add the obj back to the queue for future processing.
+		w.workqueue.AddRateLimited(obj)
 	}
 }
 
@@ -162,7 +163,7 @@ func (w *Watcher) handleEvent(e event) error {
 	case deleteEvent:
 		err = w.handleDeleteEvent(e)
 	default:
-		err = fmt.Errorf("unknow event: %v", e)
+		err = fmt.Errorf("unknown event: %v", e)
 	}
 	return err
 }
@@ -200,10 +201,16 @@ func (w *Watcher) handleAddEvent(e event) error {
 		context.Background(),
 		w.MetadataArtifactType(),
 		kfmd.MlMetadataArtifact{
+			Uri: object.GetSelfLink(),
 			Properties: map[string]kfmd.MlMetadataValue{
-				"uid":    kfmd.MlMetadataValue{StringValue: string(object.GetUID())},
-				"name":   kfmd.MlMetadataValue{StringValue: string(object.GetName())},
-				"object": kfmd.MlMetadataValue{StringValue: string(b)},
+				"name":        kfmd.MlMetadataValue{StringValue: object.GetName()},
+				"version":     kfmd.MlMetadataValue{StringValue: string(object.GetUID())},
+				"create_time": kfmd.MlMetadataValue{StringValue: object.GetCreationTimestamp().Format(time.RFC3339)},
+				"object":      kfmd.MlMetadataValue{StringValue: string(b)},
+			},
+			CustomProperties: map[string]kfmd.MlMetadataValue{
+				// set the workspace to group the metadata.
+				"__kf_workspace__": kfmd.MlMetadataValue{StringValue: workspace},
 			},
 		},
 	)
@@ -232,7 +239,7 @@ func (w *Watcher) ifExists(uid types.UID) (bool, error) {
 		return false, fmt.Errorf("failed to get list of artifacts for %s: error = %s, response = %v", w.MetadataArtifactType(), err, resp)
 	}
 	for _, artifact := range resp.Artifacts {
-		if artifact.Properties["uid"].StringValue == string(uid) {
+		if artifact.Properties["version"].StringValue == string(uid) {
 			return true, nil
 		}
 	}
