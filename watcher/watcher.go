@@ -1,74 +1,69 @@
+// Copyright 2019 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package watcher
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
-	kfmd "github.com/kubeflow/metadata/sdk/go/openapi_client"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/types"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 	"k8s.io/klog"
 )
 
-const workspace = "resource_watcher"
-
 // Watcher listens events related to a resource by implementing the toolscache.ResourceEventHandler interfacae to log
 // metadata into Kubeflow metadata service.
-// TODO(zhenghuiwang): Allow a toolscache.ResourceEventHandler to be passed in so that other types of watchers don't have to reimplement event queue.
 type Watcher struct {
-	kfmdClient *kfmd.APIClient
-	// Mutex is shared among all watchers to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
-	// https://github.com/kubeflow/metadata/issues/128
-	kfmdClientMutex *sync.Mutex
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind
 	// workqueue for handling events at our own pace instead of when they are happenning.
 	// It also guarantees we process one event at a time.
 	workqueue workqueue.RateLimitingInterface
+	handler   Handler
+}
+
+// Handler can handle notifications for events that happen to a resource.
+// If an error is returned, the event will be put back to the queue for
+// future reprocessing.
+//  * OnAdd is called when an object is added.
+//  * OnUpdate is called when an object is modified. Note that oldObj is the
+//      last known state of the object-- it is possible that several changes
+//      were combined together, so you can't use this to see every single
+//      change. OnUpdate is also called when a re-list happens, and it will
+//      get called even if nothing changed. This is useful for periodically
+//      evaluating or syncing something.
+//  * OnDelete will get the final state of the item if it is known, otherwise
+//      it will get an object of type DeletedFinalStateUnknown. This can
+//      happen if the watch is closed and misses the delete event and we don't
+//      notice the deletion until the subsequent re-list.
+type Handler interface {
+	OnAdd(obj interface{}) error
+	OnUpdate(oldObj, newObj interface{}) error
+	OnDelete(obj interface{}) error
 }
 
 // New creates a resouce Watcher for given resource GroupVersionKind and creates
 // corresponding metadata artifact logging type for future logging.
-func New(kfmdClient *kfmd.APIClient, kfmdClientMutex *sync.Mutex, gvk schema.GroupVersionKind) (*Watcher, error) {
-	w := &Watcher{
-		kfmdClient:      kfmdClient,
-		kfmdClientMutex: kfmdClientMutex,
-		resource:        gvk,
-		workqueue:       workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), gvk.String()),
+func New(gvk schema.GroupVersionKind, handler Handler) *Watcher {
+	return &Watcher{
+		resource:  gvk,
+		handler:   handler,
+		workqueue: workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), gvk.String()),
 	}
-	resourceArtifactType := kfmd.MlMetadataArtifactType{
-		Name: w.MetadataArtifactType(),
-		Properties: map[string]kfmd.MlMetadataPropertyType{
-			// same as metav1.Object.Name
-			"name": kfmd.STRING,
-			// same as metav1.Object.UID
-			"version": kfmd.STRING,
-			// same as metav1.Object.Time in rfc3339 format
-			"create_time": kfmd.STRING,
-			// stores the metav1.Object
-			"object": kfmd.STRING,
-		},
-	}
-	w.kfmdClientMutex.Lock()
-	resp, httpResp, err := kfmdClient.MetadataServiceApi.CreateArtifactType(context.Background(), resourceArtifactType)
-	w.kfmdClientMutex.Unlock()
-	if err != nil {
-		return nil, fmt.Errorf("failed to create artifact type: err %v response %v, http response %v", err, resp, httpResp)
-	}
-	return w, nil
-}
-
-// MetadataArtifactType returns the metadata artifact type for the watcher's GroupVerionKind
-func (w *Watcher) MetadataArtifactType() string {
-	return fmt.Sprintf("kubeflow.org/%s/%s", w.resource.GroupKind(), w.resource.Version)
 }
 
 type eventType int
@@ -157,91 +152,13 @@ func (w *Watcher) handleEvent(e event) error {
 	var err error
 	switch e.kind {
 	case addEvent:
-		err = w.handleAddEvent(e)
+		err = w.handler.OnAdd(e.newVal)
 	case updateEvent:
-		err = w.handleUpdateEvent(e)
+		err = w.handler.OnUpdate(e.oldVal, e.newVal)
 	case deleteEvent:
-		err = w.handleDeleteEvent(e)
+		err = w.handler.OnDelete(e.newVal)
 	default:
-		err = fmt.Errorf("unknown event: %v", e)
+		klog.Errorf("unknown event: %v", e)
 	}
 	return err
-}
-
-func (w *Watcher) handleAddEvent(e event) error {
-	var object metav1.Object
-	var ok bool
-	obj := e.newVal
-	if object, ok = obj.(metav1.Object); !ok {
-		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
-		if !ok {
-			return fmt.Errorf("error decoding object, invalid type")
-		}
-		object, ok = tombstone.Obj.(metav1.Object)
-		if !ok {
-			return fmt.Errorf("error decoding object tombstone, invalid type")
-		}
-	}
-	exists, err := w.ifExists(object.GetUID())
-	if err != nil {
-		klog.Errorf("failed to check if object of type %s exisits: %s", w.MetadataArtifactType(), err)
-		return err
-	}
-	if exists {
-		klog.Infof("Hanlded addEvent for %s. Object already exists with UID = %s, name = %s.\n", w.MetadataArtifactType(), object.GetUID(), object.GetName())
-		return nil
-	}
-	b, err := json.Marshal(e.newVal)
-	if err != nil {
-		klog.Errorf("failed to convert %s object to bytes: %s", w.MetadataArtifactType(), err)
-		return err
-	}
-	w.kfmdClientMutex.Lock()
-	_, _, err = w.kfmdClient.MetadataServiceApi.CreateArtifact(
-		context.Background(),
-		w.MetadataArtifactType(),
-		kfmd.MlMetadataArtifact{
-			Uri: object.GetSelfLink(),
-			Properties: map[string]kfmd.MlMetadataValue{
-				"name":        kfmd.MlMetadataValue{StringValue: object.GetName()},
-				"version":     kfmd.MlMetadataValue{StringValue: string(object.GetUID())},
-				"create_time": kfmd.MlMetadataValue{StringValue: object.GetCreationTimestamp().Format(time.RFC3339)},
-				"object":      kfmd.MlMetadataValue{StringValue: string(b)},
-			},
-			CustomProperties: map[string]kfmd.MlMetadataValue{
-				// set the workspace to group the metadata.
-				"__kf_workspace__": kfmd.MlMetadataValue{StringValue: workspace},
-			},
-		},
-	)
-	w.kfmdClientMutex.Unlock()
-	if err != nil {
-		klog.Errorf("failed to log metadata for %s: %s", w.MetadataArtifactType(), err)
-		return err
-	}
-	klog.Infof("Hanlded addEvent for %s.\n", w.MetadataArtifactType())
-	return nil
-}
-
-func (w *Watcher) handleUpdateEvent(e event) error {
-	return nil
-}
-
-func (w *Watcher) handleDeleteEvent(e event) error {
-	return nil
-}
-
-func (w *Watcher) ifExists(uid types.UID) (bool, error) {
-	w.kfmdClientMutex.Lock()
-	resp, _, err := w.kfmdClient.MetadataServiceApi.ListArtifacts(context.Background(), w.MetadataArtifactType())
-	w.kfmdClientMutex.Unlock()
-	if err != nil {
-		return false, fmt.Errorf("failed to get list of artifacts for %s: error = %s, response = %v", w.MetadataArtifactType(), err, resp)
-	}
-	for _, artifact := range resp.Artifacts {
-		if artifact.Properties["version"].StringValue == string(uid) {
-			return true, nil
-		}
-	}
-	return false, nil
 }
