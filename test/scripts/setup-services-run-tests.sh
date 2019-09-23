@@ -65,9 +65,7 @@ echo "VERSION ${VERSION}"
 
 cd "${MANIFESTS_DIR}"
 
-sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
-sed -i -e "s@--mysql_service_host=metadata-db.kubeflow@--mysql_service_host=metadata-db.${NAMESPACE}@" metadata/base/metadata-deployment.yaml
-
+# deploy metadata-deployment as it is. No need to replace the image with the build from this pr.
 cat metadata/base/metadata-deployment.yaml
 
 cd metadata/base
