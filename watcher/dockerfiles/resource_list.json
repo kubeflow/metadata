@@ -1,0 +1,10 @@
+[
+    {
+        "Version": "v1",
+        "Kind":    "Service"
+    },
+    {
+        "Version": "v1",
+        "Kind":    "Pod"
+    }
+]
