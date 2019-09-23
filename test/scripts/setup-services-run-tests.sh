@@ -137,4 +137,8 @@ cd "${SRC_DIR}/sdk/python" && \
   sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
   python3 -m nbconvert --to notebook --execute demo.ipynb
 
+# Test resource watcher
+cd "${SRC_DIR}/watcher" && \
+  go build -o main/main main/main.go && \
+  timeout --preserve-status 30 ./main/main -kubeconfig=${HOME}/.kube/config -metadata_service=http://0.0.0.0:8080 -resourcelist=dockerfiles/resource_list.json
 exit 0
