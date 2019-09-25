@@ -6,7 +6,7 @@ This directory contains the Python API for logging metadata of machine learning 
 
 You can install this Python library for logging metadata via the following command:
 ```
-pip install kfmd
+pip install kubeflow.metadata
 ```
 
 ## Concepts
@@ -16,6 +16,6 @@ pip install kfmd
 - _Workspace_ groups a set of runs and related artifacts and executions.
 
 ## Sample Usage
-See ![this notebook](demo.ipynb).
+See ![this notebook](./sample/demo.ipynb).
 
 ![Concepts](concepts.png)

@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright 2019 Google LLC
+# Copyright 2019 kubeflow.org.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 #   ./build.sh [output_file]
 
 
-target_archive_file=${1:-kfmd.tar.gz}
+target_archive_file=${1:-kubeflow-metadata.tar.gz}
 
 pushd "$(dirname "$0")"
 dist_dir=$(mktemp -d)
