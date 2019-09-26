@@ -115,7 +115,7 @@ class Run(object):
   def __init__(self, workspace=None, name=None, description=None):
     """
     Args:
-      workspace {Worspace} -- Required workspace object.
+      workspace {Workspace} -- Required workspace object.
       name {str} -- Required name of this run.
       description {str} -- Optional description.
     """
@@ -137,8 +137,8 @@ class Execution(object):
     """
     Args:
       name {str} -- Required name of this run.
-      workspace {Worspace} -- required workspace object.
-      run {Run} -- optional run object.
+      workspace {Workspace} -- Required workspace object.
+      run {Run} -- Optional run object.
       description {str} -- Optional description.
 
     Creates a new execution in a workspace and run.
