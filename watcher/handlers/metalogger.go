@@ -23,7 +23,10 @@ import (
 	"sync"
 	"time"
 
-	kfmd "github.com/kubeflow/metadata/sdk/go/openapi_client"
+	mlpb "ml_metadata/proto/metadata_store_go_proto"
+	storepb "ml_metadata/proto/metadata_store_service_go_proto"
+
+	"github.com/golang/protobuf/proto"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -35,40 +38,46 @@ const workspace = "resource_watcher"
 
 // MetaLogger logs k8s resource when being created.
 type MetaLogger struct {
-	kfmdClient *kfmd.APIClient
+	kfmdClient storepb.MetadataStoreServiceClient
 	// Mutex is shared among all watchers to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
 	// https://github.com/kubeflow/metadata/issues/128
 	kfmdClientMutex *sync.Mutex
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind
+	typeID   int64
 }
 
 // NewMetaLogger creates a new MetaLogger for a specific k8s GroupVersionKind.
-func NewMetaLogger(kfmdClient *kfmd.APIClient, kfmdClientMutex *sync.Mutex, gvk schema.GroupVersionKind) (*MetaLogger, error) {
+func NewMetaLogger(kfmdClient storepb.MetadataStoreServiceClient, kfmdClientMutex *sync.Mutex, gvk schema.GroupVersionKind) (*MetaLogger, error) {
 	l := &MetaLogger{
 		resource:        gvk,
 		kfmdClient:      kfmdClient,
 		kfmdClientMutex: kfmdClientMutex,
 	}
-	resourceArtifactType := kfmd.MlMetadataArtifactType{
-		Name: l.MetadataArtifactType(),
-		Properties: map[string]kfmd.MlMetadataPropertyType{
+	resourceArtifactType := mlpb.ArtifactType{
+		Name: proto.String(l.MetadataArtifactType()),
+		Properties: map[string]mlpb.PropertyType{
 			// same as metav1.Object.Name
-			"name": kfmd.STRING,
+			"name": mlpb.PropertyType_STRING,
 			// same as metav1.Object.UID
-			"version": kfmd.STRING,
+			"version": mlpb.PropertyType_STRING,
 			// same as metav1.Object.Time in rfc3339 format
-			"create_time": kfmd.STRING,
+			"create_time": mlpb.PropertyType_STRING,
 			// stores the metav1.Object
-			"object": kfmd.STRING,
+			"object": mlpb.PropertyType_STRING,
 		},
 	}
+	request := storepb.PutArtifactTypeRequest{
+		ArtifactType:   &resourceArtifactType,
+		AllFieldsMatch: proto.Bool(true),
+	}
 	l.kfmdClientMutex.Lock()
-	resp, httpResp, err := kfmdClient.MetadataServiceApi.CreateArtifactType(context.Background(), resourceArtifactType)
+	resp, err := kfmdClient.PutArtifactType(context.Background(), &request)
 	l.kfmdClientMutex.Unlock()
 	if err != nil {
-		return nil, fmt.Errorf("failed to create artifact type: err %v response %v, http response %v", err, resp, httpResp)
+		return l, fmt.Errorf("failed to create artifact type: err = %v; request = %v; response = %v", err, request, resp)
 	}
+	l.typeID = resp.GetTypeId()
 	return l, nil
 }
 
@@ -105,31 +114,40 @@ func (l *MetaLogger) OnAdd(obj interface{}) error {
 		klog.Errorf("failed to convert %s object to bytes: %s", l.MetadataArtifactType(), err)
 		return err
 	}
-	l.kfmdClientMutex.Lock()
-	_, _, err = l.kfmdClient.MetadataServiceApi.CreateArtifact(
-		context.Background(),
-		l.MetadataArtifactType(),
-		kfmd.MlMetadataArtifact{
-			Uri: object.GetSelfLink(),
-			Properties: map[string]kfmd.MlMetadataValue{
-				"name":        kfmd.MlMetadataValue{StringValue: object.GetName()},
-				"version":     kfmd.MlMetadataValue{StringValue: string(object.GetUID())},
-				"create_time": kfmd.MlMetadataValue{StringValue: object.GetCreationTimestamp().Format(time.RFC3339)},
-				"object":      kfmd.MlMetadataValue{StringValue: string(b)},
-			},
-			CustomProperties: map[string]kfmd.MlMetadataValue{
-				// set the workspace to group the metadata.
-				"__kf_workspace__": kfmd.MlMetadataValue{StringValue: workspace},
-			},
+	artifact := mlpb.Artifact{
+		TypeId: proto.Int64(l.typeID),
+		Uri:    proto.String(object.GetSelfLink()),
+		Properties: map[string]*mlpb.Value{
+			"name":        mlpbStringValue(object.GetName()),
+			"version":     mlpbStringValue(string(object.GetUID())),
+			"create_time": mlpbStringValue(object.GetCreationTimestamp().Format(time.RFC3339)),
+			"object":      mlpbStringValue(string(b)),
 		},
-	)
+		CustomProperties: map[string]*mlpb.Value{
+			// set the workspace to group the metadata.
+			"__kf_workspace__": mlpbStringValue(workspace),
+		},
+	}
+	l.kfmdClientMutex.Lock()
+	request := storepb.PutArtifactsRequest{
+		Artifacts: []*mlpb.Artifact{&artifact},
+	}
+	resp, err := l.kfmdClient.PutArtifacts(context.Background(), &request)
 	l.kfmdClientMutex.Unlock()
 	if err != nil {
-		klog.Errorf("failed to log metadata for %s: %s", l.MetadataArtifactType(), err)
+		klog.Errorf("failed to log metadata for %s: err = %s, request = %v, resp = %v", l.MetadataArtifactType(), err, request, resp)
 		return err
 	}
 	klog.Infof("Hanlded addEvent for %s.\n", l.MetadataArtifactType())
 	return nil
+}
+
+func mlpbStringValue(s string) *mlpb.Value {
+	return &mlpb.Value{
+		Value: &mlpb.Value_StringValue{
+			StringValue: s,
+		},
+	}
 }
 
 // OnUpdate handles Kubernetes resouce instance update event.
@@ -144,13 +162,16 @@ func (l *MetaLogger) OnDelete(obj interface{}) error {
 
 func (l *MetaLogger) ifExists(uid types.UID) (bool, error) {
 	l.kfmdClientMutex.Lock()
-	resp, _, err := l.kfmdClient.MetadataServiceApi.ListArtifacts(context.Background(), l.MetadataArtifactType())
+	request := storepb.GetArtifactsByTypeRequest{
+		TypeName: proto.String(l.MetadataArtifactType()),
+	}
+	resp, err := l.kfmdClient.GetArtifactsByType(context.Background(), &request)
 	l.kfmdClientMutex.Unlock()
 	if err != nil {
-		return false, fmt.Errorf("failed to get list of artifacts for %s: error = %s, response = %v", l.MetadataArtifactType(), err, resp)
+		return false, fmt.Errorf("failed to get list of artifacts for %s: err = %s, request = %v, response = %v", l.MetadataArtifactType(), err, request, resp)
 	}
 	for _, artifact := range resp.Artifacts {
-		if artifact.Properties["version"].StringValue == string(uid) {
+		if artifact.Properties["version"].GetStringValue() == string(uid) {
 			return true, nil
 		}
 	}

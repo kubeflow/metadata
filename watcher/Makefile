@@ -2,7 +2,7 @@ build:
 	go build -o main/main main/main.go
 
 test: build
-	./main/main -kubeconfig=${HOME}/.kube/config -metadata_service=http://0.0.0.0:8080 -resourcelist=dockerfiles/resource_list_testing.json
+	./main/main -kubeconfig=${HOME}/.kube/config -metadata_service=localhost:8080 -resourcelist=dockerfiles/resource_list.json
 
 docker-image:
 	cd .. && \
