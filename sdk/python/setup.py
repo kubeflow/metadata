@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2019 kubeflow.org.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 from setuptools import setup, find_packages
 
-NAME = 'kfmd'
-VERSION = '0.1.8'
+NAME = 'kubeflow-metadata'
+VERSION = '0.2.0'
 
 REQUIRES = [
 ]
@@ -24,7 +24,9 @@ setup(
     name=NAME,
     version=VERSION,
     description='KubeFlow Metadata SDK',
-    author='google',
+    author='Kubeflow Authors',
+    license="Apache License Version 2.0",
+    url="https://github.com/kubeflow/metadata",
     install_requires=REQUIRES,
     packages=find_packages(),
     classifiers=[

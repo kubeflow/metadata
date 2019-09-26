@@ -223,9 +223,9 @@ describe('ArtifactList', () => {
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(4);
       expect(expandedRows.get(0).props.row.id)
-        .toBe('kubeflow.org/alpha/model:1');
+        .toBe('kubeflow.org/alpha/model:5');
       expect(expandedRows.get(1).props.row.id)
-        .toBe('kubeflow.org/alpha/data_set:2');
+        .toBe('kubeflow.org/alpha/data_set:3');
 
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);

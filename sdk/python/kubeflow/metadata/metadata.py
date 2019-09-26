@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC
+# Copyright 2019 kubeflow.org.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 import datetime
 import json
-from kfmd import openapi_client
-from kfmd.openapi_client import Configuration, ApiClient, MetadataServiceApi
+from kubeflow.metadata import openapi_client
+from kubeflow.metadata.openapi_client import Configuration, ApiClient, MetadataServiceApi
 
 """
 This module contains the Python API for logging metadata of machine learning

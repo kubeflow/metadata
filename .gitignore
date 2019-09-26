@@ -76,4 +76,5 @@ Temporary Items
 *.egg-info
 dist
 .tox
-sdk/python/kfmd/openapi_client/
+sdk/python/kubeflow/metadata/openapi_client/
+sdk/python/build

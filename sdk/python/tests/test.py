@@ -1,6 +1,6 @@
 import unittest
 import openapi_client
-from kfmd import metadata
+from kubeflow.metadata import metadata
 
 
 class TestMetedata(unittest.TestCase):
