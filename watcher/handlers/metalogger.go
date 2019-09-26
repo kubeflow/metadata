@@ -20,7 +20,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
@@ -36,23 +35,20 @@ import (
 
 const workspace = "resource_watcher"
 
-// MetaLogger logs k8s resource when being created.
+// MetaLogger logs newly created k8s resources into metadata service.
 type MetaLogger struct {
+	// Metadata gRPC client.
 	kfmdClient storepb.MetadataStoreServiceClient
-	// Mutex is shared among all watchers to sync the outbound requests to the Metadata service, becaue concurrent requests to a server cause crash.
-	// https://github.com/kubeflow/metadata/issues/128
-	kfmdClientMutex *sync.Mutex
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind
 	typeID   int64
 }
 
 // NewMetaLogger creates a new MetaLogger for a specific k8s GroupVersionKind.
-func NewMetaLogger(kfmdClient storepb.MetadataStoreServiceClient, kfmdClientMutex *sync.Mutex, gvk schema.GroupVersionKind) (*MetaLogger, error) {
+func NewMetaLogger(kfmdClient storepb.MetadataStoreServiceClient, gvk schema.GroupVersionKind) (*MetaLogger, error) {
 	l := &MetaLogger{
-		resource:        gvk,
-		kfmdClient:      kfmdClient,
-		kfmdClientMutex: kfmdClientMutex,
+		resource:   gvk,
+		kfmdClient: kfmdClient,
 	}
 	resourceArtifactType := mlpb.ArtifactType{
 		Name: proto.String(l.MetadataArtifactType()),
@@ -71,9 +67,7 @@ func NewMetaLogger(kfmdClient storepb.MetadataStoreServiceClient, kfmdClientMute
 		ArtifactType:   &resourceArtifactType,
 		AllFieldsMatch: proto.Bool(true),
 	}
-	l.kfmdClientMutex.Lock()
 	resp, err := kfmdClient.PutArtifactType(context.Background(), &request)
-	l.kfmdClientMutex.Unlock()
 	if err != nil {
 		return l, fmt.Errorf("failed to create artifact type: err = %v; request = %v; response = %v", err, request, resp)
 	}
@@ -81,7 +75,7 @@ func NewMetaLogger(kfmdClient storepb.MetadataStoreServiceClient, kfmdClientMute
 	return l, nil
 }
 
-// MetadataArtifactType returns the metadata artifact type for the watcher's GroupVerionKind
+// MetadataArtifactType returns the metadata artifact type for the MetaLogger's GroupVerionKind
 func (l *MetaLogger) MetadataArtifactType() string {
 	return fmt.Sprintf("kubeflow.org/%s/%s", l.resource.GroupKind(), l.resource.Version)
 }
@@ -128,12 +122,10 @@ func (l *MetaLogger) OnAdd(obj interface{}) error {
 			"__kf_workspace__": mlpbStringValue(workspace),
 		},
 	}
-	l.kfmdClientMutex.Lock()
 	request := storepb.PutArtifactsRequest{
 		Artifacts: []*mlpb.Artifact{&artifact},
 	}
 	resp, err := l.kfmdClient.PutArtifacts(context.Background(), &request)
-	l.kfmdClientMutex.Unlock()
 	if err != nil {
 		klog.Errorf("failed to log metadata for %s: err = %s, request = %v, resp = %v", l.MetadataArtifactType(), err, request, resp)
 		return err
@@ -161,12 +153,10 @@ func (l *MetaLogger) OnDelete(obj interface{}) error {
 }
 
 func (l *MetaLogger) ifExists(uid types.UID) (bool, error) {
-	l.kfmdClientMutex.Lock()
 	request := storepb.GetArtifactsByTypeRequest{
 		TypeName: proto.String(l.MetadataArtifactType()),
 	}
 	resp, err := l.kfmdClient.GetArtifactsByType(context.Background(), &request)
-	l.kfmdClientMutex.Unlock()
 	if err != nil {
 		return false, fmt.Errorf("failed to get list of artifacts for %s: err = %s, request = %v, response = %v", l.MetadataArtifactType(), err, request, resp)
 	}

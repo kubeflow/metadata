@@ -25,8 +25,7 @@ import (
 	"k8s.io/klog"
 )
 
-// Watcher listens events related to a resource by implementing the toolscache.ResourceEventHandler interfacae to log
-// metadata into Kubeflow metadata service.
+// Watcher listens events related to a k8s resource and calls a Handler to process it.
 type Watcher struct {
 	// GroupVerionKind of the resource being watched.
 	resource schema.GroupVersionKind
@@ -56,8 +55,7 @@ type Handler interface {
 	OnDelete(obj interface{}) error
 }
 
-// New creates a resouce Watcher for given resource GroupVersionKind and creates
-// corresponding metadata artifact logging type for future logging.
+// New creates a resouce Watcher for given resource GroupVersionKind and Handler.
 func New(gvk schema.GroupVersionKind, handler Handler) *Watcher {
 	return &Watcher{
 		resource:  gvk,

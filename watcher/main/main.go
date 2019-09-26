@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 
 	storepb "ml_metadata/proto/metadata_store_service_go_proto"
@@ -63,7 +62,6 @@ func main() {
 	}
 	kfmdClient := storepb.NewMetadataStoreServiceClient(conn)
 	stopCh := setupSignalHandler(conn)
-	kfmdClientMutex := new(sync.Mutex)
 
 	c, err := cache.New(cfg, cache.Options{})
 	if err != nil {
@@ -80,7 +78,7 @@ func main() {
 		if err != nil {
 			klog.Fatalf("Failed to create informer for %s: %s", gvk, err)
 		}
-		metalogger, err := handlers.NewMetaLogger(kfmdClient, kfmdClientMutex, gvk)
+		metalogger, err := handlers.NewMetaLogger(kfmdClient, gvk)
 		if err != nil {
 			klog.Fatal("Failed to create metalogger for %v: %v", gvk, err)
 		}
