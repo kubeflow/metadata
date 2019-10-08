@@ -117,7 +117,7 @@ func (w *Watcher) Run(stopCh <-chan struct{}, hasSynced func() bool) error {
 	go wait.Until(w.processNextWorkItem, 50*time.Millisecond, stopCh)
 	klog.Infof("Started workers for %s\n", w.resource)
 	<-stopCh
-	klog.Infof("Shutting down workers for \n", w.resource)
+	klog.Infof("Shutting down workers for %s\n", w.resource)
 	return nil
 }
 

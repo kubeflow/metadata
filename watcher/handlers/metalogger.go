@@ -100,7 +100,7 @@ func (l *MetaLogger) OnAdd(obj interface{}) error {
 		return err
 	}
 	if exists {
-		klog.Infof("Hanlded addEvent for %s. Object already exists with UID = %s, name = %s.\n", l.MetadataArtifactType(), object.GetUID(), object.GetName())
+		klog.Infof("Handled addEvent for %s. Object already exists with UID = %s, name = %s.\n", l.MetadataArtifactType(), object.GetUID(), object.GetName())
 		return nil
 	}
 	b, err := json.Marshal(obj)
@@ -130,7 +130,7 @@ func (l *MetaLogger) OnAdd(obj interface{}) error {
 		klog.Errorf("failed to log metadata for %s: err = %s, request = %v, resp = %v", l.MetadataArtifactType(), err, request, resp)
 		return err
 	}
-	klog.Infof("Hanlded addEvent for %s.\n", l.MetadataArtifactType())
+	klog.Infof("Handled addEvent for %s.\n", l.MetadataArtifactType())
 	return nil
 }
 

@@ -80,7 +80,7 @@ func main() {
 		}
 		metalogger, err := handlers.NewMetaLogger(kfmdClient, gvk)
 		if err != nil {
-			klog.Fatal("Failed to create metalogger for %v: %v", gvk, err)
+			klog.Fatalf("Failed to create metalogger for %v: %v", gvk, err)
 		}
 		w := watcher.New(gvk, metalogger)
 		if err != nil {
@@ -127,6 +127,6 @@ func setupSignalHandler(conn *grpc.ClientConn) (stopCh <-chan struct{}) {
 func init() {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "Path to a kubeconfig. Only required if out-of-cluster.")
 	flag.StringVar(&masterURL, "master", "", "The address of the Kubernetes API server. Overrides any value in kubeconfig. Only required if out-of-cluster.")
-	flag.StringVar(&metadataServiceURL, "metadata_service", "localhost:8080", "The address of the Kubeflow Metadata GRPC service.")
-	flag.StringVar(&resourcelist, "resourcelist", "", "Path to a JSON file with a list of Kubernets GroupVersionKind to be watched.")
+	flag.StringVar(&metadataServiceURL, "metadata_service", "localhost:8080", "The address of the Kubeflow Metadata GRPC service. Required.")
+	flag.StringVar(&resourcelist, "resourcelist", "", "The path of a JSON file with a list of Kubernetes GroupVersionKind to be watched. Required.")
 }
