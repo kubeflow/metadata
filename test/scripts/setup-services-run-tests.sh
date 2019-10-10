@@ -137,4 +137,15 @@ cd "${SRC_DIR}/sdk/python" && \
   sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
   python3 -m nbconvert --to notebook --execute demo.ipynb
 
+# Test resource watcher
+# Port forwarding
+TARGET_GRPC_POD=$(kubectl -n $NAMESPACE get pod -o=name | grep metadata-grpc-deployment | head -1)
+echo "kubectl port-forward from $TARGET_GRPC_POD"
+kubectl -n $NAMESPACE port-forward $TARGET_GRPC_POD 8081:8080 &
+# Stream server logs.
+kubectl -n $NAMESPACE logs -f $TARGET_GRPC_POD &
+
+cd "${SRC_DIR}/watcher" && \
+  go build -o main/main main/main.go && \
+  timeout --preserve-status 30 ./main/main -kubeconfig=${HOME}/.kube/config -metadata_service=localhost:8081 -resourcelist=dockerfiles/resource_list.json
 exit 0
