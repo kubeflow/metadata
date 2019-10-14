@@ -184,7 +184,8 @@ class Execution(object):
       execution.custom_properties[
           RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
           string_value=self.run.name)
-    return execution
+    execFullInfo = openapi_client.ApiExecArtifactsAndEvents(execution=execution, artifact_event_pairs=None)
+    return execFullInfo
 
   def log_input(self, artifact):
     """
