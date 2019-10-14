@@ -415,39 +415,119 @@ func (s *Service) getExecution(name string) (*mlpb.Execution, error) {
 	return executions[0], nil
 }
 
-// CreateExecution creates the specified execution.
+// CreateExecution can create the specified execution and its related artifacts and events.
+// The artifacts and events are optional
 func (s *Service) CreateExecution(ctx context.Context, req *api.CreateExecutionRequest) (*api.CreateExecutionResponse, error) {
-	if req.Execution == nil {
+	var artifactAndEvent []*mlmetadata.ArtifactAndEvent
+
+	if req.ExecutionFullInfo == nil {
+		return nil, errors.New("unspecified Execution info")
+	}
+
+	executionFullInfo := req.ExecutionFullInfo
+
+	if executionFullInfo.Execution == nil {
 		return nil, errors.New("unspecified Execution")
 	}
 
-	if req.Execution.Id != nil {
+	if executionFullInfo.Execution.Id != nil {
 		return nil, errors.New("id should remain unspecified when creating Execution")
 	}
 
 	eType, err := s.getExecutionType(req.Parent)
 	if err != nil {
-		return nil, fmt.Errorf("failed to resolve ExecutionType under %q: %v", req.Parent, err)
+		return nil, fmt.Errorf("failed to resolve ExecutionType %q: %v", strings.TrimPrefix(req.Parent, executionTypesCollection), err)
 	}
 
-	req.Execution.TypeId = proto.Int64(eType.GetId())
-	ids, err := s.store.PutExecutions([]*mlpb.Execution{req.Execution})
+	executionFullInfo.Execution.TypeId = proto.Int64(eType.GetId())
+
+	if executionFullInfo.ArtifactEventPairs != nil {
+		artifactAndEvent = make([]*mlmetadata.ArtifactAndEvent, len(executionFullInfo.ArtifactEventPairs))
+		for i, v := range executionFullInfo.ArtifactEventPairs {
+
+			if v.Artifact.TypeId == nil {
+				aType, err := s.getArtifactType(v.ArtifactTypeName)
+				if err != nil {
+					return nil, fmt.Errorf("failed to resolve ArtifactType %q: %v", v.ArtifactTypeName, err)
+				}
+
+				v.Artifact.TypeId = proto.Int64(aType.GetId())
+			}
+
+			artifactAndEvent[i] = &mlmetadata.ArtifactAndEvent{
+				Artifact: v.Artifact,
+				Event:    v.Event,
+			}
+		}
+	}
+
+	eid, aids, err := s.store.PutExecution(executionFullInfo.Execution, artifactAndEvent)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(ids) != 1 {
-		return nil, fmt.Errorf("internal error: expecting single new Execution id, got instead : %v", ids)
-	}
-
-	executionName := fmt.Sprintf("%s/executions/%d", req.Parent, ids[0])
-	exec, err := s.getExecution(executionName)
+	executions, err := s.store.GetExecutionsByID([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(eid)})
 	if err != nil {
 		return nil, err
 	}
 
-	return &api.CreateExecutionResponse{Execution: exec}, nil
+	if len(executions) != 1 {
+		return nil, fmt.Errorf("internal error: expecting single Execution, got instead : %v", executions)
+	}
 
+	artifacts, err := s.store.GetArtifactsByID(aids)
+	if err != nil {
+		return nil, err
+	}
+
+	return &api.CreateExecutionResponse{
+		Execution: executions[0],
+		Artifacts: artifacts,
+	}, nil
+}
+
+// CreateExecutions creates the specified executions.
+func (s *Service) CreateExecutions(ctx context.Context, req *api.CreateExecutionsRequest) (*api.CreateExecutionsResponse, error) {
+	if req.ExecutionInfoSet == nil || req.ExecutionInfoSet.ExecutionInfo == nil {
+		return nil, errors.New("unspecified Execution")
+	}
+
+	executions := make([]*mlpb.Execution, len(req.ExecutionInfoSet.ExecutionInfo))
+
+	for i, execution := range req.ExecutionInfoSet.ExecutionInfo {
+		if execution.ExecutionTypeName == "" {
+			return nil, errors.New("the name of execution type should be specified when creating Execution")
+		}
+
+		if execution.Execution.Id != nil {
+			return nil, errors.New("id should remain unspecified when creating Execution")
+		}
+
+		eType, err := s.getExecutionType(execution.ExecutionTypeName)
+		if err != nil {
+			return nil, fmt.Errorf("failed to resolve ExecutionType %q: %v", execution.ExecutionTypeName, err)
+		}
+
+		execution.Execution.TypeId = proto.Int64(eType.GetId())
+		executions[i] = execution.Execution
+	}
+
+	ids, err := s.store.PutExecutions(executions)
+	if err != nil {
+		return nil, err
+	}
+
+	gotExecutions, err := s.store.GetExecutionsByID(ids)
+	if err != nil {
+		return nil, err
+	}
+
+	res := &api.CreateExecutionsResponse{}
+	for _, exec := range gotExecutions {
+		res.Executions = append(res.Executions, exec)
+	}
+
+	return res, nil
 }
 
 // GetExecution returns the specified execution.

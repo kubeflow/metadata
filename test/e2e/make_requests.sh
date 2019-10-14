@@ -53,6 +53,12 @@ curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types
 # List the predefined execution type.
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution
 
-# Update the the specified execution type.
+# Update the specified execution type.
 curl -X PATCH -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types -d @update_execution_type.json
 curl -H "ContentType: application/json" $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution
+
+# Create the specifed execution with related artifacts and events
+curl -X POST -H "ContentType: application/json"  $HOST:$PORT/api/v1alpha1/execution_types/kubeflow.org/alpha/execution/executions -d @create_execution.json
+
+# Create the specified execntions
+curl -X POST -H "ContentType: application/json"  $HOST:$PORT/api/v1alpha1/executions -d @create_executions.json

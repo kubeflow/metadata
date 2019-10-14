@@ -78,3 +78,6 @@ dist
 .tox
 sdk/python/kubeflow/metadata/openapi_client/
 sdk/python/build
+
+# Library of ml_metadata
+ml_metadata/

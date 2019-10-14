@@ -867,71 +867,260 @@ func TestCreateExecution(t *testing.T) {
 	svc := New(store)
 
 	ctx := context.Background()
-	req := &api.CreateExecutionTypeRequest{
-		ExecutionType: &mlpb.ExecutionType{
-			Name: proto.String("kubeflow.org/v1/Execution"),
+
+	createATypeReq := &api.CreateArtifactTypeRequest{
+		ArtifactType: &mlpb.ArtifactType{
+			Name: proto.String("kubeflow.org/v1/Model"),
 			Properties: map[string]mlpb.PropertyType{
-				"string_field": mlpb.PropertyType_STRING,
+				"name":         mlpb.PropertyType_STRING,
 				"int_field":    mlpb.PropertyType_INT,
 				"double_field": mlpb.PropertyType_DOUBLE,
 			},
 		},
 	}
-	res, err := svc.CreateExecutionType(ctx, req)
+	createATypeRes, err := svc.CreateArtifactType(ctx, createATypeReq)
 	if err != nil {
-		t.Fatalf("Failed to create ExecutionType with request %v: %v", req, err)
+		t.Fatalf("Failed to create ArtifactType with request %v: %v", createATypeReq, err)
 	}
 
-	typeID := res.ExecutionType.GetId()
+	atypeID := createATypeRes.ArtifactType.GetId()
 
-	tests := []struct {
-		request      string
-		wantResponse string
-	}{
-		{
-			request: ` execution {
-				properties { key: "string_field" value { string_value: "string value" }}
-				properties { key: "int_field" value { int_value: 100 }}
-				properties { key: "double_field" value { double_value: 1.1 }}
-				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
-				custom_properties { key: "custom_int_field" value { int_value: 200 }}
-				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }
-			   parent: "execution_types/kubeflow.org/v1/Execution" `,
-			wantResponse: ` execution {
-				properties { key: "string_field" value { string_value: "string value" }}
-				properties { key: "int_field" value { int_value: 100 }}
-				properties { key: "double_field" value { double_value: 1.1 }}
-				custom_properties { key: "custom_string_field" value { string_value: "custom string value" }}
-				custom_properties { key: "custom_int_field" value { int_value: 200 }}
-				custom_properties { key: "custom_double_field" value { double_value: 2.2 }} }`,
+	createExecTypeReq := &api.CreateExecutionTypeRequest{
+		ExecutionType: &mlpb.ExecutionType{
+			Name: proto.String("kubeflow.org/v1/Execution"),
+			Properties: map[string]mlpb.PropertyType{
+				"name":         mlpb.PropertyType_STRING,
+				"int_field":    mlpb.PropertyType_INT,
+				"double_field": mlpb.PropertyType_DOUBLE,
+			},
 		},
-		// TODO(neuromage): Add more test cases.
+	}
+	createExecTypeRes, err := svc.CreateExecutionType(ctx, createExecTypeReq)
+	if err != nil {
+		t.Fatalf("Failed to create ExecutionType with request %v: %v", createExecTypeReq, err)
 	}
 
-	for i, test := range tests {
-		req := &api.CreateExecutionRequest{}
-		if err := proto.UnmarshalText(test.request, req); err != nil {
-			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
-			continue
-		}
-		want := &api.CreateExecutionResponse{}
-		if err := proto.UnmarshalText(test.wantResponse, want); err != nil {
-			t.Errorf("Test case %d\nproto.UnmarshalText failure: %v ", i, err)
-			continue
-		}
+	execTypeID := createExecTypeRes.ExecutionType.GetId()
+	inputType := mlpb.Event_INPUT
+	uri := "gs://some-uri"
+	time := int64(100000)
 
-		want.Execution.TypeId = proto.Int64(typeID)
+	createExectionReq := &api.CreateExecutionRequest{
+		Parent: "execution_types/kubeflow.org/v1/Execution",
+		ExecutionFullInfo: &api.ExecArtifactsAndEvents{
+			Execution: &mlpb.Execution{
+				Properties: map[string]*mlpb.Value{
+					"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}},
+					"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.1}},
+				},
+				CustomProperties: map[string]*mlpb.Value{
+					"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 1}},
+				},
+			},
+			ArtifactEventPairs: []*api.ArtifactAndEvent{
+				&api.ArtifactAndEvent{
+					ArtifactTypeName: "kubeflow.org/v1/Model",
+					Artifact: &mlpb.Artifact{
+						Uri: &uri,
+						Properties: map[string]*mlpb.Value{
+							"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "modelX"}},
+							"int_field":    &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 100}},
+							"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.2}},
+						},
+						CustomProperties: map[string]*mlpb.Value{
+							"int_field":    &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 200}},
+							"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 2.2}},
+						},
+					},
+					Event: &mlpb.Event{
+						Type:                   &inputType,
+						MillisecondsSinceEpoch: &time,
+					},
+				},
+			},
+		},
+	}
 
-		got, err := svc.CreateExecution(ctx, req)
+	wantExecution := &mlpb.Execution{
+		TypeId: proto.Int64(int64(execTypeID)),
+		Properties: map[string]*mlpb.Value{
+			"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}},
+			"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.1}},
+		},
+		CustomProperties: map[string]*mlpb.Value{
+			"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 1}},
+		},
+	}
+
+	wantArtifact := &mlpb.Artifact{
+		TypeId: proto.Int64(int64(atypeID)),
+		Uri:    &uri,
+		Properties: map[string]*mlpb.Value{
+			"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "modelX"}},
+			"int_field":    &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 100}},
+			"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.2}},
+		},
+		CustomProperties: map[string]*mlpb.Value{
+			"int_field":    &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 200}},
+			"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 2.2}},
+		},
+	}
+
+	createExectionRes, err := svc.CreateExecution(ctx, createExectionReq)
+	if err != nil {
+		t.Errorf("CreateExecution\nRequest:\n%+v\nGot error:\n%v\n", createExectionReq, err)
+	}
+
+	gotExec := createExectionRes.Execution
+	gotArtifacts := createExectionRes.Artifacts
+
+	if !cmp.Equal(gotExec, wantExecution, cmpopts.IgnoreFields(mlpb.Execution{}, "Id")) {
+		t.Errorf("CreateExecution\nRequest:\n%v\nGot execution:\n%v\nError:\n%v\nWant execution:\n%v\nDiff\n%v\n",
+			createExectionReq, gotExec, err, wantExecution, cmp.Diff(wantExecution, gotExec))
+	}
+
+	if !cmp.Equal(gotArtifacts[0], wantArtifact, cmpopts.IgnoreFields(mlpb.Artifact{}, "Id")) {
+		t.Errorf("CreateExecution\nRequest:\n%v\nGot artifact:\n%v\nError:\n%v\nWant artifact:\n%v\nDiff\n%v\n",
+			createExectionReq, gotArtifacts[0], err, wantArtifact, cmp.Diff(wantArtifact, gotArtifacts[0]))
+	}
+
+	gotEventsFromExec, err := store.GetEventsByExecutionIDs([]mlmetadata.ExecutionID{mlmetadata.ExecutionID(gotExec.GetId())})
+	if err != nil {
+		t.Errorf("CreateExecution\nRequest:\n%+v\nGot events from execution error:\n%v\n", createExectionReq, err)
+	}
+
+	if len(gotEventsFromExec) != 1 {
+		t.Errorf("CreateExecution\nRequest:\n%+v\nGot error:\nGetEventsByExecutionIDs number of events mismatch, want: %v, got: %v\n", createExectionReq, 1, len(gotEventsFromExec))
+	}
+
+	gotEventsFromArtifact, err := store.GetEventsByArtifactIDs([]mlmetadata.ArtifactID{mlmetadata.ArtifactID(gotArtifacts[0].GetId())})
+	if err != nil {
+		t.Errorf("CreateExecution\nRequest:\n%+v\nGot events from artifact error:\n%v\n", createExectionReq, err)
+	}
+
+	if len(gotEventsFromArtifact) != 1 {
+		t.Errorf("CreateExecution\nRequest:\n%+v\nGot error:\nGetEventsByArtifactIDs number of events mismatch, want: %v, got: %v\n", createExectionReq, 1, len(gotEventsFromArtifact))
+	}
+
+	if !cmp.Equal(gotEventsFromExec[0], gotEventsFromArtifact[0]) {
+		t.Errorf("CreateExecution\nRequest:\n%v\nGot event from exection:\n%v\nError:\n%v\nGot event from artifact:\n%v\nDiff\n%v\n",
+			createExectionReq, gotEventsFromExec[0], err, gotEventsFromArtifact[0], cmp.Diff(gotEventsFromExec[0], gotEventsFromArtifact[0]))
+	}
+
+	wantEvent := &mlpb.Event{
+		ArtifactId:             proto.Int64((int64)(gotArtifacts[0].GetId())),
+		ExecutionId:            proto.Int64((int64)(gotExec.GetId())),
+		Type:                   &inputType,
+		MillisecondsSinceEpoch: &time,
+	}
+
+	if !cmp.Equal(gotEventsFromExec[0], wantEvent) {
+		t.Errorf("CreateExecution\nRequest:\n%v\nGot event from exection:\n%v\nError:\n%v\nWant event:\n%v\nDiff\n%v\n",
+			createExectionReq, gotEventsFromExec[0], err, wantEvent, cmp.Diff(wantEvent, gotEventsFromArtifact[0]))
+	}
+}
+
+func TestCreateExecutions(t *testing.T) {
+	store := testMLMDStore(t)
+	svc := New(store)
+
+	execType1 := "kubeflow.org/v1/MyExecutionType1"
+	execType2 := "kubeflow.org/v1/MyExecutionType2"
+
+	createExecTypeReqs := []*api.CreateExecutionTypeRequest{
+		&api.CreateExecutionTypeRequest{
+			ExecutionType: &mlpb.ExecutionType{
+				Name: &execType1,
+				Properties: map[string]mlpb.PropertyType{
+					"name":         mlpb.PropertyType_STRING,
+					"int_field":    mlpb.PropertyType_INT,
+					"double_field": mlpb.PropertyType_DOUBLE,
+				},
+			},
+		},
+		&api.CreateExecutionTypeRequest{
+			ExecutionType: &mlpb.ExecutionType{
+				Name: &execType2,
+				Properties: map[string]mlpb.PropertyType{
+					"name":      mlpb.PropertyType_STRING,
+					"int_field": mlpb.PropertyType_INT,
+				},
+			},
+		},
+	}
+	ctx := context.Background()
+	execTypeIds := make([]int64, len(createExecTypeReqs))
+
+	for i, req := range createExecTypeReqs {
+		res, err := svc.CreateExecutionType(ctx, req)
 		if err != nil {
-			t.Errorf("Test case %d\nCreateExecution\nRequest:\n%+v\nGot error:\n%v\nWant nil error", i, req, err)
-			continue
+			t.Fatalf("Failed to create ExecutionType with request %v: %v", req, err)
 		}
+		execTypeIds[i] = res.ExecutionType.GetId()
+	}
 
-		if !cmp.Equal(got, want, cmpopts.IgnoreFields(mlpb.Execution{}, "Id")) {
-			t.Errorf("Test case %d\nCreateExecution\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
-				i, req, got, err, want, cmp.Diff(want, got))
-		}
+	createExectionsReq := &api.CreateExecutionsRequest{
+		ExecutionInfoSet: &api.CreateExecutionInfoSet{
+			ExecutionInfo: []*api.CreateExecutionInfo{
+				&api.CreateExecutionInfo{
+					ExecutionTypeName: "kubeflow.org/v1/MyExecutionType1",
+					Execution: &mlpb.Execution{
+						Properties: map[string]*mlpb.Value{
+							"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}},
+							"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.1}},
+						},
+						CustomProperties: map[string]*mlpb.Value{
+							"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 1}},
+						},
+					},
+				},
+				&api.CreateExecutionInfo{
+					ExecutionTypeName: "kubeflow.org/v1/MyExecutionType2",
+					Execution: &mlpb.Execution{
+						Properties: map[string]*mlpb.Value{
+							"name":      &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e2"}},
+							"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 2}},
+						},
+						CustomProperties: map[string]*mlpb.Value{
+							"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 3}},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	wantExecutions := []*mlpb.Execution{
+		&mlpb.Execution{
+			TypeId: proto.Int64(int64(execTypeIds[0])),
+			Properties: map[string]*mlpb.Value{
+				"name":         &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e1"}},
+				"double_field": &mlpb.Value{Value: &mlpb.Value_DoubleValue{DoubleValue: 1.1}},
+			},
+			CustomProperties: map[string]*mlpb.Value{
+				"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 1}},
+			},
+		},
+		&mlpb.Execution{
+			TypeId: proto.Int64(int64(execTypeIds[1])),
+			Properties: map[string]*mlpb.Value{
+				"name":      &mlpb.Value{Value: &mlpb.Value_StringValue{StringValue: "e2"}},
+				"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 2}},
+			},
+			CustomProperties: map[string]*mlpb.Value{
+				"int_field": &mlpb.Value{Value: &mlpb.Value_IntValue{IntValue: 3}},
+			},
+		},
+	}
+
+	gotExecutions, err := svc.CreateExecutions(ctx, createExectionsReq)
+	if err != nil {
+		t.Errorf("CreateExecutions\nRequest:\n%+v\nGot error:\n%v\nWant nil error", createExectionsReq, err)
+	}
+
+	if !cmp.Equal(gotExecutions.Executions, wantExecutions, cmpopts.IgnoreFields(mlpb.Execution{}, "Id")) {
+		t.Errorf("CreateExecutions\nRequest:\n%v\nGot:\n%v\nError:\n%v\nWant:\n%v\nDiff\n%v\n",
+			createExectionsReq, gotExecutions.Executions, err, wantExecutions, cmp.Diff(wantExecutions, gotExecutions.Executions))
 	}
 }
 

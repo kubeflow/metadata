@@ -1,0 +1,48 @@
+{
+    "execution_info": [
+        {
+            "execution_type_name": "kubeflow.org/alpha/execution",
+            "execution": {
+                "properties": {
+                    "name": {
+                        "string_value": "exec1-run"
+                    },
+                    "description": {
+                        "string_value": "a run of an executable"
+                    },
+                    "create_time": {
+                        "string_value": "2019-09-18T20:20:39+00:00"
+                    },
+                    "executable_id": {
+                        "string_value": "1234567"
+                    },
+                    "owner": {
+                        "string_value": "owner@kubeflow.org"
+                    }
+                }
+            }
+        },
+        {
+            "execution_type_name": "kubeflow.org/alpha/execution",
+            "execution": {
+                "properties": {
+                    "name": {
+                        "string_value": "exec2-run"
+                    },
+                    "description": {
+                        "string_value": "a run of an executable"
+                    },
+                    "create_time": {
+                        "string_value": "2019-09-19T20:20:39+00:00"
+                    },
+                    "executable_id": {
+                        "string_value": "12345678"
+                    },
+                    "owner": {
+                        "string_value": "owner@kubeflow.org"
+                    }
+                }
+            }
+        }
+    ]
+}

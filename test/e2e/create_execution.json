@@ -1,0 +1,65 @@
+{
+    "execution": {
+        "name": "kubeflow.org/alpha/train",
+        "properties": {
+            "name": {
+                "string_value": "train-run"
+            },
+            "description": {
+                "string_value": "a run of an executable"
+            },
+            "create_time": {
+                "string_value": "2019-09-17T20:20:39+00:00"
+            },
+            "executable_id": {
+                "string_value": "123456"
+            },
+            "owner": {
+                "string_value": "owner@kubeflow.org"
+            }
+        }
+    },
+    "artifact_event_pairs": [
+        {
+            "artifact_type_name": "kubeflow.org/alpha/model",
+            "artifact": {
+                "uri": "gs://my-bucket/mnist-v2",
+                "properties": {
+                    "name": {
+                        "string_value": "MNIST-V2"
+                    },
+                    "create_time": {
+                        "string_value": "2019-09-17T01:21:48.259263Z"
+                    },
+                    "description": {
+                        "string_value": "model to recognize handwritten digits"
+                    },
+                    "model_type": {
+                        "string_value": "neural network"
+                    },
+                    "owner": {
+                        "string_value": "owner@kubeflow.org"
+                    },
+                    "version": {
+                        "string_value": "v0.0.2"
+                    },
+                    "__ALL_META__": {
+                        "string_value": "{\"description\":\"model to recognize handwritten digits\",\"hyperparameters\":{\"early_stop\":true,\"layers\":[10,3,1],\"learning_rate\":0.5},\"model_type\":\"neural network\",\"name\":\"MNIST-V2\",\"owner\":\"owner@kubeflow.org\",\"training_framework\":{\"name\":\"tensorflow\",\"version\":\"v1.0\"},\"uri\":\"gcs://my-bucket/mnist-v2\",\"version\":\"v0.0.2\"}"
+                    }
+                },
+                "custom_properties": {
+                    "__kf_run__": {
+                        "string_value": "run456"
+                    },
+                    "__kf_workspace__": {
+                        "string_value": "workspace1"
+                    }
+                }
+            },
+            "event": {
+                "type": 3,
+                "milliseconds_since_epoch": "1568727668"
+            }
+        }
+    ]
+}

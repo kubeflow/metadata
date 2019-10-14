@@ -107,6 +107,7 @@ message Execution {
     RUNNING = 2;
     COMPLETE = 3;
     FAILED = 4;
+    CACHED = 5;
   }
 
   // The last known state of an execution.
@@ -134,7 +135,6 @@ message Execution {
   // The time at which the execution ended.
   google.protobuf.Timestamp end_time = 12;
 }
-
 
 // *Value and *Type message types below are used to represent different types of
 // values and value types respectively.
