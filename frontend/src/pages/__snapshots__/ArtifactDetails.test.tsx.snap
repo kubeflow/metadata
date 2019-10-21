@@ -70,158 +70,626 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
   <div
     className="page"
   >
-    <ResourceInfo
-      resource={
-        Object {
-          "custom_properties": Object {
-            "__kf_run__": Object {
-              "string_value": "1",
-            },
-            "__kf_workspace__": Object {
-              "string_value": "workspace-1",
-            },
-          },
-          "id": "1",
-          "properties": Object {
-            "__ALL_META__": Object {
-              "string_value": "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
-            },
-            "create_time": Object {
-              "string_value": "2019-06-12T01:21:48.259263Z",
-            },
-            "description": Object {
-              "string_value": "A really great model",
-            },
-            "name": Object {
-              "string_value": "test model",
-            },
-            "version": Object {
-              "string_value": "v1",
-            },
-          },
-          "type_id": "1",
-          "uri": "gs://my-bucket/mnist",
-        }
-      }
-      typeName="Model"
+    <div
+      className=""
     >
-      <section>
-        <h1
-          className="header"
-        >
-          Type: 
-          Model
-        </h1>
-        <h2
-          className="header2"
-        >
-          Properties
-        </h2>
-        <dl
-          className="resourceInfo"
+      <MD2Tabs
+        selectedTab={0}
+        tabs={
+          Array [
+            "Overview",
+            "Lineage Explorer",
+            "Deployments",
+          ]
+        }
+      >
+        <div
+          className="tabs"
         >
           <div
-            className="field"
-            key="name"
+            className="indicator"
+          />
+          <_default
+            units={10}
           >
-            <dt
-              className="term"
-            >
-              name
-            </dt>
-            <dd
-              className="value"
-            >
-              test model
-            </dd>
-          </div>
-          <div
-            className="field"
-            key="description"
+            <span
+              style={
+                Object {
+                  "display": "inline-block",
+                  "minWidth": 10,
+                  "width": 10,
+                }
+              }
+            />
+          </_default>
+          <WithStyles(Button)
+            className="button active"
+            key="0"
+            onClick={[Function]}
           >
-            <dt
-              className="term"
+            <Button
+              className="button active"
+              classes={
+                Object {
+                  "colorInherit": "MuiButton-colorInherit-32",
+                  "contained": "MuiButton-contained-22",
+                  "containedPrimary": "MuiButton-containedPrimary-23",
+                  "containedSecondary": "MuiButton-containedSecondary-24",
+                  "disabled": "MuiButton-disabled-31",
+                  "extendedFab": "MuiButton-extendedFab-29",
+                  "fab": "MuiButton-fab-28",
+                  "flat": "MuiButton-flat-16",
+                  "flatPrimary": "MuiButton-flatPrimary-17",
+                  "flatSecondary": "MuiButton-flatSecondary-18",
+                  "focusVisible": "MuiButton-focusVisible-30",
+                  "fullWidth": "MuiButton-fullWidth-36",
+                  "label": "MuiButton-label-12",
+                  "mini": "MuiButton-mini-33",
+                  "outlined": "MuiButton-outlined-19",
+                  "outlinedPrimary": "MuiButton-outlinedPrimary-20",
+                  "outlinedSecondary": "MuiButton-outlinedSecondary-21",
+                  "raised": "MuiButton-raised-25",
+                  "raisedPrimary": "MuiButton-raisedPrimary-26",
+                  "raisedSecondary": "MuiButton-raisedSecondary-27",
+                  "root": "MuiButton-root-11",
+                  "sizeLarge": "MuiButton-sizeLarge-35",
+                  "sizeSmall": "MuiButton-sizeSmall-34",
+                  "text": "MuiButton-text-13",
+                  "textPrimary": "MuiButton-textPrimary-14",
+                  "textSecondary": "MuiButton-textSecondary-15",
+                }
+              }
+              color="default"
+              component="button"
+              disableFocusRipple={false}
+              disabled={false}
+              fullWidth={false}
+              mini={false}
+              onClick={[Function]}
+              size="medium"
+              type="button"
+              variant="text"
             >
-              description
-            </dt>
-            <dd
-              className="value"
-            >
-              A really great model
-            </dd>
-          </div>
-          <div
-            className="field"
-            key="version"
+              <WithStyles(ButtonBase)
+                className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button active"
+                component="button"
+                disabled={false}
+                focusRipple={true}
+                focusVisibleClassName="MuiButton-focusVisible-30"
+                onClick={[Function]}
+                type="button"
+              >
+                <ButtonBase
+                  centerRipple={false}
+                  className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button active"
+                  classes={
+                    Object {
+                      "disabled": "MuiButtonBase-disabled-38",
+                      "focusVisible": "MuiButtonBase-focusVisible-39",
+                      "root": "MuiButtonBase-root-37",
+                    }
+                  }
+                  component="button"
+                  disableRipple={false}
+                  disableTouchRipple={false}
+                  disabled={false}
+                  focusRipple={true}
+                  focusVisibleClassName="MuiButton-focusVisible-30"
+                  onClick={[Function]}
+                  tabIndex="0"
+                  type="button"
+                >
+                  <button
+                    className="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button active"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex="0"
+                    type="button"
+                  >
+                    <span
+                      className="MuiButton-label-12"
+                    >
+                      <span>
+                        Overview
+                      </span>
+                    </span>
+                    <NoSsr
+                      defer={false}
+                      fallback={null}
+                    >
+                      <WithStyles(TouchRipple)
+                        center={false}
+                        innerRef={[Function]}
+                      >
+                        <TouchRipple
+                          center={false}
+                          classes={
+                            Object {
+                              "child": "MuiTouchRipple-child-44",
+                              "childLeaving": "MuiTouchRipple-childLeaving-45",
+                              "childPulsate": "MuiTouchRipple-childPulsate-46",
+                              "ripple": "MuiTouchRipple-ripple-41",
+                              "ripplePulsate": "MuiTouchRipple-ripplePulsate-43",
+                              "rippleVisible": "MuiTouchRipple-rippleVisible-42",
+                              "root": "MuiTouchRipple-root-40",
+                            }
+                          }
+                        >
+                          <TransitionGroup
+                            childFactory={[Function]}
+                            className="MuiTouchRipple-root-40"
+                            component="span"
+                            enter={true}
+                            exit={true}
+                          >
+                            <span
+                              className="MuiTouchRipple-root-40"
+                            />
+                          </TransitionGroup>
+                        </TouchRipple>
+                      </WithStyles(TouchRipple)>
+                    </NoSsr>
+                  </button>
+                </ButtonBase>
+              </WithStyles(ButtonBase)>
+            </Button>
+          </WithStyles(Button)>
+          <WithStyles(Button)
+            className="button"
+            key="1"
+            onClick={[Function]}
           >
-            <dt
-              className="term"
+            <Button
+              className="button"
+              classes={
+                Object {
+                  "colorInherit": "MuiButton-colorInherit-32",
+                  "contained": "MuiButton-contained-22",
+                  "containedPrimary": "MuiButton-containedPrimary-23",
+                  "containedSecondary": "MuiButton-containedSecondary-24",
+                  "disabled": "MuiButton-disabled-31",
+                  "extendedFab": "MuiButton-extendedFab-29",
+                  "fab": "MuiButton-fab-28",
+                  "flat": "MuiButton-flat-16",
+                  "flatPrimary": "MuiButton-flatPrimary-17",
+                  "flatSecondary": "MuiButton-flatSecondary-18",
+                  "focusVisible": "MuiButton-focusVisible-30",
+                  "fullWidth": "MuiButton-fullWidth-36",
+                  "label": "MuiButton-label-12",
+                  "mini": "MuiButton-mini-33",
+                  "outlined": "MuiButton-outlined-19",
+                  "outlinedPrimary": "MuiButton-outlinedPrimary-20",
+                  "outlinedSecondary": "MuiButton-outlinedSecondary-21",
+                  "raised": "MuiButton-raised-25",
+                  "raisedPrimary": "MuiButton-raisedPrimary-26",
+                  "raisedSecondary": "MuiButton-raisedSecondary-27",
+                  "root": "MuiButton-root-11",
+                  "sizeLarge": "MuiButton-sizeLarge-35",
+                  "sizeSmall": "MuiButton-sizeSmall-34",
+                  "text": "MuiButton-text-13",
+                  "textPrimary": "MuiButton-textPrimary-14",
+                  "textSecondary": "MuiButton-textSecondary-15",
+                }
+              }
+              color="default"
+              component="button"
+              disableFocusRipple={false}
+              disabled={false}
+              fullWidth={false}
+              mini={false}
+              onClick={[Function]}
+              size="medium"
+              type="button"
+              variant="text"
             >
-              version
-            </dt>
-            <dd
-              className="value"
-            >
-              v1
-            </dd>
-          </div>
-          <div
-            className="field"
-            key="create_time"
+              <WithStyles(ButtonBase)
+                className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                component="button"
+                disabled={false}
+                focusRipple={true}
+                focusVisibleClassName="MuiButton-focusVisible-30"
+                onClick={[Function]}
+                type="button"
+              >
+                <ButtonBase
+                  centerRipple={false}
+                  className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                  classes={
+                    Object {
+                      "disabled": "MuiButtonBase-disabled-38",
+                      "focusVisible": "MuiButtonBase-focusVisible-39",
+                      "root": "MuiButtonBase-root-37",
+                    }
+                  }
+                  component="button"
+                  disableRipple={false}
+                  disableTouchRipple={false}
+                  disabled={false}
+                  focusRipple={true}
+                  focusVisibleClassName="MuiButton-focusVisible-30"
+                  onClick={[Function]}
+                  tabIndex="0"
+                  type="button"
+                >
+                  <button
+                    className="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex="0"
+                    type="button"
+                  >
+                    <span
+                      className="MuiButton-label-12"
+                    >
+                      <span>
+                        Lineage Explorer
+                      </span>
+                    </span>
+                    <NoSsr
+                      defer={false}
+                      fallback={null}
+                    >
+                      <WithStyles(TouchRipple)
+                        center={false}
+                        innerRef={[Function]}
+                      >
+                        <TouchRipple
+                          center={false}
+                          classes={
+                            Object {
+                              "child": "MuiTouchRipple-child-44",
+                              "childLeaving": "MuiTouchRipple-childLeaving-45",
+                              "childPulsate": "MuiTouchRipple-childPulsate-46",
+                              "ripple": "MuiTouchRipple-ripple-41",
+                              "ripplePulsate": "MuiTouchRipple-ripplePulsate-43",
+                              "rippleVisible": "MuiTouchRipple-rippleVisible-42",
+                              "root": "MuiTouchRipple-root-40",
+                            }
+                          }
+                        >
+                          <TransitionGroup
+                            childFactory={[Function]}
+                            className="MuiTouchRipple-root-40"
+                            component="span"
+                            enter={true}
+                            exit={true}
+                          >
+                            <span
+                              className="MuiTouchRipple-root-40"
+                            />
+                          </TransitionGroup>
+                        </TouchRipple>
+                      </WithStyles(TouchRipple)>
+                    </NoSsr>
+                  </button>
+                </ButtonBase>
+              </WithStyles(ButtonBase)>
+            </Button>
+          </WithStyles(Button)>
+          <WithStyles(Button)
+            className="button"
+            key="2"
+            onClick={[Function]}
           >
-            <dt
-              className="term"
+            <Button
+              className="button"
+              classes={
+                Object {
+                  "colorInherit": "MuiButton-colorInherit-32",
+                  "contained": "MuiButton-contained-22",
+                  "containedPrimary": "MuiButton-containedPrimary-23",
+                  "containedSecondary": "MuiButton-containedSecondary-24",
+                  "disabled": "MuiButton-disabled-31",
+                  "extendedFab": "MuiButton-extendedFab-29",
+                  "fab": "MuiButton-fab-28",
+                  "flat": "MuiButton-flat-16",
+                  "flatPrimary": "MuiButton-flatPrimary-17",
+                  "flatSecondary": "MuiButton-flatSecondary-18",
+                  "focusVisible": "MuiButton-focusVisible-30",
+                  "fullWidth": "MuiButton-fullWidth-36",
+                  "label": "MuiButton-label-12",
+                  "mini": "MuiButton-mini-33",
+                  "outlined": "MuiButton-outlined-19",
+                  "outlinedPrimary": "MuiButton-outlinedPrimary-20",
+                  "outlinedSecondary": "MuiButton-outlinedSecondary-21",
+                  "raised": "MuiButton-raised-25",
+                  "raisedPrimary": "MuiButton-raisedPrimary-26",
+                  "raisedSecondary": "MuiButton-raisedSecondary-27",
+                  "root": "MuiButton-root-11",
+                  "sizeLarge": "MuiButton-sizeLarge-35",
+                  "sizeSmall": "MuiButton-sizeSmall-34",
+                  "text": "MuiButton-text-13",
+                  "textPrimary": "MuiButton-textPrimary-14",
+                  "textSecondary": "MuiButton-textSecondary-15",
+                }
+              }
+              color="default"
+              component="button"
+              disableFocusRipple={false}
+              disabled={false}
+              fullWidth={false}
+              mini={false}
+              onClick={[Function]}
+              size="medium"
+              type="button"
+              variant="text"
             >
-              create_time
-            </dt>
-            <dd
-              className="value"
-            >
-              2019-06-12T01:21:48.259263Z
-            </dd>
-          </div>
-        </dl>
-        <h2
-          className="header2"
-        >
-          Custom Properties
-        </h2>
-        <dl
-          className="resourceInfo"
-        >
-          <div
-            className="field"
-            key="__kf_workspace__"
+              <WithStyles(ButtonBase)
+                className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                component="button"
+                disabled={false}
+                focusRipple={true}
+                focusVisibleClassName="MuiButton-focusVisible-30"
+                onClick={[Function]}
+                type="button"
+              >
+                <ButtonBase
+                  centerRipple={false}
+                  className="MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                  classes={
+                    Object {
+                      "disabled": "MuiButtonBase-disabled-38",
+                      "focusVisible": "MuiButtonBase-focusVisible-39",
+                      "root": "MuiButtonBase-root-37",
+                    }
+                  }
+                  component="button"
+                  disableRipple={false}
+                  disableTouchRipple={false}
+                  disabled={false}
+                  focusRipple={true}
+                  focusVisibleClassName="MuiButton-focusVisible-30"
+                  onClick={[Function]}
+                  tabIndex="0"
+                  type="button"
+                >
+                  <button
+                    className="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-text-13 MuiButton-flat-16 button"
+                    disabled={false}
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onContextMenu={[Function]}
+                    onFocus={[Function]}
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onMouseLeave={[Function]}
+                    onMouseUp={[Function]}
+                    onTouchEnd={[Function]}
+                    onTouchMove={[Function]}
+                    onTouchStart={[Function]}
+                    tabIndex="0"
+                    type="button"
+                  >
+                    <span
+                      className="MuiButton-label-12"
+                    >
+                      <span>
+                        Deployments
+                      </span>
+                    </span>
+                    <NoSsr
+                      defer={false}
+                      fallback={null}
+                    >
+                      <WithStyles(TouchRipple)
+                        center={false}
+                        innerRef={[Function]}
+                      >
+                        <TouchRipple
+                          center={false}
+                          classes={
+                            Object {
+                              "child": "MuiTouchRipple-child-44",
+                              "childLeaving": "MuiTouchRipple-childLeaving-45",
+                              "childPulsate": "MuiTouchRipple-childPulsate-46",
+                              "ripple": "MuiTouchRipple-ripple-41",
+                              "ripplePulsate": "MuiTouchRipple-ripplePulsate-43",
+                              "rippleVisible": "MuiTouchRipple-rippleVisible-42",
+                              "root": "MuiTouchRipple-root-40",
+                            }
+                          }
+                        >
+                          <TransitionGroup
+                            childFactory={[Function]}
+                            className="MuiTouchRipple-root-40"
+                            component="span"
+                            enter={true}
+                            exit={true}
+                          >
+                            <span
+                              className="MuiTouchRipple-root-40"
+                            />
+                          </TransitionGroup>
+                        </TouchRipple>
+                      </WithStyles(TouchRipple)>
+                    </NoSsr>
+                  </button>
+                </ButtonBase>
+              </WithStyles(ButtonBase)>
+            </Button>
+          </WithStyles(Button)>
+        </div>
+      </MD2Tabs>
+    </div>
+    <div
+      className=""
+    >
+      <ResourceInfo
+        resource={
+          Object {
+            "custom_properties": Object {
+              "__kf_run__": Object {
+                "string_value": "1",
+              },
+              "__kf_workspace__": Object {
+                "string_value": "workspace-1",
+              },
+            },
+            "id": "1",
+            "properties": Object {
+              "__ALL_META__": Object {
+                "string_value": "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+              },
+              "create_time": Object {
+                "string_value": "2019-06-12T01:21:48.259263Z",
+              },
+              "description": Object {
+                "string_value": "A really great model",
+              },
+              "name": Object {
+                "string_value": "test model",
+              },
+              "version": Object {
+                "string_value": "v1",
+              },
+            },
+            "type_id": "1",
+            "uri": "gs://my-bucket/mnist",
+          }
+        }
+        typeName="Model"
+      >
+        <section>
+          <h1
+            className="header"
           >
-            <dt
-              className="term"
-            >
-              __kf_workspace__
-            </dt>
-            <dd
-              className="value"
-            >
-              workspace-1
-            </dd>
-          </div>
-          <div
-            className="field"
-            key="__kf_run__"
+            Type: 
+            Model
+          </h1>
+          <h2
+            className="header2"
           >
-            <dt
-              className="term"
+            Properties
+          </h2>
+          <dl
+            className="resourceInfo"
+          >
+            <div
+              className="field"
+              key="name"
             >
-              __kf_run__
-            </dt>
-            <dd
-              className="value"
+              <dt
+                className="term"
+              >
+                name
+              </dt>
+              <dd
+                className="value"
+              >
+                test model
+              </dd>
+            </div>
+            <div
+              className="field"
+              key="description"
             >
-              1
-            </dd>
-          </div>
-        </dl>
-      </section>
-    </ResourceInfo>
+              <dt
+                className="term"
+              >
+                description
+              </dt>
+              <dd
+                className="value"
+              >
+                A really great model
+              </dd>
+            </div>
+            <div
+              className="field"
+              key="version"
+            >
+              <dt
+                className="term"
+              >
+                version
+              </dt>
+              <dd
+                className="value"
+              >
+                v1
+              </dd>
+            </div>
+            <div
+              className="field"
+              key="create_time"
+            >
+              <dt
+                className="term"
+              >
+                create_time
+              </dt>
+              <dd
+                className="value"
+              >
+                2019-06-12T01:21:48.259263Z
+              </dd>
+            </div>
+          </dl>
+          <h2
+            className="header2"
+          >
+            Custom Properties
+          </h2>
+          <dl
+            className="resourceInfo"
+          >
+            <div
+              className="field"
+              key="__kf_workspace__"
+            >
+              <dt
+                className="term"
+              >
+                __kf_workspace__
+              </dt>
+              <dd
+                className="value"
+              >
+                workspace-1
+              </dd>
+            </div>
+            <div
+              className="field"
+              key="__kf_run__"
+            >
+              <dt
+                className="term"
+              >
+                __kf_run__
+              </dt>
+              <dd
+                className="value"
+              >
+                1
+              </dd>
+            </div>
+          </dl>
+        </section>
+      </ResourceInfo>
+    </div>
   </div>
 </ArtifactDetails>
 `;

@@ -25,10 +25,13 @@ import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
 import {ResourceInfo} from '../components/ResourceInfo';
+import MD2Tabs from "../atoms/MD2Tabs";
 
 interface ArtifactDetailsState {
   artifact?: MlMetadataArtifact;
 }
+
+const TAB_NAMES = ['Overview', 'Lineage Explorer', 'Deployments'];
 
 export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   private api = Api.getInstance();
@@ -61,9 +64,14 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   public render(): JSX.Element {
     if (!this.state.artifact) return <CircularProgress />;
     return (
-      <div className={classes(commonCss.page, padding(20, 'lr'))}>
-        {<ResourceInfo typeName={this.properTypeName}
-          resource={this.state.artifact} />}
+      <div className={classes(commonCss.page)}>
+        <div className={classes(padding(20, 'tb'))}>
+          <MD2Tabs tabs={TAB_NAMES} selectedTab={0} />
+        </div>
+        <div className={classes(padding(20, 'lr'))}>
+            <ResourceInfo typeName={this.properTypeName}
+                           resource={this.state.artifact} />
+        </div>
       </div >
     );
   }
