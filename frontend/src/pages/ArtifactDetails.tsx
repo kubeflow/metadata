@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import { Page } from './Page';
-import { ToolbarProps } from '../components/Toolbar';
-import { RoutePage, RouteParams } from '../components/Router';
-import { Api, ArtifactProperties } from '../lib/Api';
-import { MlMetadataArtifact } from '../apis/service';
-import { classes } from 'typestyle';
-import { commonCss, padding } from '../Css';
-import { CircularProgress } from '@material-ui/core';
-import { titleCase, getResourceProperty } from '../lib/Utils';
-import { ResourceInfo } from '../components/ResourceInfo';
-import MD2Tabs from '../atoms/MD2Tabs';
+import * as React from "react";
+import { Page } from "./Page";
+import { ToolbarProps } from "../components/Toolbar";
+import { RoutePage, RouteParams } from "../components/Router";
+import { Api, ArtifactProperties } from "../lib/Api";
+import { MlMetadataArtifact } from "../apis/service";
+import { classes } from "typestyle";
+import { commonCss, padding } from "../Css";
+import { CircularProgress } from "@material-ui/core";
+import { titleCase, getResourceProperty } from "../lib/Utils";
+import { ResourceInfo } from "../components/ResourceInfo";
+import MD2Tabs from "../atoms/MD2Tabs";
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
   LINEAGE_EXPLORER = 1,
-  DEPLOYMENTS = 2,
+  DEPLOYMENTS = 2
 }
 
 const tabs = {
-  [ArtifactDetailsTab.OVERVIEW]: { name: 'Overview' },
-  [ArtifactDetailsTab.LINEAGE_EXPLORER]: { name: 'Lineage Explorer' },
-  [ArtifactDetailsTab.DEPLOYMENTS]: { name: 'Deployments' },
+  [ArtifactDetailsTab.OVERVIEW]: { name: "Overview" },
+  [ArtifactDetailsTab.LINEAGE_EXPLORER]: { name: "Lineage Explorer" },
+  [ArtifactDetailsTab.DEPLOYMENTS]: { name: "Deployments" }
 };
 
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
@@ -52,18 +52,18 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      selectedTab: ArtifactDetailsTab.OVERVIEW,
+      selectedTab: ArtifactDetailsTab.OVERVIEW
     };
     this.load = this.load.bind(this);
   }
 
   private get fullTypeName(): string {
-    return this.props.match.params[RouteParams.ARTIFACT_TYPE] || '';
+    return this.props.match.params[RouteParams.ARTIFACT_TYPE] || "";
   }
 
   private get properTypeName(): string {
-    const parts = this.fullTypeName.split('/');
-    if (!parts.length) return '';
+    const parts = this.fullTypeName.split("/");
+    if (!parts.length) return "";
 
     return titleCase(parts[parts.length - 1]);
   }
@@ -80,21 +80,26 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     if (!this.state.artifact) return <CircularProgress />;
     return (
       <div className={classes(commonCss.page)}>
-        <div className={classes(padding(20, 'tb'))}>
+        <div className={classes(padding(20, "tb"))}>
           <MD2Tabs
             tabs={tabNames}
             selectedTab={this.state.selectedTab}
             onSwitch={this.switchTab.bind(this)}
           />
         </div>
-        <div className={classes(padding(20, 'lr'))}>
+        <div className={classes(padding(20, "lr"))}>
           {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
-            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+            <ResourceInfo
+              typeName={this.properTypeName}
+              resource={this.state.artifact}
+            />
           )}
           {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
             <span>Lineage Explorer</span>
           )}
-          {this.state.selectedTab === ArtifactDetailsTab.DEPLOYMENTS && <span>Deployments</span>}
+          {this.state.selectedTab === ArtifactDetailsTab.DEPLOYMENTS && (
+            <span>Deployments</span>
+          )}
         </div>
       </div>
     );
@@ -103,8 +108,8 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   public getInitialToolbarState(): ToolbarProps {
     return {
       actions: [],
-      breadcrumbs: [{ displayName: 'Artifacts', href: RoutePage.ARTIFACTS }],
-      pageTitle: `${this.properTypeName} ${this.id} details`,
+      breadcrumbs: [{ displayName: "Artifacts", href: RoutePage.ARTIFACTS }],
+      pageTitle: `${this.properTypeName} ${this.id} details`
     };
   }
 
@@ -114,29 +119,38 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
 
   private async load(): Promise<void> {
     try {
-      const { artifact } = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
+      const { artifact } = await this.api.metadataService.getArtifact(
+        this.id,
+        this.fullTypeName
+      );
       if (!artifact) {
         throw new Error(`No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
-      const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
-      let title = artifactName ? artifactName.toString() : '';
+      const artifactName = getResourceProperty(
+        artifact,
+        ArtifactProperties.NAME
+      );
+      let title = artifactName ? artifactName.toString() : "";
       const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
       if (version) {
         title += ` (version: ${version})`;
       }
       this.props.updateToolbar({
-        pageTitle: title,
+        pageTitle: title
       });
       this.setState({ artifact });
     } catch (err) {
-      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
+      this.showPageError(
+        `Unable to retrieve ${this.fullTypeName} ${this.id}.`,
+        err
+      );
     }
   }
 
   private switchTab(selectedTab: number) {
     this.setState({
-      selectedTab,
+      selectedTab
     });
   }
 }
