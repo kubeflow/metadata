@@ -15,30 +15,45 @@
  */
 
 import * as React from 'react';
-import {Page} from './Page';
-import {ToolbarProps} from '../components/Toolbar';
-import {RoutePage, RouteParams} from '../components/Router';
-import {Api, ArtifactProperties} from '../lib/Api';
-import {MlMetadataArtifact} from '../apis/service';
-import {classes} from 'typestyle';
-import {commonCss, padding} from '../Css';
-import {CircularProgress} from '@material-ui/core';
-import {titleCase, getResourceProperty} from '../lib/Utils';
-import {ResourceInfo} from '../components/ResourceInfo';
-import MD2Tabs from "../atoms/MD2Tabs";
+import { Page } from './Page';
+import { ToolbarProps } from '../components/Toolbar';
+import { RoutePage, RouteParams } from '../components/Router';
+import { Api, ArtifactProperties } from '../lib/Api';
+import { MlMetadataArtifact } from '../apis/service';
+import { classes } from 'typestyle';
+import { commonCss, padding } from '../Css';
+import { CircularProgress } from '@material-ui/core';
+import { titleCase, getResourceProperty } from '../lib/Utils';
+import { ResourceInfo } from '../components/ResourceInfo';
+import MD2Tabs from '../atoms/MD2Tabs';
+
+export enum ArtifactDetailsTab {
+  OVERVIEW = 0,
+  LINEAGE_EXPLORER = 1,
+  DEPLOYMENTS = 2,
+}
+
+const tabs = {
+  [ArtifactDetailsTab.OVERVIEW]: { name: 'Overview' },
+  [ArtifactDetailsTab.LINEAGE_EXPLORER]: { name: 'Lineage Explorer' },
+  [ArtifactDetailsTab.DEPLOYMENTS]: { name: 'Deployments' },
+};
+
+const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
 
 interface ArtifactDetailsState {
   artifact?: MlMetadataArtifact;
+  selectedTab: ArtifactDetailsTab;
 }
-
-const TAB_NAMES = ['Overview', 'Lineage Explorer', 'Deployments'];
 
 export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   private api = Api.getInstance();
 
   constructor(props: {}) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedTab: ArtifactDetailsTab.OVERVIEW,
+    };
     this.load = this.load.bind(this);
   }
 
@@ -66,21 +81,30 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     return (
       <div className={classes(commonCss.page)}>
         <div className={classes(padding(20, 'tb'))}>
-          <MD2Tabs tabs={TAB_NAMES} selectedTab={0} />
+          <MD2Tabs
+            tabs={tabNames}
+            selectedTab={this.state.selectedTab}
+            onSwitch={this.switchTab.bind(this)}
+          />
         </div>
         <div className={classes(padding(20, 'lr'))}>
-            <ResourceInfo typeName={this.properTypeName}
-                           resource={this.state.artifact} />
+          {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
+            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+          )}
+          {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
+            <span>Lineage Explorer</span>
+          )}
+          {this.state.selectedTab === ArtifactDetailsTab.DEPLOYMENTS && <span>Deployments</span>}
         </div>
-      </div >
+      </div>
     );
   }
 
   public getInitialToolbarState(): ToolbarProps {
     return {
       actions: [],
-      breadcrumbs: [{displayName: 'Artifacts', href: RoutePage.ARTIFACTS}],
-      pageTitle: `${this.properTypeName} ${this.id} details`
+      breadcrumbs: [{ displayName: 'Artifacts', href: RoutePage.ARTIFACTS }],
+      pageTitle: `${this.properTypeName} ${this.id} details`,
     };
   }
 
@@ -90,10 +114,9 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
 
   private async load(): Promise<void> {
     try {
-      const {artifact} = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
+      const { artifact } = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
       if (!artifact) {
-        throw new Error(
-          `No ${this.fullTypeName} identified by id: ${this.id}`);
+        throw new Error(`No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
       const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
@@ -103,12 +126,17 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
         title += ` (version: ${version})`;
       }
       this.props.updateToolbar({
-        pageTitle: title
+        pageTitle: title,
       });
-      this.setState({artifact});
+      this.setState({ artifact });
     } catch (err) {
-      this.showPageError(
-        `Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
+      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
     }
+  }
+
+  private switchTab(selectedTab: number) {
+    this.setState({
+      selectedTab,
+    });
   }
 }
