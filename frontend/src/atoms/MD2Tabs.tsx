@@ -90,11 +90,11 @@ class MD2Tabs extends React.Component<MD2TabsProps, any> {
   }
 
   public componentDidMount(): void {
-    this._timeoutHandle = setTimeout(this._updateIndicator.bind(this));
+    this._setUpdateIndicatorTimeout();
   }
 
   public componentDidUpdate(): void {
-    this._timeoutHandle = setTimeout(this._updateIndicator.bind(this));
+    this._setUpdateIndicatorTimeout();
   }
 
   public componentWillUnmount(): void {
@@ -123,6 +123,10 @@ class MD2Tabs extends React.Component<MD2TabsProps, any> {
     tabIndicator.style.left = (leftOffset - 5) + 'px';
     tabIndicator.style.width = (activeLabelElement.getBoundingClientRect().width + 5) + 'px';
     tabIndicator.style.display = 'block';
+  }
+
+  private _setUpdateIndicatorTimeout(): number {
+    return setTimeout(this._updateIndicator.bind(this));
   }
 }
 
