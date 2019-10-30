@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: container
-        image: gcr.io/kubeflow-images-public/metadata/watcher:latest
+        image: gcr.io/kubeflow-images-public/metadata/watcher:v0.1.0
         command: ["./watcher/watcher",
                   "-metadata_service=metadata-grpc-service.kubeflow:8080",
                   "-resourcelist=watcher/dockerfiles/resource_list.json"]
