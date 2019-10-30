@@ -22,6 +22,7 @@ import {commonCss} from '../Css';
 import {ListRequest} from '../lib/Api';
 import {ToolbarProps} from '../components/Toolbar';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
+import {LineageActionBar} from "../components/LineageActionBar";
 
 
 interface LineageViewState {
@@ -74,29 +75,33 @@ class LineageView extends Page<{}, LineageViewState> {
         {title: 'Some Process', desc: '13,201 Examples', prev: true, next: true}
       ]},
     ] as CardDetails[];
+    const targetElement = mockExec[0].elements[0];
     return (
-      <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
-        <LineageCardColumn
-          type='artifact'
-          cards={mockInputArtifacts}
-          title={`${columnNames[0]}`} />
-        <LineageCardColumn
-          type='execution'
-          cards={mockExec}
-          title={`${columnNames[1]}`} />
-        <LineageCardColumn
-          type='artifact'
-          cards={[Object.assign({}, mockExec[0], {title: 'Target'})]}
-          title={`${columnNames[2]}`} />
-        <LineageCardColumn
-          type='execution'
-          cards={mockExec}
-          title={`${columnNames[3]}`} />
-        <LineageCardColumn
-          type='artifact'
-          cards={mockOutputArtifacts}
-          reverseBindings={true}
-          title={`${columnNames[4]}`} />
+      <div className={classes(commonCss.page,)}>
+        <LineageActionBar root={targetElement.title} />
+        <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
+          <LineageCardColumn
+            type='artifact'
+            cards={mockInputArtifacts}
+            title={`${columnNames[0]}`} />
+          <LineageCardColumn
+            type='execution'
+            cards={mockExec}
+            title={`${columnNames[1]}`} />
+          <LineageCardColumn
+            type='artifact'
+            cards={[Object.assign({}, mockExec[0], {title: 'Target'})]}
+            title={`${columnNames[2]}`} />
+          <LineageCardColumn
+            type='execution'
+            cards={mockExec}
+            title={`${columnNames[3]}`} />
+          <LineageCardColumn
+            type='artifact'
+            cards={mockOutputArtifacts}
+            reverseBindings={true}
+            title={`${columnNames[4]}`} />
+        </div>
       </div>
     );
   }

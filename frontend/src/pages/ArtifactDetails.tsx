@@ -23,11 +23,11 @@ import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
-import {ResourceInfo} from '../components/ResourceInfo';
 import MD2Tabs from '../atoms/MD2Tabs';
 import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import LineageView from './LineageView';
+import {ResourceInfo} from "../components/ResourceInfo";
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
@@ -82,7 +82,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     if (!this.state.artifact) return <CircularProgress />;
     return (
       <div className={classes(commonCss.page)}>
-        <div className={classes(padding(20, 'tb'))}>
+        <div className={classes(padding(20, 't'))}>
           <MD2Tabs
             tabs={tabNames}
             selectedTab={this.state.selectedTab}
@@ -90,9 +90,9 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           />
         </div>
         {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
-            <div className={classes(padding(20, 'lr'))}>
-              <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
-            </div>
+          <div className={classes(padding(20, 'lr'))}>
+            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+          </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
             React.createElement(LineageView, this.props)

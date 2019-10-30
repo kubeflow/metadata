@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LineageActionBar Renders correctly for a given root id 1`] = `
+<div
+  className="container flex"
+>
+  <div>
+    <span
+      className="breadcrumb"
+    >
+      artifactId
+    </span>
+  </div>
+  <div>
+    <WithStyles(Button)
+      className="actionButton"
+      disabled={false}
+    >
+      <pure(ReplayIcon) />
+       Reset
+    </WithStyles(Button)>
+  </div>
+</div>
+`;
