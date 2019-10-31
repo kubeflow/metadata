@@ -37,7 +37,8 @@
     "node_modules",
     "scripts",
     "server",
-    "src/apis"
+    "src/apis",
+    "src/generated"
   ],
   "include": [
     "src"

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@improbable-eng/grpc-web": "^0.11.0",
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
     "lodash": ">=4.17.11",
@@ -10,7 +11,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^3.2.0",
     "typestyle": "^2.0.1"
   },
   "devDependencies": {
@@ -36,17 +37,20 @@
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
     "apis:metadata": "bash generate_grpc_web_protos.sh",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
-    "build": "react-scripts build",
+    "build": "EXTEND_ESLINT=true react-scripts build",
     "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
-    "eject": "react-scripts eject",
+    "eject": "EXTEND_ESLINT=true react-scripts eject",
     "postinstall": "cd ./server && npm i",
-    "start": "react-scripts start",
+    "start": "EXTEND_ESLINT=true react-scripts start",
     "test": "TZ='America/New_York' react-scripts test --env=jsdom",
     "test:coverage": "npm test -- --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
+  "eslintIgnore": [
+    "src/generated"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
