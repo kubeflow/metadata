@@ -28,11 +28,13 @@
     "enzyme-to-json": "^3.3.5",
     "license-checker": "^25.0.1",
     "react-router-test-context": "^0.1.0",
+    "ts-protoc-gen": "^0.12.0",
     "typescript": "^3.4.5"
   },
   "scripts": {
     "apis": "npm run apis:api && npm run apis:service",
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
+    "apis:metadata": "bash generate_grpc_web_protos.sh",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "react-scripts build",
     "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
