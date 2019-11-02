@@ -29,6 +29,10 @@ const path = require('path');
 const start = path.resolve(process.cwd(), process.argv[2]);
 let licenseMissing = 0;
 const whitelist = new Map([
+  ['@jest/environment', 'third_party/jest/LICENSE'],
+  ['@jest/reporters', 'third_party/jest/LICENSE'],
+  ['@jest/test-sequencer', 'third_party/jest/LICENSE'],
+  ['@jest/transform', 'third_party/jest/LICENSE'],
   ['eslint-module-utils', 'third_party/eslint/LICENSE'],
   ['expect', 'third_party/jest/LICENSE'],
   ['jest-config', 'third_party/jest/LICENSE'],

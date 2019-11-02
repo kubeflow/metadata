@@ -37,6 +37,7 @@
     "node_modules",
     "scripts",
     "server",
+    "src/__mocks__",
     "src/apis",
     "src/generated"
   ],

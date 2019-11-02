@@ -1,4 +1,5 @@
 import {MetadataServiceApi} from '../apis/service';
+import {MetadataStoreServiceClient} from "../generated/src/apis/metadata/metadata_store_service_pb_service";
 
 /** Known Artifact properties */
 export enum ArtifactProperties {
@@ -44,6 +45,9 @@ export class Api {
 
   private static instance: Api;
   private metadataServiceApi: MetadataServiceApi;
+  // @ts-ignore
+  private metadataStoreServiceClient: MetadataStoreServiceClient =
+      new MetadataStoreServiceClient("");
 
   /**
    * Factory function to return an Api instance.
@@ -64,5 +68,9 @@ export class Api {
 
   get metadataService(): MetadataServiceApi {
     return this.metadataServiceApi;
+  }
+
+  get metadataStoreService(): MetadataStoreServiceClient {
+    return this.metadataStoreServiceClient;
   }
 }
