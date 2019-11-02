@@ -141,6 +141,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     Promise<Map<string, MlMetadataArtifactType>> {
     try {
       const response = await this.api.metadataService.listArtifactTypes();
+      // @ts-ignore
       return new Map(response.artifact_types!.map((at) => [at.id!, at]));
     } catch (err) {
       this.showPageError(

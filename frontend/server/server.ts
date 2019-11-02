@@ -26,7 +26,11 @@ const {
   /** API service will listen to this host */
   METADATA_SERVICE_SERVICE_HOST = 'localhost',
   /** API service will listen to this port */
-  METADATA_SERVICE_SERVICE_PORT = '8080'
+  METADATA_SERVICE_SERVICE_PORT = '8080',
+  /** Envoy service will listen to this host */
+  METADATA_ENVOY_SERVICE_SERVICE_HOST = 'localhost',
+  /** Envoy service will listen to this port */
+  METADATA_ENVOY_SERVICE_SERVICE_PORT = '9090',
 } = process.env;
 
 const app = express() as Application;
@@ -49,6 +53,8 @@ const staticDir = path.resolve(process.argv[2]);
 
 const port = process.argv[3] || 3000;
 const apiServerAddress = `http://${METADATA_SERVICE_SERVICE_HOST}:${METADATA_SERVICE_SERVICE_PORT}`;
+
+const envoyServiceAddress = `http://${METADATA_ENVOY_SERVICE_SERVICE_HOST}:${METADATA_ENVOY_SERVICE_SERVICE_PORT}`
 
 const v1alpha1Prefix = 'api/v1alpha1';
 
@@ -73,6 +79,16 @@ app.get(BASEPATH + '/system/cluster-name', clusterNameHandler);
 
 app.get('/system/project-id', projectIdHandler);
 app.get(BASEPATH + '/system/project-id', projectIdHandler);
+
+// Proxy metadata requests to the Envoy instance which will handle routing to the metadata gRPC server
+console.log('Starting server with gRPC proxy for /ml_metadata');
+app.all('/ml_metadata.*', proxy({
+  changeOrigin: true,
+  onProxyReq: proxyReq => {
+    console.log('Metadata proxied request: ', (proxyReq as any).path);
+  },
+  target: envoyServiceAddress,
+}));
 
 app.all('/' + v1alpha1Prefix + '/*', proxy({
   changeOrigin: true,

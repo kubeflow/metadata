@@ -35,20 +35,22 @@
   "scripts": {
     "apis": "npm run apis:api && npm run apis:service",
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
-    "apis:metadata": "bash generate_grpc_web_protos.sh",
+    "apis:metadata": "./generate_grpc_web_protos.sh",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "EXTEND_ESLINT=true react-scripts build",
     "docker": "COMMIT_HASH=`git rev-parse HEAD`; docker build -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
     "eject": "EXTEND_ESLINT=true react-scripts eject",
     "postinstall": "cd ./server && npm i",
     "start": "EXTEND_ESLINT=true react-scripts start",
-    "test": "TZ='America/New_York' react-scripts test --env=jsdom",
+    "start:proxy": "./start-proxy.sh",
+    "test": "TZ='America/New_York' EXTEND_ESLINT=true react-scripts test --env=jsdom",
     "test:coverage": "npm test -- --coverage --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "eslintIgnore": [
+    "src/__mocks__",
     "src/generated"
   ],
   "browserslist": {
@@ -67,7 +69,9 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
+      "!src/__mocks__",
       "!src/apis/**/*.{ts,tsx}",
+      "!src/generated/**/*",
       "!<rootDir>/node_modules/"
     ],
     "coverageReporters": [
