@@ -71,10 +71,11 @@ class Workspace(object):
                backend_url_prefix=None):
     """
     Args:
-      backend_url_prefix {str} -- deprecated.
+      store {Store} -- Required store object to connect to MLMD gRPC service.
       name {str} -- Required name for the workspace.
       description {str} -- Optional string for description of the workspace.
       labels {object} Optional key/value string pairs to label the workspace.
+      backend_url_prefix {str} -- Deprecated. Please use 'store' parameter.
     """
     if backend_url_prefix:
           raise ValueError("""'backend_url_prefix' is deprecated. Please set
