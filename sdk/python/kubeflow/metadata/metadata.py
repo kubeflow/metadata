@@ -14,8 +14,9 @@
 
 import datetime
 import json
-from kubeflow.metadata import openapi_client
-from kubeflow.metadata.openapi_client import Configuration, ApiClient, MetadataServiceApi
+import ml_metadata
+from ml_metadata.metadata_store import metadata_store
+from ml_metadata.proto import metadata_store_pb2 as mlpb
 
 """
 This module contains the Python API for logging metadata of machine learning
@@ -26,6 +27,36 @@ WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
 RUN_PROPERTY_NAME = '__kf_run__'
 ALL_META_PROPERTY_NAME = '__ALL_META__'
 
+class Store(object):
+  """Metadata Store that connects to the Metadata gRPC service."""
+
+  def __init__(self,
+               grpc_host="metadata-grpc-service.kubeflow",
+               grpc_port=8080,
+               root_certificates = None,
+               private_key = None,
+               certificate_chain = None):
+
+    """
+    Args:
+      grpc_host {str} -- Required gRPC service host, e.g.
+                         "metadata-grpc-service.kubeflow".
+      grpc_host {int} -- Required gRPC service port.
+      root_certificates {str} -- Optional SSL certificate for secure connection.
+      private_key {str} -- Optional private_key for secure connection.
+      certificate_chain {str} -- Optional certificate_chain for secure connection.
+    """
+    config = mlpb.MetadataStoreClientConfig()
+    config.host = grpc_host
+    config.port = grpc_port
+    if root_certificates or private_key or certificate_chain:
+      config.ssl_config = config.SSLConfig()
+      config.ssl_config.client_key = private_key
+      config.ssl_config.custom_ca = root_certificates
+      config.ssl_config.server_cert = certificate_chain
+    self.store = metadata_store.MetadataStore(
+      config, disable_upgrade_migration=False)
+
 class Workspace(object):
   """
   Groups a set of runs of pipelines, notebooks and their related artifacts
@@ -33,30 +64,29 @@ class Workspace(object):
   """
 
   def __init__(self,
-               backend_url_prefix=None,
+               store= None,
                name=None,
                description=None,
-               labels=None):
+               labels=None,
+               backend_url_prefix=None):
     """
     Args:
-      backend_url_prefix {str} -- Required URL prefix pointing to the metadata
-                                  backend, e.g. "127.0.0.1:8080".
+      backend_url_prefix {str} -- deprecated.
       name {str} -- Required name for the workspace.
       description {str} -- Optional string for description of the workspace.
       labels {object} Optional key/value string pairs to label the workspace.
     """
-    if backend_url_prefix is None or type(backend_url_prefix) != str:
-          raise ValueError("'backend_url_prefix' must be set and in string type.")
+    if backend_url_prefix:
+          raise ValueError("""'backend_url_prefix' is deprecated. Please set
+          Metadata.Store parameter to connect to the metadata gRPC service.""")
     if name is None or type(name) != str:
           raise ValueError("'name' must be set and in string type.")
-    self.backend_url_prefix = backend_url_prefix
+    if not store or type(store) != Store:
+          raise ValueError("'store' must be set as metadata.Store")
+    self.store = store.store
     self.name = name
     self.description = description
     self.labels = labels
-
-    config = Configuration()
-    config.host = backend_url_prefix
-    self.client = MetadataServiceApi(ApiClient(config))
 
   def list(self, artifact_type_name=None):
     """
@@ -67,11 +97,9 @@ class Workspace(object):
     """
     if artifact_type_name is None:
       artifact_type_name = Model.ARTIFACT_TYPE_NAME
-    response = self.client.list_artifacts(artifact_type_name)
+    response = self.store.get_artifacts_by_type(artifact_type_name)
     results = []
-    if not response.artifacts:
-      return results
-    for artifact in response.artifacts:
+    for artifact in response:
       flat = self._flat(artifact)
       if "workspace" in flat and flat["workspace"] == self.name:
         results.append(flat)
@@ -157,34 +185,28 @@ class Execution(object):
     self.run = run
     self.description = description
     self.create_time = get_rfc3339_time()
-    response = self.workspace.client.create_execution(
-        parent=self.EXECUTION_TYPE_NAME,
-        body=self.serialized(),
-    )
-    self.id = response.execution.id
+    self._type_id = self.workspace.store.get_execution_type(
+      Execution.EXECUTION_TYPE_NAME).id
+    response = self.workspace.store.put_executions([self.serialized()])
+    self.id = response[0]
 
   def serialized(self):
-    execution = openapi_client.MlMetadataExecution(
     properties={
-        "name":
-            openapi_client.MlMetadataValue(string_value=self.name),
-        "create_time":
-            openapi_client.MlMetadataValue(string_value=self.create_time),
-        "description":
-            _mlMetadataStringValue(self.description),
-    })
-    _del_none_properties(execution.properties)
+        "name": mlpb.Value(string_value=self.name),
+        "create_time": mlpb.Value(string_value=self.create_time),
+        "description": mlpb.Value(string_value=self.description),
+    }
+    _del_none_properties(properties)
 
-    execution.custom_properties = {}
+    custom_properties = {}
     if self.workspace is not None:
-      execution.custom_properties[
-          WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+      custom_properties[WORKSPACE_PROPERTY_NAME] = mlpb.Value(
           string_value=self.workspace.name)
     if self.run is not None:
-      execution.custom_properties[
-          RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
+      custom_properties[RUN_PROPERTY_NAME] = mlpb.Value(
           string_value=self.run.name)
-    return execution
+    return mlpb.Execution(type_id=self._type_id, properties=properties,
+      custom_properties=custom_properties)
 
   def log_input(self, artifact):
     """
@@ -193,19 +215,19 @@ class Execution(object):
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME string field the form of
         <namespace>/<name>.
-      - serialization() method to return a openapi_client.MlMetadataArtifact.
+      - serialization() method to return a mlpb.Artifact.
 
     This method will set artifact.id.
     """
     if artifact is None:
           raise ValueError("'artifact' must be set.")
     self._log(artifact)
-    input_event = openapi_client.MlMetadataEvent(
+    input_event = mlpb.Event(
       artifact_id=artifact.id,
       execution_id=self.id,
-      type=openapi_client.MlMetadataEventType.INPUT
+      type=mlpb.Event.INPUT
     )
-    self.workspace.client.create_event(input_event)
+    self.workspace.store.put_events([input_event])
     return artifact
 
   def log_output(self, artifact):
@@ -215,19 +237,19 @@ class Execution(object):
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME string field the form of
         <namespace>/<name>.
-      - serialization() method to return a openapi_client.MlMetadataArtifact.
+      - serialization() method to return a mlpb.Artifact.
 
     This method will set artifact.id.
     """
     if artifact is None:
           raise ValueError("'artifact' must be set.")
     self._log(artifact)
-    output_event = openapi_client.MlMetadataEvent(
+    output_event = mlpb.Event(
       artifact_id=artifact.id,
       execution_id=self.id,
-      type=openapi_client.MlMetadataEventType.OUTPUT
+      type=mlpb.Event.OUTPUT
     )
-    self.workspace.client.create_event(output_event)
+    self.workspace.store.put_events([output_event])
     return artifact
 
 
@@ -238,15 +260,18 @@ class Execution(object):
     This method expects `artifact` to have
       - ARTIFACT_TYPE_NAME string field the form of
         <namespace>/<name>.
-      - serialization() method to return a openapi_client.MlMetadataArtifact.
+      - serialization() method to return a mlpb.Artifact.
 
     This method will set artifact.id.
     """
     if artifact is None:
           raise ValueError("'artifact' must be set.")
     serialization = artifact.serialization()
-    if serialization.custom_properties is None:
-          serialization.custom_properties = {}
+    try:
+        serialization.type_id = self.workspace.store.get_artifact_type(
+          artifact.ARTIFACT_TYPE_NAME).id
+    except Exception as e:
+        raise ValueError("invalid artifact type %s: exception %s", artifact.ARTIFACT_TYPE_NAME, e)
     if WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
           raise ValueError("custom_properties contains reserved key %s"
                            % WORKSPACE_PROPERTY_NAME)
@@ -254,18 +279,10 @@ class Execution(object):
       raise ValueError("custom_properties contains reserved key %s"
                        % RUN_PROPERTY_NAME)
     if self.workspace is not None:
-      serialization.custom_properties[
-          WORKSPACE_PROPERTY_NAME] = openapi_client.MlMetadataValue(
-          string_value=self.workspace.name)
+      serialization.custom_properties[WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
-      serialization.custom_properties[
-          RUN_PROPERTY_NAME] = openapi_client.MlMetadataValue(
-          string_value=self.run.name)
-    response = self.workspace.client.create_artifact(
-        parent=artifact.ARTIFACT_TYPE_NAME,
-        body=serialization,
-    )
-    artifact.id = response.artifact.id
+      serialization.custom_properties[RUN_PROPERTY_NAME].string_value=self.run.name
+    artifact.id = self.workspace.store.put_artifacts([serialization])[0]
     return artifact
 
 class DataSet(object):
@@ -314,23 +331,17 @@ class DataSet(object):
     self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    data_set_artifact = openapi_client.MlMetadataArtifact(
+    data_set_artifact = mlpb.Artifact(
         uri=self.uri,
         properties={
-            "name":
-                openapi_client.MlMetadataValue(string_value=self.name),
-            "create_time":
-                openapi_client.MlMetadataValue(string_value=self.create_time),
-            "description":
-                _mlMetadataStringValue(self.description),
-            "query":
-                _mlMetadataStringValue(self.query),
-            "version":
-                _mlMetadataStringValue(self.version),
-            "owner":
-                _mlMetadataStringValue(self.owner),
+            "name": mlpb.Value(string_value=self.name),
+            "create_time": mlpb.Value(string_value=self.create_time),
+            "description": mlpb.Value(string_value=self.description),
+            "query": mlpb.Value(string_value=self.query),
+            "version": mlpb.Value(string_value=self.version),
+            "owner": mlpb.Value(string_value=self.owner),
             ALL_META_PROPERTY_NAME:
-                _mlMetadataStringValue(json.dumps(self.__dict__)),
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(data_set_artifact.properties)
     return data_set_artifact
@@ -385,23 +396,17 @@ class Model(object):
     self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    model_artifact = openapi_client.MlMetadataArtifact(
+    model_artifact = mlpb.Artifact(
         uri=self.uri,
         properties={
-            "name":
-                openapi_client.MlMetadataValue(string_value=self.name),
-            "create_time":
-                openapi_client.MlMetadataValue(string_value=self.create_time),
-            "description":
-                _mlMetadataStringValue(self.description),
-            "model_type":
-                _mlMetadataStringValue(self.model_type),
-            "version":
-                _mlMetadataStringValue(self.version),
-            "owner":
-                _mlMetadataStringValue(self.owner),
+            "name": mlpb.Value(string_value=self.name),
+            "create_time": mlpb.Value(string_value=self.create_time),
+            "description": mlpb.Value(string_value=self.description),
+            "model_type": mlpb.Value(string_value=self.model_type),
+            "version": mlpb.Value(string_value=self.version),
+            "owner": mlpb.Value(string_value=self.owner),
             ALL_META_PROPERTY_NAME:
-                _mlMetadataStringValue(json.dumps(self.__dict__)),
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(model_artifact.properties)
     return model_artifact
@@ -463,25 +468,18 @@ class Metrics(object):
     self.create_time = get_rfc3339_time()
 
   def serialization(self):
-    metrics_artifact = openapi_client.MlMetadataArtifact(
+    metrics_artifact = mlpb.Artifact(
         uri=self.uri,
         properties={
-            "name":
-                openapi_client.MlMetadataValue(string_value=self.name),
-            "create_time":
-                openapi_client.MlMetadataValue(string_value=self.create_time),
-            "description":
-                _mlMetadataStringValue(self.description),
-            "metrics_type":
-                _mlMetadataStringValue(self.metrics_type),
-            "data_set_id":
-                _mlMetadataStringValue(self.data_set_id),
-            "model_id":
-                _mlMetadataStringValue(self.model_id),
-            "owner":
-                _mlMetadataStringValue(self.owner),
+            "name": mlpb.Value(string_value=self.name),
+            "create_time": mlpb.Value(string_value=self.create_time),
+            "description": mlpb.Value(string_value=self.description),
+            "metrics_type": mlpb.Value(string_value=self.metrics_type),
+            "data_set_id": mlpb.Value(string_value=self.data_set_id),
+            "model_id": mlpb.Value(string_value=self.model_id),
+            "owner": mlpb.Value(string_value=self.owner),
             ALL_META_PROPERTY_NAME:
-                _mlMetadataStringValue(json.dumps(self.__dict__)),
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(metrics_artifact.properties)
     return metrics_artifact
@@ -489,13 +487,8 @@ class Metrics(object):
 def get_rfc3339_time():
       return datetime.datetime.utcnow().isoformat("T") + "Z"
 
-def _mlMetadataStringValue(str):
-      if str is None:
-            return None
-      return openapi_client.MlMetadataValue(string_value=str)
-
 def _del_none_properties(dict):
       keys = [k for k in dict.keys()]
       for k in keys:
-            if dict[k] is None:
+            if not any((dict[k].string_value, dict[k].int_value, dict[k].double_value)):
                   del(dict[k])

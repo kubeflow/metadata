@@ -18,6 +18,7 @@ NAME = 'kubeflow-metadata'
 VERSION = '0.2.0'
 
 REQUIRES = [
+    'ml-metadata>=0.15.0rc0',
 ]
 
 setup(
