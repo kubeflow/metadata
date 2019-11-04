@@ -5,34 +5,39 @@ import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
-import {ApiListArtifactsResponse, ApiListArtifactTypesResponse} from '../apis/service';
+import {ApiListArtifactsResponse} from '../apis/service';
 import CustomTable, {ExpandState} from '../components/CustomTable';
+import {GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
+import {grpc} from "@improbable-eng/grpc-web";
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
-  const mockListArtifactTypes = jest.spyOn(
-    Api.getInstance().metadataService, 'listArtifactTypes');
+  const mockGetArtifactTypes = jest.spyOn(
+    Api.getInstance().metadataStoreService, 'getArtifactTypes');
   const mockListArtifacts = jest.spyOn(
     Api.getInstance().metadataService, 'listArtifacts2');
-  const fakeArtifactTypesResponse: ApiListArtifactTypesResponse = {
-    artifact_types: [
-      {
-        id: '1',
-        name: 'kubeflow.org/alpha/metrics',
-      },
-      {
-        id: '2',
-        name: 'kubeflow.org/alpha/data_set',
-      },
-      {
-        id: '3',
-        name: 'kubeflow.org/alpha/model',
-      },
-    ]
-  };
+
+  const fakeGetArtifactTypesResponse: GetArtifactTypesResponse = new GetArtifactTypesResponse();
+
+  const artifactType1 = new ArtifactType();
+  artifactType1.setId(1);
+  artifactType1.setName('kubeflow.org/alpha/metrics');
+  fakeGetArtifactTypesResponse.addArtifactTypes(artifactType1);
+
+  const artifactType2 = new ArtifactType();
+  artifactType2.setId(2);
+  artifactType2.setName('kubeflow.org/alpha/data_set');
+  fakeGetArtifactTypesResponse.addArtifactTypes(artifactType2);
+
+  const artifactType3 = new ArtifactType();
+  artifactType3.setId(3);
+  artifactType3.setName('kubeflow.org/alpha/model');
+  fakeGetArtifactTypesResponse.addArtifactTypes(artifactType3);
+
   const fakeArtifactsResponse: ApiListArtifactsResponse = {
     artifacts: [
       {
@@ -115,6 +120,13 @@ describe('ArtifactList', () => {
     ]
   };
 
+const serviceError = {
+  code: 0,
+  message: '',
+  metadata: new grpc.Metadata()
+};
+
+
   function generateProps(): PageProps {
     return TestUtils.generatePageProps(
       ArtifactList,
@@ -140,22 +152,28 @@ describe('ArtifactList', () => {
   });
 
   it('Renders with a list of Artifacts', async () => {
-    mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
     mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     tree.update();
     expect(tree).toMatchSnapshot();
   });
 
   it('Renders and applies filter to a list of Artifacts', async () => {
-    mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactTypesResponse,
+    });
     mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     tree.update();
 
@@ -169,11 +187,14 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by pipeline/workspace name',
     async () => {
-      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -188,11 +209,14 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by id',
     async () => {
-      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -207,11 +231,14 @@ describe('ArtifactList', () => {
 
   it('Renders and expands artifacts from pipeline-1',
     async () => {
-      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -234,11 +261,14 @@ describe('ArtifactList', () => {
 
   it('Renders Artifact with no grouped rows with placeholder',
     async () => {
-      mockListArtifactTypes.mockResolvedValue(fakeArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
       mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -251,11 +281,14 @@ describe('ArtifactList', () => {
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {
-    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactTypesResponse,
+    });
     mockListArtifacts.mockRejectedValue(new Error('List artifacts error'));
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
       message: 'Unable to retrieve Artifacts. ' +
@@ -266,11 +299,13 @@ describe('ArtifactList', () => {
 
   it('Shows error when artifact types cannot be retrieved', async () => {
     mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
-    mockListArtifactTypes.mockRejectedValue(
-      new Error('List artifact types error'));
+    mockGetArtifactTypes.mockResolvedValue({
+      error: serviceError,
+      response: fakeGetArtifactTypesResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockListArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
       message:

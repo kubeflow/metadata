@@ -21,6 +21,7 @@ import { BannerProps } from '../components/Banner';
 import { SnackbarProps } from '@material-ui/core/Snackbar';
 import { DialogProps } from '../components/Router';
 import { errorToMessage } from '../lib/Utils';
+import {ServiceError} from "../generated/src/apis/metadata/metadata_store_service_pb_service";
 
 export interface PageProps extends RouteComponentProps {
   toolbarProps: ToolbarProps;
@@ -58,6 +59,16 @@ export abstract class Page<P, S> extends React.Component<P & PageProps, S> {
   }
 
   public async showPageError(message: string, error?: Error, mode?: 'error' | 'warning'): Promise<void> {
+    const errorMessage = await errorToMessage(error);
+    this.props.updateBanner({
+      additionalInfo: errorMessage ? errorMessage : undefined,
+      message: message + (errorMessage ? ' Click Details for more information.' : ''),
+      mode: mode || 'error',
+      refresh: this.refresh.bind(this),
+    });
+  }
+
+  public async showPageServiceError(message: string, error?: ServiceError, mode?: 'error' | 'warning'): Promise<void> {
     const errorMessage = await errorToMessage(error);
     this.props.updateBanner({
       additionalInfo: errorMessage ? errorMessage : undefined,

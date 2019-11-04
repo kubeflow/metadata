@@ -22,9 +22,11 @@ import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
-import {MlMetadataArtifact, MlMetadataArtifactType} from '../apis/service/api';
+import {MlMetadataArtifact} from '../apis/service/api';
 import { RoutePage, RouteParams } from '../components/Router';
 import { Link } from 'react-router-dom';
+import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
+import {GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
 
 interface ArtifactListState {
   artifacts: MlMetadataArtifact[];
@@ -36,7 +38,7 @@ interface ArtifactListState {
 class ArtifactList extends Page<{}, ArtifactListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
-  private artifactTypes: Map<string, MlMetadataArtifactType>;
+  private artifactTypes: Map<number, ArtifactType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
       const [artifactType, artifactId] = props.id.split(':');
@@ -137,17 +139,22 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     return '';
   }
 
-  private async getArtifactTypes():
-    Promise<Map<string, MlMetadataArtifactType>> {
-    try {
-      const response = await this.api.metadataService.listArtifactTypes();
-      // @ts-ignore
-      return new Map(response.artifact_types!.map((at) => [at.id!, at]));
-    } catch (err) {
-      this.showPageError(
-        'Unable to retrieve Artifact Types, some features may not work.', err);
+  private async getArtifactTypes(): Promise<Map<number, ArtifactType>> {
+    const {error, response} =
+        await this.api.metadataStoreService.getArtifactTypes(new GetArtifactTypesRequest());
+
+    if (error) {
+      this.showPageServiceError(
+          'Unable to retrieve Artifact Types, some features may not work.', error);
       return new Map();
     }
+    const artifactTypesMap = new Map<number, ArtifactType>();
+
+    (response!.getArtifactTypesList() || []).forEach((artifactType) => {
+      artifactTypesMap.set(artifactType.getId()!, artifactType);
+    });
+
+    return artifactTypesMap;
   }
 
   /**
@@ -159,8 +166,9 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private getRowsFromArtifacts(request: ListRequest): Row[] {
     const collapsedAndExpandedRows = groupRows(this.state.artifacts
       .map((a) => { // Flattens
-        const type = this.artifactTypes && this.artifactTypes.get(a.type_id!) ?
-          this.artifactTypes.get(a.type_id!)!.name : a.type_id;
+        const typeNumber = Number(a.type_id);
+        const type = this.artifactTypes && this.artifactTypes.get(typeNumber!) ?
+          this.artifactTypes.get(typeNumber!)!.getName() : typeNumber;
         return {
           id: `${type}:${a.id}`, // Join with colon so we can build the link
           otherFields: [
