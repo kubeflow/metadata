@@ -2,11 +2,13 @@ import unittest
 from kubeflow.metadata import metadata
 from ml_metadata.proto import metadata_store_pb2 as mlpb
 
+GRPC_HOST = "127.0.0.1"
+GRPC_PORT = 8081
 
 class TestMetedata(unittest.TestCase):
 
   def test_log_metadata_successfully(self):
-    store = metadata.Store(grpc_host="127.0.0.1", grpc_port=8080)
+    store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws1 = metadata.Workspace(
         store=store,
         name="ws_1",
@@ -85,7 +87,7 @@ class TestMetedata(unittest.TestCase):
     assert len(all_events) == 3
 
   def test_log_invalid_artifacts_should_fail(self):
-    store = metadata.Store(grpc_host="127.0.0.1", grpc_port=8080)
+    store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws = metadata.Workspace(
     store=store,
     name="ws_1",
@@ -110,7 +112,7 @@ class TestMetedata(unittest.TestCase):
     self.assertRaises(ValueError, e.log_output, artifact2)
 
   def test_log_metadata_successfully_with_minimum_information(self):
-    store = metadata.Store(grpc_host="127.0.0.1",grpc_port=8080)
+    store = metadata.Store(grpc_host=GRPC_HOST,grpc_port=GRPC_PORT)
 
     ws1 = metadata.Workspace(store=store, name="ws_1")
 

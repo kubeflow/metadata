@@ -127,12 +127,10 @@ done
 
 # Run CURL tests
 cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
-# Run Python tests
-pip install pandas
-cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
 # Test demo notebook
 pip install jupyterlab
 pip install nbconvert
+pip install pandas
 cd "${SRC_DIR}/sdk/python" && \
   sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
   python3 -m nbconvert --to notebook --execute demo.ipynb
@@ -144,6 +142,10 @@ echo "kubectl port-forward from $TARGET_GRPC_POD"
 kubectl -n $NAMESPACE port-forward $TARGET_GRPC_POD 8081:8080 &
 # Stream server logs.
 kubectl -n $NAMESPACE logs -f $TARGET_GRPC_POD &
+
+# Run Python tests
+pip install ml-metadata==0.15.0
+cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
 
 cd "${SRC_DIR}/watcher" && \
   go build -o main/main main/main.go && \
