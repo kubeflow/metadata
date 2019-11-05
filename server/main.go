@@ -93,7 +93,7 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 		if err == nil {
 			return store
 		}
-		sample := rand.Float64()*0.5 + 0.75 // randon sample from [0.75, 1.25]
+		sample := rand.Float64()*0.5 + 0.75 // random sample from [0.75, 1.25]
 		backoff := time.Millisecond * time.Duration(1000*math.Pow(2, float64(r))*sample)
 		glog.Errorf("Failed to create ML Metadata Store: %v.\nRetry %d/%d.\nSleep %v", err, r+1, *retryNum, backoff)
 		time.Sleep(backoff)
