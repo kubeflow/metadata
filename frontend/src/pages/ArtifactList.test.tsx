@@ -7,17 +7,16 @@ import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import CustomTable, {ExpandState} from '../components/CustomTable';
 import {GetArtifactsResponse, GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
-import {Artifact, ArtifactType, Value} from "../generated/src/apis/metadata/metadata_store_pb";
-import {grpc} from "@improbable-eng/grpc-web";
-import {stringValue} from '../TestUtils';
+import {Artifact, ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
+import {serviceError, stringValue} from '../TestUtils';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
-  const mockGetArtifactTypes = jest.spyOn(
-    Api.getInstance().metadataStoreService, 'getArtifactTypes');
+  const mockGetArtifactTypes =
+      jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
   const mockGetArtifacts = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifacts');
   const mockListArtifacts = jest.spyOn(
     Api.getInstance().metadataService, 'listArtifacts2');
@@ -45,7 +44,7 @@ describe('ArtifactList', () => {
   artifact1.setId(1);
   artifact1.setTypeId(3);
   artifact1.setUri('gs://my-bucket/mnist');
-  const artifact1PropertiesMap = artifact1.getPropertiesMap() as Map<string, Value>;
+  const artifact1PropertiesMap = artifact1.getPropertiesMap();
   artifact1PropertiesMap.set('name', stringValue('model'));
   artifact1PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
   artifact1PropertiesMap.set('version', stringValue('v0'));
@@ -56,12 +55,12 @@ describe('ArtifactList', () => {
   artifact2.setId(2);
   artifact2.setTypeId(2);
   artifact2.setUri('gs://my-bucket/dataset2');
-  const artifact2PropertiesMap = artifact2.getPropertiesMap() as Map<string, Value>;
+  const artifact2PropertiesMap = artifact2.getPropertiesMap();
   artifact2PropertiesMap.set('name', stringValue('dataset'));
   artifact2PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
   artifact2PropertiesMap.set('version', stringValue('v1'));
   artifact2PropertiesMap.set('create_time', stringValue('2019-06-16T01:21:48.259263Z'));
-  const artifact2CustomPropertiesMap = artifact2.getCustomPropertiesMap() as Map<string, Value>;
+  const artifact2CustomPropertiesMap = artifact2.getCustomPropertiesMap();
   artifact2CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
   fakeGetArtifactsResponse.addArtifacts(artifact2);
 
@@ -69,12 +68,12 @@ describe('ArtifactList', () => {
   artifact3.setId(3);
   artifact3.setTypeId(2);
   artifact3.setUri('gs://my-bucket/dataset2');
-  const artifact3PropertiesMap = artifact3.getPropertiesMap() as Map<string, Value>;
+  const artifact3PropertiesMap = artifact3.getPropertiesMap();
   artifact3PropertiesMap.set('name', stringValue('dataset'));
   artifact3PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
   artifact3PropertiesMap.set('version', stringValue('v2'));
   artifact3PropertiesMap.set('create_time', stringValue('2019-07-01T01:00:00.000000Z'));
-  const artifact3CustomPropertiesMap = artifact3.getCustomPropertiesMap() as Map<string, Value>;
+  const artifact3CustomPropertiesMap = artifact3.getCustomPropertiesMap();
   artifact3CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
   fakeGetArtifactsResponse.addArtifacts(artifact3);
 
@@ -82,7 +81,7 @@ describe('ArtifactList', () => {
   artifact4.setId(4);
   artifact4.setTypeId(1);
   artifact4.setUri('gcs://my-bucket/mnist-eval.csv');
-  const artifact4PropertiesMap = artifact4.getPropertiesMap() as Map<string, Value>;
+  const artifact4PropertiesMap = artifact4.getPropertiesMap();
   artifact4PropertiesMap.set('create_time', stringValue('2019-06-28T01:40:11.843625Z'));
   artifact4PropertiesMap.set('data_set_id', stringValue('13'));
   artifact4PropertiesMap.set('description', stringValue('validating the MNIST model to recognize handwritten digits'));
@@ -90,7 +89,7 @@ describe('ArtifactList', () => {
   artifact4PropertiesMap.set('model_id', stringValue('1'));
   artifact4PropertiesMap.set('name', stringValue('MNIST-evaluation'));
   artifact4PropertiesMap.set('owner', stringValue('someone@kubeflow.org'));
-  const artifact4CustomPropertiesMap = artifact4.getCustomPropertiesMap() as Map<string, Value>;
+  const artifact4CustomPropertiesMap = artifact4.getCustomPropertiesMap();
   artifact4CustomPropertiesMap.set('__kf_run__', stringValue('run-2019-06-28T01:40:11.735816'));
   artifact4CustomPropertiesMap.set('__kf_workspace__', stringValue('ws1'));
   fakeGetArtifactsResponse.addArtifacts(artifact4);
@@ -99,21 +98,14 @@ describe('ArtifactList', () => {
   artifact5.setId(5);
   artifact5.setTypeId(3);
   artifact5.setUri('gs://my-bucket/mnist');
-  const artifact5PropertiesMap = artifact5.getPropertiesMap() as Map<string, Value>;
+  const artifact5PropertiesMap = artifact5.getPropertiesMap();
   artifact5PropertiesMap.set('name', stringValue('model'));
   artifact5PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
   artifact5PropertiesMap.set('version', stringValue('v1'));
   artifact5PropertiesMap.set('create_time', stringValue('2019-07-01T00:00:00.000000Z'));
-  const artifact5CustomPropertiesMap = artifact5.getCustomPropertiesMap() as Map<string, Value>;
+  const artifact5CustomPropertiesMap = artifact5.getCustomPropertiesMap();
   artifact5CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
   fakeGetArtifactsResponse.addArtifacts(artifact5);
-
-const serviceError = {
-  code: 0,
-  message: '',
-  metadata: new grpc.Metadata()
-};
-
 
   function generateProps(): PageProps {
     return TestUtils.generatePageProps(

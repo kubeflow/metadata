@@ -19,15 +19,16 @@ import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
 import { RoutePage, RouteParams } from '../components/Router';
 import { Api, ExecutionProperties } from '../lib/Api';
-import { MlMetadataExecution } from '../apis/service';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
 import { CircularProgress } from '@material-ui/core';
-import {titleCase, getMlMetadataResourceProperty} from '../lib/Utils';
+import {titleCase, getResourceProperty} from '../lib/Utils';
 import { ResourceInfo } from '../components/ResourceInfo';
+import {Execution} from '../generated/src/apis/metadata/metadata_store_pb';
+import {GetExecutionsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 interface ExecutionDetailsState {
-  execution?: MlMetadataExecution;
+  execution?: Execution;
 }
 
 export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
@@ -81,21 +82,34 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
   }
 
   private async load(): Promise<void> {
-    try {
-      const { execution } = await this.api.metadataService.getExecution(this.id, this.fullTypeName);
-      if (!execution) {
-        throw new Error(
-          `No ${this.fullTypeName} identified by id: ${this.id}`);
-      }
+    const request = new GetExecutionsByIDRequest();
+    request.addExecutionIds(Number(this.id));
 
-      const executionName = getMlMetadataResourceProperty(execution, ExecutionProperties.NAME);
-      this.props.updateToolbar({
-        pageTitle: executionName ? executionName.toString() : ''
-      });
-      this.setState({ execution });
-    } catch (err) {
-      this.showPageError(
-        `Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
+    const {error, response} = await this.api.metadataStoreService.getExecutionsByID(request);
+
+    if (error) {
+      this.showPageServiceError(
+          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
     }
+
+    if (response!.getExecutionsList()!.length) {
+      this.showPageError(`No ${this.fullTypeName} identified by id: ${this.id}`);
+      return;
+    }
+
+    if (response!.getExecutionsList().length > 1) {
+      this.showPageError(`Found multiple executions with ID: ${this.id}`);
+      return;
+    }
+
+    const execution = response!.getExecutionsList()[0];
+    
+    const executionName = getResourceProperty(execution, ExecutionProperties.NAME);
+    let title = executionName ? executionName.toString() : '';
+
+    this.props.updateToolbar({
+      pageTitle: title
+    });
+    this.setState({ execution });
   }
 }

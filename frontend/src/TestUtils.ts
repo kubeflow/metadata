@@ -23,6 +23,7 @@ import createRouterContext from 'react-router-test-context';
 import {ToolbarActionConfig} from './components/Toolbar';
 import {Page, PageProps} from './pages/Page';
 import {Value} from './generated/src/apis/metadata/metadata_store_pb';
+import {grpc} from '@improbable-eng/grpc-web';
 
 
 /**
@@ -115,4 +116,10 @@ export const stringValue = (string: String) => {
   const value = new Value();
   value.setStringValue(String(string));
   return value;
+};
+
+export const serviceError = {
+  code: 0,
+  message: '',
+  metadata: new grpc.Metadata()
 };

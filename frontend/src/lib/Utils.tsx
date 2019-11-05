@@ -82,7 +82,7 @@ export function getMlMetadataResourceProperty(resource: MlMetadataArtifact | MlM
     || null;
 }
 
-export function getMlMetadataMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
+function getMlMetadataMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
   // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
   // int_value has type string.
   return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
@@ -98,10 +98,23 @@ export function getResourceProperty(resource: Artifact | Execution,
       || null;
 }
 
-export function getMetadataValue(value: Value): string | number {
-  // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
-  // int_value has type string.
-  return value.getDoubleValue() || value.getIntValue() || value.getStringValue() || '';
+export function getMetadataValue(value?: Value): string | number {
+  if (!value) {
+    return '';
+  }
+
+  if (value.hasDoubleValue()) {
+    return value.getDoubleValue() || '';
+  }
+
+  if (value.hasIntValue()) {
+    return value.getIntValue() || '';
+  }
+
+  if (value.hasStringValue()) {
+    return value.getStringValue() || '';
+  }
+  return '';
 }
 
 /**

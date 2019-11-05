@@ -2,42 +2,37 @@ import * as React from 'react';
 import ArtifactDetails, {ArtifactDetailsTab} from './ArtifactDetails';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
-import {Api} from '../lib/Api';
-import * as TestUtils from '../TestUtils';
+import {Api, ArtifactCustomProperties, ArtifactProperties} from '../lib/Api';
+import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
-import {ApiGetArtifactResponse} from '../apis/service';
+import {serviceError, stringValue} from '../TestUtils';
+import {GetArtifactsByIDResponse} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 
 describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
-  const mockGetArtifact = jest.spyOn(
-    Api.getInstance().metadataService, 'getArtifact');
-  const fakeArtifactResponse: ApiGetArtifactResponse = {
-    artifact:
-    {
-      id: '1',
-      type_id: '1',
-      uri: 'gs://my-bucket/mnist',
-      properties: {
-        name: {string_value: 'test model'},
-        description: {string_value: 'A really great model'},
-        version: {string_value: 'v1'},
-        create_time: {string_value: '2019-06-12T01:21:48.259263Z'},
-        __ALL_META__: {
-          string_value: '{"hyperparameters": {"early_stop": true, ' +
-            '"layers": [10, 3, 1], "learning_rate": 0.5}, ' +
-            '"model_type": "neural network", ' +
-            '"training_framework": {"name": "tensorflow", "version": "v1.0"}}'
-        }
-      },
-      custom_properties: {
-        __kf_workspace__: {string_value: 'workspace-1'},
-        __kf_run__: {string_value: '1'},
-      },
-    }
-  };
+  const mockGetArtifact = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactsByID');
+  const fakeGetArtifactByIDResponse = new GetArtifactsByIDResponse();
+  const artifact = new Artifact();
+  artifact.setId(1);
+  artifact.setTypeId(1);
+  artifact.setUri('gs://my-bucket/mnist');
+  artifact.getPropertiesMap().set(ArtifactProperties.NAME, stringValue('test model'));
+  artifact.getPropertiesMap().set(ArtifactProperties.DESCRIPTION, stringValue('A really great model'));
+  artifact.getPropertiesMap().set(ArtifactProperties.VERSION, stringValue('v1'));
+  artifact.getPropertiesMap().set(ArtifactProperties.CREATE_TIME, stringValue('2019-06-12T01:21:48.259263Z'));
+  artifact.getPropertiesMap().set(ArtifactProperties.ALL_META, stringValue(
+      '{"hyperparameters": {"early_stop": true, ' +
+      '"layers": [10, 3, 1], "learning_rate": 0.5}, ' +
+      '"model_type": "neural network", ' +
+      '"training_framework": {"name": "tensorflow", "version": "v1.0"))'));
+  artifact.getCustomPropertiesMap().set(ArtifactCustomProperties.WORKSPACE, stringValue('workspace-1'));
+  artifact.getCustomPropertiesMap().set(ArtifactCustomProperties.RUN, stringValue('1'));
+  fakeGetArtifactByIDResponse.addArtifacts(artifact);
+
   const MODEL_TYPE = 'kubeflow.org/alpha/model';
   const FAKE_MODEL_ID = '1';
 
@@ -71,7 +66,10 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders with a Model Artifact and updates the page title', async () => {
-    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    mockGetArtifact.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactByIDResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
@@ -84,20 +82,25 @@ describe('ArtifactDetails', () => {
   });
 
   it('Shows error when returned Artifact is empty', async () => {
-    mockGetArtifact.mockResolvedValue({});
+    mockGetArtifact.mockResolvedValue({
+      error: null,
+      response: new GetArtifactsByIDResponse(),
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve kubeflow.org/alpha/model 1. ' +
-        'Click Details for more information.',
+      message: 'No kubeflow.org/alpha/model identified by id: 1',
       mode: 'error',
     }));
   });
 
   it('Shows error when Artifact cannot be retrieved', async () => {
-    mockGetArtifact.mockRejectedValue(new Error('Get Model error'));
+    mockGetArtifact.mockResolvedValue({
+      error: serviceError,
+      response: fakeGetArtifactByIDResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
@@ -110,7 +113,10 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders the Overview tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    mockGetArtifact.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactByIDResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.OVERVIEW
@@ -123,7 +129,10 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders the Lineage Explorer tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    mockGetArtifact.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactByIDResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.LINEAGE_EXPLORER
@@ -136,7 +145,10 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders the Deployments tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    mockGetArtifact.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactByIDResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.DEPLOYMENTS

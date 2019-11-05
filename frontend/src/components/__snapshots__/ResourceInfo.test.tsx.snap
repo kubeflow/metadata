@@ -18,17 +18,17 @@ exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
   >
     <div
       className="field"
-      key="name"
+      key="create_time"
     >
       <dt
         className="term"
       >
-        name
+        create_time
       </dt>
       <dd
         className="value"
       >
-        test model
+        2019-06-12T01:21:48.259263Z
       </dd>
     </div>
     <div
@@ -48,6 +48,21 @@ exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
     </div>
     <div
       className="field"
+      key="name"
+    >
+      <dt
+        className="term"
+      >
+        name
+      </dt>
+      <dd
+        className="value"
+      >
+        test model
+      </dd>
+    </div>
+    <div
+      className="field"
       key="version"
     >
       <dt
@@ -61,21 +76,6 @@ exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
         v1
       </dd>
     </div>
-    <div
-      className="field"
-      key="create_time"
-    >
-      <dt
-        className="term"
-      >
-        create_time
-      </dt>
-      <dd
-        className="value"
-      >
-        2019-06-12T01:21:48.259263Z
-      </dd>
-    </div>
   </dl>
   <h2
     className="header2"
@@ -85,21 +85,6 @@ exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
   <dl
     className="resourceInfo"
   >
-    <div
-      className="field"
-      key="__kf_workspace__"
-    >
-      <dt
-        className="term"
-      >
-        __kf_workspace__
-      </dt>
-      <dd
-        className="value"
-      >
-        workspace-1
-      </dd>
-    </div>
     <div
       className="field"
       key="__kf_run__"
@@ -113,6 +98,21 @@ exports[`ResourceInfo Renders Artifact information for a Model 1`] = `
         className="value"
       >
         1
+      </dd>
+    </div>
+    <div
+      className="field"
+      key="__kf_workspace__"
+    >
+      <dt
+        className="term"
+      >
+        __kf_workspace__
+      </dt>
+      <dd
+        className="value"
+      >
+        workspace-1
       </dd>
     </div>
   </dl>
@@ -135,6 +135,21 @@ exports[`ResourceInfo Renders generic Artifact information 1`] = `
   <dl
     className="resourceInfo"
   >
+    <div
+      className="field"
+      key="create_time"
+    >
+      <dt
+        className="term"
+      >
+        create_time
+      </dt>
+      <dd
+        className="value"
+      >
+        2019-06-12T01:21:48.259263Z
+      </dd>
+    </div>
     <div
       className="field"
       key="name"
@@ -163,21 +178,6 @@ exports[`ResourceInfo Renders generic Artifact information 1`] = `
         className="value"
       >
         v0.0.1
-      </dd>
-    </div>
-    <div
-      className="field"
-      key="create_time"
-    >
-      <dt
-        className="term"
-      >
-        create_time
-      </dt>
-      <dd
-        className="value"
-      >
-        2019-06-12T01:21:48.259263Z
       </dd>
     </div>
   </dl>

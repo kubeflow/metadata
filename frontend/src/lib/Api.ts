@@ -62,8 +62,10 @@ const metadataServiceClient = new MetadataStoreServiceClient('');
 
 // TODO: add all other api methods we need here.
 const metadataServicePromiseClient = {
-  getArtifacts: makePromiseApi(metadataServiceClient.getArtifacts.bind(metadataServiceClient)),
   getArtifactTypes: makePromiseApi(metadataServiceClient.getArtifactTypes.bind(metadataServiceClient)),
+  getArtifacts: makePromiseApi(metadataServiceClient.getArtifacts.bind(metadataServiceClient)),
+  getArtifactsByID: makePromiseApi(metadataServiceClient.getArtifactsByID.bind(metadataServiceClient)),
+  getExecutionsByID: makePromiseApi(metadataServiceClient.getExecutionsByID.bind(metadataServiceClient)),
 };
 
 /**

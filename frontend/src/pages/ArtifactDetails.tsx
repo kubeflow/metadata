@@ -19,13 +19,14 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Api, ArtifactProperties} from '../lib/Api';
-import {MlMetadataArtifact} from '../apis/service';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
-import {titleCase, getMlMetadataResourceProperty} from '../lib/Utils';
+import {titleCase, getResourceProperty} from '../lib/Utils';
 import {ResourceInfo} from '../components/ResourceInfo';
 import MD2Tabs from '../atoms/MD2Tabs';
+import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
@@ -42,7 +43,7 @@ const tabs = {
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
 
 interface ArtifactDetailsState {
-  artifact?: MlMetadataArtifact;
+  artifact?: Artifact;
   selectedTab: ArtifactDetailsTab;
 }
 
@@ -113,25 +114,38 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   }
 
   private async load(): Promise<void> {
-    try {
-      const {artifact} = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
-      if (!artifact) {
-        throw new Error(`No ${this.fullTypeName} identified by id: ${this.id}`);
-      }
+    const request = new GetArtifactsByIDRequest();
+    request.setArtifactIdsList([Number(this.id)]);
 
-      const artifactName = getMlMetadataResourceProperty(artifact, ArtifactProperties.NAME);
-      let title = artifactName ? artifactName.toString() : '';
-      const version = getMlMetadataResourceProperty(artifact, ArtifactProperties.VERSION);
-      if (version) {
-        title += ` (version: ${version})`;
-      }
-      this.props.updateToolbar({
-        pageTitle: title
-      });
-      this.setState({artifact});
-    } catch (err) {
-      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
+    const {error, response} = await this.api.metadataStoreService.getArtifactsByID(request);
+
+    if (error) {
+      this.showPageServiceError(
+          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
     }
+
+    if (!response!.getArtifactsList()!.length) {
+      this.showPageError(`No ${this.fullTypeName} identified by id: ${this.id}`);
+      return;
+    }
+
+    if (response!.getArtifactsList().length > 1) {
+      this.showPageError(`Found multiple artifacts with ID: ${this.id}`);
+      return;
+    }
+
+    const artifact = response!.getArtifactsList()[0];
+
+    const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
+    let title = artifactName ? artifactName.toString() : '';
+    const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
+    if (version) {
+      title += ` (version: ${version})`;
+    }
+    this.props.updateToolbar({
+      pageTitle: title
+    });
+    this.setState({ artifact });
   }
 
   private switchTab(selectedTab: number) {

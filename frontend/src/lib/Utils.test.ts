@@ -23,7 +23,6 @@ import {
   rowFilterFn,
   rowCompareFn,
   groupRows,
-  getMlMetadataMetadataValue,
   getMlMetadataResourceProperty,
 } from './Utils';
 import { Column, Row, ExpandState } from '../components/CustomTable';
@@ -239,25 +238,6 @@ describe('Utils', () => {
 
     it('returns an empty string if Value has no value', () => {
       expect(getMetadataValue(new Value())).toEqual('');
-    });
-  });
-
-  describe('getMlMetadataMetadataValue', () => {
-    it('returns a value of type double', () => {
-      expect(getMlMetadataMetadataValue({ double_value: 123 })).toEqual(123);
-    });
-
-    it('returns a value of type int', () => {
-      // Swagger takes a int64 type from a .proto and converts it to string in Typescript
-      expect(getMlMetadataMetadataValue({ int_value: '123' })).toEqual('123');
-    });
-
-    it('returns a value of type string', () => {
-      expect(getMlMetadataMetadataValue({ string_value: 'abc' })).toEqual('abc');
-    });
-
-    it('returns an empty string if MlMetadataValue has no value', () => {
-      expect(getMlMetadataMetadataValue({})).toEqual('');
     });
   });
 
