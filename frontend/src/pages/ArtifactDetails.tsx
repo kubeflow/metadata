@@ -117,11 +117,11 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     const request = new GetArtifactsByIDRequest();
     request.setArtifactIdsList([Number(this.id)]);
 
-    const response = await this.api.metadataStoreService.getArtifactsByID(request);
+    const {error, response} = await this.api.metadataStoreService.getArtifactsByID(request);
 
-    if (!response) {
-      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`);
-      return
+    if (error) {
+      this.showPageServiceError(
+          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
     }
 
     if (!response!.getArtifactsList()!.length) {
@@ -145,10 +145,12 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     this.props.updateToolbar({
       pageTitle: title
     });
-    this.setState({artifact});
+    this.setState({ artifact });
   }
 
   private switchTab(selectedTab: number) {
-    this.setState({selectedTab});
+    this.setState({
+      selectedTab
+    });
   }
 }

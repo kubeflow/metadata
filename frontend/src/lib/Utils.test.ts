@@ -23,6 +23,7 @@ import {
   rowFilterFn,
   rowCompareFn,
   groupRows,
+  getMlMetadataResourceProperty,
 } from './Utils';
 import { Column, Row, ExpandState } from '../components/CustomTable';
 import {Artifact, Value} from '../generated/src/apis/metadata/metadata_store_pb';
@@ -140,6 +141,85 @@ describe('Utils', () => {
               /* fromCustomProperties= */ true
           )
       ).toEqual('abc');
+    });
+  });
+
+  describe('getMlMetadataResourceProperty', () => {
+    it('returns null if resource has no properties', () => {
+      expect(getMlMetadataResourceProperty({}, 'testPropName')).toBeNull();
+    });
+
+    it('returns null if resource has no custom properties', () => {
+      expect(getMlMetadataResourceProperty({}, 'testCustomPropName', true)).toBeNull();
+    });
+
+    it('returns null if resource has no property with the provided name', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'somePropName': {
+                double_value: 123,
+              },
+            },
+          },
+          'testPropName'
+      )).toBeNull();
+    });
+
+    it('returns if resource has no property with specified name if fromCustomProperties is false', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            custom_properties: {
+              'testCustomPropName': {
+                double_value: 123,
+              },
+            },
+          },
+          'testCustomPropName',
+          false // fromCustomProperties
+      )).toBeNull();
+    });
+
+
+    it('returns if resource has no custom property with specified name if fromCustomProperties is true', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'testPropName': {
+                double_value: 123,
+              },
+            },
+          },
+          'testPropName',
+          true // fromCustomProperties
+      )).toBeNull();
+    });
+
+    it('returns the value of the property with the provided name', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'testPropName': {
+                double_value: 123,
+              },
+            },
+          },
+          'testPropName',
+      )).toEqual(123);
+    });
+
+    it('returns the value of the custom property with the provided name', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            custom_properties: {
+              'testCustomPropName': {
+                string_value: 'abc',
+              },
+            },
+          },
+          'testCustomPropName',
+          true
+      )).toEqual('abc');
     });
   });
 

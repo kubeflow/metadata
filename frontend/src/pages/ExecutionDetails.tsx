@@ -85,14 +85,14 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
     const request = new GetExecutionsByIDRequest();
     request.addExecutionIds(Number(this.id));
 
-    const response = await this.api.metadataStoreService.getExecutionsByID(request);
+    const {error, response} = await this.api.metadataStoreService.getExecutionsByID(request);
 
-    if (!response) {
-      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`);
-      return
+    if (error) {
+      this.showPageServiceError(
+          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
     }
 
-    if (!response!.getExecutionsList()!.length) {
+    if (response!.getExecutionsList()!.length) {
       this.showPageError(`No ${this.fullTypeName} identified by id: ${this.id}`);
       return;
     }
@@ -103,13 +103,13 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
     }
 
     const execution = response!.getExecutionsList()[0];
-    
+
     const executionName = getResourceProperty(execution, ExecutionProperties.NAME);
     let title = executionName ? executionName.toString() : '';
 
     this.props.updateToolbar({
       pageTitle: title
     });
-    this.setState({execution});
+    this.setState({ execution });
   }
 }
