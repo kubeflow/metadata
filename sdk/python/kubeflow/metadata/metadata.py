@@ -64,7 +64,7 @@ class Workspace(object):
   """
 
   def __init__(self,
-               store= None,
+               store=None,
                name=None,
                description=None,
                labels=None,
