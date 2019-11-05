@@ -17,7 +17,7 @@ import * as React from 'react';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
 import {MlMetadataArtifact, MlMetadataExecution} from '../apis/service';
-import { getMetadataValue } from '../lib/Utils';
+import {getMlMetadataMetadataValue} from '../lib/Utils';
 
 export const css = stylesheet({
   resourceInfo: {
@@ -64,7 +64,7 @@ export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
               <div className={css.field} key={k}>
                 <dt className={css.term}>{k}</dt>
                 <dd className={css.value}>
-                  {resource.properties && getMetadataValue(resource.properties[k])}
+                  {resource.properties && getMlMetadataMetadataValue(resource.properties[k])}
                 </dd>
               </div>
             )
@@ -76,7 +76,7 @@ export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
             <div className={css.field} key={k}>
               <dt className={css.term}>{k}</dt>
               <dd className={css.value}>
-                {resource.custom_properties && getMetadataValue(resource.custom_properties[k])}
+                {resource.custom_properties && getMlMetadataMetadataValue(resource.custom_properties[k])}
               </dd>
             </div>
           )}

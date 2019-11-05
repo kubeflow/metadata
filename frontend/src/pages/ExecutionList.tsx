@@ -20,7 +20,7 @@ import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
-import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
+import { getMlMetadataResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
 import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
 import { MlMetadataExecutionType, MlMetadataExecution } from '../apis/service/api';
 import { Link } from 'react-router-dom';
@@ -136,6 +136,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   private async getExecutionTypes(): Promise<Map<string, MlMetadataExecutionType>> {
     try {
       const response = await this.api.metadataService.listExecutionTypes();
+      // @ts-ignore
       return new Map(response.execution_types!.map((ex) => [ex.id!, ex]));
     } catch (err) {
       this.showPageError('Unable to retrieve Execution Types, some features may not work.', err);
@@ -157,10 +158,10 @@ class ExecutionList extends Page<{}, ExecutionListState> {
         return {
           id: `${type}:${execution.id}`, // Join with colon so we can build the link
           otherFields: [
-            getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
-            || getResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
-            getResourceProperty(execution, ExecutionProperties.NAME),
-            getResourceProperty(execution, ExecutionProperties.STATE),
+            getMlMetadataResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
+            || getMlMetadataResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
+            getMlMetadataResourceProperty(execution, ExecutionProperties.NAME),
+            getMlMetadataResourceProperty(execution, ExecutionProperties.STATE),
             execution.id,
             type,
           ],

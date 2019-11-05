@@ -22,6 +22,7 @@ import {match} from 'react-router';
 import createRouterContext from 'react-router-test-context';
 import {ToolbarActionConfig} from './components/Toolbar';
 import {Page, PageProps} from './pages/Page';
+import {Value} from './generated/src/apis/metadata/metadata_store_pb';
 
 
 /**
@@ -97,3 +98,21 @@ export function getToolbarButton(
   const lastCall = updateToolbarSpy.mock.calls[lastCallIdx][0];
   return lastCall.actions.find((b: any) => b.title === title);
 }
+
+export const doubleValue = (number: number) => {
+  const value = new Value();
+  value.setDoubleValue(number);
+  return value;
+};
+
+export const intValue = (number: number) => {
+  const value = new Value();
+  value.setIntValue(number);
+  return value;
+};
+
+export const stringValue = (string: String) => {
+  const value = new Value();
+  value.setStringValue(String(string));
+  return value;
+};

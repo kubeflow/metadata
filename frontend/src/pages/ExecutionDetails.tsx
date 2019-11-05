@@ -23,7 +23,7 @@ import { MlMetadataExecution } from '../apis/service';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
 import { CircularProgress } from '@material-ui/core';
-import { titleCase, getResourceProperty } from '../lib/Utils';
+import {titleCase, getMlMetadataResourceProperty} from '../lib/Utils';
 import { ResourceInfo } from '../components/ResourceInfo';
 
 interface ExecutionDetailsState {
@@ -88,7 +88,7 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
           `No ${this.fullTypeName} identified by id: ${this.id}`);
       }
 
-      const executionName = getResourceProperty(execution, ExecutionProperties.NAME);
+      const executionName = getMlMetadataResourceProperty(execution, ExecutionProperties.NAME);
       this.props.updateToolbar({
         pageTitle: executionName ? executionName.toString() : ''
       });

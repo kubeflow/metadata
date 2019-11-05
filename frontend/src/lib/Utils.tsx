@@ -22,6 +22,10 @@ import { classes } from 'typestyle';
 import { Row, Column, ExpandState, CustomTableRow } from '../components/CustomTable';
 import { ListRequest } from './Api';
 import { padding } from '../Css';
+import {
+  Artifact,
+  Execution, Value
+} from "../generated/src/apis/metadata/metadata_store_pb";
 
 export const logger = {
   error: (...args: any[]) => {
@@ -68,20 +72,36 @@ export function titleCase(str: string): string {
  * @param propertyName
  * @param fromCustomProperties
  */
-export function getResourceProperty(resource: MlMetadataArtifact | MlMetadataExecution,
+export function getMlMetadataResourceProperty(resource: MlMetadataArtifact | MlMetadataExecution,
   propertyName: string, fromCustomProperties = false): string | number | null {
   const props = fromCustomProperties
     ? resource.custom_properties
     : resource.properties;
 
-  return (props && props[propertyName] && getMetadataValue(props[propertyName]))
+  return (props && props[propertyName] && getMlMetadataMetadataValue(props[propertyName]))
     || null;
 }
 
-export function getMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
+export function getMlMetadataMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
   // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
   // int_value has type string.
   return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
+}
+
+export function getResourceProperty(resource: Artifact | Execution,
+    propertyName: string, fromCustomProperties = false): string | number | null {
+  const props = fromCustomProperties
+      ? resource.getCustomPropertiesMap()
+      : resource.getPropertiesMap();
+
+  return (props && props.get(propertyName) && getMetadataValue(props.get(propertyName)))
+      || null;
+}
+
+export function getMetadataValue(value: Value): string | number {
+  // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
+  // int_value has type string.
+  return value.getDoubleValue() || value.getIntValue() || value.getStringValue() || '';
 }
 
 /**

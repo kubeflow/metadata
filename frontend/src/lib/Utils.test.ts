@@ -23,10 +23,12 @@ import {
   rowFilterFn,
   rowCompareFn,
   groupRows,
-  getExpandedRow,
+  getMlMetadataMetadataValue,
+  getMlMetadataResourceProperty,
 } from './Utils';
 import { Column, Row, ExpandState } from '../components/CustomTable';
-import { number } from 'prop-types';
+import {Artifact, Value} from '../generated/src/apis/metadata/metadata_store_pb';
+import {doubleValue, intValue, stringValue} from '../TestUtils';
 
 describe('Utils', () => {
   describe('log', () => {
@@ -91,99 +93,171 @@ describe('Utils', () => {
 
   describe('getResourceProperty', () => {
     it('returns null if resource has no properties', () => {
-      expect(getResourceProperty({}, 'testPropName')).toBeNull();
+      expect(getResourceProperty(new Artifact(), 'testPropName')).toBeNull();
     });
 
     it('returns null if resource has no custom properties', () => {
-      expect(getResourceProperty({}, 'testCustomPropName', true)).toBeNull();
+      expect(getResourceProperty(new Artifact(), 'testCustomPropName', true)).toBeNull();
     });
 
     it('returns null if resource has no property with the provided name', () => {
+      const resource = new Artifact();
+      resource.getPropertiesMap().set('somePropName', doubleValue(123));
+      expect(getResourceProperty(resource, 'testPropName')).toBeNull();
+    });
+
+    it('returns if resource has no property with specified name if fromCustomProperties is false', () => {
+      const resource = new Artifact();
+      resource.getCustomPropertiesMap().set('testCustomPropName', doubleValue(123));
       expect(getResourceProperty(
-        {
-          properties: {
-            'somePropName': {
-              double_value: 123,
+        resource,
+        'testCustomPropName',
+        /* fromCustomProperties= */ false
+      )).toBeNull();
+    });
+
+    it('returns if resource has no custom property with specified name if fromCustomProperties is true', () => {
+      const resource = new Artifact();
+      resource.getPropertiesMap().set('testPropName', doubleValue(123));
+      expect(getResourceProperty(
+        resource,
+        'testPropName',
+        /* fromCustomProperties= */ true
+      )).toBeNull();
+    });
+
+    it('returns the value of the property with the provided name', () => {
+      const resource = new Artifact();
+      resource.getPropertiesMap().set('testPropName', doubleValue(123));
+      expect(getResourceProperty(resource, 'testPropName')).toEqual(123);
+    });
+
+    it('returns the value of the custom property with the provided name', () => {
+      const resource = new Artifact();
+      resource.getCustomPropertiesMap().set('testCustomPropName', stringValue('abc'));
+      expect(
+          getResourceProperty(
+              resource,
+              'testCustomPropName',
+              /* fromCustomProperties= */ true
+          )
+      ).toEqual('abc');
+    });
+  });
+
+  describe('getMlMetadataResourceProperty', () => {
+    it('returns null if resource has no properties', () => {
+      expect(getMlMetadataResourceProperty({}, 'testPropName')).toBeNull();
+    });
+
+    it('returns null if resource has no custom properties', () => {
+      expect(getMlMetadataResourceProperty({}, 'testCustomPropName', true)).toBeNull();
+    });
+
+    it('returns null if resource has no property with the provided name', () => {
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'somePropName': {
+                double_value: 123,
+              },
             },
           },
-        },
-        'testPropName'
+          'testPropName'
       )).toBeNull();
     });
 
     it('returns if resource has no property with specified name if fromCustomProperties is false', () => {
-      expect(getResourceProperty(
-        {
-          custom_properties: {
-            'testCustomPropName': {
-              double_value: 123,
+      expect(getMlMetadataResourceProperty(
+          {
+            custom_properties: {
+              'testCustomPropName': {
+                double_value: 123,
+              },
             },
           },
-        },
-        'testCustomPropName',
-        false // fromCustomProperties
+          'testCustomPropName',
+          false // fromCustomProperties
       )).toBeNull();
     });
 
 
     it('returns if resource has no custom property with specified name if fromCustomProperties is true', () => {
-      expect(getResourceProperty(
-        {
-          properties: {
-            'testPropName': {
-              double_value: 123,
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'testPropName': {
+                double_value: 123,
+              },
             },
           },
-        },
-        'testPropName',
-        true // fromCustomProperties
+          'testPropName',
+          true // fromCustomProperties
       )).toBeNull();
     });
 
     it('returns the value of the property with the provided name', () => {
-      expect(getResourceProperty(
-        {
-          properties: {
-            'testPropName': {
-              double_value: 123,
+      expect(getMlMetadataResourceProperty(
+          {
+            properties: {
+              'testPropName': {
+                double_value: 123,
+              },
             },
           },
-        },
-        'testPropName',
+          'testPropName',
       )).toEqual(123);
     });
 
     it('returns the value of the custom property with the provided name', () => {
-      expect(getResourceProperty(
-        {
-          custom_properties: {
-            'testCustomPropName': {
-              string_value: 'abc',
+      expect(getMlMetadataResourceProperty(
+          {
+            custom_properties: {
+              'testCustomPropName': {
+                string_value: 'abc',
+              },
             },
           },
-        },
-        'testCustomPropName',
-        true
+          'testCustomPropName',
+          true
       )).toEqual('abc');
     });
   });
 
   describe('getMetadataValue', () => {
     it('returns a value of type double', () => {
-      expect(getMetadataValue({ double_value: 123 })).toEqual(123);
+      expect(getMetadataValue(doubleValue(123))).toEqual(123);
+    });
+
+    it('returns a value of type int', () => {
+      expect(getMetadataValue(intValue(123))).toEqual(123);
+    });
+
+    it('returns a value of type string', () => {
+      expect(getMetadataValue(stringValue('abc'))).toEqual('abc');
+    });
+
+    it('returns an empty string if Value has no value', () => {
+      expect(getMetadataValue(new Value())).toEqual('');
+    });
+  });
+
+  describe('getMlMetadataMetadataValue', () => {
+    it('returns a value of type double', () => {
+      expect(getMlMetadataMetadataValue({ double_value: 123 })).toEqual(123);
     });
 
     it('returns a value of type int', () => {
       // Swagger takes a int64 type from a .proto and converts it to string in Typescript
-      expect(getMetadataValue({ int_value: '123' })).toEqual('123');
+      expect(getMlMetadataMetadataValue({ int_value: '123' })).toEqual('123');
     });
 
     it('returns a value of type string', () => {
-      expect(getMetadataValue({ string_value: 'abc' })).toEqual('abc');
+      expect(getMlMetadataMetadataValue({ string_value: 'abc' })).toEqual('abc');
     });
 
     it('returns an empty string if MlMetadataValue has no value', () => {
-      expect(getMetadataValue({})).toEqual('');
+      expect(getMlMetadataMetadataValue({})).toEqual('');
     });
   });
 
