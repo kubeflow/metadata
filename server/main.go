@@ -19,8 +19,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"math"
+	"math/rand"
 	"net"
 	"net/http"
+	"time"
 
 	"ml_metadata/metadata_store/mlmetadata"
 	mlpb "ml_metadata/proto/metadata_store_go_proto"
@@ -46,6 +49,7 @@ var (
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
 	mySQLServiceUser     = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 	mySQLServicePassword = flag.String("mysql_service_password", "", "MySQL Service Password.")
+	retryNum             = flag.Int("retries_on_transaction_failure", 10, "Number of retries for exponentail backoff.")
 	sqliteFilenameUri    = flag.String("sqlite_filename_uri", "mlmetadata", "Sqlite Filename URI")
 	sqliteConnMode       = flag.Int("sqlite_conn_mode", 3, "Sqlite Connection Mode. Supported options: 0(UNKNOWN), 1(READONLY), 2(READWRITE), 3(READWRITE_OPENCREATE)")
 )
@@ -56,8 +60,7 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 	case "in-memory":
 		cfg = &mlpb.ConnectionConfig{
 			Config: &mlpb.ConnectionConfig_FakeDatabase{
-				&mlpb.FakeDatabaseConfig{
-				},
+				&mlpb.FakeDatabaseConfig{},
 			},
 		}
 	case "mysql":
@@ -84,12 +87,19 @@ func mlmdStoreOrDie() *mlmetadata.Store {
 	default:
 		glog.Fatalf("Unknown mlmd_db_type %q: please choose from [in-memory, mysql, sqlite]", *mlmdDBType)
 	}
-
-	store, err := mlmetadata.NewStore(cfg)
-	if err != nil {
-		glog.Fatalf("Failed to create ML Metadata Store with config %v: %v.\n", cfg, err)
+	var err error
+	for r := 0; r < *retryNum; r++ {
+		store, err := mlmetadata.NewStore(cfg)
+		if err == nil {
+			return store
+		}
+		sample := rand.Float64()*0.5 + 0.75 // randon sample from [0.75, 1.25]
+		backoff := time.Millisecond * time.Duration(1000*math.Pow(2, float64(r))*sample)
+		glog.Errorf("Failed to create ML Metadata Store: %v.\nRetry %d/%d.\nSleep %v", err, r+1, *retryNum, backoff)
+		time.Sleep(backoff)
 	}
-	return store
+	glog.Fatalf("Failed to create ML Metadata Store with config %v: %v.\n", cfg, err)
+	return nil
 }
 
 func main() {
