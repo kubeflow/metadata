@@ -49,7 +49,7 @@ var (
 	mySQLServicePort     = flag.Uint("mysql_service_port", 3306, "MySQL Service Port.")
 	mySQLServiceUser     = flag.String("mysql_service_user", "root", "MySQL Service Username.")
 	mySQLServicePassword = flag.String("mysql_service_password", "", "MySQL Service Password.")
-	retryNum             = flag.Int("retries_on_transaction_failure", 10, "Number of retries for exponentail backoff.")
+	retryNum             = flag.Int("retries_on_transaction_failure", 10, "Number of retries for exponential backoff.")
 	sqliteFilenameUri    = flag.String("sqlite_filename_uri", "mlmetadata", "Sqlite Filename URI")
 	sqliteConnMode       = flag.Int("sqlite_conn_mode", 3, "Sqlite Connection Mode. Supported options: 0(UNKNOWN), 1(READONLY), 2(READWRITE), 3(READWRITE_OPENCREATE)")
 )
