@@ -133,11 +133,12 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   }
 
   private async getExecutionTypes(): Promise<Map<number, ExecutionType>> {
-    const response =
+    const {error, response} =
         await this.api.metadataStoreService.getExecutionTypes(new GetExecutionTypesRequest());
 
-    if (!response) {
-      this.showPageError('Unable to retrieve Execution Types, some features may not work.');
+    if (error) {
+      this.showPageServiceError(
+          'Unable to retrieve Execution Types, some features may not work.', error);
       return new Map();
     }
 
@@ -151,10 +152,11 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   }
 
   private async getExecutions(): Promise<Execution[]> {
-    const response = await this.api.metadataStoreService.getExecutions(new GetExecutionsRequest());
+    const {error, response} =
+        await this.api.metadataStoreService.getExecutions(new GetExecutionsRequest());
 
-    if (!response) {
-      this.showPageError('Unable to retrieve Executions.');
+    if (error) {
+      this.showPageServiceError('Unable to retrieve Executions.', error);
       return []
     }
 
@@ -203,7 +205,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED
       ? ExpandState.COLLAPSED
       : ExpandState.EXPANDED;
-    this.setState({rows});
+    this.setState({ rows });
   }
 
   private getExpandedExecutionsRow(index: number): React.ReactNode {
