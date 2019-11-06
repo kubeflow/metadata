@@ -18,8 +18,6 @@ describe('ArtifactList', () => {
   const mockGetArtifactTypes =
       jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
   const mockGetArtifacts = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifacts');
-  const mockListArtifacts = jest.spyOn(
-    Api.getInstance().metadataService, 'listArtifacts2');
 
   const fakeGetArtifactTypesResponse = new GetArtifactTypesResponse();
 
@@ -84,7 +82,8 @@ describe('ArtifactList', () => {
   const artifact4PropertiesMap = artifact4.getPropertiesMap();
   artifact4PropertiesMap.set('create_time', stringValue('2019-06-28T01:40:11.843625Z'));
   artifact4PropertiesMap.set('data_set_id', stringValue('13'));
-  artifact4PropertiesMap.set('description', stringValue('validating the MNIST model to recognize handwritten digits'));
+  artifact4PropertiesMap.set(
+      'description', stringValue('validating the MNIST model to recognize handwritten digits'));
   artifact4PropertiesMap.set('metrics_type', stringValue('validation'));
   artifact4PropertiesMap.set('model_id', stringValue('1'));
   artifact4PropertiesMap.set('name', stringValue('MNIST-evaluation'));
@@ -137,8 +136,8 @@ describe('ArtifactList', () => {
       response: fakeGetArtifactsResponse,
     });
     mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
+      error: null,
+      response: fakeGetArtifactTypesResponse,
     });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
@@ -238,16 +237,13 @@ describe('ArtifactList', () => {
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      const index = table.props.rows
-        .findIndex((r) => r.otherFields[0] === 'pipeline-1');
+      const index = table.props.rows.findIndex((r) => r.otherFields[0] === 'pipeline-1');
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(4);
-      expect(expandedRows.get(0).props.row.id)
-        .toBe('kubeflow.org/alpha/model:1');
-      expect(expandedRows.get(1).props.row.id)
-        .toBe('kubeflow.org/alpha/data_set:2');
+      expect(expandedRows.get(0).props.row.id).toBe('kubeflow.org/alpha/model:1');
+      expect(expandedRows.get(1).props.row.id).toBe('kubeflow.org/alpha/data_set:2');
 
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
@@ -287,7 +283,6 @@ describe('ArtifactList', () => {
       error: serviceError,
       response: fakeGetArtifactsResponse,
     });
-    mockListArtifacts.mockRejectedValue(new Error('List artifacts error'));
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
     await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -310,7 +305,7 @@ describe('ArtifactList', () => {
     });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockGetArtifactTypes]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
       message:
