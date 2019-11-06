@@ -92,7 +92,7 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
           `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
     }
 
-    if (response!.getExecutionsList()!.length) {
+    if (!response!.getExecutionsList()!.length) {
       this.showPageError(`No ${this.fullTypeName} identified by id: ${this.id}`);
       return;
     }
