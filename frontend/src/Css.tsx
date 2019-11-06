@@ -15,8 +15,8 @@
  */
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import { NestedCSSProperties } from 'typestyle/lib/types';
-import { style, stylesheet } from 'typestyle';
+import {NestedCSSProperties} from 'typestyle/lib/types';
+import {style, stylesheet} from 'typestyle';
 
 export const color = {
   activeBg: '#eaf1fd',

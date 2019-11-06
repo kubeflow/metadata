@@ -1,0 +1,101 @@
+.noRadio {
+  height: 16px;
+  width: 16px;
+}
+
+.form-radio {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid var(--grey-400);
+  color: var(--blue-500);
+  top: 0px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  outline: none;
+}
+
+.form-radio:checked {
+  border: 2px solid var(--blue-500);
+}
+
+.form-radio:checked::before {
+  position: absolute;
+  font-size: 44px;
+  left: -1px;
+  top: -23px;
+  content: "\2022";
+}
+
+.form-radio:hover {
+  background-color: var(--grey-100);
+}
+
+.form-radio:checked {
+  background-color: #fff;
+}
+
+.cardRow {
+  height: 54px;
+  padding: 6px 0px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.cardRow div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cardRow div input {
+  margin: 10px 10px 0 20px;
+}
+
+.rowTitle {
+  font-size: 13px;
+  font-family: "PublicSans-SemiBold";
+  color: var(--grey-900);
+  letter-spacing: 0.2px;
+  line-height: 24px;
+}
+
+.rowTitle:hover {
+  text-decoration: underline;
+  color: var(--blue-600);
+  cursor: pointer;
+}
+
+.rowDesc {
+  font-size: 11px;
+  color: var(--grey-600);
+  letter-spacing: 0.3px;
+  line-height: 12px;
+}
+
+.edgeRight {
+  width: 8px;
+  height: 8px;
+  background-color: var(--grey-700);
+  border-radius: 2px;
+  float: right;
+  margin-right: -5px;
+  margin-top: 18px;
+}
+
+.edgeLeft {
+  width: 8px;
+  height: 8px;
+  background-color: var(--grey-700);
+  border-radius: 2px;
+  float: left;
+  margin-left: -5px;
+  margin-top: 18px;
+}
+
+.lastRow {
+  border-bottom: 0px;
+}

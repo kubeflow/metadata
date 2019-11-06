@@ -15,69 +15,52 @@
  */
 
 import * as React from 'react';
-import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
 import {Page} from './Page';
-import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact} from '../apis/service/api';
-import { RoutePage, RouteParams } from '../components/Router';
-import { Link } from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
 import {GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
 
+import {ToolbarProps} from '../components/Toolbar';
+// import {RoutePage, RouteParams} from '../components/Router';
+import {LineageCardColumn} from "../components/LineageCardColumn";
+
+
 interface ArtifactListState {
   artifacts: MlMetadataArtifact[];
-  rows: Row[];
   expandedRows: Map<number, Row[]>;
-  columns: Column[];
+  columnNames: String[];
+  columnTypes: String[];
 }
 
 class ArtifactList extends Page<{}, ArtifactListState> {
-  private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private artifactTypes: Map<number, ArtifactType>;
-  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
-    (props: CustomRendererProps<string>) => {
-      const [artifactType, artifactId] = props.id.split(':');
-      const link = RoutePage.ARTIFACT_DETAILS
-        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
-        .replace(`:${RouteParams.ID}`, artifactId);
-      return (
-        <Link onClick={(e) => e.stopPropagation()}
-          className={commonCss.link}
-          to={link}>
-          {props.value}
-        </Link>
-      );
-  }
+  // private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
+  //   (props: CustomRendererProps<string>) => {
+  //     const [artifactType, artifactId] = props.id.split(':');
+  //     const link = RoutePage.ARTIFACT_DETAILS
+  //       .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
+  //       .replace(`:${RouteParams.ID}`, artifactId);
+  //     return (
+  //       <Link onClick={(e) => e.stopPropagation()}
+  //         className={commonCss.link}
+  //         to={link}>
+  //         {props.value}
+  //       </Link>
+  //     );
+  // }
 
   constructor(props: any) {
     super(props);
     this.state = {
       artifacts: [],
-      columns: [
-        {
-          label: 'Pipeline/Workspace',
-          flex: 2,
-          customRenderer: this.nameCustomRenderer,
-          sortKey: 'pipelineName'
-        },
-        {
-          label: 'Name',
-          flex: 1,
-          customRenderer: this.nameCustomRenderer,
-          sortKey: 'name',
-        },
-        {label: 'ID', flex: 1, sortKey: 'id'},
-        {label: 'Type', flex: 2, sortKey: 'type'},
-        {label: 'URI', flex: 2, sortKey: 'uri', },
-        // TODO: Get timestamp from the event that created this artifact.
-        // {label: 'Created at', flex: 1, sortKey: 'created_at'},
-      ],
-      rows: [],
+      columnNames: ['Input Artifact', '', 'Target', '', 'Output Artifact'],
+      columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
       expandedRows: new Map(),
     };
     this.reload = this.reload.bind(this);
@@ -94,9 +77,24 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   }
 
   public render(): JSX.Element {
-    const {rows, columns} = this.state;
+    const {columnNames} = this.state;
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
+        <LineageCardColumn
+          type="artifacts"
+          title={`${columnNames[0]}`} />
+        <LineageCardColumn
+          type="executions"
+          title={`${columnNames[1]}`} />
+        <LineageCardColumn
+          type="artifacts"
+          title={`${columnNames[2]}`} />
+        <LineageCardColumn
+          type="executions"
+          title={`${columnNames[3]}`} />
+        <LineageCardColumn
+          type="artifacts"
+          title={`${columnNames[4]}`} />
         <CustomTable ref={this.tableRef}
           columns={columns}
           rows={rows}
