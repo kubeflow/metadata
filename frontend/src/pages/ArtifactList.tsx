@@ -124,7 +124,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     }
     if (!this.state.artifacts!.length) {
       const artifacts = await this.getArtifacts();
-      this.setState({artifacts: artifacts || []});
+      this.setState({artifacts});
       this.clearBanner();
     }
     this.setState({

@@ -16,7 +16,6 @@
 
 import * as React from 'react';
 import { isFunction } from 'lodash';
-import { MlMetadataArtifact, MlMetadataExecution, MlMetadataValue } from '../apis/service';
 import { css as customTableCss } from '../components/CustomTable';
 import { classes } from 'typestyle';
 import { Row, Column, ExpandState, CustomTableRow } from '../components/CustomTable';
@@ -63,29 +62,6 @@ export function titleCase(str: string): string {
   return str.split(/[\s_-]/)
     .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
     .join(' ');
-}
-
-/**
- * Safely extracts the named property or custom property from the provided
- * Artifact or Execution.
- * @param resource
- * @param propertyName
- * @param fromCustomProperties
- */
-export function getMlMetadataResourceProperty(resource: MlMetadataArtifact | MlMetadataExecution,
-  propertyName: string, fromCustomProperties = false): string | number | null {
-  const props = fromCustomProperties
-    ? resource.custom_properties
-    : resource.properties;
-
-  return (props && props[propertyName] && getMlMetadataMetadataValue(props[propertyName]))
-    || null;
-}
-
-function getMlMetadataMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
-  // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
-  // int_value has type string.
-  return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
 }
 
 export function getResourceProperty(resource: Artifact | Execution,
