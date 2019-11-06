@@ -2,12 +2,11 @@ import * as React from 'react';
 import ArtifactDetails, {ArtifactDetailsTab} from './ArtifactDetails';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
-import {Api, ArtifactCustomProperties, ArtifactProperties} from '../lib/Api';
+import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
-import {serviceError, stringValue} from '../TestUtils';
+import {serviceError, testModel} from '../TestUtils';
 import {GetArtifactsByIDResponse} from '../generated/src/apis/metadata/metadata_store_service_pb';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 
 describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -16,22 +15,7 @@ describe('ArtifactDetails', () => {
   const historyPushSpy = jest.fn();
   const mockGetArtifact = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactsByID');
   const fakeGetArtifactByIDResponse = new GetArtifactsByIDResponse();
-  const artifact = new Artifact();
-  artifact.setId(1);
-  artifact.setTypeId(1);
-  artifact.setUri('gs://my-bucket/mnist');
-  artifact.getPropertiesMap().set(ArtifactProperties.NAME, stringValue('test model'));
-  artifact.getPropertiesMap().set(ArtifactProperties.DESCRIPTION, stringValue('A really great model'));
-  artifact.getPropertiesMap().set(ArtifactProperties.VERSION, stringValue('v1'));
-  artifact.getPropertiesMap().set(ArtifactProperties.CREATE_TIME, stringValue('2019-06-12T01:21:48.259263Z'));
-  artifact.getPropertiesMap().set(ArtifactProperties.ALL_META, stringValue(
-      '{"hyperparameters": {"early_stop": true, ' +
-      '"layers": [10, 3, 1], "learning_rate": 0.5}, ' +
-      '"model_type": "neural network", ' +
-      '"training_framework": {"name": "tensorflow", "version": "v1.0"))'));
-  artifact.getCustomPropertiesMap().set(ArtifactCustomProperties.WORKSPACE, stringValue('workspace-1'));
-  artifact.getCustomPropertiesMap().set(ArtifactCustomProperties.RUN, stringValue('1'));
-  fakeGetArtifactByIDResponse.addArtifacts(artifact);
+  fakeGetArtifactByIDResponse.addArtifacts(testModel);
 
   const MODEL_TYPE = 'kubeflow.org/alpha/model';
   const FAKE_MODEL_ID = '1';
