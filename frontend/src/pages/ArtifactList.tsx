@@ -22,22 +22,22 @@ import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRo
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import {MlMetadataArtifact} from '../apis/service/api';
 // import {Link} from 'react-router-dom';
-import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
-import {GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {ArtifactType} from '../generated/src/apis/metadata/metadata_store_pb';
+import {GetArtifactTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 import {ToolbarProps} from '../components/Toolbar';
 // import {RoutePage, RouteParams} from '../components/Router';
-import {LineageCardColumn} from "../components/LineageCardColumn";
+import {LineageCardColumn} from '../components/LineageCardColumn';
 
 
-interface ArtifactListState {
-  artifacts: MlMetadataArtifact[];
-  expandedRows: Map<number, Row[]>;
-  columnNames: String[];
-  columnTypes: String[];
-}
+// interface ArtifactListState {
+//   artifacts: MlMetadataArtifact[];
+//   expandedRows: Map<number, Row[]>;
+//   columnNames: string[];
+//   columnTypes: string[];
+// }
 
-class ArtifactList extends Page<{}, ArtifactListState> {
+class ArtifactList extends Page<{}, {}> {
   private api = Api.getInstance();
   private artifactTypes: Map<number, ArtifactType>;
   // private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
@@ -81,21 +81,26 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     return (
       <div className={classes(commonCss.page, padding(20, 'lr'))}>
         <LineageCardColumn
-          type="artifacts"
+          type='artifact'
+          cards={[]}
           title={`${columnNames[0]}`} />
         <LineageCardColumn
-          type="executions"
+          type='execution'
+          cards={[]}
           title={`${columnNames[1]}`} />
         <LineageCardColumn
-          type="artifacts"
+          type='artifact'
+          cards={[]}
           title={`${columnNames[2]}`} />
         <LineageCardColumn
-          type="executions"
+          type='execution'
+          cards={[]}
           title={`${columnNames[3]}`} />
         <LineageCardColumn
-          type="artifacts"
+          type='artifact'
+          cards={[]}
           title={`${columnNames[4]}`} />
-        <CustomTable ref={this.tableRef}
+        {/* <CustomTable ref={this.tableRef}
           columns={columns}
           rows={rows}
           disablePaging={true}
@@ -105,7 +110,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
           initialSortOrder='asc'
           getExpandComponent={this.getExpandedArtifactsRow}
           toggleExpansion={this.toggleRowExpand}
-          emptyMessage='No artifacts found.' />
+          emptyMessage='No artifacts found.' /> */}
       </div>
     );
   }

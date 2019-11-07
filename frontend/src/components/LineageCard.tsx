@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './LineageCard.css';
-import {CardRow} from './LineageCardRow';
+import {LineageCardRow} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
 
 interface LineageCardProps {
@@ -16,13 +16,13 @@ export class LineageCard extends React.Component<LineageCardProps> {
     const {title, type, rows, addSpacer, isTarget} = this.props;
 
     const listCardRows = () => rows.map((r, i) => 
-      <CardRow
+      <LineageCardRow
         key={i}
-        artiName={r.title}
-        artiDescription={r.desc}
+        title={r.title}
+        description={r.desc}
         leftAffordance={false}
         rightAffordance={true}
-        lastRowState={i === rows.length-1}
+        isLastRow={i === rows.length-1}
         hideRadio={false}
       />
     );
@@ -32,7 +32,6 @@ export class LineageCard extends React.Component<LineageCardProps> {
         <div className='cardTitle'>
           <h3>{title}</h3>
         </div>
-
         <div className='cardBody'>{listCardRows()}</div>
       </div>
     );

@@ -1,49 +1,40 @@
-import React from "react";
-import "./CardRow.css";
+// tslint:disable: no-unused-expression
+import React from 'react';
+import './LineageCardRow.css';
 
-function CardRow(props) {
-
-  const checkEdgeAfforances = () => {
-    const affItems = [];
-    if (props.leftAffordance) {
-      affItems.push(<div className="edgeLeft"></div>);
-    }
-    if (props.rightAffordance) {
-      affItems.push(<div className="edgeRight"></div>);
-    }
-    return affItems;
-  };
-
-  const checkLastRow = () => {
-    if (props.lastRowState) return ("lastRow");
-    else return ("");
-  }
-
-  const checkRadio = () => {
-    if (!props.hideRadio) {
-      return (
-        <div>
-          <input type="radio" className="form-radio" name="" value="" />
-        </div>
-      );
-    }
-    else {
-      return (
-        <div className="noRadio"></div>
-      );
-    }
-  }
-
-  return (
-    <div className={`cardRow ${checkLastRow()}`}>
-      {checkRadio()}
-      <div>
-        <p className="rowTitle">{props.artiName}</p>
-        <p className="rowDesc">{props.artiDescription}</p>
-      </div>
-      {checkEdgeAfforances()}
-    </div>
-  );
+interface LineageCardRowProps {
+  title: string;
+  description?: string;
+  leftAffordance: boolean;
+  rightAffordance: boolean;
+  hideRadio: boolean;
+  isLastRow: boolean;
 }
 
-export default CardRow;
+export class LineageCardRow extends React.Component<LineageCardRowProps> {
+  public checkEdgeAfforances(): JSX.Element[] {
+    const affItems = [];
+    this.props.leftAffordance && affItems.push(<div className='edgeLeft' />);
+    this.props.rightAffordance && affItems.push(<div className='edgeRight' />);
+    return affItems;
+  }
+  public render(): JSX.Element {
+    const {title, description, isLastRow} = this.props;
+    return (
+      <div className={`cardRow ${isLastRow?'lastRow':''}`}>
+        {this.checkRadio()}
+        <div>
+          <p className='rowTitle'>{title}</p>
+          <p className='rowDesc'>{description}</p>;
+        </div>
+        {this.checkEdgeAfforances()}
+      </div>
+    );
+  }
+  private checkRadio(): JSX.Element {
+    if (!this.props.hideRadio) {
+      return <div><input type='radio' className='form-radio' name='' value='' /></div>;
+    }
+    return <div className='noRadio' />;
+  }
+}
