@@ -17,7 +17,6 @@ import json
 import ml_metadata
 from ml_metadata.metadata_store import metadata_store
 from ml_metadata.proto import metadata_store_pb2 as mlpb
-
 """
 This module contains the Python API for logging metadata of machine learning
 workflows to the Kubeflow Metadata service.
@@ -27,16 +26,16 @@ WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
 RUN_PROPERTY_NAME = '__kf_run__'
 ALL_META_PROPERTY_NAME = '__ALL_META__'
 
+
 class Store(object):
   """Metadata Store that connects to the Metadata gRPC service."""
 
   def __init__(self,
                grpc_host="metadata-grpc-service.kubeflow",
                grpc_port=8080,
-               root_certificates = None,
-               private_key = None,
-               certificate_chain = None):
-
+               root_certificates=None,
+               private_key=None,
+               certificate_chain=None):
     """
     Args:
       grpc_host {str} -- Required gRPC service host, e.g.
@@ -54,8 +53,9 @@ class Store(object):
       config.ssl_config.client_key = private_key
       config.ssl_config.custom_ca = root_certificates
       config.ssl_config.server_cert = certificate_chain
-    self.store = metadata_store.MetadataStore(
-      config, disable_upgrade_migration=False)
+    self.store = metadata_store.MetadataStore(config,
+                                              disable_upgrade_migration=False)
+
 
 class Workspace(object):
   """
@@ -108,18 +108,20 @@ class Workspace(object):
 
   def _flat(self, artifact):
     if artifact is None:
-          raise ValueError("'artifact' must be set.")
+      raise ValueError("'artifact' must be set.")
     result = {
-      "id": artifact.id,
+        "id": artifact.id,
     }
     if artifact.custom_properties is not None:
       if WORKSPACE_PROPERTY_NAME in artifact.custom_properties:
-        result["workspace"] = artifact.custom_properties[WORKSPACE_PROPERTY_NAME].string_value
+        result["workspace"] = artifact.custom_properties[
+            WORKSPACE_PROPERTY_NAME].string_value
       if RUN_PROPERTY_NAME in artifact.custom_properties:
-        result["run"] = artifact.custom_properties[RUN_PROPERTY_NAME].string_value
+        result["run"] = artifact.custom_properties[
+            RUN_PROPERTY_NAME].string_value
     if not artifact.properties:
       return result
-    for k,v in artifact.properties.items():
+    for k, v in artifact.properties.items():
       if k != ALL_META_PROPERTY_NAME:
         if v.string_value is not None:
           result[k] = v.string_value
@@ -136,6 +138,7 @@ class Workspace(object):
         result[k] = v
     return result
 
+
 class Run(object):
   """
   Captures a run of pipeline or notebooks in a workspace and group executions.
@@ -149,12 +152,13 @@ class Run(object):
       description {str} -- Optional description.
     """
     if workspace is None:
-        raise ValueError("'workspace' must be set.")
+      raise ValueError("'workspace' must be set.")
     if name is None or type(name) != str:
-        raise ValueError("'name' must be set and in string type.")
+      raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
+
 
 class Execution(object):
   """
@@ -177,9 +181,9 @@ class Execution(object):
     Returns an execution object for logging.
     """
     if workspace is None:
-        raise ValueError("'workspace' must be set.")
+      raise ValueError("'workspace' must be set.")
     if name is None or type(name) != str:
-        raise ValueError("'name' must be set and in string type.")
+      raise ValueError("'name' must be set and in string type.")
     self.id = None
     self.name = name
     self.workspace = workspace
@@ -187,27 +191,28 @@ class Execution(object):
     self.description = description
     self.create_time = get_rfc3339_time()
     self._type_id = self.workspace.store.get_execution_type(
-      Execution.EXECUTION_TYPE_NAME).id
+        Execution.EXECUTION_TYPE_NAME).id
     response = self.workspace.store.put_executions([self.serialized()])
     self.id = response[0]
 
   def serialized(self):
-    properties={
-      "name": mlpb.Value(string_value=self.name),
-      "create_time": mlpb.Value(string_value=self.create_time),
-      "description": mlpb.Value(string_value=self.description),
+    properties = {
+        "name": mlpb.Value(string_value=self.name),
+        "create_time": mlpb.Value(string_value=self.create_time),
+        "description": mlpb.Value(string_value=self.description),
     }
     _del_none_properties(properties)
 
     custom_properties = {}
     if self.workspace is not None:
       custom_properties[WORKSPACE_PROPERTY_NAME] = mlpb.Value(
-        string_value=self.workspace.name)
+          string_value=self.workspace.name)
     if self.run is not None:
       custom_properties[RUN_PROPERTY_NAME] = mlpb.Value(
-        string_value=self.run.name)
-    return mlpb.Execution(type_id=self._type_id, properties=properties,
-      custom_properties=custom_properties)
+          string_value=self.run.name)
+    return mlpb.Execution(type_id=self._type_id,
+                          properties=properties,
+                          custom_properties=custom_properties)
 
   def log_input(self, artifact):
     """
@@ -223,11 +228,9 @@ class Execution(object):
     if artifact is None:
       raise ValueError("'artifact' must be set.")
     self._log(artifact)
-    input_event = mlpb.Event(
-      artifact_id=artifact.id,
-      execution_id=self.id,
-      type=mlpb.Event.INPUT
-    )
+    input_event = mlpb.Event(artifact_id=artifact.id,
+                             execution_id=self.id,
+                             type=mlpb.Event.INPUT)
     self.workspace.store.put_events([input_event])
     return artifact
 
@@ -243,16 +246,13 @@ class Execution(object):
     This method will set artifact.id.
     """
     if artifact is None:
-          raise ValueError("'artifact' must be set.")
+      raise ValueError("'artifact' must be set.")
     self._log(artifact)
-    output_event = mlpb.Event(
-      artifact_id=artifact.id,
-      execution_id=self.id,
-      type=mlpb.Event.OUTPUT
-    )
+    output_event = mlpb.Event(artifact_id=artifact.id,
+                              execution_id=self.id,
+                              type=mlpb.Event.OUTPUT)
     self.workspace.store.put_events([output_event])
     return artifact
-
 
   def _log(self, artifact):
     """
@@ -270,21 +270,25 @@ class Execution(object):
     serialization = artifact.serialization()
     try:
       serialization.type_id = self.workspace.store.get_artifact_type(
-        artifact.ARTIFACT_TYPE_NAME).id
+          artifact.ARTIFACT_TYPE_NAME).id
     except Exception as e:
-      raise ValueError("invalid artifact type %s: exception %s", artifact.ARTIFACT_TYPE_NAME, e)
+      raise ValueError("invalid artifact type %s: exception %s",
+                       artifact.ARTIFACT_TYPE_NAME, e)
     if WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
-      raise ValueError("custom_properties contains reserved key %s"
-                           % WORKSPACE_PROPERTY_NAME)
+      raise ValueError("custom_properties contains reserved key %s" %
+                       WORKSPACE_PROPERTY_NAME)
     if RUN_PROPERTY_NAME in serialization.custom_properties:
-      raise ValueError("custom_properties contains reserved key %s"
-                       % RUN_PROPERTY_NAME)
+      raise ValueError("custom_properties contains reserved key %s" %
+                       RUN_PROPERTY_NAME)
     if self.workspace is not None:
-      serialization.custom_properties[WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
+      serialization.custom_properties[
+          WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
-      serialization.custom_properties[RUN_PROPERTY_NAME].string_value=self.run.name
+      serialization.custom_properties[
+          RUN_PROPERTY_NAME].string_value = self.run.name
     artifact.id = self.workspace.store.put_artifacts([serialization])[0]
     return artifact
+
 
 class DataSet(object):
   """
@@ -333,19 +337,26 @@ class DataSet(object):
 
   def serialization(self):
     data_set_artifact = mlpb.Artifact(
-      uri=self.uri,
-      properties={
-          "name": mlpb.Value(string_value=self.name),
-          "create_time": mlpb.Value(string_value=self.create_time),
-          "description": mlpb.Value(string_value=self.description),
-          "query": mlpb.Value(string_value=self.query),
-          "version": mlpb.Value(string_value=self.version),
-          "owner": mlpb.Value(string_value=self.owner),
-          ALL_META_PROPERTY_NAME:
-              mlpb.Value(string_value=json.dumps(self.__dict__)),
-      })
+        uri=self.uri,
+        properties={
+            "name":
+                mlpb.Value(string_value=self.name),
+            "create_time":
+                mlpb.Value(string_value=self.create_time),
+            "description":
+                mlpb.Value(string_value=self.description),
+            "query":
+                mlpb.Value(string_value=self.query),
+            "version":
+                mlpb.Value(string_value=self.version),
+            "owner":
+                mlpb.Value(string_value=self.owner),
+            ALL_META_PROPERTY_NAME:
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
+        })
     _del_none_properties(data_set_artifact.properties)
     return data_set_artifact
+
 
 class Model(object):
   """
@@ -398,17 +409,23 @@ class Model(object):
 
   def serialization(self):
     model_artifact = mlpb.Artifact(
-      uri=self.uri,
-      properties={
-        "name": mlpb.Value(string_value=self.name),
-        "create_time": mlpb.Value(string_value=self.create_time),
-        "description": mlpb.Value(string_value=self.description),
-        "model_type": mlpb.Value(string_value=self.model_type),
-        "version": mlpb.Value(string_value=self.version),
-        "owner": mlpb.Value(string_value=self.owner),
-        ALL_META_PROPERTY_NAME:
-            mlpb.Value(string_value=json.dumps(self.__dict__)),
-    })
+        uri=self.uri,
+        properties={
+            "name":
+                mlpb.Value(string_value=self.name),
+            "create_time":
+                mlpb.Value(string_value=self.create_time),
+            "description":
+                mlpb.Value(string_value=self.description),
+            "model_type":
+                mlpb.Value(string_value=self.model_type),
+            "version":
+                mlpb.Value(string_value=self.version),
+            "owner":
+                mlpb.Value(string_value=self.owner),
+            ALL_META_PROPERTY_NAME:
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
+        })
     _del_none_properties(model_artifact.properties)
     return model_artifact
 
@@ -452,9 +469,9 @@ class Metrics(object):
     metrics.
     """
     if uri is None or type(uri) != str:
-          raise ValueError("'uri' must be set and in string type.")
+      raise ValueError("'uri' must be set and in string type.")
     if name is None or type(name) != str:
-          raise ValueError("'name' must be set and in string type.")
+      raise ValueError("'name' must be set and in string type.")
     self.workspace = workspace
     self.name = name
     self.description = description
@@ -470,26 +487,35 @@ class Metrics(object):
 
   def serialization(self):
     metrics_artifact = mlpb.Artifact(
-      uri=self.uri,
-      properties={
-        "name": mlpb.Value(string_value=self.name),
-        "create_time": mlpb.Value(string_value=self.create_time),
-        "description": mlpb.Value(string_value=self.description),
-        "metrics_type": mlpb.Value(string_value=self.metrics_type),
-        "data_set_id": mlpb.Value(string_value=self.data_set_id),
-        "model_id": mlpb.Value(string_value=self.model_id),
-        "owner": mlpb.Value(string_value=self.owner),
-        ALL_META_PROPERTY_NAME:
-          mlpb.Value(string_value=json.dumps(self.__dict__)),
+        uri=self.uri,
+        properties={
+            "name":
+                mlpb.Value(string_value=self.name),
+            "create_time":
+                mlpb.Value(string_value=self.create_time),
+            "description":
+                mlpb.Value(string_value=self.description),
+            "metrics_type":
+                mlpb.Value(string_value=self.metrics_type),
+            "data_set_id":
+                mlpb.Value(string_value=self.data_set_id),
+            "model_id":
+                mlpb.Value(string_value=self.model_id),
+            "owner":
+                mlpb.Value(string_value=self.owner),
+            ALL_META_PROPERTY_NAME:
+                mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(metrics_artifact.properties)
     return metrics_artifact
 
+
 def get_rfc3339_time():
   return datetime.datetime.utcnow().isoformat("T") + "Z"
+
 
 def _del_none_properties(dict):
   keys = [k for k in dict.keys()]
   for k in keys:
     if not any((dict[k].string_value, dict[k].int_value, dict[k].double_value)):
-      del(dict[k])
+      del (dict[k])
