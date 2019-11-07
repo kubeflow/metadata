@@ -26,7 +26,12 @@ mlmd-proto:
 	mv ml_metadata/proto/*.go ml_metadata/
 
 metadata-docker-image:
-	docker build -t gcr.io/kubeflow-images-public/metadata .
+	@if test $(shell uname -m) = "aarch64"; then \
+		docker build -t metadata-base-aarch64:latest -f ./dockerfiles/Dockerfile-linux-base.aarch64 . && \
+		docker build -t gcr.io/kubeflow-images-public/metadata --build-arg BASE_IMG=metadata-base-aarch64:latest --build-arg OUTPUT_DIR=linux_arm64_stripped .;\
+	else \
+		docker build -t gcr.io/kubeflow-images-public/metadata .;\
+	fi
 
 swagger-py-client:
 	mkdir -p /tmp/swagger
