@@ -6,14 +6,14 @@
   border: 1px solid var(--grey-300);
 }
 
-.cardTitle {
+.cardContainer .cardTitle {
   height: 40px;
   border-bottom: 1px solid var(--grey-200);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
 
-h3 {
+.cardContainer h3 {
   font-size: 10px;
   color: var(--blue-600);
   letter-spacing: 0.8px;
@@ -40,5 +40,27 @@ h3 {
   border-bottom: 0;
 }
 .cardContainer.executions h3 {
+  color: #0A3B71;
+}
+
+/* Lineage Target Card */
+.cardContainer.target {
+  border: 2px solid var(--blue-500);
+}
+
+/* Lineage Execution Card */
+.cardContainer.execution {
+  border-radius: var(--card-radius);
+  background: #F8FBFF;
+  border: 1px solid #CCE4FF;
+}
+
+.cardContainer.execution .cardTitle {
+  border-top-left-radius: var(--card-radius);
+  border-top-right-radius: var(--card-radius);
+  border-bottom: 0;
+}
+
+.cardContainer.execution .cardTitle h6 {
   color: #0A3B71;
 }

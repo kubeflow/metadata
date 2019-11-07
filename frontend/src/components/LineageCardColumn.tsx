@@ -15,6 +15,7 @@ export interface LineageCardColumnProps {
   type: LineageCardType;
   title: string;
   cards: CardDetails[];
+  reverseBindings?: boolean;
 }
 
 export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
@@ -27,7 +28,7 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
           <h2>{title}</h2>
         </div>
         <div className='columnBody'>
-          {this.drawColumns()}
+          {this.drawColumnContent()}
         </div>
       </div>
     );
@@ -41,16 +42,16 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
       rows={det.elements}
       isTarget={/Target/i.test(this.props.title)} />;
   }
-  private drawColumns(): JSX.Element {
+  private drawColumnContent(): JSX.Element {
     const {type, cards} = this.props;
     const cardSkeleton = cards.map(c => c.elements.length);
 
-    return <div>
+    return <React.Fragment>
       <EdgeCanvas
         type={type}
         cardArray={cardSkeleton}
-        reverseEdges={false} />
-      {cards.map(this.jsxFromCardDetails)}
-    </div>;
+        reverseEdges={!!this.props.reverseBindings} />
+      {cards.map(this.jsxFromCardDetails.bind(this))}
+    </React.Fragment>;
   }
 }

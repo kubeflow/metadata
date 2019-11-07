@@ -5,8 +5,12 @@
   border: 0;
   display: inline-block;
   margin-left: 260px;
-  margin-top: 68px;
-  z-index: -100;
+  margin-top: 74px;
+  z-index: -1;
+}
+.edgeCanvas.reverse {
+  margin-left: 0;
+  transform: translateX(-100%);
 }
 
 .kWKfgJ {

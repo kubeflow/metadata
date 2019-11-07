@@ -20,10 +20,10 @@ export class LineageCard extends React.Component<LineageCardProps> {
         key={i}
         title={r.title}
         description={r.desc}
-        leftAffordance={false}
-        rightAffordance={true}
+        leftAffordance={!!r.prev}
+        rightAffordance={!!r.next}
         isLastRow={i === rows.length-1}
-        hideRadio={false}
+        hideRadio={type === 'execution' || !!isTarget}
       />
     );
 

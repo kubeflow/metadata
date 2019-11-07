@@ -6,6 +6,7 @@ export type LineageCardType = 'artifact' | 'execution';
 export interface LineageRow {
     title: string;
     desc?: string;
-    selected?: boolean;
+    prev?: boolean;
+    next?: boolean;
 }
 export const DEFAULT_LINEAGE_CARD_TYPE = 'artifact' as LineageCardType;

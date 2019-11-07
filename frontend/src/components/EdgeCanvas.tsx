@@ -2,6 +2,7 @@ import * as React from 'react';
 import {LineageCardType} from './LineageTypes';
 
 import './EdgeCanvas.css';
+import './LineChart.d.ts';
 import LineChart from 'react-svg-line-chart';
 
 interface EdgeCanvasProps {
@@ -20,28 +21,28 @@ interface EdgeCanvasState {
   y1: number;
   y4: number;
   edgeColor: string;
-  edgeInfo: JSX.Element[];
   colType: LineageCardType;
-  reRender: boolean;
 }
 
 export class EdgeCanvas extends React.Component<EdgeCanvasProps, EdgeCanvasState> {
+  private myWidth = 200;
+  private defaultState = {
+    edgeColor: '#BDC1C6',
+    viewHeight: 1,
+    viewWidth: this.myWidth,
+    x1: 0,
+    x2: 30,
+    x3: this.myWidth-30,
+    x4: this.myWidth,
+    y1: 0,
+    y4: 0,
+  } as EdgeCanvasState;
   constructor(props: any) {
     super(props);
-    this.state = {
+    Object.assign(this.defaultState, {
       colType: props.type,
-      edgeColor: '#BDC1C6',
-      edgeInfo: [],
-      reRender: false,
-      viewHeight: 1,
-      viewWidth: 160,
-      x1: 0,
-      x2: 30,
-      x3: 130,
-      x4: 160,
-      y1: 0,
-      y4: 0,
-    } as EdgeCanvasState;
+    });
+    this.state = Object.assign({}, this.defaultState);
   }
 
   public componentWillMount(): void {
@@ -49,20 +50,22 @@ export class EdgeCanvas extends React.Component<EdgeCanvasProps, EdgeCanvasState
     this.setState(ei);
   }
 
-  public shouldComponentUpdate(nextProps: Readonly<EdgeCanvasProps>, nextState: Readonly<EdgeCanvasState>): boolean { 
-    return nextState.reRender;
+  public shouldComponentUpdate(nextProps: Readonly<EdgeCanvasProps>, nextState: Readonly<EdgeCanvasState>): boolean {
+    return this.state.y1 !== nextState.y1 || this.state.y4 !== nextState.y4;
   }
 
-  public drawEdges = (cardStructure: number[], reverse: boolean) => {
-    const cardOffset = 64;
-    const {x1, x2, x3, x4, y1, y4} = this.state;
-    const newState = Object.assign({}, this.state) as EdgeCanvasState;
+  public drawEdges(cardStructure: number[], reverse: boolean): JSX.Element[] {
+    const cardOffset = 24+41+2;
+    const newState = Object.assign({}, this.defaultState) as EdgeCanvasState;
+    const {x1, x2, x3, x4, edgeColor, viewWidth} = newState;
     const lastNode = reverse?'y1':'y4';
-
-    cardStructure.forEach(rows => {
+    const edgeInfo = [] as JSX.Element[];
+    cardStructure.forEach((rows, i) => {
       for (let j = 0; j < rows; j++) {
-        this.state.edgeInfo.push(
+        const {y1, y4, viewHeight} = newState;
+        edgeInfo.push(
           <LineChart
+            key={`${i}-${j}`}
             data={[
               {x: x1, y: y1},
               {x: x2, y: y1},
@@ -73,28 +76,28 @@ export class EdgeCanvas extends React.Component<EdgeCanvasProps, EdgeCanvasState
             axisVisible={false}
             gridVisible={false}
             labelsVisible={false}
-            pathColor={this.state.edgeColor}
+            pathColor={edgeColor}
             pathVisible={true}
             pathWidth={1}
             pathOpacity={1}
             pointsVisible={false}
-            viewBoxHeight={this.state.viewHeight}
-            viewBoxWidth={this.state.viewWidth}
+            viewBoxHeight={viewHeight}
+            viewBoxWidth={viewWidth}
             pathSmoothing={0}
           />
         );
-        newState.viewHeight += 54;
-        newState[lastNode] += 55;
+        newState.viewHeight += 67;
+        newState[lastNode] += 67;
       }
       newState.viewHeight += cardOffset;
       newState[lastNode] += cardOffset;
     });
-    newState.reRender = false;
     this.setState(newState);
-    return this.state.edgeInfo;
-  };
+    return edgeInfo;
+  }
 
   public render(): JSX.Element {
-    return <div className='edgeCanvas kWKfgJ'>{this.drawEdges(this.props.cardArray, this.props.reverseEdges)}</div>;
+    const {cardArray, reverseEdges} = this.props;
+    return <div className={`edgeCanvas kWKfgJ${reverseEdges?' reverse':''}`} style={{width: `${this.myWidth}px`}}>{this.drawEdges(cardArray, reverseEdges)}</div>;
   }
 }

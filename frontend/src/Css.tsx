@@ -16,7 +16,45 @@
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import {NestedCSSProperties} from 'typestyle/lib/types';
-import {style, stylesheet} from 'typestyle';
+import {style, stylesheet, cssRaw} from 'typestyle';
+import './fonts.scss';
+
+cssRaw(`
+  .LineageExplorer {
+    --blue-50: #e8f0fe;
+    --blue-100: #d2e3fc;
+    --blue-200: #aecbfa;
+    --blue-300: #8ab4f8;
+    --blue-400: #669df6;
+    --blue-500: #1098f7;
+    --blue-600: #1098f7;
+    --blue-700: #1967d2;
+    --blue-800: #185abc;
+    --blue-900: #174ea6;
+    --red-50: #fce8e6;
+    --red-700: #c5221f;
+    --yellow-600: #f9ab00;
+    --green-500: #34a853;
+    --green-600: #1e8e3e;
+    --grey-50: #f8f9fa;
+    --grey-100: #f1f3f4;
+    --grey-200: #e8eaed;
+    --grey-300: #dadce0;
+    --grey-400: #bdc1c6;
+    --grey-500: #9aa0a6;
+    --grey-600: #80868b;
+    --grey-700: #5f6368;
+    --grey-800: #3c4043;
+    --grey-900: #202124;
+    --orange-500: #fa7b17;
+    --orange-700: #d56e0c;
+    --orange-900: #b06000;
+    --pink-500: #f538a0;
+    --pink-700: #c92786;
+    --purple-500: #a142f4;
+    --card-radius: 6px;
+  }
+`);
 
 export const color = {
   activeBg: '#eaf1fd',
@@ -218,6 +256,15 @@ export const commonCss = stylesheet({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
+  },
+  fit: {
+    bottom: 0,
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: '100%',
   },
   flex: {
     alignItems: 'center !important',

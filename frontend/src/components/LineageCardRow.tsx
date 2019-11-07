@@ -23,10 +23,10 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
     return (
       <div className={`cardRow ${isLastRow?'lastRow':''}`}>
         {this.checkRadio()}
-        <div>
+        <footer>
           <p className='rowTitle'>{title}</p>
-          <p className='rowDesc'>{description}</p>;
-        </div>
+          <p className='rowDesc'>{description}</p>
+        </footer>
         {this.checkEdgeAfforances()}
       </div>
     );

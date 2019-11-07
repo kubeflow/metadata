@@ -1,9 +1,18 @@
-.noRadio {
+.cardRow {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  padding: 6px 0px;
+  border-bottom: 1px solid var(--grey-200);
+  position: relative;
+}
+
+.cardRow .noRadio {
   height: 16px;
   width: 16px;
 }
 
-.form-radio {
+.cardRow .form-radio {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -20,30 +29,28 @@
   outline: none;
 }
 
-.form-radio:checked {
+.cardRow .form-radio:checked {
   border: 2px solid var(--blue-500);
 }
 
-.form-radio:checked::before {
+.cardRow .form-radio:checked::before {
   position: absolute;
-  font-size: 44px;
-  left: -1px;
-  top: -23px;
-  content: "\2022";
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  content: '';
+  transform: translate(-50%, -50%);
+  padding: 5px;
+  display: block;
+  background: currentColor;
 }
 
-.form-radio:hover {
+.cardRow .form-radio:hover {
   background-color: var(--grey-100);
 }
 
-.form-radio:checked {
+.cardRow .form-radio:checked {
   background-color: #fff;
-}
-
-.cardRow {
-  height: 54px;
-  padding: 6px 0px;
-  border-bottom: 1px solid var(--grey-200);
 }
 
 .cardRow div {
@@ -55,47 +62,51 @@
   margin: 10px 10px 0 20px;
 }
 
-.rowTitle {
+.cardRow .rowTitle {
   font-size: 13px;
   font-family: "PublicSans-SemiBold";
   color: var(--grey-900);
   letter-spacing: 0.2px;
   line-height: 24px;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.rowTitle:hover {
+.cardRow .rowTitle:hover {
   text-decoration: underline;
   color: var(--blue-600);
   cursor: pointer;
 }
 
-.rowDesc {
+.cardRow .rowDesc {
   font-size: 11px;
   color: var(--grey-600);
   letter-spacing: 0.3px;
   line-height: 12px;
 }
-
-.edgeRight {
+.cardRow footer {
+  overflow: hidden;
+}
+.cardRow [class^='edge'] {
   width: 8px;
   height: 8px;
   background-color: var(--grey-700);
   border-radius: 2px;
-  float: right;
-  margin-right: -5px;
-  margin-top: 18px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  cursor: pointer;
+}
+.cardRow .edgeRight {
+  left: 100%;
 }
 
-.edgeLeft {
-  width: 8px;
-  height: 8px;
-  background-color: var(--grey-700);
-  border-radius: 2px;
-  float: left;
-  margin-left: -5px;
-  margin-top: 18px;
+.cardRow .edgeLeft {
+  left: 0;
 }
 
-.lastRow {
+.cardRow.lastRow {
   border-bottom: 0px;
 }
