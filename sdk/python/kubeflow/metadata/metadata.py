@@ -17,33 +17,37 @@ import json
 import ml_metadata
 from ml_metadata.metadata_store import metadata_store
 from ml_metadata.proto import metadata_store_pb2 as mlpb
-"""
-This module contains the Python API for logging metadata of machine learning
+from typing import Any, List, Mapping, Optional, TypeVar, Union
+"""This module contains the Python API for logging metadata of machine learning
 workflows to the Kubeflow Metadata service.
 """
 
-WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
-RUN_PROPERTY_NAME = '__kf_run__'
-ALL_META_PROPERTY_NAME = '__ALL_META__'
+# TypeArtifact is the type Model, Dataset, Metrics or any class that has
+# class variable ARTIFACT_TYPE_NAME of string and a serialization() method that
+# returns a metadata_store_pb2.Artifact.
+TypeArtifact = TypeVar('TypeArtifact', 'Model', 'DataSet', 'Metrics', Any)
+
+_WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
+_RUN_PROPERTY_NAME = '__kf_run__'
+_ALL_META_PROPERTY_NAME = '__ALL_META__'
 
 
 class Store(object):
   """Metadata Store that connects to the Metadata gRPC service."""
 
   def __init__(self,
-               grpc_host="metadata-grpc-service.kubeflow",
-               grpc_port=8080,
-               root_certificates=None,
-               private_key=None,
-               certificate_chain=None):
+               grpc_host: str = "metadata-grpc-service.kubeflow",
+               grpc_port: int = 8080,
+               root_certificates: Optional[str] = None,
+               private_key: Optional[str] = None,
+               certificate_chain: Optional[str] = None):
     """
     Args:
-      grpc_host {str} -- Required gRPC service host, e.g.
-                         "metadata-grpc-service.kubeflow".
-      grpc_host {int} -- Required gRPC service port.
-      root_certificates {str} -- Optional SSL certificate for secure connection.
-      private_key {str} -- Optional private_key for secure connection.
-      certificate_chain {str} -- Optional certificate_chain for secure connection.
+      grpc_host: Required gRPC service host, e.g."metadata-grpc-service.kubeflow".
+      grpc_host: Required gRPC service port.
+      root_certificates: Optional SSL certificate for secure connection.
+      private_key: Optional private_key for secure connection.
+      certificate_chain: Optional certificate_chain for secure connection.
     """
     config = mlpb.MetadataStoreClientConfig()
     config.host = grpc_host
@@ -58,24 +62,23 @@ class Store(object):
 
 
 class Workspace(object):
-  """
-  Groups a set of runs of pipelines, notebooks and their related artifacts
+  """Groups a set of runs of pipelines, notebooks and their related artifacts
   and executions.
   """
 
   def __init__(self,
-               store=None,
-               name=None,
-               description=None,
-               labels=None,
-               backend_url_prefix=None):
+               store: Store = None,
+               name: str = None,
+               description: Optional[str] = None,
+               labels: Optional[Mapping[str, str]] = None,
+               backend_url_prefix: Optional[str] = None):
     """
     Args:
-      store {Store} -- Required store object to connect to MLMD gRPC service.
-      name {str} -- Required name for the workspace.
-      description {str} -- Optional string for description of the workspace.
-      labels {object} Optional key/value string pairs to label the workspace.
-      backend_url_prefix {str} -- Deprecated. Please use 'store' parameter.
+      store: Required store object to connect to MLMD gRPC service.
+      name: Required name for the workspace.
+      description: Optional string for description of the workspace.
+      labels: Optional key/value string pairs to label the workspace.
+      backend_url_prefix: Deprecated. Please use 'store' parameter.
     """
     if backend_url_prefix:
       raise ValueError("""'backend_url_prefix' is deprecated. Please set
@@ -89,12 +92,16 @@ class Workspace(object):
     self.description = description
     self.labels = labels
 
-  def list(self, artifact_type_name=None):
-    """
+  def list(self, artifact_type_name: str = None) -> List[TypeArtifact]:
+    """List all artifacts of a given type.
+
     Args:
       artifact_type_name {str} name of artifact type.
-    Returns a list of artifacts of the provided typed associated
-    with this workspace. Each artifact is represented as a dict.
+      Returns a list of artifacts of the provided typed associated
+      with this workspace. Each artifact is represented as a dict.
+
+    Returns:
+      A list of Artifact objects.
     """
     if artifact_type_name is None:
       artifact_type_name = Model.ARTIFACT_TYPE_NAME
@@ -113,26 +120,26 @@ class Workspace(object):
         "id": artifact.id,
     }
     if artifact.custom_properties is not None:
-      if WORKSPACE_PROPERTY_NAME in artifact.custom_properties:
+      if _WORKSPACE_PROPERTY_NAME in artifact.custom_properties:
         result["workspace"] = artifact.custom_properties[
-            WORKSPACE_PROPERTY_NAME].string_value
-      if RUN_PROPERTY_NAME in artifact.custom_properties:
+            _WORKSPACE_PROPERTY_NAME].string_value
+      if _RUN_PROPERTY_NAME in artifact.custom_properties:
         result["run"] = artifact.custom_properties[
-            RUN_PROPERTY_NAME].string_value
+            _RUN_PROPERTY_NAME].string_value
     if not artifact.properties:
       return result
     for k, v in artifact.properties.items():
-      if k != ALL_META_PROPERTY_NAME:
+      if k != _ALL_META_PROPERTY_NAME:
         if v.string_value is not None:
           result[k] = v.string_value
         elif v.int_value is not None:
           result[k] = v.int_value
         else:
           result[k] = v.double_value
-    if not ALL_META_PROPERTY_NAME in artifact.properties:
+    if not _ALL_META_PROPERTY_NAME in artifact.properties:
       return result
     # Pick up all nested objects stored in the __ALL_META__ field.
-    all_meta = artifact.properties[ALL_META_PROPERTY_NAME].string_value
+    all_meta = artifact.properties[_ALL_META_PROPERTY_NAME].string_value
     for k, v in json.loads(all_meta).items():
       if not k in result:
         result[k] = v
@@ -140,16 +147,19 @@ class Workspace(object):
 
 
 class Run(object):
-  """
-  Captures a run of pipeline or notebooks in a workspace and group executions.
+  """Run captures a run of pipeline or notebooks in a workspace and group
+  executions.
   """
 
-  def __init__(self, workspace=None, name=None, description=None):
+  def __init__(self,
+               workspace: Workspace = None,
+               name: str = None,
+               description: Optional[str] = None):
     """
     Args:
-      workspace {Worspace} -- Required workspace object.
-      name {str} -- Required name of this run.
-      description {str} -- Optional description.
+      workspace: Required workspace object to which this run belongs.
+      name: Required name of this run.
+      description: Optional description.
     """
     if workspace is None:
       raise ValueError("'workspace' must be set.")
@@ -161,24 +171,27 @@ class Run(object):
 
 
 class Execution(object):
-  """
-  Captures a run of pipeline or notebooks in a workspace and group executions.
+  """Captures a run of pipeline or notebooks in a workspace and group executions.
+
+  Execution also serves as object for logging artifacts as its input or output.
   """
   EXECUTION_TYPE_NAME = "kubeflow.org/alpha/execution"
 
-  def __init__(self, name=None, workspace=None, run=None, description=None):
+  def __init__(self,
+               name: str = None,
+               workspace: Workspace = None,
+               run: Optional[Run] = None,
+               description: Optional[str] = None):
     """
     Args:
-      name {str} -- Required name of this run.
-      workspace {Worspace} -- required workspace object.
-      run {Run} -- optional run object.
-      description {str} -- Optional description.
+      name: Required name of this run.
+      workspace: Required workspace object where this execution belongs to.
+      run: Optional run object.
+      description: Optional description.
 
     Creates a new execution in a workspace and run.
-    The exection.log_XXX() methods will attach corresponding artifacts as the
+    The execution.log_XXX() methods will attach corresponding artifacts as the
     input or output of this execution.
-
-    Returns an execution object for logging.
     """
     if workspace is None:
       raise ValueError("'workspace' must be set.")
@@ -205,25 +218,23 @@ class Execution(object):
 
     custom_properties = {}
     if self.workspace is not None:
-      custom_properties[WORKSPACE_PROPERTY_NAME] = mlpb.Value(
+      custom_properties[_WORKSPACE_PROPERTY_NAME] = mlpb.Value(
           string_value=self.workspace.name)
     if self.run is not None:
-      custom_properties[RUN_PROPERTY_NAME] = mlpb.Value(
+      custom_properties[_RUN_PROPERTY_NAME] = mlpb.Value(
           string_value=self.run.name)
     return mlpb.Execution(type_id=self._type_id,
                           properties=properties,
                           custom_properties=custom_properties)
 
-  def log_input(self, artifact):
-    """
-    Log an artifact as an input of this execution.
+  def log_input(self, artifact: TypeArtifact) -> TypeArtifact:
+    """ Log an artifact as an input of this execution.
 
-    This method expects `artifact` to have
-      - ARTIFACT_TYPE_NAME string field the form of
-        <namespace>/<name>.
-      - serialization() method to return a mlpb.Artifact.
+    Args:
+      artifact: Model, DataSet, Metrics or customized artifact type.
 
-    This method will set artifact.id.
+    Returns:
+      The same artifact with artifact.id set.
     """
     if artifact is None:
       raise ValueError("'artifact' must be set.")
@@ -234,16 +245,14 @@ class Execution(object):
     self.workspace.store.put_events([input_event])
     return artifact
 
-  def log_output(self, artifact):
-    """
-    Log an artifact as an output of this execution.
+  def log_output(self, artifact: TypeArtifact) -> TypeArtifact:
+    """ Log an artifact as an input of this execution.
 
-    This method expects `artifact` to have
-      - ARTIFACT_TYPE_NAME string field the form of
-        <namespace>/<name>.
-      - serialization() method to return a mlpb.Artifact.
+    Args:
+      artifact: Model, DataSet, Metrics or customized artifact type.
 
-    This method will set artifact.id.
+    Returns:
+      The same artifact with artifact.id set.
     """
     if artifact is None:
       raise ValueError("'artifact' must be set.")
@@ -255,70 +264,80 @@ class Execution(object):
     return artifact
 
   def _log(self, artifact):
-    """
-    Log an artifact.
-
-    This method expects `artifact` to have
-      - ARTIFACT_TYPE_NAME string field the form of
-        <namespace>/<name>.
-      - serialization() method to return a mlpb.Artifact.
-
-    This method will set artifact.id.
-    """
+    """Log artifact into metadata store."""
     if artifact is None:
       raise ValueError("'artifact' must be set.")
-    serialization = artifact.serialization()
+    ser = artifact.serialization()
     try:
-      serialization.type_id = self.workspace.store.get_artifact_type(
+      ser.type_id = self.workspace.store.get_artifact_type(
           artifact.ARTIFACT_TYPE_NAME).id
     except Exception as e:
       raise ValueError("invalid artifact type %s: exception %s",
                        artifact.ARTIFACT_TYPE_NAME, e)
-    if WORKSPACE_PROPERTY_NAME in serialization.custom_properties:
+    if _WORKSPACE_PROPERTY_NAME in ser.custom_properties:
       raise ValueError("custom_properties contains reserved key %s" %
-                       WORKSPACE_PROPERTY_NAME)
-    if RUN_PROPERTY_NAME in serialization.custom_properties:
+                       _WORKSPACE_PROPERTY_NAME)
+    if _RUN_PROPERTY_NAME in ser.custom_properties:
       raise ValueError("custom_properties contains reserved key %s" %
-                       RUN_PROPERTY_NAME)
+                       _RUN_PROPERTY_NAME)
     if self.workspace is not None:
-      serialization.custom_properties[
-          WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
+      ser.custom_properties[
+          _WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
-      serialization.custom_properties[
-          RUN_PROPERTY_NAME].string_value = self.run.name
-    artifact.id = self.workspace.store.put_artifacts([serialization])[0]
+      ser.custom_properties[_RUN_PROPERTY_NAME].string_value = self.run.name
+    artifact.id = self.workspace.store.put_artifacts([ser])[0]
     return artifact
 
 
 class DataSet(object):
-  """
-  Captures a data set in a machine learning workflow.
+  """ Dataset captures a data set in a machine learning workflow.
+
+  Attributes:
+
+    uri: Required uri of the data set.
+    name: Required name of the data set.
+    workspace: Optional name of the workspace.
+    description: Optional description of the data set.
+    owner: Optional owner of the data set.
+    version: Optional version tagged by the user.
+    query: Optional query string on how this data set being fetched from a data
+      source.
+    labels: Optional string key value pairs for labels.
+
+    example:
+      metadata.DataSet(description="an example data",
+                       name="mytable-dump",
+                       owner="owner@my-company.org",
+                       uri="file://path/to/dataset",
+                       version="v1.0.0",
+                       query="SELECT * FROM mytable",
+                       labels={"label1","val1"}))
   """
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/data_set"
 
   def __init__(self,
-               workspace=None,
-               name=None,
-               description=None,
-               owner=None,
-               uri=None,
-               version=None,
-               query=None,
-               labels=None,
+               uri: str = None,
+               name: str = None,
+               workspace: Optional[str] = None,
+               description: Optional[str] = None,
+               owner: Optional[str] = None,
+               version: Optional[str] = None,
+               query: Optional[str] = None,
+               labels: Optional[Mapping[str, str]] = None,
                **kwargs):
     """
     Args:
-      workspace {str} -- Optional name of the workspace.
-      name {str} -- Required name of the data set.
-      description {str} -- Optional description of the data set.
-      owner {str} -- Optional owner of the data set.
-      uri {str} -- Required uri of the data set.
-      version {str} -- Optional version tagged by the user.
-      query {str} -- Optioan query string for how to fetch this data set from
-                      a data source.
-      labels {object} -- Optional string key value pairs for labels.
-    Addtional keyword arguments are saved as addtional properties of this
-    dataset.
+      uri: Required uri of the data set.
+      name: Required name of the data set.
+      workspace: Optional name of the workspace.
+      description: Optional description of the data set.
+      owner: Optional owner of the data set.
+      version: Optional version tagged by the user.
+      query: Optional query string on how this data set being fetched from
+        a data source.
+      labels: Optional string key value pairs for labels.
+      kwargs: Optional additional keyword arguments are saved as additional
+        properties of this dataset.
     """
     if uri is None or type(uri) != str:
       raise ValueError("'uri' must be set and in string type.")
@@ -351,7 +370,7 @@ class DataSet(object):
                 mlpb.Value(string_value=self.version),
             "owner":
                 mlpb.Value(string_value=self.owner),
-            ALL_META_PROPERTY_NAME:
+            _ALL_META_PROPERTY_NAME:
                 mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(data_set_artifact.properties)
@@ -359,36 +378,67 @@ class DataSet(object):
 
 
 class Model(object):
-  """
-  Captures a machine learning model.
+  """Captures a machine learning model.
+
+  Attributes:
+      uri: Required uri of the metrics.
+      name: Required name of the metrics.
+      workspace: Optional name of the workspace.
+      description: Optional description of the metrics.
+      owner: Optional owner of the metrics.
+      model_type: Optional type of the model.
+      training_framework: Optional framework used to train the model.
+      hyperparameters: Optional map from hyper param name to its value.
+      labels: Optional string key value pairs for labels.
+      kwargs: Optional additional keyword arguments are saved as additional
+        properties of this model.
+
+      example:
+        metadata.Model(name="MNIST",
+                       description="model to recognize handwritten digits",
+                       owner="someone@kubeflow.org",
+                       uri="gcs://my-bucket/mnist",
+                       model_type="neural network",
+                       training_framework={
+                           "name": "tensorflow",
+                           "version": "v1.0"
+                       },
+                       hyperparameters={
+                           "learning_rate": 0.5,
+                           "layers": [10, 3, 1],
+                           "early_stop": True
+                       },
+                       version="v0.0.1",
+                       labels={"mylabel": "l1"}))
   """
 
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/model"
 
   def __init__(self,
-               workspace=None,
-               name=None,
-               description=None,
-               owner=None,
-               uri=None,
-               version=None,
-               model_type=None,
-               training_framework=None,
-               hyperparameters=None,
-               labels=None,
+               uri: str = None,
+               name: str = None,
+               workspace: Optional[str] = None,
+               description: Optional[str] = None,
+               owner: Optional[str] = None,
+               version: Optional[str] = None,
+               model_type: Optional[str] = None,
+               training_framework: Optional[Any] = None,
+               hyperparameters: Optional[Mapping[str, float]] = None,
+               labels: Optional[Mapping[str, str]] = None,
                **kwargs):
     """
     Args:
-      workspace {str} -- Optional name of the workspace.
-      name {str} -- Required name of the metrics.
-      description {str} -- Optional description of the metrics.
-      owner {str} -- Optional owner of the metrics.
-      uri {str} -- Required uri of the metrics.
-      model_type {str} -- Optional type of the model.
-      training_framework {object} -- Optional framework used to train the model.
-      hyperparameters {object}-- Optional map from hyper param name to its value.
-      labels {object} -- Optional string key value pairs for labels.
-    Addtional keyword arguments are saved as addtional properties of this model.
+      uri: Required uri of the metrics.
+      name: Required name of the metrics.
+      workspace: Optional name of the workspace.
+      description: Optional description of the metrics.
+      owner: Optional owner of the metrics.
+      model_type: Optional type of the model.
+      training_framework: Optional framework used to train the model.
+      hyperparameters: Optional map from hyper param name to its value.
+      labels: Optional string key value pairs for labels.
+      kwargs: Optional additional keyword arguments are saved as additional
+        properties of this model.
     """
     if uri is None or type(uri) != str:
       raise ValueError("'uri' must be set and in string type.")
@@ -423,7 +473,7 @@ class Model(object):
                 mlpb.Value(string_value=self.version),
             "owner":
                 mlpb.Value(string_value=self.owner),
-            ALL_META_PROPERTY_NAME:
+            _ALL_META_PROPERTY_NAME:
                 mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(model_artifact.properties)
@@ -431,7 +481,32 @@ class Model(object):
 
 
 class Metrics(object):
-  """Captures an evaulation metrics of a model on a data set."""
+  """Captures an evaluation metrics of a model on a data set.
+
+  Attributes:
+    uri: Required uri of the metrics.
+    name: Required name of the metrics.
+    workspace: Optional name of the workspace.
+    description: Optional description of the metrics.
+    owner: Optional owner of the metrics.
+    data_set_id: Optional id of the data set used for evaluation.
+    model_id: Optional id of a evaluated model.
+    metrics_type: Optional type of the evaluation.
+    values: Optional map from metrics name to its value.
+    labels: Optional string key value pairs for labels.
+
+    example:
+        metadata.Metrics(name="MNIST-evaluation",
+            description=
+            "validating the MNIST model to recognize handwritten digits",
+            owner="someone@kubeflow.org",
+            uri="gcs://my-bucket/mnist-eval.csv",
+            data_set_id="123",
+            model_id="12345",
+            metrics_type=metadata.Metrics.VALIDATION,
+            values={"accuracy": 0.95},
+            labels={"mylabel": "l1"}))
+  """
 
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/metrics"
 
@@ -442,31 +517,31 @@ class Metrics(object):
   PRODUCTION = "production"
 
   def __init__(self,
-               workspace=None,
-               name=None,
-               description=None,
-               owner=None,
-               uri=None,
-               data_set_id=None,
-               model_id=None,
-               metrics_type=None,
-               values=None,
-               labels=None,
+               uri: str = None,
+               name: str = None,
+               workspace: Optional[str] = None,
+               description: Optional[str] = None,
+               owner: Optional[str] = None,
+               data_set_id: Optional[str] = None,
+               model_id: Optional[str] = None,
+               metrics_type: Optional[str] = None,
+               values: Optional[Mapping[str, float]] = None,
+               labels: Optional[Mapping[str, str]] = None,
                **kwargs):
     """
     Args:
-      workspace {str} -- Optional name of the workspace.
-      name {str} -- Required name of the metrics.
-      description {str} -- Optional description of the metrics.
-      owner {str} -- Optional owner of the metrics.
-      uri {str} -- Required uri of the metrics.
-      data_set_id {str} -- Optional id of the data set used for evaluation.
-      model_id {str} -- Optional id of a evluated model.
-      metrics_type {str}-- Optional type of the evaluation.
-      values {object} -- Optional map from metrics name to its value.
-      labels {object} -- Optional string key value pairs for labels.
-    Addtional keyword arguments are saved as addtional properties of this
-    metrics.
+      uri: Required uri of the metrics.
+      name: Required name of the metrics.
+      workspace: Optional name of the workspace.
+      description: Optional description of the metrics.
+      owner: Optional owner of the metrics.
+      data_set_id: Optional id of the data set used for evaluation.
+      model_id: Optional id of a evaluated model.
+      metrics_type: Optional type of the evaluation.
+      values: Optional map from metrics name to its value.
+      labels: Optional string key value pairs for labels.
+      kwargs: additional keyword arguments are saved as additional properties
+        of this metrics.
     """
     if uri is None or type(uri) != str:
       raise ValueError("'uri' must be set and in string type.")
@@ -503,7 +578,7 @@ class Metrics(object):
                 mlpb.Value(string_value=self.model_id),
             "owner":
                 mlpb.Value(string_value=self.owner),
-            ALL_META_PROPERTY_NAME:
+            _ALL_META_PROPERTY_NAME:
                 mlpb.Value(string_value=json.dumps(self.__dict__)),
         })
     _del_none_properties(metrics_artifact.properties)
@@ -518,4 +593,4 @@ def _del_none_properties(dict):
   keys = [k for k in dict.keys()]
   for k in keys:
     if not any((dict[k].string_value, dict[k].int_value, dict[k].double_value)):
-      del (dict[k])
+      del dict[k]

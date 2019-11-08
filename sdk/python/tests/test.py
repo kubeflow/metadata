@@ -95,14 +95,14 @@ class TestMetedata(unittest.TestCase):
     artifact1 = ArtifactFixture(
         mlpb.Artifact(uri="gs://uri",
                       custom_properties={
-                          metadata.WORKSPACE_PROPERTY_NAME:
+                          metadata._WORKSPACE_PROPERTY_NAME:
                               mlpb.Value(string_value="ws1"),
                       }))
     self.assertRaises(ValueError, e.log_input, artifact1)
     artifact2 = ArtifactFixture(
         mlpb.Artifact(uri="gs://uri",
                       custom_properties={
-                          metadata.RUN_PROPERTY_NAME:
+                          metadata._RUN_PROPERTY_NAME:
                               mlpb.Value(string_value="run1"),
                       }))
     self.assertRaises(ValueError, e.log_output, artifact2)
