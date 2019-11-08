@@ -110,6 +110,6 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
     this.props.updateToolbar({
       pageTitle: title
     });
-    this.setState({ execution });
+    this.setState({execution});
   }
 }

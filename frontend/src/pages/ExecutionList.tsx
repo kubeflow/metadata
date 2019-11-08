@@ -205,7 +205,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED
       ? ExpandState.COLLAPSED
       : ExpandState.EXPANDED;
-    this.setState({ rows });
+    this.setState({rows});
   }
 
   private getExpandedExecutionsRow(index: number): React.ReactNode {

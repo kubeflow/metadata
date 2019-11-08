@@ -145,12 +145,10 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     this.props.updateToolbar({
       pageTitle: title
     });
-    this.setState({ artifact });
+    this.setState({artifact});
   }
 
   private switchTab(selectedTab: number) {
-    this.setState({
-      selectedTab
-    });
+    this.setState({selectedTab});
   }
 }
