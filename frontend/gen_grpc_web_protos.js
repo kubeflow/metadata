@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {spawn} = require('child_process');
 
+const PROTOC_GEN_TS_PATH = path.join(__dirname, 'node_modules', '.bin', 'protoc-gen-ts');
 const OUT_DIR = path.join(__dirname, 'src', 'generated');
 
 if (!fs.existsSync(OUT_DIR)) {
@@ -16,8 +17,9 @@ if (!fs.existsSync(OUT_DIR)) {
 // pre-built binary on GitHub (look for the protoc-*.zip files under Downloads).
 const protocProcess = spawn(
     'protoc', [
+      `--plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}"`,
       `--js_out="import_style=commonjs,binary:${OUT_DIR}"`,
-      `--grpc-web_out="import_style=commonjs+dts,mode=grpcweb:${OUT_DIR}"`,
+      `--ts_out="service=grpc-web:${OUT_DIR}"`,
       'src/apis/**/*.proto'
     ], {
       // Allow wildcards in glob to be interpreted
