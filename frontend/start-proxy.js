@@ -40,10 +40,10 @@ const detectMetadataUiPodName = async () => {
   }
 
   if (stdout.length === 0) {
-    console.log(`Couldn't get metadata-ui pod in namespace '$NAMESPACE', check the cluster your ` +
-        `kubectl talks to and your namespace is correct.`);
-    console.log(`Namespace can be configured by setting env variable NAMESPACE. e.g. ` +
-        `'$ NAMESPACE=kfm npm run start:proxy'`);
+    console.log(`
+Couldn't get metadata-ui pod in namespace '$NAMESPACE', double check the cluster your kubectl talks to and your namespace is correct.
+Namespace can be configured by setting env variable NAMESPACE. e.g. '$ NAMESPACE=kfm npm run start:proxy'
+`);
     process.exit(1);
   }
 
