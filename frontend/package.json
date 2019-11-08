@@ -43,7 +43,7 @@
     "eject": "EXTEND_ESLINT=true react-scripts eject",
     "postinstall": "cd ./server && npm i",
     "start": "EXTEND_ESLINT=true react-scripts start",
-    "start:proxy": "./start-proxy.sh",
+    "start:proxy": "node ./start-proxy.js",
     "test": "TZ='America/New_York' EXTEND_ESLINT=true react-scripts test --env=jsdom",
     "test:coverage": "npm test -- --coverage --watchAll=false"
   },
