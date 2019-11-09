@@ -134,14 +134,14 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   }
 
   private async getArtifactTypes(): Promise<Map<number, ArtifactType>> {
-    const {error, response} =
+    const response =
         await this.api.metadataStoreService.getArtifactTypes(new GetArtifactTypesRequest());
 
-    if (error) {
-      this.showPageServiceError(
-          'Unable to retrieve Artifact Types, some features may not work.', error);
+    if (!response) {
+      this.showPageError('Unable to retrieve Artifact Types, some features may not work.');
       return new Map();
     }
+
     const artifactTypesMap = new Map<number, ArtifactType>();
 
     (response!.getArtifactTypesList() || []).forEach((artifactType) => {
@@ -152,11 +152,10 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   }
 
   private async getArtifacts(): Promise<Artifact[]> {
-    const {error, response} =
-        await this.api.metadataStoreService.getArtifacts(new GetArtifactsRequest());
+    const response = await this.api.metadataStoreService.getArtifacts(new GetArtifactsRequest());
 
-    if (error) {
-      this.showPageServiceError('Unable to retrieve Artifacts.', error);
+    if (!response) {
+      this.showPageError('Unable to retrieve Artifacts.');
       return []
     }
 

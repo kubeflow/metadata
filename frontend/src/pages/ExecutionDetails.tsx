@@ -85,11 +85,11 @@ export default class ExecutionDetails extends Page<{}, ExecutionDetailsState> {
     const request = new GetExecutionsByIDRequest();
     request.addExecutionIds(Number(this.id));
 
-    const {error, response} = await this.api.metadataStoreService.getExecutionsByID(request);
+    const response = await this.api.metadataStoreService.getExecutionsByID(request);
 
-    if (error) {
-      this.showPageServiceError(
-          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
+    if (!response) {
+      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`);
+      return
     }
 
     if (response!.getExecutionsList()!.length) {

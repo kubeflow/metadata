@@ -23,7 +23,6 @@ import createRouterContext from 'react-router-test-context';
 import {ToolbarActionConfig} from './components/Toolbar';
 import {Page, PageProps} from './pages/Page';
 import {Artifact, Value} from './generated/src/apis/metadata/metadata_store_pb';
-import {grpc} from '@improbable-eng/grpc-web';
 import {ArtifactCustomProperties, ArtifactProperties} from './lib/Api';
 
 
@@ -122,7 +121,6 @@ export const stringValue = (string: String) => {
 export const serviceError = {
   code: 0,
   message: '',
-  metadata: new grpc.Metadata()
 };
 
 export const buildTestModel = () => {

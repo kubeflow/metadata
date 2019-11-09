@@ -15,16 +15,12 @@
  */
 
 import * as React from 'react';
-import { isFunction } from 'lodash';
-import { css as customTableCss } from '../components/CustomTable';
-import { classes } from 'typestyle';
-import { Row, Column, ExpandState, CustomTableRow } from '../components/CustomTable';
-import { ListRequest } from './Api';
-import { padding } from '../Css';
-import {
-  Artifact,
-  Execution, Value
-} from "../generated/src/apis/metadata/metadata_store_pb";
+import {isFunction} from 'lodash';
+import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
+import {classes} from 'typestyle';
+import {ListRequest} from './Api';
+import {padding} from '../Css';
+import {Artifact, Execution, Value} from "../generated/src/apis/metadata/metadata_store_pb";
 
 export const logger = {
   error: (...args: any[]) => {
@@ -79,18 +75,16 @@ export function getMetadataValue(value?: Value): string | number {
     return '';
   }
 
-  if (value.hasDoubleValue()) {
-    return value.getDoubleValue() || '';
+  switch (value.getValueCase()) {
+    case Value.ValueCase.DOUBLE_VALUE:
+      return value.getDoubleValue();
+    case Value.ValueCase.INT_VALUE:
+      return value.getIntValue();
+    case Value.ValueCase.STRING_VALUE:
+      return value.getStringValue();
+    case Value.ValueCase.VALUE_NOT_SET:
+      return '';
   }
-
-  if (value.hasIntValue()) {
-    return value.getIntValue() || '';
-  }
-
-  if (value.hasStringValue()) {
-    return value.getStringValue() || '';
-  }
-  return '';
 }
 
 /**

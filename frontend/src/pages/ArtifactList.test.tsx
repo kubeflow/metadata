@@ -8,7 +8,7 @@ import {RoutePage} from '../components/Router';
 import CustomTable, {ExpandState} from '../components/CustomTable';
 import {GetArtifactsResponse, GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
 import {Artifact, ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
-import {serviceError, stringValue} from '../TestUtils';
+import {stringValue} from '../TestUtils';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -18,8 +18,6 @@ describe('ArtifactList', () => {
   const mockGetArtifactTypes =
       jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
   const mockGetArtifacts = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifacts');
-  const mockListArtifacts = jest.spyOn(
-    Api.getInstance().metadataService, 'listArtifacts2');
 
   const fakeGetArtifactTypesResponse = new GetArtifactTypesResponse();
 
@@ -84,7 +82,8 @@ describe('ArtifactList', () => {
   const artifact4PropertiesMap = artifact4.getPropertiesMap();
   artifact4PropertiesMap.set('create_time', stringValue('2019-06-28T01:40:11.843625Z'));
   artifact4PropertiesMap.set('data_set_id', stringValue('13'));
-  artifact4PropertiesMap.set('description', stringValue('validating the MNIST model to recognize handwritten digits'));
+  artifact4PropertiesMap.set(
+      'description', stringValue('validating the MNIST model to recognize handwritten digits'));
   artifact4PropertiesMap.set('metrics_type', stringValue('validation'));
   artifact4PropertiesMap.set('model_id', stringValue('1'));
   artifact4PropertiesMap.set('name', stringValue('MNIST-evaluation'));
@@ -132,14 +131,8 @@ describe('ArtifactList', () => {
   });
 
   it('Renders with a list of Artifacts', async () => {
-    mockGetArtifacts.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactsResponse,
-    });
-    mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
-    });
+    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
     await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -149,14 +142,8 @@ describe('ArtifactList', () => {
   });
 
   it('Renders and applies filter to a list of Artifacts', async () => {
-    mockGetArtifactTypes.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactTypesResponse,
-    });
-    mockGetArtifacts.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactsResponse,
-    });
+    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
     await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -173,14 +160,8 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by pipeline/workspace name',
     async () => {
-      mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
-      });
-      mockGetArtifacts.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactsResponse,
-      });
+      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
       await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -198,14 +179,8 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by id',
     async () => {
-      mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
-      });
-      mockGetArtifacts.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactsResponse,
-      });
+      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
       await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -223,14 +198,8 @@ describe('ArtifactList', () => {
 
   it('Renders and expands artifacts from pipeline-1',
     async () => {
-      mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
-      });
-      mockGetArtifacts.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactsResponse,
-      });
+      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
       await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -238,16 +207,13 @@ describe('ArtifactList', () => {
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      const index = table.props.rows
-        .findIndex((r) => r.otherFields[0] === 'pipeline-1');
+      const index = table.props.rows.findIndex((r) => r.otherFields[0] === 'pipeline-1');
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(4);
-      expect(expandedRows.get(0).props.row.id)
-        .toBe('kubeflow.org/alpha/model:1');
-      expect(expandedRows.get(1).props.row.id)
-        .toBe('kubeflow.org/alpha/data_set:2');
+      expect(expandedRows.get(0).props.row.id).toBe('kubeflow.org/alpha/model:1');
+      expect(expandedRows.get(1).props.row.id).toBe('kubeflow.org/alpha/data_set:2');
 
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
@@ -256,14 +222,8 @@ describe('ArtifactList', () => {
 
   it('Renders Artifact with no grouped rows with placeholder',
     async () => {
-      mockGetArtifactTypes.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactTypesResponse,
-      });
-      mockGetArtifacts.mockResolvedValue({
-        error: null,
-        response: fakeGetArtifactsResponse,
-      });
+      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
       await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
@@ -279,43 +239,30 @@ describe('ArtifactList', () => {
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {
-    mockGetArtifactTypes.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactTypesResponse,
-    });
-    mockGetArtifacts.mockResolvedValue({
-      error: serviceError,
-      response: fakeGetArtifactsResponse,
-    });
-    mockListArtifacts.mockRejectedValue(new Error('List artifacts error'));
+    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+    // @ts-ignore
+    mockGetArtifacts.mockResolvedValue();
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
     await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve Artifacts. ' +
-        'Click Details for more information.',
+      message: 'Unable to retrieve Artifacts.',
       mode: 'error',
     }));
   });
 
   it('Shows error when artifact types cannot be retrieved', async () => {
-    mockGetArtifacts.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactsResponse,
-    });
-    mockGetArtifactTypes.mockResolvedValue({
-      error: serviceError,
-      response: fakeGetArtifactTypesResponse,
-    });
+    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
+    // @ts-ignore
+    mockGetArtifactTypes.mockResolvedValue();
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockGetArtifactTypes]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
       message:
-        'Unable to retrieve Artifact Types, some features may not work. ' +
-        'Click Details for more information.',
+        'Unable to retrieve Artifact Types, some features may not work.',
       mode: 'error',
     }));
   });

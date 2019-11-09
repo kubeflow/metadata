@@ -117,11 +117,11 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     const request = new GetArtifactsByIDRequest();
     request.setArtifactIdsList([Number(this.id)]);
 
-    const {error, response} = await this.api.metadataStoreService.getArtifactsByID(request);
+    const response = await this.api.metadataStoreService.getArtifactsByID(request);
 
-    if (error) {
-      this.showPageServiceError(
-          `Unable to retrieve ${this.fullTypeName} ${this.id}.`, error);
+    if (!response) {
+      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`);
+      return
     }
 
     if (!response!.getArtifactsList()!.length) {
