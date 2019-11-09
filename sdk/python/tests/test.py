@@ -1,6 +1,8 @@
+import ml_metadata
 import unittest
 from kubeflow.metadata import metadata
 from ml_metadata.proto import metadata_store_pb2 as mlpb
+from unittest.mock import patch
 
 GRPC_HOST = "127.0.0.1"
 GRPC_PORT = 8081
@@ -148,10 +150,28 @@ class TestMetedata(unittest.TestCase):
     # Fix this unit test once this bug is fixed.
     with self.assertRaises(TypeError):
       metadata.Store(grpc_host=GRPC_HOST,
-        grpc_port= GRPC_PORT,
-        root_certificates= b"cert",
-        private_key= b"private_key",
-        certificate_chain=b"chain")
+                     grpc_port=GRPC_PORT,
+                     root_certificates=b"cert",
+                     private_key=b"private_key",
+                     certificate_chain=b"chain")
+    with patch('ml_metadata.metadata_store.metadata_store.MetadataStore',
+               new=CheckMetadataStore) as m:
+      metadata.Store(grpc_host=GRPC_HOST,
+                     grpc_port=GRPC_PORT,
+                     root_certificates=b"cert",
+                     private_key=b"private_key",
+                     certificate_chain=b"chain")
+
+
+class CheckMetadataStore(object):
+
+  def __init__(self, config, disable_upgrade_migration=None):
+    assert disable_upgrade_migration is not None
+    assert config.ssl_config is not None
+    assert config.ssl_config.custom_ca is not None
+    assert config.ssl_config.client_key is not None
+    assert config.ssl_config.server_cert is not None
+
 
 class ArtifactFixture(object):
   ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"
