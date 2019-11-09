@@ -133,12 +133,11 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   }
 
   private async getExecutionTypes(): Promise<Map<number, ExecutionType>> {
-    const {error, response} =
+    const response =
         await this.api.metadataStoreService.getExecutionTypes(new GetExecutionTypesRequest());
 
-    if (error) {
-      this.showPageServiceError(
-          'Unable to retrieve Execution Types, some features may not work.', error);
+    if (!response) {
+      this.showPageError('Unable to retrieve Execution Types, some features may not work.');
       return new Map();
     }
 
@@ -152,11 +151,10 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   }
 
   private async getExecutions(): Promise<Execution[]> {
-    const {error, response} =
-        await this.api.metadataStoreService.getExecutions(new GetExecutionsRequest());
+    const response = await this.api.metadataStoreService.getExecutions(new GetExecutionsRequest());
 
-    if (error) {
-      this.showPageServiceError('Unable to retrieve Executions.', error);
+    if (!response) {
+      this.showPageError('Unable to retrieve Executions.');
       return []
     }
 
