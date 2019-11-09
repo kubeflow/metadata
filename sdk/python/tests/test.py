@@ -142,6 +142,16 @@ class TestMetedata(unittest.TestCase):
                                description="a workspace for testing",
                                labels={"n1": "v1"})
 
+  def test_init_store_with_ssl_config(self):
+    # TODO: There is a type error in underlying ml_metadate library:
+    #   TypeError: expected certificate to be bytes, got <class 'str'>
+    # Fix this unit test once this bug is fixed.
+    with self.assertRaises(TypeError):
+      metadata.Store(grpc_host=GRPC_HOST,
+        grpc_port= GRPC_PORT,
+        root_certificates= b"cert",
+        private_key= b"private_key",
+        certificate_chain=b"chain")
 
 class ArtifactFixture(object):
   ARTIFACT_TYPE_NAME = "artifact_types/kubeflow.org/alpha/artifact_fixture"

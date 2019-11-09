@@ -38,9 +38,9 @@ class Store(object):
   def __init__(self,
                grpc_host: str = "metadata-grpc-service.kubeflow",
                grpc_port: int = 8080,
-               root_certificates: Optional[str] = None,
-               private_key: Optional[str] = None,
-               certificate_chain: Optional[str] = None):
+               root_certificates: Optional[bytes] = None,
+               private_key: Optional[bytes] = None,
+               certificate_chain: Optional[bytes] = None):
     """
     Args:
       grpc_host: Required gRPC service host, e.g."metadata-grpc-service.kubeflow".
@@ -48,15 +48,20 @@ class Store(object):
       root_certificates: Optional SSL certificate for secure connection.
       private_key: Optional private_key for secure connection.
       certificate_chain: Optional certificate_chain for secure connection.
+
+    The optional parameters are the same as in grpc.ssl_channel_credentials.
+    https://grpc.github.io/grpc/python/grpc.html#grpc.ssl_channel_credentials
     """
     config = mlpb.MetadataStoreClientConfig()
     config.host = grpc_host
     config.port = grpc_port
-    if root_certificates or private_key or certificate_chain:
-      config.ssl_config = config.SSLConfig()
+    if private_key:
       config.ssl_config.client_key = private_key
+    if root_certificates:
       config.ssl_config.custom_ca = root_certificates
+    if certificate_chain:
       config.ssl_config.server_cert = certificate_chain
+
     self.store = metadata_store.MetadataStore(config,
                                               disable_upgrade_migration=False)
 
@@ -202,7 +207,7 @@ class Execution(object):
     self.workspace = workspace
     self.run = run
     self.description = description
-    self.create_time = get_rfc3339_time()
+    self.create_time = _get_rfc3339_time()
     self._type_id = self.workspace.store.get_execution_type(
         Execution.EXECUTION_TYPE_NAME).id
     response = self.workspace.store.put_executions([self.serialized()])
@@ -352,7 +357,7 @@ class DataSet(object):
     self.query = query
     self.labels = labels
     self.id = None
-    self.create_time = get_rfc3339_time()
+    self.create_time = _get_rfc3339_time()
 
   def serialization(self):
     data_set_artifact = mlpb.Artifact(
@@ -455,7 +460,7 @@ class Model(object):
     self.hyperparameters = hyperparameters
     self.labels = labels
     self.id = None
-    self.create_time = get_rfc3339_time()
+    self.create_time = _get_rfc3339_time()
 
   def serialization(self):
     model_artifact = mlpb.Artifact(
@@ -558,7 +563,7 @@ class Metrics(object):
     self.values = values
     self.labels = labels
     self.id = None
-    self.create_time = get_rfc3339_time()
+    self.create_time = _get_rfc3339_time()
 
   def serialization(self):
     metrics_artifact = mlpb.Artifact(
@@ -585,7 +590,7 @@ class Metrics(object):
     return metrics_artifact
 
 
-def get_rfc3339_time():
+def _get_rfc3339_time():
   return datetime.datetime.utcnow().isoformat("T") + "Z"
 
 
