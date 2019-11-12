@@ -113,7 +113,7 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
             "otherFields": Array [
               "pipeline-1",
               "model",
-              1,
+              "1",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -124,7 +124,7 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
             "otherFields": Array [
               "ws1",
               "MNIST-evaluation",
-              4,
+              "4",
               "kubeflow.org/alpha/metrics",
               "gcs://my-bucket/mnist-eval.csv",
             ],
@@ -4329,7 +4329,7 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      1,
+                      "1",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -4472,7 +4472,7 @@ exports[`ArtifactList Renders Artifact with no grouped rows with placeholder 1`]
                     "otherFields": Array [
                       "ws1",
                       "MNIST-evaluation",
-                      4,
+                      "4",
                       "kubeflow.org/alpha/metrics",
                       "gcs://my-bucket/mnist-eval.csv",
                     ],
@@ -4684,7 +4684,7 @@ exports[`ArtifactList Renders and applies filter to a list of Artifacts 1`] = `
             "otherFields": Array [
               "ws1",
               "MNIST-evaluation",
-              4,
+              "4",
               "kubeflow.org/alpha/metrics",
               "gcs://my-bucket/mnist-eval.csv",
             ],
@@ -8807,7 +8807,7 @@ exports[`ArtifactList Renders and applies filter to a list of Artifacts 1`] = `
                     "otherFields": Array [
                       "ws1",
                       "MNIST-evaluation",
-                      4,
+                      "4",
                       "kubeflow.org/alpha/metrics",
                       "gcs://my-bucket/mnist-eval.csv",
                     ],
@@ -9018,7 +9018,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by id 1`] =
             "otherFields": Array [
               "pipeline-1",
               "model",
-              5,
+              "5",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -9029,7 +9029,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by id 1`] =
             "otherFields": Array [
               "ws1",
               "MNIST-evaluation",
-              4,
+              "4",
               "kubeflow.org/alpha/metrics",
               "gcs://my-bucket/mnist-eval.csv",
             ],
@@ -13302,7 +13302,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by id 1`] =
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      5,
+                      "5",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -13445,7 +13445,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by id 1`] =
                     "otherFields": Array [
                       "ws1",
                       "MNIST-evaluation",
-                      4,
+                      "4",
                       "kubeflow.org/alpha/metrics",
                       "gcs://my-bucket/mnist-eval.csv",
                     ],
@@ -13656,7 +13656,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
             "otherFields": Array [
               "pipeline-1",
               "model",
-              1,
+              "1",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -13667,7 +13667,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
             "otherFields": Array [
               "ws1",
               "MNIST-evaluation",
-              4,
+              "4",
               "kubeflow.org/alpha/metrics",
               "gcs://my-bucket/mnist-eval.csv",
             ],
@@ -17940,7 +17940,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      1,
+                      "1",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -18083,7 +18083,7 @@ exports[`ArtifactList Renders and sorts Artifacts in ascending order by pipeline
                     "otherFields": Array [
                       "ws1",
                       "MNIST-evaluation",
-                      4,
+                      "4",
                       "kubeflow.org/alpha/metrics",
                       "gcs://my-bucket/mnist-eval.csv",
                     ],
@@ -18294,7 +18294,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             "otherFields": Array [
               "pipeline-1",
               "model",
-              1,
+              "1",
               "kubeflow.org/alpha/model",
               "gs://my-bucket/mnist",
             ],
@@ -18305,7 +18305,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
             "otherFields": Array [
               "ws1",
               "MNIST-evaluation",
-              4,
+              "4",
               "kubeflow.org/alpha/metrics",
               "gcs://my-bucket/mnist-eval.csv",
             ],
@@ -22510,7 +22510,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     "otherFields": Array [
                       "pipeline-1",
                       "model",
-                      1,
+                      "1",
                       "kubeflow.org/alpha/model",
                       "gs://my-bucket/mnist",
                     ],
@@ -22653,7 +22653,7 @@ exports[`ArtifactList Renders with a list of Artifacts 1`] = `
                     "otherFields": Array [
                       "ws1",
                       "MNIST-evaluation",
-                      4,
+                      "4",
                       "kubeflow.org/alpha/metrics",
                       "gcs://my-bucket/mnist-eval.csv",
                     ],

@@ -5,21 +5,23 @@ import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
+import {ApiListArtifactsResponse} from '../apis/service';
 import CustomTable, {ExpandState} from '../components/CustomTable';
-import {GetArtifactsResponse, GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
-import {Artifact, ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
-import {stringValue} from '../TestUtils';
+import {GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
+import {grpc} from "@improbable-eng/grpc-web";
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
-  const mockGetArtifactTypes =
-      jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
-  const mockGetArtifacts = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifacts');
+  const mockGetArtifactTypes = jest.spyOn(
+    Api.getInstance().metadataStoreService, 'getArtifactTypes');
+  const mockListArtifacts = jest.spyOn(
+    Api.getInstance().metadataService, 'listArtifacts2');
 
-  const fakeGetArtifactTypesResponse = new GetArtifactTypesResponse();
+  const fakeGetArtifactTypesResponse: GetArtifactTypesResponse = new GetArtifactTypesResponse();
 
   const artifactType1 = new ArtifactType();
   artifactType1.setId(1);
@@ -36,75 +38,94 @@ describe('ArtifactList', () => {
   artifactType3.setName('kubeflow.org/alpha/model');
   fakeGetArtifactTypesResponse.addArtifactTypes(artifactType3);
 
-  const fakeGetArtifactsResponse = new GetArtifactsResponse();
+  const fakeArtifactsResponse: ApiListArtifactsResponse = {
+    artifacts: [
+      {
+        id: '1',
+        type_id: '3',
+        uri: 'gs://my-bucket/mnist',
+        properties: {
+          name: {string_value: 'model'},
+          pipeline_name: {string_value: 'pipeline-1'},
+          version: {string_value: 'v0'},
+          create_time: {string_value: '2019-06-12T01:21:48.259263Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+      {
+        id: '2',
+        type_id: '2',
+        uri: 'gs://my-bucket/dataset2',
+        properties: {
+          name: {string_value: 'dataset'},
+          pipeline_name: {string_value: 'pipeline-1'},
+          version: {string_value: 'v1'},
+          create_time: {string_value: '2019-06-16T01:21:48.259263Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+      {
+        id: '3',
+        type_id: '2',
+        uri: 'gs://my-bucket/dataset2',
+        properties: {
+          name: {string_value: 'dataset'},
+          pipeline_name: {string_value: 'pipeline-1'},
+          version: {string_value: 'v2'},
+          create_time: {string_value: '2019-07-01T01:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+      {
+        id: '4',
+        type_id: '1',
+        uri: 'gcs://my-bucket/mnist-eval.csv',
+        properties: {
+          create_time: {string_value: '2019-06-28T01:40:11.843625Z'},
+          data_set_id: {string_value: '13'},
+          description: {
+            string_value:
+              'validating the MNIST model to recognize handwritten digits'
+          },
+          metrics_type: {string_value: 'validation'},
+          model_id: {string_value: '1'},
+          name: {string_value: 'MNIST-evaluation'},
+          owner: {string_value: 'someone@kubeflow.org'}
+        },
+        custom_properties: {
+          __kf_run__: {string_value: 'run-2019-06-28T01:40:11.735816'},
+          __kf_workspace__: {string_value: 'ws1'}
+        }
+      },
+      {
+        id: '5',
+        type_id: '3',
+        uri: 'gs://my-bucket/mnist',
+        properties: {
+          name: {string_value: 'model'},
+          pipeline_name: {string_value: 'pipeline-1'},
+          version: {string_value: 'v1'},
+          create_time: {string_value: '2019-07-01T00:00:00.000000Z'},
+        },
+        custom_properties: {
+          __kf_workspace__: {string_value: 'workspace-1'},
+        },
+      },
+    ]
+  };
 
-  const artifact1 = new Artifact();
-  artifact1.setId(1);
-  artifact1.setTypeId(3);
-  artifact1.setUri('gs://my-bucket/mnist');
-  const artifact1PropertiesMap = artifact1.getPropertiesMap();
-  artifact1PropertiesMap.set('name', stringValue('model'));
-  artifact1PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
-  artifact1PropertiesMap.set('version', stringValue('v0'));
-  artifact1PropertiesMap.set('create_time', stringValue('2019-06-12T01:21:48.259263Z'));
-  fakeGetArtifactsResponse.addArtifacts(artifact1);
+const serviceError = {
+  code: 0,
+  message: '',
+  metadata: new grpc.Metadata()
+};
 
-  const artifact2 = new Artifact();
-  artifact2.setId(2);
-  artifact2.setTypeId(2);
-  artifact2.setUri('gs://my-bucket/dataset2');
-  const artifact2PropertiesMap = artifact2.getPropertiesMap();
-  artifact2PropertiesMap.set('name', stringValue('dataset'));
-  artifact2PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
-  artifact2PropertiesMap.set('version', stringValue('v1'));
-  artifact2PropertiesMap.set('create_time', stringValue('2019-06-16T01:21:48.259263Z'));
-  const artifact2CustomPropertiesMap = artifact2.getCustomPropertiesMap();
-  artifact2CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
-  fakeGetArtifactsResponse.addArtifacts(artifact2);
-
-  const artifact3 = new Artifact();
-  artifact3.setId(3);
-  artifact3.setTypeId(2);
-  artifact3.setUri('gs://my-bucket/dataset2');
-  const artifact3PropertiesMap = artifact3.getPropertiesMap();
-  artifact3PropertiesMap.set('name', stringValue('dataset'));
-  artifact3PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
-  artifact3PropertiesMap.set('version', stringValue('v2'));
-  artifact3PropertiesMap.set('create_time', stringValue('2019-07-01T01:00:00.000000Z'));
-  const artifact3CustomPropertiesMap = artifact3.getCustomPropertiesMap();
-  artifact3CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
-  fakeGetArtifactsResponse.addArtifacts(artifact3);
-
-  const artifact4 = new Artifact();
-  artifact4.setId(4);
-  artifact4.setTypeId(1);
-  artifact4.setUri('gcs://my-bucket/mnist-eval.csv');
-  const artifact4PropertiesMap = artifact4.getPropertiesMap();
-  artifact4PropertiesMap.set('create_time', stringValue('2019-06-28T01:40:11.843625Z'));
-  artifact4PropertiesMap.set('data_set_id', stringValue('13'));
-  artifact4PropertiesMap.set(
-      'description', stringValue('validating the MNIST model to recognize handwritten digits'));
-  artifact4PropertiesMap.set('metrics_type', stringValue('validation'));
-  artifact4PropertiesMap.set('model_id', stringValue('1'));
-  artifact4PropertiesMap.set('name', stringValue('MNIST-evaluation'));
-  artifact4PropertiesMap.set('owner', stringValue('someone@kubeflow.org'));
-  const artifact4CustomPropertiesMap = artifact4.getCustomPropertiesMap();
-  artifact4CustomPropertiesMap.set('__kf_run__', stringValue('run-2019-06-28T01:40:11.735816'));
-  artifact4CustomPropertiesMap.set('__kf_workspace__', stringValue('ws1'));
-  fakeGetArtifactsResponse.addArtifacts(artifact4);
-
-  const artifact5 = new Artifact();
-  artifact5.setId(5);
-  artifact5.setTypeId(3);
-  artifact5.setUri('gs://my-bucket/mnist');
-  const artifact5PropertiesMap = artifact5.getPropertiesMap();
-  artifact5PropertiesMap.set('name', stringValue('model'));
-  artifact5PropertiesMap.set('pipeline_name', stringValue('pipeline-1'));
-  artifact5PropertiesMap.set('version', stringValue('v1'));
-  artifact5PropertiesMap.set('create_time', stringValue('2019-07-01T00:00:00.000000Z'));
-  const artifact5CustomPropertiesMap = artifact5.getCustomPropertiesMap();
-  artifact5CustomPropertiesMap.set('__kf_workspace__', stringValue('workspace-1'));
-  fakeGetArtifactsResponse.addArtifacts(artifact5);
 
   function generateProps(): PageProps {
     return TestUtils.generatePageProps(
@@ -131,22 +152,28 @@ describe('ArtifactList', () => {
   });
 
   it('Renders with a list of Artifacts', async () => {
-    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     tree.update();
     expect(tree).toMatchSnapshot();
   });
 
   it('Renders and applies filter to a list of Artifacts', async () => {
-    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactTypesResponse,
+    });
+    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     tree.update();
 
@@ -160,11 +187,14 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by pipeline/workspace name',
     async () => {
-      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -179,11 +209,14 @@ describe('ArtifactList', () => {
 
   it('Renders and sorts Artifacts in ascending order by id',
     async () => {
-      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -198,22 +231,28 @@ describe('ArtifactList', () => {
 
   it('Renders and expands artifacts from pipeline-1',
     async () => {
-      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
       const table = tree.find(CustomTable).instance() as CustomTable;
-      const index = table.props.rows.findIndex((r) => r.otherFields[0] === 'pipeline-1');
+      const index = table.props.rows
+        .findIndex((r) => r.otherFields[0] === 'pipeline-1');
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.EXPANDED);
       const expandedRows = tree.find('.expandedContainer CustomTableRow');
       expect(expandedRows.length).toBe(4);
-      expect(expandedRows.get(0).props.row.id).toBe('kubeflow.org/alpha/model:1');
-      expect(expandedRows.get(1).props.row.id).toBe('kubeflow.org/alpha/data_set:2');
+      expect(expandedRows.get(0).props.row.id)
+        .toBe('kubeflow.org/alpha/model:1');
+      expect(expandedRows.get(1).props.row.id)
+        .toBe('kubeflow.org/alpha/data_set:2');
 
       tree.find('IconButton.expandButton').at(index).simulate('click');
       expect(table.props.rows[index].expandState).toBe(ExpandState.COLLAPSED);
@@ -222,11 +261,14 @@ describe('ArtifactList', () => {
 
   it('Renders Artifact with no grouped rows with placeholder',
     async () => {
-      mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-      mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
+      mockGetArtifactTypes.mockResolvedValue({
+        error: null,
+        response: fakeGetArtifactTypesResponse,
+      });
+      mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
       tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-      await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+      await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
       await TestUtils.flushPromises();
       tree.update();
 
@@ -239,30 +281,36 @@ describe('ArtifactList', () => {
     });
 
   it('Shows error when artifacts cannot be retrieved', async () => {
-    mockGetArtifactTypes.mockResolvedValue(fakeGetArtifactTypesResponse);
-    // @ts-ignore
-    mockGetArtifacts.mockResolvedValue();
+    mockGetArtifactTypes.mockResolvedValue({
+      error: null,
+      response: fakeGetArtifactTypesResponse,
+    });
+    mockListArtifacts.mockRejectedValue(new Error('List artifacts error'));
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockGetArtifacts]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve Artifacts.',
+      message: 'Unable to retrieve Artifacts. ' +
+        'Click Details for more information.',
       mode: 'error',
     }));
   });
 
   it('Shows error when artifact types cannot be retrieved', async () => {
-    mockGetArtifacts.mockResolvedValue(fakeGetArtifactsResponse);
-    // @ts-ignore
-    mockGetArtifactTypes.mockResolvedValue();
+    mockListArtifacts.mockResolvedValue(fakeArtifactsResponse);
+    mockGetArtifactTypes.mockResolvedValue({
+      error: serviceError,
+      response: fakeGetArtifactTypesResponse,
+    });
     tree = TestUtils.mountWithRouter(<ArtifactList {...generateProps()} />);
 
-    await Promise.all([mockGetArtifactTypes, mockGetArtifactTypes]);
+    await Promise.all([mockGetArtifactTypes, mockListArtifacts]);
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
       message:
-        'Unable to retrieve Artifact Types, some features may not work.',
+        'Unable to retrieve Artifact Types, some features may not work. ' +
+        'Click Details for more information.',
       mode: 'error',
     }));
   });

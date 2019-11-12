@@ -1,20 +1,30 @@
-import * as jspb from "google-protobuf"
+// package: ml_metadata
+// file: src/apis/metadata/metadata_store.proto
+
+import * as jspb from "google-protobuf";
 
 export class Value extends jspb.Message {
-  getIntValue(): number;
+  hasIntValue(): boolean;
+  clearIntValue(): void;
+  getIntValue(): number | undefined;
   setIntValue(value: number): void;
 
-  getDoubleValue(): number;
+  hasDoubleValue(): boolean;
+  clearDoubleValue(): void;
+  getDoubleValue(): number | undefined;
   setDoubleValue(value: number): void;
 
-  getStringValue(): string;
+  hasStringValue(): boolean;
+  clearStringValue(): void;
+  getStringValue(): string | undefined;
   setStringValue(value: string): void;
 
   getValueCase(): Value.ValueCase;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Value.AsObject;
   static toObject(includeInstance: boolean, msg: Value): Value.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Value, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Value;
   static deserializeBinaryFromReader(message: Value, reader: jspb.BinaryReader): Value;
@@ -22,12 +32,12 @@ export class Value extends jspb.Message {
 
 export namespace Value {
   export type AsObject = {
-    intValue: number,
-    doubleValue: number,
-    stringValue: string,
+    intValue?: number,
+    doubleValue?: number,
+    stringValue?: string,
   }
 
-  export enum ValueCase { 
+  export enum ValueCase {
     VALUE_NOT_SET = 0,
     INT_VALUE = 1,
     DOUBLE_VALUE = 2,
@@ -36,24 +46,30 @@ export namespace Value {
 }
 
 export class Artifact extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getTypeId(): number;
+  hasTypeId(): boolean;
+  clearTypeId(): void;
+  getTypeId(): number | undefined;
   setTypeId(value: number): void;
 
-  getUri(): string;
+  hasUri(): boolean;
+  clearUri(): void;
+  getUri(): string | undefined;
   setUri(value: string): void;
 
   getPropertiesMap(): jspb.Map<string, Value>;
   clearPropertiesMap(): void;
-
   getCustomPropertiesMap(): jspb.Map<string, Value>;
   clearCustomPropertiesMap(): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Artifact.AsObject;
   static toObject(includeInstance: boolean, msg: Artifact): Artifact.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Artifact, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Artifact;
   static deserializeBinaryFromReader(message: Artifact, reader: jspb.BinaryReader): Artifact;
@@ -61,27 +77,32 @@ export class Artifact extends jspb.Message {
 
 export namespace Artifact {
   export type AsObject = {
-    id: number,
-    typeId: number,
-    uri: string,
+    id?: number,
+    typeId?: number,
+    uri?: string,
     propertiesMap: Array<[string, Value.AsObject]>,
     customPropertiesMap: Array<[string, Value.AsObject]>,
   }
 }
 
 export class ArtifactType extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getName(): string;
+  hasName(): boolean;
+  clearName(): void;
+  getName(): string | undefined;
   setName(value: string): void;
 
-  getPropertiesMap(): jspb.Map<string, PropertyType>;
+  getPropertiesMap(): jspb.Map<string, PropertyTypeMap[keyof PropertyTypeMap]>;
   clearPropertiesMap(): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ArtifactType.AsObject;
   static toObject(includeInstance: boolean, msg: ArtifactType): ArtifactType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ArtifactType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ArtifactType;
   static deserializeBinaryFromReader(message: ArtifactType, reader: jspb.BinaryReader): ArtifactType;
@@ -89,33 +110,43 @@ export class ArtifactType extends jspb.Message {
 
 export namespace ArtifactType {
   export type AsObject = {
-    id: number,
-    name: string,
-    propertiesMap: Array<[string, PropertyType]>,
+    id?: number,
+    name?: string,
+    propertiesMap: Array<[string, PropertyTypeMap[keyof PropertyTypeMap]]>,
   }
 }
 
 export class Event extends jspb.Message {
-  getArtifactId(): number;
+  hasArtifactId(): boolean;
+  clearArtifactId(): void;
+  getArtifactId(): number | undefined;
   setArtifactId(value: number): void;
 
-  getExecutionId(): number;
+  hasExecutionId(): boolean;
+  clearExecutionId(): void;
+  getExecutionId(): number | undefined;
   setExecutionId(value: number): void;
 
-  getPath(): Event.Path | undefined;
-  setPath(value?: Event.Path): void;
   hasPath(): boolean;
   clearPath(): void;
+  getPath(): Event.Path | undefined;
+  setPath(value?: Event.Path): void;
 
-  getType(): Event.Type;
-  setType(value: Event.Type): void;
+  hasType(): boolean;
+  clearType(): void;
+  getType(): Event.TypeMap[keyof Event.TypeMap] | undefined;
+  setType(value: Event.TypeMap[keyof Event.TypeMap]): void;
 
-  getMillisecondsSinceEpoch(): number;
+  hasMillisecondsSinceEpoch(): boolean;
+  clearMillisecondsSinceEpoch(): void;
+  getMillisecondsSinceEpoch(): number | undefined;
   setMillisecondsSinceEpoch(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Event.AsObject;
   static toObject(includeInstance: boolean, msg: Event): Event.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Event, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Event;
   static deserializeBinaryFromReader(message: Event, reader: jspb.BinaryReader): Event;
@@ -123,22 +154,24 @@ export class Event extends jspb.Message {
 
 export namespace Event {
   export type AsObject = {
-    artifactId: number,
-    executionId: number,
+    artifactId?: number,
+    executionId?: number,
     path?: Event.Path.AsObject,
-    type: Event.Type,
-    millisecondsSinceEpoch: number,
+    type?: Event.TypeMap[keyof Event.TypeMap],
+    millisecondsSinceEpoch?: number,
   }
 
   export class Path extends jspb.Message {
+    clearStepsList(): void;
     getStepsList(): Array<Event.Path.Step>;
     setStepsList(value: Array<Event.Path.Step>): void;
-    clearStepsList(): void;
     addSteps(value?: Event.Path.Step, index?: number): Event.Path.Step;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): Path.AsObject;
     static toObject(includeInstance: boolean, msg: Path): Path.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
     static serializeBinaryToWriter(message: Path, writer: jspb.BinaryWriter): void;
     static deserializeBinary(bytes: Uint8Array): Path;
     static deserializeBinaryFromReader(message: Path, reader: jspb.BinaryReader): Path;
@@ -150,17 +183,22 @@ export namespace Event {
     }
 
     export class Step extends jspb.Message {
-      getIndex(): number;
+      hasIndex(): boolean;
+      clearIndex(): void;
+      getIndex(): number | undefined;
       setIndex(value: number): void;
 
-      getKey(): string;
+      hasKey(): boolean;
+      clearKey(): void;
+      getKey(): string | undefined;
       setKey(value: string): void;
 
       getValueCase(): Step.ValueCase;
-
       serializeBinary(): Uint8Array;
       toObject(includeInstance?: boolean): Step.AsObject;
       static toObject(includeInstance: boolean, msg: Step): Step.AsObject;
+      static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+      static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
       static serializeBinaryToWriter(message: Step, writer: jspb.BinaryWriter): void;
       static deserializeBinary(bytes: Uint8Array): Step;
       static deserializeBinaryFromReader(message: Step, reader: jspb.BinaryReader): Step;
@@ -168,48 +206,54 @@ export namespace Event {
 
     export namespace Step {
       export type AsObject = {
-        index: number,
-        key: string,
+        index?: number,
+        key?: string,
       }
 
-      export enum ValueCase { 
+      export enum ValueCase {
         VALUE_NOT_SET = 0,
         INDEX = 1,
         KEY = 2,
       }
     }
-
   }
 
-
-  export enum Type { 
-    UNKNOWN = 0,
-    DECLARED_OUTPUT = 1,
-    DECLARED_INPUT = 2,
-    INPUT = 3,
-    OUTPUT = 4,
+  export interface TypeMap {
+    UNKNOWN: 0;
+    DECLARED_OUTPUT: 1;
+    DECLARED_INPUT: 2;
+    INPUT: 3;
+    OUTPUT: 4;
   }
+
+  export const Type: TypeMap;
 }
 
 export class Execution extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getTypeId(): number;
+  hasTypeId(): boolean;
+  clearTypeId(): void;
+  getTypeId(): number | undefined;
   setTypeId(value: number): void;
 
-  getLastKnownState(): Execution.State;
-  setLastKnownState(value: Execution.State): void;
+  hasLastKnownState(): boolean;
+  clearLastKnownState(): void;
+  getLastKnownState(): Execution.StateMap[keyof Execution.StateMap] | undefined;
+  setLastKnownState(value: Execution.StateMap[keyof Execution.StateMap]): void;
 
   getPropertiesMap(): jspb.Map<string, Value>;
   clearPropertiesMap(): void;
-
   getCustomPropertiesMap(): jspb.Map<string, Value>;
   clearCustomPropertiesMap(): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Execution.AsObject;
   static toObject(includeInstance: boolean, msg: Execution): Execution.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Execution, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Execution;
   static deserializeBinaryFromReader(message: Execution, reader: jspb.BinaryReader): Execution;
@@ -217,46 +261,53 @@ export class Execution extends jspb.Message {
 
 export namespace Execution {
   export type AsObject = {
-    id: number,
-    typeId: number,
-    lastKnownState: Execution.State,
+    id?: number,
+    typeId?: number,
+    lastKnownState?: Execution.StateMap[keyof Execution.StateMap],
     propertiesMap: Array<[string, Value.AsObject]>,
     customPropertiesMap: Array<[string, Value.AsObject]>,
   }
 
-  export enum State { 
-    UNKNOWN = 0,
-    NEW = 1,
-    RUNNING = 2,
-    COMPLETE = 3,
-    FAILED = 4,
-    CACHED = 5,
+  export interface StateMap {
+    UNKNOWN: 0;
+    NEW: 1;
+    RUNNING: 2;
+    COMPLETE: 3;
+    FAILED: 4;
+    CACHED: 5;
   }
+
+  export const State: StateMap;
 }
 
 export class ExecutionType extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getName(): string;
+  hasName(): boolean;
+  clearName(): void;
+  getName(): string | undefined;
   setName(value: string): void;
 
-  getPropertiesMap(): jspb.Map<string, PropertyType>;
+  getPropertiesMap(): jspb.Map<string, PropertyTypeMap[keyof PropertyTypeMap]>;
   clearPropertiesMap(): void;
-
-  getInputType(): ArtifactStructType | undefined;
-  setInputType(value?: ArtifactStructType): void;
   hasInputType(): boolean;
   clearInputType(): void;
+  getInputType(): ArtifactStructType | undefined;
+  setInputType(value?: ArtifactStructType): void;
 
-  getOutputType(): ArtifactStructType | undefined;
-  setOutputType(value?: ArtifactStructType): void;
   hasOutputType(): boolean;
   clearOutputType(): void;
+  getOutputType(): ArtifactStructType | undefined;
+  setOutputType(value?: ArtifactStructType): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ExecutionType.AsObject;
   static toObject(includeInstance: boolean, msg: ExecutionType): ExecutionType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ExecutionType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ExecutionType;
   static deserializeBinaryFromReader(message: ExecutionType, reader: jspb.BinaryReader): ExecutionType;
@@ -264,27 +315,32 @@ export class ExecutionType extends jspb.Message {
 
 export namespace ExecutionType {
   export type AsObject = {
-    id: number,
-    name: string,
-    propertiesMap: Array<[string, PropertyType]>,
+    id?: number,
+    name?: string,
+    propertiesMap: Array<[string, PropertyTypeMap[keyof PropertyTypeMap]]>,
     inputType?: ArtifactStructType.AsObject,
     outputType?: ArtifactStructType.AsObject,
   }
 }
 
 export class ContextType extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getName(): string;
+  hasName(): boolean;
+  clearName(): void;
+  getName(): string | undefined;
   setName(value: string): void;
 
-  getPropertiesMap(): jspb.Map<string, PropertyType>;
+  getPropertiesMap(): jspb.Map<string, PropertyTypeMap[keyof PropertyTypeMap]>;
   clearPropertiesMap(): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ContextType.AsObject;
   static toObject(includeInstance: boolean, msg: ContextType): ContextType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ContextType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ContextType;
   static deserializeBinaryFromReader(message: ContextType, reader: jspb.BinaryReader): ContextType;
@@ -292,31 +348,37 @@ export class ContextType extends jspb.Message {
 
 export namespace ContextType {
   export type AsObject = {
-    id: number,
-    name: string,
-    propertiesMap: Array<[string, PropertyType]>,
+    id?: number,
+    name?: string,
+    propertiesMap: Array<[string, PropertyTypeMap[keyof PropertyTypeMap]]>,
   }
 }
 
 export class Context extends jspb.Message {
-  getId(): number;
+  hasId(): boolean;
+  clearId(): void;
+  getId(): number | undefined;
   setId(value: number): void;
 
-  getTypeId(): number;
+  hasTypeId(): boolean;
+  clearTypeId(): void;
+  getTypeId(): number | undefined;
   setTypeId(value: number): void;
 
-  getName(): string;
+  hasName(): boolean;
+  clearName(): void;
+  getName(): string | undefined;
   setName(value: string): void;
 
   getPropertiesMap(): jspb.Map<string, Value>;
   clearPropertiesMap(): void;
-
   getCustomPropertiesMap(): jspb.Map<string, Value>;
   clearCustomPropertiesMap(): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Context.AsObject;
   static toObject(includeInstance: boolean, msg: Context): Context.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Context, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Context;
   static deserializeBinaryFromReader(message: Context, reader: jspb.BinaryReader): Context;
@@ -324,24 +386,30 @@ export class Context extends jspb.Message {
 
 export namespace Context {
   export type AsObject = {
-    id: number,
-    typeId: number,
-    name: string,
+    id?: number,
+    typeId?: number,
+    name?: string,
     propertiesMap: Array<[string, Value.AsObject]>,
     customPropertiesMap: Array<[string, Value.AsObject]>,
   }
 }
 
 export class Attribution extends jspb.Message {
-  getArtifactId(): number;
+  hasArtifactId(): boolean;
+  clearArtifactId(): void;
+  getArtifactId(): number | undefined;
   setArtifactId(value: number): void;
 
-  getContextId(): number;
+  hasContextId(): boolean;
+  clearContextId(): void;
+  getContextId(): number | undefined;
   setContextId(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Attribution.AsObject;
   static toObject(includeInstance: boolean, msg: Attribution): Attribution.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Attribution, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Attribution;
   static deserializeBinaryFromReader(message: Attribution, reader: jspb.BinaryReader): Attribution;
@@ -349,21 +417,27 @@ export class Attribution extends jspb.Message {
 
 export namespace Attribution {
   export type AsObject = {
-    artifactId: number,
-    contextId: number,
+    artifactId?: number,
+    contextId?: number,
   }
 }
 
 export class Association extends jspb.Message {
-  getExecutionId(): number;
+  hasExecutionId(): boolean;
+  clearExecutionId(): void;
+  getExecutionId(): number | undefined;
   setExecutionId(value: number): void;
 
-  getContextId(): number;
+  hasContextId(): boolean;
+  clearContextId(): void;
+  getContextId(): number | undefined;
   setContextId(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Association.AsObject;
   static toObject(includeInstance: boolean, msg: Association): Association.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: Association, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): Association;
   static deserializeBinaryFromReader(message: Association, reader: jspb.BinaryReader): Association;
@@ -371,21 +445,27 @@ export class Association extends jspb.Message {
 
 export namespace Association {
   export type AsObject = {
-    executionId: number,
-    contextId: number,
+    executionId?: number,
+    contextId?: number,
   }
 }
 
 export class ParentContext extends jspb.Message {
-  getChildId(): number;
+  hasChildId(): boolean;
+  clearChildId(): void;
+  getChildId(): number | undefined;
   setChildId(value: number): void;
 
-  getParentId(): number;
+  hasParentId(): boolean;
+  clearParentId(): void;
+  getParentId(): number | undefined;
   setParentId(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ParentContext.AsObject;
   static toObject(includeInstance: boolean, msg: ParentContext): ParentContext.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ParentContext, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ParentContext;
   static deserializeBinaryFromReader(message: ParentContext, reader: jspb.BinaryReader): ParentContext;
@@ -393,57 +473,58 @@ export class ParentContext extends jspb.Message {
 
 export namespace ParentContext {
   export type AsObject = {
-    childId: number,
-    parentId: number,
+    childId?: number,
+    parentId?: number,
   }
 }
 
 export class ArtifactStructType extends jspb.Message {
-  getSimple(): ArtifactType | undefined;
-  setSimple(value?: ArtifactType): void;
   hasSimple(): boolean;
   clearSimple(): void;
+  getSimple(): ArtifactType | undefined;
+  setSimple(value?: ArtifactType): void;
 
-  getUnionType(): UnionArtifactStructType | undefined;
-  setUnionType(value?: UnionArtifactStructType): void;
   hasUnionType(): boolean;
   clearUnionType(): void;
+  getUnionType(): UnionArtifactStructType | undefined;
+  setUnionType(value?: UnionArtifactStructType): void;
 
-  getIntersection(): IntersectionArtifactStructType | undefined;
-  setIntersection(value?: IntersectionArtifactStructType): void;
   hasIntersection(): boolean;
   clearIntersection(): void;
+  getIntersection(): IntersectionArtifactStructType | undefined;
+  setIntersection(value?: IntersectionArtifactStructType): void;
 
-  getList(): ListArtifactStructType | undefined;
-  setList(value?: ListArtifactStructType): void;
   hasList(): boolean;
   clearList(): void;
+  getList(): ListArtifactStructType | undefined;
+  setList(value?: ListArtifactStructType): void;
 
-  getNone(): NoneArtifactStructType | undefined;
-  setNone(value?: NoneArtifactStructType): void;
   hasNone(): boolean;
   clearNone(): void;
+  getNone(): NoneArtifactStructType | undefined;
+  setNone(value?: NoneArtifactStructType): void;
 
-  getAny(): AnyArtifactStructType | undefined;
-  setAny(value?: AnyArtifactStructType): void;
   hasAny(): boolean;
   clearAny(): void;
+  getAny(): AnyArtifactStructType | undefined;
+  setAny(value?: AnyArtifactStructType): void;
 
-  getTuple(): TupleArtifactStructType | undefined;
-  setTuple(value?: TupleArtifactStructType): void;
   hasTuple(): boolean;
   clearTuple(): void;
+  getTuple(): TupleArtifactStructType | undefined;
+  setTuple(value?: TupleArtifactStructType): void;
 
-  getDict(): DictArtifactStructType | undefined;
-  setDict(value?: DictArtifactStructType): void;
   hasDict(): boolean;
   clearDict(): void;
+  getDict(): DictArtifactStructType | undefined;
+  setDict(value?: DictArtifactStructType): void;
 
   getKindCase(): ArtifactStructType.KindCase;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: ArtifactStructType): ArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ArtifactStructType;
   static deserializeBinaryFromReader(message: ArtifactStructType, reader: jspb.BinaryReader): ArtifactStructType;
@@ -461,7 +542,7 @@ export namespace ArtifactStructType {
     dict?: DictArtifactStructType.AsObject,
   }
 
-  export enum KindCase { 
+  export enum KindCase {
     KIND_NOT_SET = 0,
     SIMPLE = 1,
     UNION_TYPE = 2,
@@ -475,14 +556,16 @@ export namespace ArtifactStructType {
 }
 
 export class UnionArtifactStructType extends jspb.Message {
+  clearCandidatesList(): void;
   getCandidatesList(): Array<ArtifactStructType>;
   setCandidatesList(value: Array<ArtifactStructType>): void;
-  clearCandidatesList(): void;
   addCandidates(value?: ArtifactStructType, index?: number): ArtifactStructType;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UnionArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: UnionArtifactStructType): UnionArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: UnionArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): UnionArtifactStructType;
   static deserializeBinaryFromReader(message: UnionArtifactStructType, reader: jspb.BinaryReader): UnionArtifactStructType;
@@ -495,14 +578,16 @@ export namespace UnionArtifactStructType {
 }
 
 export class IntersectionArtifactStructType extends jspb.Message {
+  clearConstraintsList(): void;
   getConstraintsList(): Array<ArtifactStructType>;
   setConstraintsList(value: Array<ArtifactStructType>): void;
-  clearConstraintsList(): void;
   addConstraints(value?: ArtifactStructType, index?: number): ArtifactStructType;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): IntersectionArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: IntersectionArtifactStructType): IntersectionArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: IntersectionArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): IntersectionArtifactStructType;
   static deserializeBinaryFromReader(message: IntersectionArtifactStructType, reader: jspb.BinaryReader): IntersectionArtifactStructType;
@@ -515,14 +600,16 @@ export namespace IntersectionArtifactStructType {
 }
 
 export class ListArtifactStructType extends jspb.Message {
-  getElement(): ArtifactStructType | undefined;
-  setElement(value?: ArtifactStructType): void;
   hasElement(): boolean;
   clearElement(): void;
+  getElement(): ArtifactStructType | undefined;
+  setElement(value?: ArtifactStructType): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: ListArtifactStructType): ListArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ListArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ListArtifactStructType;
   static deserializeBinaryFromReader(message: ListArtifactStructType, reader: jspb.BinaryReader): ListArtifactStructType;
@@ -538,6 +625,8 @@ export class NoneArtifactStructType extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): NoneArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: NoneArtifactStructType): NoneArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: NoneArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): NoneArtifactStructType;
   static deserializeBinaryFromReader(message: NoneArtifactStructType, reader: jspb.BinaryReader): NoneArtifactStructType;
@@ -552,6 +641,8 @@ export class AnyArtifactStructType extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): AnyArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: AnyArtifactStructType): AnyArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: AnyArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): AnyArtifactStructType;
   static deserializeBinaryFromReader(message: AnyArtifactStructType, reader: jspb.BinaryReader): AnyArtifactStructType;
@@ -563,14 +654,16 @@ export namespace AnyArtifactStructType {
 }
 
 export class TupleArtifactStructType extends jspb.Message {
+  clearElementsList(): void;
   getElementsList(): Array<ArtifactStructType>;
   setElementsList(value: Array<ArtifactStructType>): void;
-  clearElementsList(): void;
   addElements(value?: ArtifactStructType, index?: number): ArtifactStructType;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TupleArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: TupleArtifactStructType): TupleArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: TupleArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): TupleArtifactStructType;
   static deserializeBinaryFromReader(message: TupleArtifactStructType, reader: jspb.BinaryReader): TupleArtifactStructType;
@@ -585,18 +678,21 @@ export namespace TupleArtifactStructType {
 export class DictArtifactStructType extends jspb.Message {
   getPropertiesMap(): jspb.Map<string, ArtifactStructType>;
   clearPropertiesMap(): void;
-
-  getNoneTypeNotRequired(): boolean;
+  hasNoneTypeNotRequired(): boolean;
+  clearNoneTypeNotRequired(): void;
+  getNoneTypeNotRequired(): boolean | undefined;
   setNoneTypeNotRequired(value: boolean): void;
 
-  getExtraPropertiesType(): ArtifactStructType | undefined;
-  setExtraPropertiesType(value?: ArtifactStructType): void;
   hasExtraPropertiesType(): boolean;
   clearExtraPropertiesType(): void;
+  getExtraPropertiesType(): ArtifactStructType | undefined;
+  setExtraPropertiesType(value?: ArtifactStructType): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DictArtifactStructType.AsObject;
   static toObject(includeInstance: boolean, msg: DictArtifactStructType): DictArtifactStructType.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: DictArtifactStructType, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): DictArtifactStructType;
   static deserializeBinaryFromReader(message: DictArtifactStructType, reader: jspb.BinaryReader): DictArtifactStructType;
@@ -605,7 +701,7 @@ export class DictArtifactStructType extends jspb.Message {
 export namespace DictArtifactStructType {
   export type AsObject = {
     propertiesMap: Array<[string, ArtifactStructType.AsObject]>,
-    noneTypeNotRequired: boolean,
+    noneTypeNotRequired?: boolean,
     extraPropertiesType?: ArtifactStructType.AsObject,
   }
 }
@@ -614,6 +710,8 @@ export class FakeDatabaseConfig extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): FakeDatabaseConfig.AsObject;
   static toObject(includeInstance: boolean, msg: FakeDatabaseConfig): FakeDatabaseConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: FakeDatabaseConfig, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): FakeDatabaseConfig;
   static deserializeBinaryFromReader(message: FakeDatabaseConfig, reader: jspb.BinaryReader): FakeDatabaseConfig;
@@ -625,24 +723,36 @@ export namespace FakeDatabaseConfig {
 }
 
 export class MySQLDatabaseConfig extends jspb.Message {
-  getHost(): string;
+  hasHost(): boolean;
+  clearHost(): void;
+  getHost(): string | undefined;
   setHost(value: string): void;
 
-  getPort(): number;
+  hasPort(): boolean;
+  clearPort(): void;
+  getPort(): number | undefined;
   setPort(value: number): void;
 
-  getDatabase(): string;
+  hasDatabase(): boolean;
+  clearDatabase(): void;
+  getDatabase(): string | undefined;
   setDatabase(value: string): void;
 
-  getUser(): string;
+  hasUser(): boolean;
+  clearUser(): void;
+  getUser(): string | undefined;
   setUser(value: string): void;
 
-  getPassword(): string;
+  hasPassword(): boolean;
+  clearPassword(): void;
+  getPassword(): string | undefined;
   setPassword(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MySQLDatabaseConfig.AsObject;
   static toObject(includeInstance: boolean, msg: MySQLDatabaseConfig): MySQLDatabaseConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: MySQLDatabaseConfig, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): MySQLDatabaseConfig;
   static deserializeBinaryFromReader(message: MySQLDatabaseConfig, reader: jspb.BinaryReader): MySQLDatabaseConfig;
@@ -650,24 +760,30 @@ export class MySQLDatabaseConfig extends jspb.Message {
 
 export namespace MySQLDatabaseConfig {
   export type AsObject = {
-    host: string,
-    port: number,
-    database: string,
-    user: string,
-    password: string,
+    host?: string,
+    port?: number,
+    database?: string,
+    user?: string,
+    password?: string,
   }
 }
 
 export class SqliteMetadataSourceConfig extends jspb.Message {
-  getFilenameUri(): string;
+  hasFilenameUri(): boolean;
+  clearFilenameUri(): void;
+  getFilenameUri(): string | undefined;
   setFilenameUri(value: string): void;
 
-  getConnectionMode(): SqliteMetadataSourceConfig.ConnectionMode;
-  setConnectionMode(value: SqliteMetadataSourceConfig.ConnectionMode): void;
+  hasConnectionMode(): boolean;
+  clearConnectionMode(): void;
+  getConnectionMode(): SqliteMetadataSourceConfig.ConnectionModeMap[keyof SqliteMetadataSourceConfig.ConnectionModeMap] | undefined;
+  setConnectionMode(value: SqliteMetadataSourceConfig.ConnectionModeMap[keyof SqliteMetadataSourceConfig.ConnectionModeMap]): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SqliteMetadataSourceConfig.AsObject;
   static toObject(includeInstance: boolean, msg: SqliteMetadataSourceConfig): SqliteMetadataSourceConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: SqliteMetadataSourceConfig, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SqliteMetadataSourceConfig;
   static deserializeBinaryFromReader(message: SqliteMetadataSourceConfig, reader: jspb.BinaryReader): SqliteMetadataSourceConfig;
@@ -675,39 +791,42 @@ export class SqliteMetadataSourceConfig extends jspb.Message {
 
 export namespace SqliteMetadataSourceConfig {
   export type AsObject = {
-    filenameUri: string,
-    connectionMode: SqliteMetadataSourceConfig.ConnectionMode,
+    filenameUri?: string,
+    connectionMode?: SqliteMetadataSourceConfig.ConnectionModeMap[keyof SqliteMetadataSourceConfig.ConnectionModeMap],
   }
 
-  export enum ConnectionMode { 
-    UNKNOWN = 0,
-    READONLY = 1,
-    READWRITE = 2,
-    READWRITE_OPENCREATE = 3,
+  export interface ConnectionModeMap {
+    UNKNOWN: 0;
+    READONLY: 1;
+    READWRITE: 2;
+    READWRITE_OPENCREATE: 3;
   }
+
+  export const ConnectionMode: ConnectionModeMap;
 }
 
 export class ConnectionConfig extends jspb.Message {
-  getFakeDatabase(): FakeDatabaseConfig | undefined;
-  setFakeDatabase(value?: FakeDatabaseConfig): void;
   hasFakeDatabase(): boolean;
   clearFakeDatabase(): void;
+  getFakeDatabase(): FakeDatabaseConfig | undefined;
+  setFakeDatabase(value?: FakeDatabaseConfig): void;
 
-  getMysql(): MySQLDatabaseConfig | undefined;
-  setMysql(value?: MySQLDatabaseConfig): void;
   hasMysql(): boolean;
   clearMysql(): void;
+  getMysql(): MySQLDatabaseConfig | undefined;
+  setMysql(value?: MySQLDatabaseConfig): void;
 
-  getSqlite(): SqliteMetadataSourceConfig | undefined;
-  setSqlite(value?: SqliteMetadataSourceConfig): void;
   hasSqlite(): boolean;
   clearSqlite(): void;
+  getSqlite(): SqliteMetadataSourceConfig | undefined;
+  setSqlite(value?: SqliteMetadataSourceConfig): void;
 
   getConfigCase(): ConnectionConfig.ConfigCase;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ConnectionConfig.AsObject;
   static toObject(includeInstance: boolean, msg: ConnectionConfig): ConnectionConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: ConnectionConfig, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): ConnectionConfig;
   static deserializeBinaryFromReader(message: ConnectionConfig, reader: jspb.BinaryReader): ConnectionConfig;
@@ -720,7 +839,7 @@ export namespace ConnectionConfig {
     sqlite?: SqliteMetadataSourceConfig.AsObject,
   }
 
-  export enum ConfigCase { 
+  export enum ConfigCase {
     CONFIG_NOT_SET = 0,
     FAKE_DATABASE = 1,
     MYSQL = 2,
@@ -729,19 +848,21 @@ export namespace ConnectionConfig {
 }
 
 export class MetadataStoreServerConfig extends jspb.Message {
-  getConnectionConfig(): ConnectionConfig | undefined;
-  setConnectionConfig(value?: ConnectionConfig): void;
   hasConnectionConfig(): boolean;
   clearConnectionConfig(): void;
+  getConnectionConfig(): ConnectionConfig | undefined;
+  setConnectionConfig(value?: ConnectionConfig): void;
 
-  getSslConfig(): MetadataStoreServerConfig.SSLConfig | undefined;
-  setSslConfig(value?: MetadataStoreServerConfig.SSLConfig): void;
   hasSslConfig(): boolean;
   clearSslConfig(): void;
+  getSslConfig(): MetadataStoreServerConfig.SSLConfig | undefined;
+  setSslConfig(value?: MetadataStoreServerConfig.SSLConfig): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MetadataStoreServerConfig.AsObject;
   static toObject(includeInstance: boolean, msg: MetadataStoreServerConfig): MetadataStoreServerConfig.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
   static serializeBinaryToWriter(message: MetadataStoreServerConfig, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): MetadataStoreServerConfig;
   static deserializeBinaryFromReader(message: MetadataStoreServerConfig, reader: jspb.BinaryReader): MetadataStoreServerConfig;
@@ -754,21 +875,31 @@ export namespace MetadataStoreServerConfig {
   }
 
   export class SSLConfig extends jspb.Message {
-    getServerKey(): string;
+    hasServerKey(): boolean;
+    clearServerKey(): void;
+    getServerKey(): string | undefined;
     setServerKey(value: string): void;
 
-    getServerCert(): string;
+    hasServerCert(): boolean;
+    clearServerCert(): void;
+    getServerCert(): string | undefined;
     setServerCert(value: string): void;
 
-    getCustomCa(): string;
+    hasCustomCa(): boolean;
+    clearCustomCa(): void;
+    getCustomCa(): string | undefined;
     setCustomCa(value: string): void;
 
-    getClientVerify(): boolean;
+    hasClientVerify(): boolean;
+    clearClientVerify(): void;
+    getClientVerify(): boolean | undefined;
     setClientVerify(value: boolean): void;
 
     serializeBinary(): Uint8Array;
     toObject(includeInstance?: boolean): SSLConfig.AsObject;
     static toObject(includeInstance: boolean, msg: SSLConfig): SSLConfig.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
     static serializeBinaryToWriter(message: SSLConfig, writer: jspb.BinaryWriter): void;
     static deserializeBinary(bytes: Uint8Array): SSLConfig;
     static deserializeBinaryFromReader(message: SSLConfig, reader: jspb.BinaryReader): SSLConfig;
@@ -776,18 +907,20 @@ export namespace MetadataStoreServerConfig {
 
   export namespace SSLConfig {
     export type AsObject = {
-      serverKey: string,
-      serverCert: string,
-      customCa: string,
-      clientVerify: boolean,
+      serverKey?: string,
+      serverCert?: string,
+      customCa?: string,
+      clientVerify?: boolean,
     }
   }
-
 }
 
-export enum PropertyType { 
-  UNKNOWN = 0,
-  INT = 1,
-  DOUBLE = 2,
-  STRING = 3,
+export interface PropertyTypeMap {
+  UNKNOWN: 0;
+  INT: 1;
+  DOUBLE: 2;
+  STRING: 3;
 }
+
+export const PropertyType: PropertyTypeMap;
+

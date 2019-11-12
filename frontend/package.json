@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@improbable-eng/grpc-web": "^0.11.0",
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
-    "grpc-web": "^1.0.7",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.0",
     "portable-fetch": "^3.0.0",
@@ -19,7 +19,6 @@
     "@types/enzyme": "^3.9.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/express": "^4.16.0",
-    "@types/google-protobuf": "^3.7.2",
     "@types/jest": "^24.0.13",
     "@types/lodash": ">=4.14.117",
     "@types/node": "^12.0.2",
@@ -45,7 +44,7 @@
     "eject": "cross-env EXTEND_ESLINT=true react-scripts eject",
     "postinstall": "cd ./server && npm i",
     "start": "cross-env EXTEND_ESLINT=true react-scripts start",
-    "start:proxy": "node ./start-proxy.js",
+    "start:proxy": "./start-proxy.sh",
     "test": "cross-env TZ='America/New_York' EXTEND_ESLINT=true react-scripts test --env=jsdom",
     "test:coverage": "npm test -- --coverage --watchAll=false"
   },

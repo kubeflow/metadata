@@ -1,5 +1,8 @@
 import {MetadataServiceApi} from '../apis/service';
-import {MetadataStoreServicePromiseClient} from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
+import {
+  MetadataStoreServiceClient,
+  ServiceError, UnaryResponse
+} from "../generated/src/apis/metadata/metadata_store_service_pb_service";
 
 /** Known Artifact properties */
 export enum ArtifactProperties {
@@ -38,6 +41,34 @@ export interface ListRequest {
   sortBy?: string;
 }
 
+type Callback<R> = (err: ServiceError | null, res: R | null) => void;
+type MetadataApiMethod<T, R> = (request: T, callback: Callback<R>) => UnaryResponse;
+type PromiseBasedMetadataApiMethod<T, R> = (request: T) => Promise<{ response: R | null, error: ServiceError | null }>;
+
+/**
+ * Converts a callback based api method to promise based api method.
+ */
+function makePromiseApi<T, R>(apiMethod: MetadataApiMethod<T, R>): PromiseBasedMetadataApiMethod<T, R> {
+  return (request: T) => new Promise((resolve, reject) => {
+    const handler = (error: ServiceError | null, response: R | null) => {
+      // resolve both response and error to keep type information
+      resolve({ response, error });
+    };
+    apiMethod(request, handler);
+  });
+}
+
+const metadataServiceClient = new MetadataStoreServiceClient('');
+
+// TODO: add all other api methods we need here.
+const metadataServicePromiseClient = {
+  getArtifactTypes: makePromiseApi(metadataServiceClient.getArtifactTypes.bind(metadataServiceClient)),
+  getArtifactsByID: makePromiseApi(metadataServiceClient.getArtifactsByID.bind(metadataServiceClient)),
+  getEventsByArtifactIDs: makePromiseApi(metadataServiceClient.getEventsByArtifactIDs.bind(metadataServiceClient)),
+  getEventsByExecutionIDs: makePromiseApi(metadataServiceClient.getEventsByExecutionIDs.bind(metadataServiceClient)),
+  getExecutionsByID: makePromiseApi(metadataServiceClient.getExecutionsByID.bind(metadataServiceClient)),
+};
+
 /**
  * Class to wrap backend APIs.
  */
@@ -45,7 +76,6 @@ export class Api {
 
   private static instance: Api;
   private metadataServiceApi: MetadataServiceApi;
-  private metadataServicePromiseClient = new MetadataStoreServicePromiseClient('');
 
   /**
    * Factory function to return an Api instance.
@@ -69,6 +99,6 @@ export class Api {
   }
 
   get metadataStoreService() {
-    return this.metadataServicePromiseClient;
+    return metadataServicePromiseClient;
   }
 }

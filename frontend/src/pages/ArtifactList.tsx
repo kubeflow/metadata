@@ -20,15 +20,16 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow, getResourceProperty} from '../lib/Utils';
+import {getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
-import { RoutePage, RouteParams } from '../components/Router';
-import { Link } from 'react-router-dom';
-import {ArtifactType, Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
-import {GetArtifactsRequest, GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {MlMetadataArtifact} from '../apis/service/api';
+import {RoutePage, RouteParams} from '../components/Router';
+import {Link} from 'react-router-dom';
+import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
+import {GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
 
 interface ArtifactListState {
-  artifacts: Artifact[];
+  artifacts: MlMetadataArtifact[];
   rows: Row[];
   expandedRows: Map<number, Row[]>;
   columns: Column[];
@@ -122,10 +123,15 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     if (!this.artifactTypes || !this.artifactTypes.size) {
       this.artifactTypes = await this.getArtifactTypes();
     }
-    if (!this.state.artifacts!.length) {
-      const artifacts = await this.getArtifacts();
-      this.setState({artifacts});
-      this.clearBanner();
+    const {artifacts} = this.state;
+    if (!artifacts.length) {
+      try {
+        const response = await this.api.metadataService.listArtifacts2();
+        this.setState({artifacts: (response && response.artifacts) || []});
+        this.clearBanner();
+      } catch (err) {
+        this.showPageError('Unable to retrieve Artifacts.', err);
+      }
     }
     this.setState({
       rows: this.getRowsFromArtifacts(request),
@@ -134,14 +140,14 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   }
 
   private async getArtifactTypes(): Promise<Map<number, ArtifactType>> {
-    const response =
+    const {error, response} =
         await this.api.metadataStoreService.getArtifactTypes(new GetArtifactTypesRequest());
 
-    if (!response) {
-      this.showPageError('Unable to retrieve Artifact Types, some features may not work.');
+    if (error) {
+      this.showPageServiceError(
+          'Unable to retrieve Artifact Types, some features may not work.', error);
       return new Map();
     }
-
     const artifactTypesMap = new Map<number, ArtifactType>();
 
     (response!.getArtifactTypesList() || []).forEach((artifactType) => {
@@ -149,17 +155,6 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     });
 
     return artifactTypesMap;
-  }
-
-  private async getArtifacts(): Promise<Artifact[]> {
-    const response = await this.api.metadataStoreService.getArtifacts(new GetArtifactsRequest());
-
-    if (!response) {
-      this.showPageError('Unable to retrieve Artifacts.');
-      return []
-    }
-
-    return response!.getArtifactsList() || [];
   }
 
   /**
@@ -171,18 +166,18 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private getRowsFromArtifacts(request: ListRequest): Row[] {
     const collapsedAndExpandedRows = groupRows(this.state.artifacts
       .map((a) => { // Flattens
-        const typeId = a.getTypeId();
-        const type = this.artifactTypes && this.artifactTypes.get(typeId!) ?
-          this.artifactTypes.get(typeId!)!.getName() : typeId;
+        const typeNumber = Number(a.type_id);
+        const type = this.artifactTypes && this.artifactTypes.get(typeNumber!) ?
+          this.artifactTypes.get(typeNumber!)!.getName() : typeNumber;
         return {
-          id: `${type}:${a.getId()}`, // Join with colon so we can build the link
+          id: `${type}:${a.id}`, // Join with colon so we can build the link
           otherFields: [
             getResourceProperty(a, ArtifactProperties.PIPELINE_NAME)
               || getResourceProperty(a, ArtifactCustomProperties.WORKSPACE, true),
             getResourceProperty(a, ArtifactProperties.NAME),
-            a.getId(),
+            a.id,
             type,
-            a.getUri(),
+            a.uri,
             // TODO: Get timestamp from the event that created this artifact.
             // formatDateString(
             //   getArtifactProperty(a, ArtifactProperties.CREATE_TIME) || ''),
