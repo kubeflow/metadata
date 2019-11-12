@@ -7,7 +7,7 @@
   "linterOptions": {
     "exclude": [
       "node_modules/**/*.ts",
-      "src/apis/**/*.ts",
+      "src/apis/**/*.ts"
     ]
   },
   "rules": {
