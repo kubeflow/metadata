@@ -78,5 +78,5 @@ dist
 .tox
 sdk/python/kubeflow/metadata/openapi_client/
 sdk/python/build
-
 node_modules/
+.env

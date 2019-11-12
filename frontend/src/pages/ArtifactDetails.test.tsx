@@ -1,9 +1,9 @@
 import * as React from 'react';
-import ArtifactDetails from './ArtifactDetails';
+import ArtifactDetails, {ArtifactDetailsTab} from './ArtifactDetails';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
-import * as TestUtils from '../TestUtils'
+import * as TestUtils from '../TestUtils';
 import {RouteParams} from '../components/Router';
 import {ApiGetArtifactResponse} from '../apis/service';
 
@@ -107,5 +107,44 @@ describe('ArtifactDetails', () => {
         'Click Details for more information.',
       mode: 'error',
     }));
+  });
+
+  it('Renders the Overview tab for an artifact', async () => {
+    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
+    tree.setState({
+      selectedTab: ArtifactDetailsTab.OVERVIEW
+    });
+
+    await mockGetArtifact;
+    await TestUtils.flushPromises();
+    tree.update();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('Renders the Lineage Explorer tab for an artifact', async () => {
+    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
+    tree.setState({
+      selectedTab: ArtifactDetailsTab.LINEAGE_EXPLORER
+    });
+
+    await mockGetArtifact;
+    await TestUtils.flushPromises();
+    tree.update();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('Renders the Deployments tab for an artifact', async () => {
+    mockGetArtifact.mockResolvedValue(fakeArtifactResponse);
+    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
+    tree.setState({
+      selectedTab: ArtifactDetailsTab.DEPLOYMENTS
+    });
+
+    await mockGetArtifact;
+    await TestUtils.flushPromises();
+    tree.update();
+    expect(tree).toMatchSnapshot();
   });
 });
