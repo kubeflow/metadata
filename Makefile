@@ -28,6 +28,10 @@ mlmd-proto:
 metadata-docker-image:
 	docker build -t gcr.io/kubeflow-images-public/metadata .
 
+metadata-docker-image-aarch64:
+	docker build -t metadata-base-aarch64:latest -f ./dockerfiles/Dockerfile-linux-base.aarch64 . && \
+	docker build -t kubeflow-images-public/metadata --build-arg BASE_IMG=metadata-base-aarch64:latest --build-arg OUTPUT_DIR=linux_arm64_stripped .
+
 swagger-py-client:
 	mkdir -p /tmp/swagger
 	wget http://central.maven.org/maven2/org/openapitools/openapi-generator-cli/4.0.1/openapi-generator-cli-4.0.1.jar -O /tmp/swagger/swagger-codegen-cli.jar && \
