@@ -38,7 +38,7 @@
   "scripts": {
     "apis": "npm run apis:api && npm run apis:service",
     "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
-    "apis:metadata": "./generate_grpc_web_protos.sh",
+    "apis:metadata": "node ./gen_grpc_web_protos.js",
     "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "cross-env EXTEND_ESLINT=true react-scripts build",
     "docker": "cross-env COMMIT_HASH=`git rev-parse HEAD`; docker build -t gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH} --build-arg COMMIT_HASH=${COMMIT_HASH} --build-arg DATE=\"`date -u`\" .",
