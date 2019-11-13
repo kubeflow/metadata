@@ -5,7 +5,7 @@ import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
-import {serviceError, testModel} from '../TestUtils';
+import {testModel} from '../TestUtils';
 import {GetArtifactsByIDResponse} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 describe('ArtifactDetails', () => {
@@ -50,10 +50,7 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders with a Model Artifact and updates the page title', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactByIDResponse,
-    });
+    mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
@@ -66,10 +63,7 @@ describe('ArtifactDetails', () => {
   });
 
   it('Shows error when returned Artifact is empty', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: null,
-      response: new GetArtifactsByIDResponse(),
-    });
+    mockGetArtifact.mockResolvedValue(new GetArtifactsByIDResponse());
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
@@ -81,26 +75,20 @@ describe('ArtifactDetails', () => {
   });
 
   it('Shows error when Artifact cannot be retrieved', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: serviceError,
-      response: fakeGetArtifactByIDResponse,
-    });
+    // @ts-ignore
+    mockGetArtifact.mockResolvedValue();
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
     await TestUtils.flushPromises();
     expect(updateBannerSpy).toHaveBeenCalledWith(expect.objectContaining({
-      message: 'Unable to retrieve kubeflow.org/alpha/model 1. ' +
-        'Click Details for more information.',
+      message: 'Unable to retrieve kubeflow.org/alpha/model 1.',
       mode: 'error',
     }));
   });
 
   it('Renders the Overview tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactByIDResponse,
-    });
+    mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.OVERVIEW
@@ -113,10 +101,7 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders the Lineage Explorer tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactByIDResponse,
-    });
+    mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.LINEAGE_EXPLORER
@@ -129,10 +114,7 @@ describe('ArtifactDetails', () => {
   });
 
   it('Renders the Deployments tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue({
-      error: null,
-      response: fakeGetArtifactByIDResponse,
-    });
+    mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
     tree.setState({
       selectedTab: ArtifactDetailsTab.DEPLOYMENTS
