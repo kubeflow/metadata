@@ -27,6 +27,7 @@ import {ResourceInfo} from '../components/ResourceInfo';
 import MD2Tabs from '../atoms/MD2Tabs';
 import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import LineageView from './LineageView';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
@@ -88,15 +89,14 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
             onSwitch={this.switchTab.bind(this)}
           />
         </div>
-        <div className={classes(padding(20, 'lr'))}>
-          {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
-            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
-          )}
-          {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            <span>Lineage Explorer</span>
-          )}
-          {this.state.selectedTab === ArtifactDetailsTab.DEPLOYMENTS && <span>Deployments</span>}
-        </div>
+        {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
+            <div className={classes(padding(20, 'lr'))}>
+              <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+            </div>
+        )}
+        {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
+            React.createElement(LineageView, this.props)
+        )}
       </div>
     );
   }

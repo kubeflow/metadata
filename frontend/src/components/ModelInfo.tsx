@@ -16,7 +16,7 @@
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {getMlMetadataResourceProperty, logger} from '../lib/Utils';
+import {getResourceProperty, logger} from '../lib/Utils';
 import {css} from './ResourceInfo';
 import {ArtifactProperties} from '../lib/Api';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
@@ -48,7 +48,7 @@ export class ModelInfo extends React.Component<{model: Artifact}, {}> {
   public render(): JSX.Element {
     const {model} = this.props;
     let modelData: ModelSchema = {};
-    const modelDataJSON = getMlMetadataResourceProperty(model, ArtifactProperties.ALL_META);
+    const modelDataJSON = getResourceProperty(model, ArtifactProperties.ALL_META);
     try {
       modelData = JSON.parse(modelDataJSON ? modelDataJSON.toString() : '{}');
     } catch (err) {
