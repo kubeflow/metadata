@@ -14,10 +14,12 @@
 
 import datetime
 import json
+from typing import Any, List, Mapping, Optional, TypeVar, Union
+
 import ml_metadata
+from retrying import retry
 from ml_metadata.metadata_store import metadata_store
 from ml_metadata.proto import metadata_store_pb2 as mlpb
-from typing import Any, List, Mapping, Optional, TypeVar, Union
 """This module contains the Python API for logging metadata of machine learning
 workflows to the Kubeflow Metadata service.
 """
@@ -86,8 +88,9 @@ class Workspace(object):
       backend_url_prefix: Deprecated. Please use 'store' parameter.
     """
     if backend_url_prefix:
-      raise ValueError("""'backend_url_prefix' is deprecated. Please set
-        Metadata.Store parameter to connect to the metadata gRPC service.""")
+      raise ValueError(
+          "'backend_url_prefix' is deprecated. Please set Metadata.Store "
+          "parameter to connect to the metadata gRPC service.")
     if name is None or type(name) != str:
       raise ValueError("'name' must be set and in string type.")
     if not store or type(store) != Store:
@@ -110,7 +113,8 @@ class Workspace(object):
     """
     if artifact_type_name is None:
       artifact_type_name = Model.ARTIFACT_TYPE_NAME
-    response = self.store.get_artifacts_by_type(artifact_type_name)
+    response = _retry(
+        lambda: self.store.get_artifacts_by_type(artifact_type_name))
     results = []
     for artifact in response:
       flat = self._flat(artifact)
@@ -208,9 +212,10 @@ class Execution(object):
     self.run = run
     self.description = description
     self.create_time = _get_rfc3339_time()
-    self._type_id = self.workspace.store.get_execution_type(
-        Execution.EXECUTION_TYPE_NAME).id
-    response = self.workspace.store.put_executions([self.serialized()])
+    self._type_id = _retry(lambda: self.workspace.store.get_execution_type(
+        Execution.EXECUTION_TYPE_NAME).id)
+    response = _retry(
+        lambda: self.workspace.store.put_executions([self.serialized()]))
     self.id = response[0]
 
   def serialized(self):
@@ -247,7 +252,7 @@ class Execution(object):
     input_event = mlpb.Event(artifact_id=artifact.id,
                              execution_id=self.id,
                              type=mlpb.Event.INPUT)
-    self.workspace.store.put_events([input_event])
+    _retry(lambda: self.workspace.store.put_events([input_event]))
     return artifact
 
   def log_output(self, artifact: TypeArtifact) -> TypeArtifact:
@@ -265,20 +270,30 @@ class Execution(object):
     output_event = mlpb.Event(artifact_id=artifact.id,
                               execution_id=self.id,
                               type=mlpb.Event.OUTPUT)
-    self.workspace.store.put_events([output_event])
+    _retry(lambda: self.workspace.store.put_events([output_event]))
     return artifact
 
   def _log(self, artifact):
     """Log artifact into metadata store."""
+    # Sanity checks for artifact.
     if artifact is None:
       raise ValueError("'artifact' must be set.")
-    ser = artifact.serialization()
     try:
-      ser.type_id = self.workspace.store.get_artifact_type(
-          artifact.ARTIFACT_TYPE_NAME).id
+      type_id = _retry(lambda: self.workspace.store.get_artifact_type(
+          artifact.ARTIFACT_TYPE_NAME).id)
     except Exception as e:
       raise ValueError("invalid artifact type %s: exception %s",
                        artifact.ARTIFACT_TYPE_NAME, e)
+
+    # Deduplicate artifact for existing one in the database.
+    existing_id = self._get_existing_artifact_id(artifact, type_id)
+    if existing_id is not None:
+      artifact.id = existing_id
+      return artifact
+
+    # Create a new artifact.
+    ser = artifact.serialization()
+    ser.type_id = type_id
     if _WORKSPACE_PROPERTY_NAME in ser.custom_properties:
       raise ValueError("custom_properties contains reserved key %s" %
                        _WORKSPACE_PROPERTY_NAME)
@@ -290,8 +305,42 @@ class Execution(object):
           _WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
       ser.custom_properties[_RUN_PROPERTY_NAME].string_value = self.run.name
-    artifact.id = self.workspace.store.put_artifacts([ser])[0]
+    artifact.id = _retry(lambda: self.workspace.store.put_artifacts([ser])[0])
     return artifact
+
+  def _get_existing_artifact_id(self, artifact, type_id):
+    if artifact.id is not None:
+      try:
+        pbs = _retry(
+            lambda: self.workspace.store.get_artifacts_by_id([artifact.id]))
+      except Exception as e:
+        raise ValueError("invalid artifact id {}: {}".format(artifact.id, e))
+      if len(pbs) != 1:
+        raise ValueError(
+            "invalid artifact id {}: artifacts with this id: {}".format(
+                artifact.id, pbs))
+      return artifact.id
+
+    # Find the artifact that has the same uri, name, version and workspace.
+    pbs = _retry(
+        lambda: self.workspace.store.get_artifacts_by_uri(artifact.uri))
+    for pb in pbs:
+      pb_name = None
+      pb_version = None
+      pb_workspace = None
+      if "name" in pb.properties:
+        pb_name = pb.properties["name"].string_value
+      if "version" in pb.properties:
+        pb_version = pb.properties["version"].string_value
+      if _WORKSPACE_PROPERTY_NAME in pb.custom_properties:
+        pb_workspace = pb.custom_properties[
+            _WORKSPACE_PROPERTY_NAME].string_value
+      if pb.type_id == type_id and pb_name == getattr(
+          artifact, "name", None) and pb_version == getattr(
+              artifact, "version",
+              None) and pb_workspace == self.workspace.name:
+        return pb.id
+    return None
 
 
 class DataSet(object):
@@ -588,6 +637,12 @@ class Metrics(object):
         })
     _del_none_properties(metrics_artifact.properties)
     return metrics_artifact
+
+
+@retry(wait_exponential_multiplier=500, stop_max_delay=4000)
+def _retry(f):
+  '''retry function f with exponential backoff'''
+  return f()
 
 
 def _get_rfc3339_time():

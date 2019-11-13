@@ -1,8 +1,11 @@
-import ml_metadata
 import unittest
-from kubeflow.metadata import metadata
-from ml_metadata.proto import metadata_store_pb2 as mlpb
+import uuid
 from unittest.mock import patch
+
+import ml_metadata
+from ml_metadata.proto import metadata_store_pb2 as mlpb
+
+from kubeflow.metadata import metadata
 
 GRPC_HOST = "127.0.0.1"
 GRPC_PORT = 8081
@@ -13,7 +16,7 @@ class TestMetedata(unittest.TestCase):
   def test_log_metadata_successfully(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws1 = metadata.Workspace(store=store,
-                             name="ws_1",
+                             name="test_log_metadata_successfully_ws",
                              description="a workspace for testing",
                              labels={"n1": "v1"})
 
@@ -36,7 +39,7 @@ class TestMetedata(unittest.TestCase):
                          name="mytable-dump",
                          owner="owner@my-company.org",
                          uri="file://path/to/dataset",
-                         version="v1.0.0",
+                         version=str(uuid.uuid4()),
                          query="SELECT * FROM mytable"))
     self.assertIsNotNone(data_set.id)
 
@@ -111,26 +114,35 @@ class TestMetedata(unittest.TestCase):
 
   def test_log_metadata_successfully_with_minimum_information(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
-
     ws1 = metadata.Workspace(store=store, name="ws_1")
-
     r = metadata.Run(workspace=ws1, name="first run")
-
     e = metadata.Execution(name="test execution", workspace=ws1, run=r)
     self.assertIsNotNone(e.id)
 
     data_set = e.log_input(
         metadata.DataSet(name="mytable-dump", uri="file://path/to/dataset"))
     self.assertIsNotNone(data_set.id)
+    data_set_id = data_set.id
+    # ID should not change after logging twice.
+    e.log_input(data_set)
+    self.assertEqual(data_set_id, data_set.id)
 
     metrics = e.log_output(
         metadata.Metrics(name="MNIST-evaluation",
                          uri="gcs://my-bucket/mnist-eval.csv"))
     self.assertIsNotNone(metrics.id)
+    metrics_id = metrics.id
+    # ID should not change after logging twice.
+    e.log_output(metrics)
+    self.assertEqual(metrics_id, metrics.id)
 
     model = e.log_output(
         metadata.Model(name="MNIST", uri="gcs://my-bucket/mnist"))
     self.assertIsNotNone(model.id)
+    model_id = model.id
+    # ID should not change after logging twice.
+    e.log_output(model)
+    self.assertEqual(metrics_id, metrics.id)
 
   def test_invalid_workspace_should_fail(self):
     with self.assertRaises(ValueError):
@@ -161,6 +173,31 @@ class TestMetedata(unittest.TestCase):
                      root_certificates=b"cert",
                      private_key=b"private_key",
                      certificate_chain=b"chain")
+
+  def test_artifact_dedupe(self):
+    store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
+    ws1 = metadata.Workspace(store=store, name="workspace_one")
+    ws2 = metadata.Workspace(store=store, name="workspace_two")
+    r = metadata.Run(workspace=ws1, name="first run")
+    e = metadata.Execution(name="test execution", workspace=ws1, run=r)
+    e2 = metadata.Execution(name="execution 2", workspace=ws1)
+    e3 = metadata.Execution(name="execution 3", workspace=ws2)
+    self.assertIsNotNone(e.id)
+    self.assertIsNotNone(e2.id)
+
+    model = metadata.Model(name="MNIST",
+                           uri="gcs://my-bucket/mnist",
+                           model_type="neural network",
+                           version="v0.0.1")
+    model2 = metadata.Model(name="MNIST",
+                            uri="gcs://my-bucket/mnist",
+                            model_type="neural network",
+                            version="v0.0.1")
+    e.log_output(model)
+    self.assertIsNotNone(model.id)
+    e2.log_output(model2)
+    self.assertIsNotNone(model.id)
+    self.assertEqual(model.id, model2.id)
 
 
 class CheckMetadataStore(object):
