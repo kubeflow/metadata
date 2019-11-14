@@ -240,6 +240,13 @@ class Execution(object):
         lambda: self.workspace.store.put_executions([self.serialized()]))
     self.id = response[0]
 
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
+
   def serialized(self):
     properties = {
         "name": mlpb.Value(string_value=self.name),
@@ -412,6 +419,14 @@ class DataSet(Artifact):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     data_set_artifact = mlpb.Artifact(
@@ -524,6 +539,14 @@ class Model(Artifact):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     model_artifact = mlpb.Artifact(
@@ -636,6 +659,14 @@ class Metrics(Artifact):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     metrics_artifact = mlpb.Artifact(

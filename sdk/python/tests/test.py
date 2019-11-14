@@ -26,15 +26,15 @@ class TestMetedata(unittest.TestCase):
         description="first run in ws_1",
     )
 
-    e = metadata.Execution(
+    trainer = metadata.Execution(
         name="test execution",
         workspace=ws1,
         run=r,
         description="an execution",
     )
-    self.assertIsNotNone(e.id)
+    self.assertIsNotNone(trainer.id)
 
-    data_set = e.log_input(
+    data_set = trainer.log_input(
         metadata.DataSet(description="an example data",
                          name="mytable-dump",
                          owner="owner@my-company.org",
@@ -42,8 +42,9 @@ class TestMetedata(unittest.TestCase):
                          version=str(uuid.uuid4()),
                          query="SELECT * FROM mytable"))
     self.assertIsNotNone(data_set.id)
+    self.assertIsNotNone(repr(data_set))
 
-    metrics = e.log_output(
+    metrics = trainer.log_output(
         metadata.Metrics(
             name="MNIST-evaluation",
             description=
@@ -56,8 +57,10 @@ class TestMetedata(unittest.TestCase):
             values={"accuracy": 0.95},
             labels={"mylabel": "l1"}))
     self.assertIsNotNone(metrics.id)
+    self.assertIsNotNone(repr(metrics))
 
-    model = e.log_output(
+    model_version = str(uuid.uuid4())
+    model = trainer.log_output(
         metadata.Model(name="MNIST",
                        description="model to recognize handwritten digits",
                        owner="someone@kubeflow.org",
@@ -72,9 +75,24 @@ class TestMetedata(unittest.TestCase):
                            "layers": [10, 3, 1],
                            "early_stop": True
                        },
-                       version=str(uuid.uuid4()),
+                       version=model_version,
                        labels={"mylabel": "l1"}))
     self.assertIsNotNone(model.id)
+    self.assertIsNotNone(repr(model))
+
+    serving_application = metadata.Execution(
+        name="serving model",
+        workspace=ws1,
+        description="an execution to represent model serving component",
+    )
+    self.assertIsNotNone(serving_application.id)
+    # Use model name, version, uri to uniquely identify existing model.
+    served_model = metadata.Model(
+        name="MNIST",
+        uri="gcs://my-bucket/mnist",
+        version=model_version,
+    )
+    serving_application.log_input(served_model)
 
     # Test listing artifacts in a workspace
     self.assertTrue(len(ws1.list()) > 0)
@@ -83,12 +101,13 @@ class TestMetedata(unittest.TestCase):
     self.assertTrue(len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0)
 
     # Test lineage tracking.
-    output_events = ws1.store.get_events_by_artifact_ids([model.id])
-    self.assertEqual(len(output_events), 1)
-    execution_id = output_events[0].execution_id
-    self.assertEqual(execution_id, e.id)
-    all_events = ws1.store.get_events_by_execution_ids([execution_id])
-    self.assertEqual(len(all_events), 3)
+    model_events = ws1.store.get_events_by_artifact_ids([model.id])
+    self.assertEqual(len(model_events), 2)
+    execution_ids = set(e.execution_id for e in model_events)
+    assert execution_ids == set([serving_application.id, trainer.id])
+    trainer_events = ws1.store.get_events_by_execution_ids([trainer.id])
+    artifact_ids = set(e.artifact_id for e in trainer_events)
+    assert artifact_ids == set([model.id, metrics.id, data_set.id])
 
   def test_log_invalid_artifacts_should_fail(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
