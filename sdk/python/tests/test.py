@@ -161,7 +161,7 @@ class TestMetedata(unittest.TestCase):
     model_id = model.id
     # ID should not change after logging twice.
     e.log_output(model)
-    self.assertEqual(metrics_id, metrics.id)
+    self.assertEqual(model_id, model.id)
 
   def test_invalid_workspace_should_fail(self):
     with self.assertRaises(ValueError):
