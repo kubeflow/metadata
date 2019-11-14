@@ -72,7 +72,7 @@ class TestMetedata(unittest.TestCase):
                            "layers": [10, 3, 1],
                            "early_stop": True
                        },
-                       version="v0.0.1",
+                       version=str(uuid.uuid4()),
                        labels={"mylabel": "l1"}))
     self.assertIsNotNone(model.id)
 
@@ -84,11 +84,11 @@ class TestMetedata(unittest.TestCase):
 
     # Test lineage tracking.
     output_events = ws1.store.get_events_by_artifact_ids([model.id])
-    assert len(output_events) == 1
+    self.assertEqual(len(output_events), 1)
     execution_id = output_events[0].execution_id
-    assert execution_id == e.id
+    self.assertEqual(execution_id, e.id)
     all_events = ws1.store.get_events_by_execution_ids([execution_id])
-    assert len(all_events) == 3
+    self.assertEqual(len(all_events), 3)
 
   def test_log_invalid_artifacts_should_fail(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
@@ -174,7 +174,7 @@ class TestMetedata(unittest.TestCase):
                      private_key=b"private_key",
                      certificate_chain=b"chain")
 
-  def test_artifact_dedupe(self):
+  def test_artifact_deduplication(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws1 = metadata.Workspace(store=store, name="workspace_one")
     ws2 = metadata.Workspace(store=store, name="workspace_two")

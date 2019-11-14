@@ -14,24 +14,47 @@
 
 import datetime
 import json
+from abc import ABC, abstractmethod
 from typing import Any, List, Mapping, Optional, TypeVar, Union
 
 import ml_metadata
-from retrying import retry
 from ml_metadata.metadata_store import metadata_store
 from ml_metadata.proto import metadata_store_pb2 as mlpb
+from retrying import retry
 """This module contains the Python API for logging metadata of machine learning
 workflows to the Kubeflow Metadata service.
 """
 
-# TypeArtifact is the type Model, Dataset, Metrics or any class that has
-# class variable ARTIFACT_TYPE_NAME of string and a serialization() method that
-# returns a metadata_store_pb2.Artifact.
-TypeArtifact = TypeVar('TypeArtifact', 'Model', 'DataSet', 'Metrics', Any)
-
 _WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
 _RUN_PROPERTY_NAME = '__kf_run__'
 _ALL_META_PROPERTY_NAME = '__ALL_META__'
+
+
+class Artifact(ABC):
+
+  @property
+  @classmethod
+  @abstractmethod
+  def ARTIFACT_TYPE_NAME(cls) -> str:
+    pass
+
+  @abstractmethod
+  def serialization(self) -> mlpb.Artifact:
+    pass
+
+  @staticmethod
+  def isDuplicated(a: mlpb.Artifact, b: mlpb.Artifact):
+    '''Checks if two artifacts are duplicated.
+
+    The artifacts may be considered duplication even if not all the fields are
+    the same as in mlpb.Artifact. For example, two models can be considered the
+    same if they have the same uri, name and version.
+
+    Returns:
+      True or False for duplication.
+      NotImplemented is same as False.
+    '''
+    return NotImplemented
 
 
 class Store(object):
@@ -100,7 +123,7 @@ class Workspace(object):
     self.description = description
     self.labels = labels
 
-  def list(self, artifact_type_name: str = None) -> List[TypeArtifact]:
+  def list(self, artifact_type_name: str = None) -> List[Artifact]:
     """List all artifacts of a given type.
 
     Args:
@@ -237,7 +260,7 @@ class Execution(object):
                           properties=properties,
                           custom_properties=custom_properties)
 
-  def log_input(self, artifact: TypeArtifact) -> TypeArtifact:
+  def log_input(self, artifact: Artifact) -> Artifact:
     """ Log an artifact as an input of this execution.
 
     Args:
@@ -255,7 +278,7 @@ class Execution(object):
     _retry(lambda: self.workspace.store.put_events([input_event]))
     return artifact
 
-  def log_output(self, artifact: TypeArtifact) -> TypeArtifact:
+  def log_output(self, artifact: Artifact) -> Artifact:
     """ Log an artifact as an input of this execution.
 
     Args:
@@ -285,13 +308,11 @@ class Execution(object):
       raise ValueError("invalid artifact type %s: exception %s",
                        artifact.ARTIFACT_TYPE_NAME, e)
 
-    # Deduplicate artifact for existing one in the database.
-    existing_id = self._get_existing_artifact_id(artifact, type_id)
-    if existing_id is not None:
-      artifact.id = existing_id
+    if artifact.id is not None:
+      self._check_artifact_id(artifact.id)
       return artifact
 
-    # Create a new artifact.
+    # Construct a new artifact serialization.
     ser = artifact.serialization()
     ser.type_id = type_id
     if _WORKSPACE_PROPERTY_NAME in ser.custom_properties:
@@ -305,45 +326,29 @@ class Execution(object):
           _WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
       ser.custom_properties[_RUN_PROPERTY_NAME].string_value = self.run.name
-    artifact.id = _retry(lambda: self.workspace.store.put_artifacts([ser])[0])
-    return artifact
 
-  def _get_existing_artifact_id(self, artifact, type_id):
-    if artifact.id is not None:
-      try:
-        pbs = _retry(
-            lambda: self.workspace.store.get_artifacts_by_id([artifact.id]))
-      except Exception as e:
-        raise ValueError("invalid artifact id {}: {}".format(artifact.id, e))
-      if len(pbs) != 1:
-        raise ValueError(
-            "invalid artifact id {}: artifacts with this id: {}".format(
-                artifact.id, pbs))
-      return artifact.id
-
-    # Find the artifact that has the same uri, name, version and workspace.
+    # Deduplicate artifact for existing one in the database.
     pbs = _retry(
         lambda: self.workspace.store.get_artifacts_by_uri(artifact.uri))
     for pb in pbs:
-      pb_name = None
-      pb_version = None
-      pb_workspace = None
-      if "name" in pb.properties:
-        pb_name = pb.properties["name"].string_value
-      if "version" in pb.properties:
-        pb_version = pb.properties["version"].string_value
-      if _WORKSPACE_PROPERTY_NAME in pb.custom_properties:
-        pb_workspace = pb.custom_properties[
-            _WORKSPACE_PROPERTY_NAME].string_value
-      if pb.type_id == type_id and pb_name == getattr(
-          artifact, "name", None) and pb_version == getattr(
-              artifact, "version",
-              None) and pb_workspace == self.workspace.name:
-        return pb.id
-    return None
+      if artifact.isDuplicated(ser, pb):
+        artifact.id = pb.id
+        return artifact
+
+    artifact.id = _retry(lambda: self.workspace.store.put_artifacts([ser])[0])
+    return artifact
+
+  def _check_artifact_id(self, aid):
+    try:
+      pbs = _retry(lambda: self.workspace.store.get_artifacts_by_id([aid]))
+    except Exception as e:
+      raise ValueError("invalid artifact id {}: {}".format(aid, e))
+    if len(pbs) != 1:
+      raise ValueError(
+          "invalid artifact id {}: artifacts with this id: {}".format(aid, pbs))
 
 
-class DataSet(object):
+class DataSet(Artifact):
   """ Dataset captures a data set in a machine learning workflow.
 
   Attributes:
@@ -430,8 +435,17 @@ class DataSet(object):
     _del_none_properties(data_set_artifact.properties)
     return data_set_artifact
 
+  @staticmethod
+  def isDuplicated(a, b):
+    ap = a.properties
+    bp = b.properties
+    return a.uri == b.uri and ap["name"] == bp["name"] and ap["version"] == bp[
+        "version"] and a.custom_properties[
+            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
+                _WORKSPACE_PROPERTY_NAME]
 
-class Model(object):
+
+class Model(Artifact):
   """Captures a machine learning model.
 
   Attributes:
@@ -533,8 +547,17 @@ class Model(object):
     _del_none_properties(model_artifact.properties)
     return model_artifact
 
+  @staticmethod
+  def isDuplicated(a, b):
+    ap = a.properties
+    bp = b.properties
+    return a.uri == b.uri and ap["name"] == bp["name"] and ap["version"] == bp[
+        "version"] and a.custom_properties[
+            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
+                _WORKSPACE_PROPERTY_NAME]
 
-class Metrics(object):
+
+class Metrics(Artifact):
   """Captures an evaluation metrics of a model on a data set.
 
   Attributes:
