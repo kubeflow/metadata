@@ -4,9 +4,11 @@ exports[`LineageActionBar Renders correctly for a given root id 1`] = `
 <div
   className="container flex"
 >
-  <div>
+  <div
+    className="flex"
+  >
     <span
-      className="breadcrumb"
+      className="breadcrumbActive"
     >
       artifactId
     </span>
@@ -15,6 +17,7 @@ exports[`LineageActionBar Renders correctly for a given root id 1`] = `
     <WithStyles(Button)
       className="actionButton"
       disabled={false}
+      onClick={[Function]}
     >
       <pure(ReplayIcon) />
        Reset

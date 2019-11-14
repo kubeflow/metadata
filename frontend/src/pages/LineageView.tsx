@@ -31,6 +31,8 @@ interface LineageViewState {
 }
 
 class LineageView extends Page<{}, LineageViewState> {
+  private actionBarRef: React.Ref<LineageActionBar>;
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -38,6 +40,8 @@ class LineageView extends Page<{}, LineageViewState> {
       columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
     };
     this.reload = this.reload.bind(this);
+    this.onArtifactCardClicked = this.onArtifactCardClicked.bind(this);
+    this.actionBarRef = React.createRef<LineageActionBar>();
   }
 
   public getInitialToolbarState(): ToolbarProps {
@@ -75,22 +79,27 @@ class LineageView extends Page<{}, LineageViewState> {
         {title: 'Some Process', desc: '13,201 Examples', prev: true, next: true}
       ]},
     ] as CardDetails[];
-    const targetElement = mockExec[0].elements[0];
+    const mockTarget = [
+      Object.assign({}, mockExec[0], {title: 'Target'})
+    ];
+    const targetElement = mockTarget[0].elements[0];
     return (
       <div className={classes(commonCss.page,)}>
-        <LineageActionBar root={targetElement.title} />
+        <LineageActionBar root={targetElement.title} ref={this.actionBarRef}/>
         <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
           <LineageCardColumn
             type='artifact'
             cards={mockInputArtifacts}
-            title={`${columnNames[0]}`} />
+            title={`${columnNames[0]}`}
+            onArtifactCardClicked={this.onArtifactCardClicked}
+          />
           <LineageCardColumn
             type='execution'
             cards={mockExec}
             title={`${columnNames[1]}`} />
           <LineageCardColumn
             type='artifact'
-            cards={[Object.assign({}, mockExec[0], {title: 'Target'})]}
+            cards={mockTarget}
             title={`${columnNames[2]}`} />
           <LineageCardColumn
             type='execution'
@@ -100,7 +109,9 @@ class LineageView extends Page<{}, LineageViewState> {
             type='artifact'
             cards={mockOutputArtifacts}
             reverseBindings={true}
-            title={`${columnNames[4]}`} />
+            title={`${columnNames[4]}`}
+            onArtifactCardClicked={this.onArtifactCardClicked}
+          />
         </div>
       </div>
     );
@@ -129,6 +140,16 @@ class LineageView extends Page<{}, LineageViewState> {
     //   rows: this.getRowsFromArtifacts(request),
     // });
     return '';
+  }
+
+  private onArtifactCardClicked(id: string) {
+    console.log(`Artifact selected: ${id}`);
+    if (!this.actionBarRef) {
+      return
+    }
+    // @ts-ignore
+    const actionBar = this.actionBarRef.current as LineageActionBar;
+    actionBar.pushHistory(id);
   }
 }
 
