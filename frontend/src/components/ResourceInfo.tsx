@@ -16,8 +16,8 @@
 import * as React from 'react';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
-import {MlMetadataArtifact, MlMetadataExecution} from '../apis/service';
-import { getMetadataValue } from '../lib/Utils';
+import {getMetadataValue} from '../lib/Utils';
+import {Artifact, Execution} from '../generated/src/apis/metadata/metadata_store_pb';
 
 export const css = stylesheet({
   resourceInfo: {
@@ -44,27 +44,30 @@ export const css = stylesheet({
 });
 
 export interface ResourceInfoProps {
+  resource: Artifact | Execution;
+  // TODO: Pass in ResourceType and render <GcsLink /> for Artifacts
   typeName: string;
-  resource: MlMetadataArtifact | MlMetadataExecution;
 }
 
 export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
 
   public render(): JSX.Element {
     const { resource } = this.props;
+    const propertyMap = resource.getPropertiesMap();
+    const customPropertyMap = resource.getCustomPropertiesMap();
     return (
       <section>
         <h1 className={commonCss.header}>Type: {this.props.typeName}</h1>
         <h2 className={commonCss.header2}>Properties</h2>
         <dl className={css.resourceInfo}>
-          {Object.keys(resource.properties || {})
+          {propertyMap.getEntryList()
             // TODO: __ALL_META__ is something of a hack, is redundant, and can be ignored
-            .filter(k => k !== '__ALL_META__')
+            .filter(k => k[0] !== '__ALL_META__')
             .map(k =>
-              <div className={css.field} key={k}>
-                <dt className={css.term}>{k}</dt>
+              <div className={css.field} key={k[0]}>
+                <dt className={css.term}>{k[0]}</dt>
                 <dd className={css.value}>
-                  {resource.properties && getMetadataValue(resource.properties[k])}
+                  {propertyMap && getMetadataValue(propertyMap.get(k[0]))}
                 </dd>
               </div>
             )
@@ -72,11 +75,11 @@ export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
         </dl>
         <h2 className={commonCss.header2}>Custom Properties</h2>
         <dl className={css.resourceInfo}>
-          {Object.keys(resource.custom_properties || {}).map(k =>
-            <div className={css.field} key={k}>
-              <dt className={css.term}>{k}</dt>
+          {customPropertyMap.getEntryList().map(k =>
+            <div className={css.field} key={k[0]}>
+              <dt className={css.term}>{k[0]}</dt>
               <dd className={css.value}>
-                {resource.custom_properties && getMetadataValue(resource.custom_properties[k])}
+                {customPropertyMap && getMetadataValue(customPropertyMap.get(k[0]))}
               </dd>
             </div>
           )}

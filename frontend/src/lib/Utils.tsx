@@ -15,13 +15,12 @@
  */
 
 import * as React from 'react';
-import { isFunction } from 'lodash';
-import { MlMetadataArtifact, MlMetadataExecution, MlMetadataValue } from '../apis/service';
-import { css as customTableCss } from '../components/CustomTable';
-import { classes } from 'typestyle';
-import { Row, Column, ExpandState, CustomTableRow } from '../components/CustomTable';
-import { ListRequest } from './Api';
-import { padding } from '../Css';
+import {isFunction} from 'lodash';
+import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
+import {classes} from 'typestyle';
+import {ListRequest} from './Api';
+import {padding} from '../Css';
+import {Artifact, Execution, Value} from "../generated/src/apis/metadata/metadata_store_pb";
 
 export const logger = {
   error: (...args: any[]) => {
@@ -61,27 +60,31 @@ export function titleCase(str: string): string {
     .join(' ');
 }
 
-/**
- * Safely extracts the named property or custom property from the provided
- * Artifact or Execution.
- * @param resource
- * @param propertyName
- * @param fromCustomProperties
- */
-export function getResourceProperty(resource: MlMetadataArtifact | MlMetadataExecution,
-  propertyName: string, fromCustomProperties = false): string | number | null {
+export function getResourceProperty(resource: Artifact | Execution,
+    propertyName: string, fromCustomProperties = false): string | number | null {
   const props = fromCustomProperties
-    ? resource.custom_properties
-    : resource.properties;
+      ? resource.getCustomPropertiesMap()
+      : resource.getPropertiesMap();
 
-  return (props && props[propertyName] && getMetadataValue(props[propertyName]))
-    || null;
+  return (props && props.get(propertyName) && getMetadataValue(props.get(propertyName)))
+      || null;
 }
 
-export function getMetadataValue(mlMetadataValue: MlMetadataValue): string | number {
-  // TODO: Swagger takes a int64 type from a .proto and converts it to string in Typescript, so
-  // int_value has type string.
-  return mlMetadataValue.double_value || mlMetadataValue.int_value || mlMetadataValue.string_value || '';
+export function getMetadataValue(value?: Value): string | number {
+  if (!value) {
+    return '';
+  }
+
+  switch (value.getValueCase()) {
+    case Value.ValueCase.DOUBLE_VALUE:
+      return value.getDoubleValue();
+    case Value.ValueCase.INT_VALUE:
+      return value.getIntValue();
+    case Value.ValueCase.STRING_VALUE:
+      return value.getStringValue();
+    case Value.ValueCase.VALUE_NOT_SET:
+      return '';
+  }
 }
 
 /**

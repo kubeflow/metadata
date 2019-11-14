@@ -22,12 +22,13 @@ import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
 import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
 import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
-import { MlMetadataExecutionType, MlMetadataExecution } from '../apis/service/api';
 import { Link } from 'react-router-dom';
 import { RoutePage, RouteParams } from '../components/Router';
+import {Execution, ExecutionType} from '../generated/src/apis/metadata/metadata_store_pb';
+import {GetExecutionsRequest, GetExecutionTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 interface ExecutionListState {
-  executions: MlMetadataExecution[];
+  executions: Execution[];
   rows: Row[];
   expandedRows: Map<number, Row[]>;
   columns: Column[];
@@ -36,7 +37,7 @@ interface ExecutionListState {
 class ExecutionList extends Page<{}, ExecutionListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
-  private executionTypes: Map<string, MlMetadataExecutionType>;
+  private executionTypes: Map<number, ExecutionType>;
   private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
     (props: CustomRendererProps<string>) => {
       const [executionType, executionId] = props.id.split(':');
@@ -120,12 +121,10 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     if (!this.executionTypes || !this.executionTypes.size) {
       this.executionTypes = await this.getExecutionTypes();
     }
-    try {
-      const response = await this.api.metadataService.listExecutions2();
-      this.setState({ executions: (response && response.executions) || [] });
+    if (!this.state.executions.length) {
+      const executions = await this.getExecutions();
+      this.setState({ executions });
       this.clearBanner();
-    } catch (err) {
-      this.showPageError('Unable to retrieve Executions.', err);
     }
     this.setState({
       rows: this.getRowsFromExecutions(request),
@@ -133,14 +132,33 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     return '';
   }
 
-  private async getExecutionTypes(): Promise<Map<string, MlMetadataExecutionType>> {
-    try {
-      const response = await this.api.metadataService.listExecutionTypes();
-      return new Map(response.execution_types!.map((ex) => [ex.id!, ex]));
-    } catch (err) {
-      this.showPageError('Unable to retrieve Execution Types, some features may not work.', err);
+  private async getExecutionTypes(): Promise<Map<number, ExecutionType>> {
+    const response =
+        await this.api.metadataStoreService.getExecutionTypes(new GetExecutionTypesRequest());
+
+    if (!response) {
+      this.showPageError('Unable to retrieve Execution Types, some features may not work.');
       return new Map();
     }
+
+    const artifactTypesMap = new Map<number, ExecutionType>();
+
+    (response!.getExecutionTypesList() || []).forEach((executionType) => {
+      artifactTypesMap.set(executionType.getId()!, executionType);
+    });
+
+    return artifactTypesMap;
+  }
+
+  private async getExecutions(): Promise<Execution[]> {
+    const response = await this.api.metadataStoreService.getExecutions(new GetExecutionsRequest());
+
+    if (!response) {
+      this.showPageError('Unable to retrieve Executions.');
+      return []
+    }
+
+    return response!.getExecutionsList() || [];
   }
 
   /**
@@ -152,16 +170,16 @@ class ExecutionList extends Page<{}, ExecutionListState> {
   private getRowsFromExecutions(request: ListRequest): Row[] {
     const collapsedAndExpandedRows = groupRows(this.state.executions
       .map((execution) => { // Flattens
-        const type = this.executionTypes && this.executionTypes.get(execution.type_id!) ?
-          this.executionTypes.get(execution.type_id!)!.name : execution.type_id;
+        const type = this.executionTypes && this.executionTypes.get(execution.getTypeId()!) ?
+          this.executionTypes.get(execution.getTypeId()!)!.getName() : execution.getTypeId();
         return {
-          id: `${type}:${execution.id}`, // Join with colon so we can build the link
+          id: `${type}:${execution.getId()}`, // Join with colon so we can build the link
           otherFields: [
             getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
             || getResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
             getResourceProperty(execution, ExecutionProperties.NAME),
             getResourceProperty(execution, ExecutionProperties.STATE),
-            execution.id,
+            execution.getId(),
             type,
           ],
         };
@@ -185,7 +203,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
     rows[index].expandState = rows[index].expandState === ExpandState.EXPANDED
       ? ExpandState.COLLAPSED
       : ExpandState.EXPANDED;
-    this.setState({ rows });
+    this.setState({rows});
   }
 
   private getExpandedExecutionsRow(index: number): React.ReactNode {

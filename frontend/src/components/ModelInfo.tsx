@@ -18,8 +18,8 @@ import {classes} from 'typestyle';
 import {commonCss} from '../Css';
 import {getResourceProperty, logger} from '../lib/Utils';
 import {css} from './ResourceInfo';
-import {MlMetadataArtifact} from '../apis/service';
 import {ArtifactProperties} from '../lib/Api';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 
 // Standard artifact properties and Model properties from
 // https://github.com/kubeflow/metadata/blob/master/schema/alpha/artifacts/model.json
@@ -43,7 +43,7 @@ interface ModelSchema {
   training_framework?: {name: string, version: string};
 }
 
-export class ModelInfo extends React.Component<{model: MlMetadataArtifact}, {}> {
+export class ModelInfo extends React.Component<{model: Artifact}, {}> {
 
   public render(): JSX.Element {
     const {model} = this.props;
@@ -73,7 +73,7 @@ export class ModelInfo extends React.Component<{model: MlMetadataArtifact}, {}> 
         </div>
         <div className={css.field}>
           <dt className={css.term}>Training data</dt>
-          <dd className={css.value}>{this.props.model.uri}</dd>
+          <dd className={css.value}>{this.props.model.getUri()}</dd>
         </div>
         <div className={css.field}>
           <dt className={css.term}>Training framework</dt>

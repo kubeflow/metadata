@@ -19,13 +19,15 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Api, ArtifactProperties} from '../lib/Api';
-import {MlMetadataArtifact} from '../apis/service';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
 import {ResourceInfo} from '../components/ResourceInfo';
 import MD2Tabs from '../atoms/MD2Tabs';
+import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import LineageView from './LineageView';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
@@ -42,7 +44,7 @@ const tabs = {
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
 
 interface ArtifactDetailsState {
-  artifact?: MlMetadataArtifact;
+  artifact?: Artifact;
   selectedTab: ArtifactDetailsTab;
 }
 
@@ -87,15 +89,14 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
             onSwitch={this.switchTab.bind(this)}
           />
         </div>
-        <div className={classes(padding(20, 'lr'))}>
-          {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
-            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
-          )}
-          {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            <span>Lineage Explorer</span>
-          )}
-          {this.state.selectedTab === ArtifactDetailsTab.DEPLOYMENTS && <span>Deployments</span>}
-        </div>
+        {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
+            <div className={classes(padding(20, 'lr'))}>
+              <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+            </div>
+        )}
+        {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
+            React.createElement(LineageView, this.props)
+        )}
       </div>
     );
   }
@@ -113,30 +114,41 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   }
 
   private async load(): Promise<void> {
-    try {
-      const {artifact} = await this.api.metadataService.getArtifact(this.id, this.fullTypeName);
-      if (!artifact) {
-        throw new Error(`No ${this.fullTypeName} identified by id: ${this.id}`);
-      }
+    const request = new GetArtifactsByIDRequest();
+    request.setArtifactIdsList([Number(this.id)]);
 
-      const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
-      let title = artifactName ? artifactName.toString() : '';
-      const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
-      if (version) {
-        title += ` (version: ${version})`;
-      }
-      this.props.updateToolbar({
-        pageTitle: title
-      });
-      this.setState({artifact});
-    } catch (err) {
-      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`, err);
+    const response = await this.api.metadataStoreService.getArtifactsByID(request);
+
+    if (!response) {
+      this.showPageError(`Unable to retrieve ${this.fullTypeName} ${this.id}.`);
+      return
     }
+
+    if (!response!.getArtifactsList()!.length) {
+      this.showPageError(`No ${this.fullTypeName} identified by id: ${this.id}`);
+      return;
+    }
+
+    if (response!.getArtifactsList().length > 1) {
+      this.showPageError(`Found multiple artifacts with ID: ${this.id}`);
+      return;
+    }
+
+    const artifact = response!.getArtifactsList()[0];
+
+    const artifactName = getResourceProperty(artifact, ArtifactProperties.NAME);
+    let title = artifactName ? artifactName.toString() : '';
+    const version = getResourceProperty(artifact, ArtifactProperties.VERSION);
+    if (version) {
+      title += ` (version: ${version})`;
+    }
+    this.props.updateToolbar({
+      pageTitle: title
+    });
+    this.setState({artifact});
   }
 
   private switchTab(selectedTab: number) {
-    this.setState({
-      selectedTab
-    });
+    this.setState({selectedTab});
   }
 }
