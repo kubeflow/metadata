@@ -196,8 +196,24 @@ class TestMetedata(unittest.TestCase):
     e.log_output(model)
     self.assertIsNotNone(model.id)
     e2.log_output(model2)
-    self.assertIsNotNone(model.id)
+    self.assertIsNotNone(model2.id)
     self.assertEqual(model.id, model2.id)
+
+  def test_is_duplicated_methods(self):
+    for cls in [metadata.Model, metadata.DataSet]:
+      m = mlpb_artifact(1, "gcs://123", "ws1", "name1", "v1")
+      m1 = mlpb_artifact(1, "gcs://123", "ws1", "name1", "v1")
+      self.assertTrue(cls.is_duplicated(m, m1))
+      m2 = mlpb_artifact(1, "gcs://123", "ws1", "name1")
+      self.assertFalse(cls.is_duplicated(m, m2))
+      m3 = mlpb_artifact(1, "gcs://123", "ws1", "name2", "v1")
+      self.assertFalse(cls.is_duplicated(m, m3))
+      m4 = mlpb_artifact(1, "gcs://123", "ws2", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m4))
+      m5 = mlpb_artifact(1, "gcs://1234", "ws1", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m5))
+      m6 = mlpb_artifact(2, "gcs://123", "ws1", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m6))
 
 
 class CheckMetadataStore(object):
@@ -218,6 +234,21 @@ class ArtifactFixture(object):
 
   def serialization(self):
     return self._fixture
+
+
+def mlpb_artifact(type_id, uri, workspace, name=None, version=None):
+  properties = {}
+  if name:
+    properties["name"] = mlpb.Value(string_value=name)
+  if version:
+    properties["version"] = mlpb.Value(string_value=version)
+  return mlpb.Artifact(uri=uri,
+                       type_id=type_id,
+                       properties=properties,
+                       custom_properties={
+                           metadata._WORKSPACE_PROPERTY_NAME:
+                               mlpb.Value(string_value=workspace),
+                       })
 
 
 if __name__ == "__main__":

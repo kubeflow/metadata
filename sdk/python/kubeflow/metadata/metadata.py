@@ -43,7 +43,7 @@ class Artifact(ABC):
     pass
 
   @staticmethod
-  def isDuplicated(a: mlpb.Artifact, b: mlpb.Artifact):
+  def is_duplicated(a: mlpb.Artifact, b: mlpb.Artifact):
     '''Checks if two artifacts are duplicated.
 
     The artifacts may be considered duplication even if not all the fields are
@@ -52,7 +52,6 @@ class Artifact(ABC):
 
     Returns:
       True or False for duplication.
-      NotImplemented is same as False.
     '''
     return NotImplemented
 
@@ -308,6 +307,7 @@ class Execution(object):
       raise ValueError("invalid artifact type %s: exception %s",
                        artifact.ARTIFACT_TYPE_NAME, e)
 
+    # if id is set, then this artifact is already saved in database.
     if artifact.id is not None:
       self._check_artifact_id(artifact.id)
       return artifact
@@ -331,7 +331,7 @@ class Execution(object):
     pbs = _retry(
         lambda: self.workspace.store.get_artifacts_by_uri(artifact.uri))
     for pb in pbs:
-      if artifact.isDuplicated(ser, pb):
+      if artifact.is_duplicated(ser, pb):
         artifact.id = pb.id
         return artifact
 
@@ -436,11 +436,11 @@ class DataSet(Artifact):
     return data_set_artifact
 
   @staticmethod
-  def isDuplicated(a, b):
+  def is_duplicated(a, b):
     ap = a.properties
     bp = b.properties
-    return a.uri == b.uri and ap["name"] == bp["name"] and ap["version"] == bp[
-        "version"] and a.custom_properties[
+    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
+        "name"] and ap["version"] == bp["version"] and a.custom_properties[
             _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
                 _WORKSPACE_PROPERTY_NAME]
 
@@ -548,11 +548,11 @@ class Model(Artifact):
     return model_artifact
 
   @staticmethod
-  def isDuplicated(a, b):
+  def is_duplicated(a, b):
     ap = a.properties
     bp = b.properties
-    return a.uri == b.uri and ap["name"] == bp["name"] and ap["version"] == bp[
-        "version"] and a.custom_properties[
+    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
+        "name"] and ap["version"] == bp["version"] and a.custom_properties[
             _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
                 _WORKSPACE_PROPERTY_NAME]
 
