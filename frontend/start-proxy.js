@@ -78,6 +78,6 @@ const portForwardToMetadataUiPod = async (podName) => {
 
 detectMetadataUiPodName()
     .then(podName => portForwardToMetadataUiPod(podName))
-    .catch((reason => {
+    .catch(reason => {
       console.log(reason);
-    }));
+    });
