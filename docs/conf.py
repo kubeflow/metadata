@@ -48,11 +48,10 @@
 
 import os
 import sys
-# sys.path.append(os.path.abspath('/Users/zhenghui/kubeflow/metadata/.env/lib/python3.6/site-packages'))
-sys.path.insert(0, os.path.abspath('/Users/zhenghui/kubeflow/metadata/sdk/python'))
 sys.path.extend(['/Library/Frameworks/Python.framework/Versions/3.6/lib/python36.zip', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/lib-dynload','/Library/Frameworks/Python.framework/Versions/3.8/bin'])
 print(sys.path)
 import ml_metadata
+import sphinx_rtd_theme
 
 
 # -- Project information -----------------------------------------------------
@@ -117,11 +116,8 @@ pygments_style = None
 # a list of builtin themes.
 #
 #html_theme = 'alabaster'
-try:
-    import sphinx_rtd_theme
-    html_theme = 'classic'
-except ImportError:
-    pass
+html_theme = 'sphinx_rtd_theme'
+html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
