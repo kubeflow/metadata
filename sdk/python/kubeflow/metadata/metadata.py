@@ -309,14 +309,14 @@ class DataSet(object):
       source.
     labels: Optional string key value pairs for labels.
 
-    example:
-      metadata.DataSet(description="an example data",
-                       name="mytable-dump",
-                       owner="owner@my-company.org",
-                       uri="file://path/to/dataset",
-                       version="v1.0.0",
-                       query="SELECT * FROM mytable",
-                       labels={"label1","val1"}))
+  Example:
+      >>> metadata.DataSet(description="an example data",
+      ...                  name="mytable-dump",
+      ...                  owner="owner@my-company.org",
+      ...                  uri="file://path/to/dataset",
+      ...                  version="v1.0.0",
+      ...                  query="SELECT * FROM mytable",
+      ...                  labels={"label1","val1"}))
   """
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/data_set"
 
@@ -398,23 +398,23 @@ class Model(object):
       kwargs: Optional additional keyword arguments are saved as additional
         properties of this model.
 
-      example:
-        metadata.Model(name="MNIST",
-                       description="model to recognize handwritten digits",
-                       owner="someone@kubeflow.org",
-                       uri="gcs://my-bucket/mnist",
-                       model_type="neural network",
-                       training_framework={
-                           "name": "tensorflow",
-                           "version": "v1.0"
-                       },
-                       hyperparameters={
-                           "learning_rate": 0.5,
-                           "layers": [10, 3, 1],
-                           "early_stop": True
-                       },
-                       version="v0.0.1",
-                       labels={"mylabel": "l1"}))
+  Example:
+      >>> metadata.Model(name="MNIST",
+      ...                description="model to recognize handwritten digits",
+      ...                owner="someone@kubeflow.org",
+      ...                uri="gcs://my-bucket/mnist",
+      ...                model_type="neural network",
+      ...                training_framework={
+      ...                   "name": "tensorflow",
+      ...                   "version": "v1.0"
+      ...                },
+      ...                hyperparameters={
+      ...                   "learning_rate": 0.5,
+      ...                   "layers": [10, 3, 1],
+      ...                   "early_stop": True
+      ...                },
+      ...                version="v0.0.1",
+      ...                labels={"mylabel": "l1"}))
   """
 
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/model"
@@ -500,17 +500,18 @@ class Metrics(object):
     values: Optional map from metrics name to its value.
     labels: Optional string key value pairs for labels.
 
-    example:
-        metadata.Metrics(name="MNIST-evaluation",
-            description=
-            "validating the MNIST model to recognize handwritten digits",
-            owner="someone@kubeflow.org",
-            uri="gcs://my-bucket/mnist-eval.csv",
-            data_set_id="123",
-            model_id="12345",
-            metrics_type=metadata.Metrics.VALIDATION,
-            values={"accuracy": 0.95},
-            labels={"mylabel": "l1"}))
+  Example:
+    >>> metadata.Metrics(
+    ...        name="MNIST-evaluation",
+    ...        description=
+    ...        "validating the MNIST model to recognize handwritten digits",
+    ...        owner="someone@kubeflow.org",
+    ...        uri="gcs://my-bucket/mnist-eval.csv",
+    ...        data_set_id="123",
+    ...        model_id="12345",
+    ...        metrics_type=metadata.Metrics.VALIDATION,
+    ...        values={"accuracy": 0.95},
+    ...        labels={"mylabel": "l1"}))
   """
 
   ARTIFACT_TYPE_NAME = "kubeflow.org/alpha/metrics"
