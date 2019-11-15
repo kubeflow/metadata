@@ -20,5 +20,5 @@ formats: all
 python:
   version: 3.6
   install:
-    -method: pip
-     path: ./sdk/python
+    -method: setuptools
+     path: sdk/python/setup.py
