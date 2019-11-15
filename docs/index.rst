@@ -4,15 +4,19 @@
    contain the root `toctree` directive.
 
 Welcome to Kubeflow Metadata SDK API reference
-================================================
+==============================================
 
 Main documentation: https://www.kubeflow.org/docs/components/misc/metadata/
 
-Source code: https://github.com/kubeflow/metadata/
+Source code: https://github.com/kubeflow/metadata/tree/master/sdk/python
+
+Tutorial: https://github.com/kubeflow/metadata/blob/master/sdk/python/sample/demo.ipynb
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Contents
 
-* :ref:`md-ref`
+   source/md
+
 * :ref:`genindex`
+* :ref:`modindex`

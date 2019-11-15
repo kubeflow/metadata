@@ -48,8 +48,6 @@
 
 import os
 import sys
-sys.path.extend(['/Library/Frameworks/Python.framework/Versions/3.6/lib/python36.zip', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/lib-dynload','/Library/Frameworks/Python.framework/Versions/3.8/bin'])
-print(sys.path)
 import ml_metadata
 import sphinx_rtd_theme
 

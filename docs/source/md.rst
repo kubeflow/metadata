@@ -1,6 +1,6 @@
 .. _md-ref:
 
-metadata package
+Metadata Package
 ================
 
 .. automodule:: kubeflow.metadata.metadata
