@@ -5,8 +5,19 @@ import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import ReplayIcon from '@material-ui/icons/Replay';
 import {classes, stylesheet} from "typestyle";
 import {color, commonCss, fonts, padding} from "../Css";
+import {CSSProperties} from "typestyle/lib/types";
+
+const baseLinkButton: CSSProperties = {
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+    display: "inline",
+    margin: 0,
+    padding: 0,
+};
 
 const baseBreadcrumb = {
+    ...baseLinkButton,
     fontFamily: fonts.secondary,
     fontWeight: 500,
 };
@@ -20,14 +31,18 @@ const actionBarCss = stylesheet({
         ...baseBreadcrumb,
         $nest: {
             '&:hover': {
-                cursor: 'pointer',
                 textDecoration: 'underline',
             }
         }
     },
     breadcrumbActive: {
         color: color.strong,
-        ...baseBreadcrumb
+        ...baseBreadcrumb,
+        $nest: {
+            '&:hover': {
+                cursor: 'default',
+            }
+        }
     },
     breadcrumbSeparator: {
         color: grey[400],
@@ -70,9 +85,9 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
         const historyItems = [root, ...this.state.history];
         const breadcrumbLinks: JSX.Element[] = historyItems.map((id, index) => {
             const isActive = index === historyItems.length - 1;
-            return <span className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}>
+            return <button className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}>
                 {id}
-            </span>
+            </button>
         });
         const newBread = this.reactElementJoin(breadcrumbLinks, (
           <div className={classes(commonCss.flex)}>
