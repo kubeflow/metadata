@@ -24,8 +24,8 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
 
   public checkEdgeAffordances(): JSX.Element[] {
     const affItems = [];
-    this.props.leftAffordance && affItems.push(<div className='edgeLeft' />);
-    this.props.rightAffordance && affItems.push(<div className='edgeRight' />);
+    this.props.leftAffordance && affItems.push(<div className='edgeLeft' key={'edgeLeft'} />);
+    this.props.rightAffordance && affItems.push(<div className='edgeRight' key={'edgeRight'} />);
     return affItems;
   }
   public render(): JSX.Element {

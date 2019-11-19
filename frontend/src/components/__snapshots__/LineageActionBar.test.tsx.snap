@@ -7,11 +7,13 @@ exports[`LineageActionBar Renders correctly for a given root id 1`] = `
   <div
     className="flex"
   >
-    <span
+    <button
       className="breadcrumbActive"
+      key="0"
+      onClick={[Function]}
     >
-      artifactId
-    </span>
+      test model
+    </button>
   </div>
   <div>
     <WithStyles(Button)

@@ -38,6 +38,7 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
   private jsxFromCardDetails(det: CardDetails, i: number): JSX.Element {
     const isNotFirstEl = i > 0;
     return <LineageCard
+      key={i}
       title={det.title}
       type={this.props.type}
       addSpacer={isNotFirstEl}

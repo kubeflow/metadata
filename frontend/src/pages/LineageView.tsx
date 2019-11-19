@@ -91,7 +91,7 @@ class LineageView extends Page<LineageViewProps, LineageViewState> {
     const mockTarget = [...mockExec];
     mockTarget[0].elements[0].title = targetTitle ? targetTitle as string : '';
     return (
-      <div className={classes(commonCss.page,)}>
+      <div className={classes(commonCss.page)}>
         <LineageActionBar ref={this.actionBarRef} initialTarget={this.props.target} setLineageViewTarget={this.setTargetFromActionBar} />
         <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
           <LineageCardColumn

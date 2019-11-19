@@ -54,7 +54,6 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      // TODO: Development convenience change. Remove before submission.
       selectedTab: ArtifactDetailsTab.OVERVIEW
     };
     this.load = this.load.bind(this);

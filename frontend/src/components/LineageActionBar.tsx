@@ -94,6 +94,7 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
             };
             return (
               <button
+                key={index}
                 className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}
                 onClick={onBreadcrumbClicked}
               >
