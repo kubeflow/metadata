@@ -13,5 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cd $(dirname $0)/../kubeflow/metadata
-python3 -m unittest discover --verbose --start-dir ../../tests --top-level-directory=../..
+cd $(dirname $0)/..
+rm -rf .testing-env
+python3 -m venv .testing-env && \
+source .testing-env/bin/activate && \
+python3 -m pip install -U pip
+python3 -m pip install pytest
+# install local kubeflow.metadata package
+python3 -m pip install -e .
+python3 -m pytest tests/test.py
+rm -rf .testing-env

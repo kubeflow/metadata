@@ -1,8 +1,11 @@
-import ml_metadata
 import unittest
-from kubeflow.metadata import metadata
-from ml_metadata.proto import metadata_store_pb2 as mlpb
+import uuid
 from unittest.mock import patch
+
+import ml_metadata
+from ml_metadata.proto import metadata_store_pb2 as mlpb
+
+from kubeflow.metadata import metadata
 
 GRPC_HOST = "127.0.0.1"
 GRPC_PORT = 8081
@@ -13,7 +16,7 @@ class TestMetedata(unittest.TestCase):
   def test_log_metadata_successfully(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws1 = metadata.Workspace(store=store,
-                             name="ws_1",
+                             name="test_log_metadata_successfully_ws",
                              description="a workspace for testing",
                              labels={"n1": "v1"})
 
@@ -23,24 +26,25 @@ class TestMetedata(unittest.TestCase):
         description="first run in ws_1",
     )
 
-    e = metadata.Execution(
+    trainer = metadata.Execution(
         name="test execution",
         workspace=ws1,
         run=r,
         description="an execution",
     )
-    self.assertIsNotNone(e.id)
+    self.assertIsNotNone(trainer.id)
 
-    data_set = e.log_input(
+    data_set = trainer.log_input(
         metadata.DataSet(description="an example data",
                          name="mytable-dump",
                          owner="owner@my-company.org",
                          uri="file://path/to/dataset",
-                         version="v1.0.0",
+                         version=str(uuid.uuid4()),
                          query="SELECT * FROM mytable"))
     self.assertIsNotNone(data_set.id)
+    self.assertIsNotNone(repr(data_set))
 
-    metrics = e.log_output(
+    metrics = trainer.log_output(
         metadata.Metrics(
             name="MNIST-evaluation",
             description=
@@ -53,8 +57,10 @@ class TestMetedata(unittest.TestCase):
             values={"accuracy": 0.95},
             labels={"mylabel": "l1"}))
     self.assertIsNotNone(metrics.id)
+    self.assertIsNotNone(repr(metrics))
 
-    model = e.log_output(
+    model_version = str(uuid.uuid4())
+    model = trainer.log_output(
         metadata.Model(name="MNIST",
                        description="model to recognize handwritten digits",
                        owner="someone@kubeflow.org",
@@ -69,9 +75,24 @@ class TestMetedata(unittest.TestCase):
                            "layers": [10, 3, 1],
                            "early_stop": True
                        },
-                       version="v0.0.1",
+                       version=model_version,
                        labels={"mylabel": "l1"}))
     self.assertIsNotNone(model.id)
+    self.assertIsNotNone(repr(model))
+
+    serving_application = metadata.Execution(
+        name="serving model",
+        workspace=ws1,
+        description="an execution to represent model serving component",
+    )
+    self.assertIsNotNone(serving_application.id)
+    # Use model name, version, uri to uniquely identify existing model.
+    served_model = metadata.Model(
+        name="MNIST",
+        uri="gcs://my-bucket/mnist",
+        version=model_version,
+    )
+    serving_application.log_input(served_model)
 
     # Test listing artifacts in a workspace
     self.assertTrue(len(ws1.list()) > 0)
@@ -80,12 +101,13 @@ class TestMetedata(unittest.TestCase):
     self.assertTrue(len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0)
 
     # Test lineage tracking.
-    output_events = ws1.store.get_events_by_artifact_ids([model.id])
-    assert len(output_events) == 1
-    execution_id = output_events[0].execution_id
-    assert execution_id == e.id
-    all_events = ws1.store.get_events_by_execution_ids([execution_id])
-    assert len(all_events) == 3
+    model_events = ws1.store.get_events_by_artifact_ids([model.id])
+    self.assertEqual(len(model_events), 2)
+    execution_ids = set(e.execution_id for e in model_events)
+    assert execution_ids == set([serving_application.id, trainer.id])
+    trainer_events = ws1.store.get_events_by_execution_ids([trainer.id])
+    artifact_ids = set(e.artifact_id for e in trainer_events)
+    assert artifact_ids == set([model.id, metrics.id, data_set.id])
 
   def test_log_invalid_artifacts_should_fail(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
@@ -111,26 +133,35 @@ class TestMetedata(unittest.TestCase):
 
   def test_log_metadata_successfully_with_minimum_information(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
-
     ws1 = metadata.Workspace(store=store, name="ws_1")
-
     r = metadata.Run(workspace=ws1, name="first run")
-
     e = metadata.Execution(name="test execution", workspace=ws1, run=r)
     self.assertIsNotNone(e.id)
 
     data_set = e.log_input(
         metadata.DataSet(name="mytable-dump", uri="file://path/to/dataset"))
     self.assertIsNotNone(data_set.id)
+    data_set_id = data_set.id
+    # ID should not change after logging twice.
+    e.log_input(data_set)
+    self.assertEqual(data_set_id, data_set.id)
 
     metrics = e.log_output(
         metadata.Metrics(name="MNIST-evaluation",
                          uri="gcs://my-bucket/mnist-eval.csv"))
     self.assertIsNotNone(metrics.id)
+    metrics_id = metrics.id
+    # ID should not change after logging twice.
+    e.log_output(metrics)
+    self.assertEqual(metrics_id, metrics.id)
 
     model = e.log_output(
         metadata.Model(name="MNIST", uri="gcs://my-bucket/mnist"))
     self.assertIsNotNone(model.id)
+    model_id = model.id
+    # ID should not change after logging twice.
+    e.log_output(model)
+    self.assertEqual(model_id, model.id)
 
   def test_invalid_workspace_should_fail(self):
     with self.assertRaises(ValueError):
@@ -162,6 +193,47 @@ class TestMetedata(unittest.TestCase):
                      private_key=b"private_key",
                      certificate_chain=b"chain")
 
+  def test_artifact_deduplication(self):
+    store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
+    ws1 = metadata.Workspace(store=store, name="workspace_one")
+    ws2 = metadata.Workspace(store=store, name="workspace_two")
+    r = metadata.Run(workspace=ws1, name="first run")
+    e = metadata.Execution(name="test execution", workspace=ws1, run=r)
+    e2 = metadata.Execution(name="execution 2", workspace=ws1)
+    e3 = metadata.Execution(name="execution 3", workspace=ws2)
+    self.assertIsNotNone(e.id)
+    self.assertIsNotNone(e2.id)
+
+    model = metadata.Model(name="MNIST",
+                           uri="gcs://my-bucket/mnist",
+                           model_type="neural network",
+                           version="v0.0.1")
+    model2 = metadata.Model(name="MNIST",
+                            uri="gcs://my-bucket/mnist",
+                            model_type="neural network",
+                            version="v0.0.1")
+    e.log_output(model)
+    self.assertIsNotNone(model.id)
+    e2.log_output(model2)
+    self.assertIsNotNone(model2.id)
+    self.assertEqual(model.id, model2.id)
+
+  def test_is_duplicated_methods(self):
+    for cls in [metadata.Model, metadata.DataSet]:
+      m = mlpb_artifact(1, "gcs://123", "ws1", "name1", "v1")
+      m1 = mlpb_artifact(1, "gcs://123", "ws1", "name1", "v1")
+      self.assertTrue(cls.is_duplicated(m, m1))
+      m2 = mlpb_artifact(1, "gcs://123", "ws1", "name1")
+      self.assertFalse(cls.is_duplicated(m, m2))
+      m3 = mlpb_artifact(1, "gcs://123", "ws1", "name2", "v1")
+      self.assertFalse(cls.is_duplicated(m, m3))
+      m4 = mlpb_artifact(1, "gcs://123", "ws2", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m4))
+      m5 = mlpb_artifact(1, "gcs://1234", "ws1", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m5))
+      m6 = mlpb_artifact(2, "gcs://123", "ws1", "name1", "v1")
+      self.assertFalse(cls.is_duplicated(m, m6))
+
 
 class CheckMetadataStore(object):
 
@@ -181,6 +253,21 @@ class ArtifactFixture(object):
 
   def serialization(self):
     return self._fixture
+
+
+def mlpb_artifact(type_id, uri, workspace, name=None, version=None):
+  properties = {}
+  if name:
+    properties["name"] = mlpb.Value(string_value=name)
+  if version:
+    properties["version"] = mlpb.Value(string_value=version)
+  return mlpb.Artifact(uri=uri,
+                       type_id=type_id,
+                       properties=properties,
+                       custom_properties={
+                           metadata._WORKSPACE_PROPERTY_NAME:
+                               mlpb.Value(string_value=workspace),
+                       })
 
 
 if __name__ == "__main__":

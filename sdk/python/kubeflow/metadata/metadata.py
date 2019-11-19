@@ -14,22 +14,46 @@
 
 import datetime
 import json
+from abc import ABC, abstractmethod
+from typing import Any, List, Mapping, Optional, TypeVar, Union
+
 import ml_metadata
 from ml_metadata.metadata_store import metadata_store
 from ml_metadata.proto import metadata_store_pb2 as mlpb
-from typing import Any, List, Mapping, Optional, TypeVar, Union
+from retrying import retry
 """This module contains the Python API for logging metadata of machine learning
 workflows to the Kubeflow Metadata service.
 """
 
-# TypeArtifact is the type Model, Dataset, Metrics or any class that has
-# class variable ARTIFACT_TYPE_NAME of string and a serialization() method that
-# returns a metadata_store_pb2.Artifact.
-TypeArtifact = TypeVar('TypeArtifact', 'Model', 'DataSet', 'Metrics', Any)
-
 _WORKSPACE_PROPERTY_NAME = '__kf_workspace__'
 _RUN_PROPERTY_NAME = '__kf_run__'
 _ALL_META_PROPERTY_NAME = '__ALL_META__'
+
+
+class Artifact(ABC):
+
+  @property
+  @classmethod
+  @abstractmethod
+  def ARTIFACT_TYPE_NAME(cls) -> str:
+    pass
+
+  @abstractmethod
+  def serialization(self) -> mlpb.Artifact:
+    pass
+
+  @staticmethod
+  def is_duplicated(a: mlpb.Artifact, b: mlpb.Artifact):
+    '''Checks if two artifacts are duplicated.
+
+    The artifacts may be considered duplication even if not all the fields are
+    the same as in mlpb.Artifact. For example, two models can be considered the
+    same if they have the same uri, name and version.
+
+    Returns:
+      True or False for duplication.
+    '''
+    return NotImplemented
 
 
 class Store(object):
@@ -86,8 +110,9 @@ class Workspace(object):
       backend_url_prefix: Deprecated. Please use 'store' parameter.
     """
     if backend_url_prefix:
-      raise ValueError("""'backend_url_prefix' is deprecated. Please set
-        Metadata.Store parameter to connect to the metadata gRPC service.""")
+      raise ValueError(
+          "'backend_url_prefix' is deprecated. Please set Metadata.Store "
+          "parameter to connect to the metadata gRPC service.")
     if name is None or type(name) != str:
       raise ValueError("'name' must be set and in string type.")
     if not store or type(store) != Store:
@@ -97,7 +122,7 @@ class Workspace(object):
     self.description = description
     self.labels = labels
 
-  def list(self, artifact_type_name: str = None) -> List[TypeArtifact]:
+  def list(self, artifact_type_name: str = None) -> List[Artifact]:
     """List all artifacts of a given type.
 
     Args:
@@ -110,7 +135,8 @@ class Workspace(object):
     """
     if artifact_type_name is None:
       artifact_type_name = Model.ARTIFACT_TYPE_NAME
-    response = self.store.get_artifacts_by_type(artifact_type_name)
+    response = _retry(
+        lambda: self.store.get_artifacts_by_type(artifact_type_name))
     results = []
     for artifact in response:
       flat = self._flat(artifact)
@@ -208,10 +234,18 @@ class Execution(object):
     self.run = run
     self.description = description
     self.create_time = _get_rfc3339_time()
-    self._type_id = self.workspace.store.get_execution_type(
-        Execution.EXECUTION_TYPE_NAME).id
-    response = self.workspace.store.put_executions([self.serialized()])
+    self._type_id = _retry(lambda: self.workspace.store.get_execution_type(
+        Execution.EXECUTION_TYPE_NAME).id)
+    response = _retry(
+        lambda: self.workspace.store.put_executions([self.serialized()]))
     self.id = response[0]
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialized(self):
     properties = {
@@ -232,7 +266,7 @@ class Execution(object):
                           properties=properties,
                           custom_properties=custom_properties)
 
-  def log_input(self, artifact: TypeArtifact) -> TypeArtifact:
+  def log_input(self, artifact: Artifact) -> Artifact:
     """ Log an artifact as an input of this execution.
 
     Args:
@@ -247,10 +281,10 @@ class Execution(object):
     input_event = mlpb.Event(artifact_id=artifact.id,
                              execution_id=self.id,
                              type=mlpb.Event.INPUT)
-    self.workspace.store.put_events([input_event])
+    _retry(lambda: self.workspace.store.put_events([input_event]))
     return artifact
 
-  def log_output(self, artifact: TypeArtifact) -> TypeArtifact:
+  def log_output(self, artifact: Artifact) -> Artifact:
     """ Log an artifact as an input of this execution.
 
     Args:
@@ -265,20 +299,29 @@ class Execution(object):
     output_event = mlpb.Event(artifact_id=artifact.id,
                               execution_id=self.id,
                               type=mlpb.Event.OUTPUT)
-    self.workspace.store.put_events([output_event])
+    _retry(lambda: self.workspace.store.put_events([output_event]))
     return artifact
 
   def _log(self, artifact):
     """Log artifact into metadata store."""
+    # Sanity checks for artifact.
     if artifact is None:
       raise ValueError("'artifact' must be set.")
-    ser = artifact.serialization()
     try:
-      ser.type_id = self.workspace.store.get_artifact_type(
-          artifact.ARTIFACT_TYPE_NAME).id
+      type_id = _retry(lambda: self.workspace.store.get_artifact_type(
+          artifact.ARTIFACT_TYPE_NAME).id)
     except Exception as e:
       raise ValueError("invalid artifact type %s: exception %s",
                        artifact.ARTIFACT_TYPE_NAME, e)
+
+    # if id is set, then this artifact is already saved in database.
+    if artifact.id is not None:
+      self._check_artifact_id(artifact.id)
+      return artifact
+
+    # Construct a new artifact serialization.
+    ser = artifact.serialization()
+    ser.type_id = type_id
     if _WORKSPACE_PROPERTY_NAME in ser.custom_properties:
       raise ValueError("custom_properties contains reserved key %s" %
                        _WORKSPACE_PROPERTY_NAME)
@@ -290,11 +333,29 @@ class Execution(object):
           _WORKSPACE_PROPERTY_NAME].string_value = self.workspace.name
     if self.run is not None:
       ser.custom_properties[_RUN_PROPERTY_NAME].string_value = self.run.name
-    artifact.id = self.workspace.store.put_artifacts([ser])[0]
+
+    # Deduplicate artifact for existing one in the database.
+    pbs = _retry(
+        lambda: self.workspace.store.get_artifacts_by_uri(artifact.uri))
+    for pb in pbs:
+      if artifact.is_duplicated(ser, pb):
+        artifact.id = pb.id
+        return artifact
+
+    artifact.id = _retry(lambda: self.workspace.store.put_artifacts([ser])[0])
     return artifact
 
+  def _check_artifact_id(self, aid):
+    try:
+      pbs = _retry(lambda: self.workspace.store.get_artifacts_by_id([aid]))
+    except Exception as e:
+      raise ValueError("invalid artifact id {}: {}".format(aid, e))
+    if len(pbs) != 1:
+      raise ValueError(
+          "invalid artifact id {}: artifacts with this id: {}".format(aid, pbs))
 
-class DataSet(object):
+
+class DataSet(Artifact):
   """ Dataset captures a data set in a machine learning workflow.
 
   Attributes:
@@ -358,6 +419,14 @@ class DataSet(object):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     data_set_artifact = mlpb.Artifact(
@@ -381,8 +450,17 @@ class DataSet(object):
     _del_none_properties(data_set_artifact.properties)
     return data_set_artifact
 
+  @staticmethod
+  def is_duplicated(a, b):
+    ap = a.properties
+    bp = b.properties
+    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
+        "name"] and ap["version"] == bp["version"] and a.custom_properties[
+            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
+                _WORKSPACE_PROPERTY_NAME]
 
-class Model(object):
+
+class Model(Artifact):
   """Captures a machine learning model.
 
   Attributes:
@@ -461,6 +539,14 @@ class Model(object):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     model_artifact = mlpb.Artifact(
@@ -484,8 +570,17 @@ class Model(object):
     _del_none_properties(model_artifact.properties)
     return model_artifact
 
+  @staticmethod
+  def is_duplicated(a, b):
+    ap = a.properties
+    bp = b.properties
+    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
+        "name"] and ap["version"] == bp["version"] and a.custom_properties[
+            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
+                _WORKSPACE_PROPERTY_NAME]
 
-class Metrics(object):
+
+class Metrics(Artifact):
   """Captures an evaluation metrics of a model on a data set.
 
   Attributes:
@@ -564,6 +659,14 @@ class Metrics(object):
     self.labels = labels
     self.id = None
     self.create_time = _get_rfc3339_time()
+    self.kwargs = kwargs
+
+  def __repr__(self):
+    field_names = self.__dict__.keys()
+    fields_str = ", ".join(
+        "{}={!r}".format(name, getattr(self, name)) for name in field_names)
+    return "{0.__class__.__module__}.{0.__class__.__qualname__}({1})".format(
+        self, fields_str)
 
   def serialization(self):
     metrics_artifact = mlpb.Artifact(
@@ -588,6 +691,12 @@ class Metrics(object):
         })
     _del_none_properties(metrics_artifact.properties)
     return metrics_artifact
+
+
+@retry(wait_exponential_multiplier=500, stop_max_delay=4000)
+def _retry(f):
+  '''retry function f with exponential backoff'''
+  return f()
 
 
 def _get_rfc3339_time():
