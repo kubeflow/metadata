@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import {Page} from './Page';
+import {Page, PageProps} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Api, ArtifactProperties} from '../lib/Api';
@@ -23,11 +23,11 @@ import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
+import {ResourceInfo} from "../components/ResourceInfo";
 import MD2Tabs from '../atoms/MD2Tabs';
 import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
-import LineageView from './LineageView';
-import {ResourceInfo} from "../components/ResourceInfo";
+import LineageView, {LineageViewProps} from './LineageView';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
@@ -42,6 +42,11 @@ const tabs = {
 };
 
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
+
+const createLineageView = (pageProps: PageProps, artifact?: Artifact): JSX.Element => {
+  const props: LineageViewProps = Object.assign({}, pageProps, {target: artifact});
+  return React.createElement<LineageViewProps>(LineageView, props);
+};
 
 interface ArtifactDetailsState {
   artifact?: Artifact;
@@ -95,8 +100,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-          // TODO: This skirts type checking in a bad way.
-          React.createElement(LineageView, Object.assign({}, this.props, {target: this.state.artifact}))
+          createLineageView(this.props, this.state.artifact)
         )}
       </div>
     );

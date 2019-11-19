@@ -25,8 +25,9 @@ import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from "../components/LineageActionBar";
 import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 import {getResourceProperty} from "../lib/Utils";
+import {RefObject} from "react";
 
-interface LineageViewProps {
+export interface LineageViewProps {
   target?: Artifact
 }
 
@@ -151,12 +152,12 @@ class LineageView extends Page<LineageViewProps, LineageViewState> {
 
   // Updates the view and action bar when the target is set from a lineage card.
   private setTargetFromLineageCard(target: Artifact) {
-    if (!this.actionBarRef) {
+    const actionBarRefObject = this.actionBarRef as RefObject<LineageActionBar>;
+    if (!actionBarRefObject.current) {
       return
     }
-    // @ts-ignore
-    const actionBar = this.actionBarRef.current as LineageActionBar;
-    actionBar.pushHistory(target);
+
+    actionBarRefObject.current.pushHistory(target);
     this.target = target;
   }
 

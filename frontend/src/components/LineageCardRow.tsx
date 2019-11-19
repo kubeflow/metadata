@@ -6,7 +6,7 @@ import {
 } from "../generated/src/apis/metadata/metadata_store_pb";
 import {ArtifactProperties} from "../lib/Api";
 
-export interface LineageCardRowProps {
+interface LineageCardRowProps {
   title: string;
   description?: string;
   leftAffordance: boolean;
