@@ -57,14 +57,22 @@ const actionBarCss = stylesheet({
     },
 });
 
-interface LineageActionBarProps {
+export interface LineageActionBarProps {
     initialTarget?: Artifact
     setLineageViewTarget(artifact: Artifact): void
 }
 
-interface LineageActionBarState {
+export interface LineageActionBarState {
     history: Artifact[]
 }
+
+const BreadcrumbSeparator: React.FC = () => (
+    <div className={classes(commonCss.flex)}>
+        <ArrowRightAltIcon
+          className={classes(actionBarCss.breadcrumbSeparator, padding(10, 'lr'))}
+        />
+    </div>
+);
 
 /** Shows the current navigation history and actions available to the Lineage Explorer. */
 export class LineageActionBar extends React.Component<LineageActionBarProps, LineageActionBarState> {
@@ -87,35 +95,31 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
     }
 
     public render() {
-        const breadcrumbLinks: JSX.Element[] = this.state.history.map((artifact: Artifact, index) => {
+        const breadcrumbs: JSX.Element[] = [];
+        this.state.history.forEach((artifact: Artifact, index) => {
             const isActive = index === this.state.history.length - 1;
             const onBreadcrumbClicked = () => {
                 this.sliceHistory(index);
             };
-            return (
+            breadcrumbs.push(
               <button
-                key={index}
+                key={`breadcrumb-${index}`}
                 className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}
+                disabled={isActive}
                 onClick={onBreadcrumbClicked}
               >
                   {getResourceProperty(artifact, ArtifactProperties.NAME)}
               </button>
-            )
+            );
+            if (!isActive) {
+                breadcrumbs.push(<BreadcrumbSeparator key={`separator-${index}`} />);
+            }
         });
-        const newBread = this.reactElementJoin(breadcrumbLinks, (
-          <div className={classes(commonCss.flex)}>
-              <ArrowRightAltIcon
-                className={classes(actionBarCss.breadcrumbSeparator, padding(10, 'lr'))}
-                onClick={this.reset}
-              >
-                  Reset
-              </ArrowRightAltIcon>
-          </div>
-        ));
+
         return (
           <div
             className={classes(actionBarCss.container, padding(25, 'lr'), commonCss.flex)}>
-              <div className={classes(commonCss.flex)}>{newBread}</div>
+              <div className={classes(commonCss.flex)}>{breadcrumbs}</div>
               <div>
                   <Button
                     className={classes(actionBarCss.actionButton)}
@@ -140,21 +144,5 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
 
     private reset() {
         this.sliceHistory(0);
-    }
-
-    private reactElementJoin(elements: JSX.Element[], separator: JSX.Element): JSX.Element[] {
-        if (elements.length <= 1) {
-            return elements
-        }
-
-        const joinedElements: JSX.Element[] = [];
-        elements.forEach((element, index) => {
-            joinedElements.push(element);
-            const isLast = index === elements.length - 1;
-            if (!isLast) {
-                joinedElements.push(separator);
-            }
-        });
-        return joinedElements;
     }
 }

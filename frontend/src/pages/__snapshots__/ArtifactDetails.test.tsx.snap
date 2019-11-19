@@ -1774,7 +1774,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             >
               <button
                 className="breadcrumbActive"
-                key="0"
+                disabled={true}
+                key="breadcrumb-0"
                 onClick={[Function]}
               >
                 test model
