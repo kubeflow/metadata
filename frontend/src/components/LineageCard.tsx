@@ -2,6 +2,7 @@ import * as React from 'react';
 import './LineageCard.css';
 import {LineageCardRow, LineageCardRowProps} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 
 interface LineageCardProps {
   title: string;
@@ -9,7 +10,7 @@ interface LineageCardProps {
   rows: LineageRow[];
   addSpacer: boolean;
   isTarget?: boolean;
-  onArtifactCardClicked?(id: string): void
+  onArtifactCardClicked?(artifact: Artifact): void
 }
 
 export class LineageCard extends React.Component<LineageCardProps> {

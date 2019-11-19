@@ -1,6 +1,10 @@
-// tslint:disable: no-unused-expression
-import React from 'react';
+import * as React from 'react';
 import './LineageCardRow.css';
+import {
+  Artifact,
+  Value
+} from "../generated/src/apis/metadata/metadata_store_pb";
+import {ArtifactProperties} from "../lib/Api";
 
 export interface LineageCardRowProps {
   title: string;
@@ -9,7 +13,7 @@ export interface LineageCardRowProps {
   rightAffordance: boolean;
   hideRadio: boolean;
   isLastRow: boolean;
-  onArtifactCardClicked?(id: string): void
+  onArtifactCardClicked?(artifact: Artifact): void
 }
 
 export class LineageCardRow extends React.Component<LineageCardRowProps> {
@@ -45,10 +49,13 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
   }
 
   private logClick() {
-    console.log(`click: ${JSON.stringify(this.props, null, 2)}`);
     if (this.props.onArtifactCardClicked) {
-      // TODO: Pass ID up when using
-      this.props.onArtifactCardClicked(this.props.title);
+      // TODO: Remove once this class has an Artifact in its props.
+      const mockArtifact = new Artifact();
+      const nameValue = new Value();
+      nameValue.setStringValue(this.props.title);
+      mockArtifact.getPropertiesMap().set(ArtifactProperties.NAME, nameValue);
+      this.props.onArtifactCardClicked(mockArtifact);
     }
   }
 }

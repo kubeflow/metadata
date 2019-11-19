@@ -19,18 +19,24 @@ import * as React from 'react';
 import {Page} from './Page';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {ListRequest} from '../lib/Api';
+import {ArtifactProperties, ListRequest} from '../lib/Api';
 import {ToolbarProps} from '../components/Toolbar';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from "../components/LineageActionBar";
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import {getResourceProperty} from "../lib/Utils";
 
+interface LineageViewProps {
+  target?: Artifact
+}
 
 interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
+  target?: Artifact;
 }
 
-class LineageView extends Page<{}, LineageViewState> {
+class LineageView extends Page<LineageViewProps, LineageViewState> {
   private actionBarRef: React.Ref<LineageActionBar>;
 
   constructor(props: any) {
@@ -38,9 +44,11 @@ class LineageView extends Page<{}, LineageViewState> {
     this.state = {
       columnNames: ['Input Artifact', '', 'Target', '', 'Output Artifact'],
       columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
+      target: props.target
     };
     this.reload = this.reload.bind(this);
     this.onArtifactCardClicked = this.onArtifactCardClicked.bind(this);
+    this.setTarget = this.setTarget.bind(this);
     this.actionBarRef = React.createRef<LineageActionBar>();
   }
 
@@ -79,13 +87,12 @@ class LineageView extends Page<{}, LineageViewState> {
         {title: 'Some Process', desc: '13,201 Examples', prev: true, next: true}
       ]},
     ] as CardDetails[];
-    const mockTarget = [
-      Object.assign({}, mockExec[0], {title: 'Target'})
-    ];
-    const targetElement = mockTarget[0].elements[0];
+    const targetTitle = this.state.target ? getResourceProperty(this.state.target, ArtifactProperties.NAME) : '';
+    const mockTarget = [...mockExec];
+    mockTarget[0].elements[0].title = targetTitle ? targetTitle as string : '';
     return (
       <div className={classes(commonCss.page,)}>
-        <LineageActionBar root={targetElement.title} ref={this.actionBarRef}/>
+        <LineageActionBar initialTarget={this.props.target} ref={this.actionBarRef} setLineageViewTarget={this.setTarget} />
         <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
           <LineageCardColumn
             type='artifact'
@@ -142,14 +149,20 @@ class LineageView extends Page<{}, LineageViewState> {
     return '';
   }
 
-  private onArtifactCardClicked(id: string) {
-    console.log(`Artifact selected: ${id}`);
+  private onArtifactCardClicked(artifact: Artifact) {
     if (!this.actionBarRef) {
       return
     }
     // @ts-ignore
     const actionBar = this.actionBarRef.current as LineageActionBar;
-    actionBar.pushHistory(id);
+    actionBar.pushHistory(artifact);
+    this.setTarget(artifact);
+  }
+
+  private setTarget(target: Artifact) {
+    this.setState({
+      target,
+    });
   }
 }
 

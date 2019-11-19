@@ -6,6 +6,9 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import {classes, stylesheet} from "typestyle";
 import {color, commonCss, fonts, padding} from "../Css";
 import {CSSProperties} from "typestyle/lib/types";
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import {getResourceProperty} from "../lib/Utils";
+import {ArtifactProperties} from "../lib/Api";
 
 const baseLinkButton: CSSProperties = {
     backgroundColor: "transparent",
@@ -55,11 +58,12 @@ const actionBarCss = stylesheet({
 });
 
 interface LineageActionBarProps {
-    root: string
+    initialTarget?: Artifact
+    setLineageViewTarget(artifact: Artifact): void
 }
 
 interface LineageActionBarState {
-    history: string[]
+    history: Artifact[]
 }
 
 /** Shows the current navigation history and actions available to the Lineage Explorer. */
@@ -70,28 +74,41 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
         this.pushHistory = this.pushHistory.bind(this);
         this.state = {
             history: []
+        };
+        if (this.props.initialTarget) {
+            this.state.history.push(this.props.initialTarget)
         }
     }
 
-    public pushHistory(id: string) {
-        console.log(`LineageActionBar: new history item ${id}`);
+    public pushHistory(artifact: Artifact) {
         this.setState({
-            history: [...this.state.history, id]
+            history: [...this.state.history, artifact]
         })
     }
 
     public render() {
-        const {root} = this.props;
-        const historyItems = [root, ...this.state.history];
-        const breadcrumbLinks: JSX.Element[] = historyItems.map((id, index) => {
-            const isActive = index === historyItems.length - 1;
-            return <button className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}>
-                {id}
-            </button>
+        const breadcrumbLinks: JSX.Element[] = this.state.history.map((artifact: Artifact, index) => {
+            const isActive = index === this.state.history.length - 1;
+            const onBreadcrumbClicked = () => {
+                this.sliceHistory(index);
+            };
+            return (
+              <button
+                className={classes(isActive ? actionBarCss.breadcrumbActive : actionBarCss.breadcrumbInactive)}
+                onClick={onBreadcrumbClicked}
+              >
+                  {getResourceProperty(artifact, ArtifactProperties.NAME)}
+              </button>
+            )
         });
         const newBread = this.reactElementJoin(breadcrumbLinks, (
           <div className={classes(commonCss.flex)}>
-              <ArrowRightAltIcon className={classes(actionBarCss.breadcrumbSeparator, padding(10, 'lr'))}>Reset</ArrowRightAltIcon>
+              <ArrowRightAltIcon
+                className={classes(actionBarCss.breadcrumbSeparator, padding(10, 'lr'))}
+                onClick={this.reset}
+              >
+                  Reset
+              </ArrowRightAltIcon>
           </div>
         ));
         return (
@@ -111,10 +128,17 @@ export class LineageActionBar extends React.Component<LineageActionBarProps, Lin
         );
     }
 
-    private reset() {
+    private sliceHistory(index: number): void {
+        const history = this.state.history.slice(0, index + 1);
+        const targetArtifact = history[index];
+        const onHistoryChanged = this.props.setLineageViewTarget.bind(this, targetArtifact);
         this.setState({
-            history: []
-        })
+            history,
+        }, onHistoryChanged)
+    }
+
+    private reset() {
+        this.sliceHistory(0);
     }
 
     private reactElementJoin(elements: JSX.Element[], separator: JSX.Element): JSX.Element[] {

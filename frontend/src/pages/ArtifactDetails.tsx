@@ -55,7 +55,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     super(props);
     this.state = {
       // TODO: Development convenience change. Remove before submission.
-      selectedTab: ArtifactDetailsTab.LINEAGE_EXPLORER
+      selectedTab: ArtifactDetailsTab.OVERVIEW
     };
     this.load = this.load.bind(this);
   }
@@ -96,7 +96,8 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            React.createElement(LineageView, this.props)
+          // TODO: This skirts type checking in a bad way.
+          React.createElement(LineageView, Object.assign({}, this.props, {target: this.state.artifact}))
         )}
       </div>
     );
