@@ -13,16 +13,16 @@ export interface LineageCardRowProps {
   rightAffordance: boolean;
   hideRadio: boolean;
   isLastRow: boolean;
-  onArtifactCardClicked?(artifact: Artifact): void
+  setLineageViewTarget?(artifact: Artifact): void
 }
 
 export class LineageCardRow extends React.Component<LineageCardRowProps> {
   constructor(props: LineageCardRowProps) {
     super(props);
-    this.logClick = this.logClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
-  public checkEdgeAfforances(): JSX.Element[] {
+  public checkEdgeAffordances(): JSX.Element[] {
     const affItems = [];
     this.props.leftAffordance && affItems.push(<div className='edgeLeft' />);
     this.props.rightAffordance && affItems.push(<div className='edgeRight' />);
@@ -37,25 +37,30 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
           <p className='rowTitle'>{title}</p>
           <p className='rowDesc'>{description}</p>
         </footer>
-        {this.checkEdgeAfforances()}
+        {this.checkEdgeAffordances()}
       </div>
     );
   }
+
   private checkRadio(): JSX.Element {
     if (!this.props.hideRadio) {
-      return <div><input type='radio' className='form-radio' name='' value='' onClick={this.logClick} /></div>;
+      return <div><input type='radio' className='form-radio' name='' value='' onClick={this.handleClick} /></div>;
     }
     return <div className='noRadio' />;
   }
 
-  private logClick() {
-    if (this.props.onArtifactCardClicked) {
-      // TODO: Remove once this class has an Artifact in its props.
-      const mockArtifact = new Artifact();
-      const nameValue = new Value();
-      nameValue.setStringValue(this.props.title);
-      mockArtifact.getPropertiesMap().set(ArtifactProperties.NAME, nameValue);
-      this.props.onArtifactCardClicked(mockArtifact);
+  private get artifact(): Artifact {
+    // TODO: Return this.props.artifact once available.
+    const mockArtifact = new Artifact();
+    const nameValue = new Value();
+    nameValue.setStringValue(this.props.title);
+    mockArtifact.getPropertiesMap().set(ArtifactProperties.NAME, nameValue);
+    return mockArtifact
+  }
+
+  private handleClick() {
+    if (this.props.setLineageViewTarget) {
+      this.props.setLineageViewTarget(this.artifact);
     }
   }
 }

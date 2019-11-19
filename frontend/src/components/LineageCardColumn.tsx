@@ -17,7 +17,7 @@ export interface LineageCardColumnProps {
   title: string;
   cards: CardDetails[];
   reverseBindings?: boolean;
-  onArtifactCardClicked?(artifact: Artifact): void
+  setLineageViewTarget?(artifact: Artifact): void
 }
 
 export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
@@ -43,7 +43,7 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
       addSpacer={isNotFirstEl}
       rows={det.elements}
       isTarget={/Target/i.test(this.props.title)}
-      onArtifactCardClicked={this.props.onArtifactCardClicked}
+      setLineageViewTarget={this.props.setLineageViewTarget}
     />;
   }
   private drawColumnContent(): JSX.Element {
