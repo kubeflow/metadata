@@ -93,7 +93,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
             </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            React.createElement(LineageView, this.props)
+            <LineageView />
         )}
       </div>
     );
