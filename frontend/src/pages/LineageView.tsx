@@ -16,11 +16,9 @@
 // tslint:disable: object-literal-sort-keys
 
 import * as React from 'react';
-import {Page} from './Page';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
 import {ListRequest} from '../lib/Api';
-import {ToolbarProps} from '../components/Toolbar';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 
 
@@ -29,7 +27,7 @@ interface LineageViewState {
   columnTypes: string[];
 }
 
-class LineageView extends Page<{}, LineageViewState> {
+class LineageView extends React.Component<{}, LineageViewState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -37,14 +35,6 @@ class LineageView extends Page<{}, LineageViewState> {
       columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
     };
     this.reload = this.reload.bind(this);
-  }
-
-  public getInitialToolbarState(): ToolbarProps {
-    return {
-      actions: [],
-      breadcrumbs: [],
-      pageTitle: 'Artifacts',
-    };
   }
 
   public render(): JSX.Element {
