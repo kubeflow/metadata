@@ -112,17 +112,4 @@ describe('ArtifactDetails', () => {
     tree.update();
     expect(tree).toMatchSnapshot();
   });
-
-  it('Renders the Deployments tab for an artifact', async () => {
-    mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
-    tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
-    tree.setState({
-      selectedTab: ArtifactDetailsTab.DEPLOYMENTS
-    });
-
-    await mockGetArtifact;
-    await TestUtils.flushPromises();
-    tree.update();
-    expect(tree).toMatchSnapshot();
-  });
 });
