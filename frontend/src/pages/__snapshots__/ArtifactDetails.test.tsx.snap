@@ -391,70 +391,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
         </div>
       </MD2Tabs>
     </div>
-    <LineageView
-      history={
-        Object {
-          "push": [MockFunction],
-        }
-      }
-      location={Object {}}
-      match={
-        Object {
-          "params": Object {
-            "artifactType": "kubeflow.org/alpha/model",
-            "id": "1",
-          },
-        }
-      }
-      toolbarProps={
-        Object {
-          "actions": Array [],
-          "breadcrumbs": Array [
-            Object {
-              "displayName": "Artifacts",
-              "href": "/artifacts",
-            },
-          ],
-          "pageTitle": "Model 1 details",
-        }
-      }
-      updateBanner={[MockFunction]}
-      updateDialog={[MockFunction]}
-      updateSnackbar={[MockFunction]}
-      updateToolbar={
-        [MockFunction] {
-          "calls": Array [
-            Array [
-              Object {
-                "actions": Array [],
-                "breadcrumbs": Array [
-                  Object {
-                    "displayName": "Artifacts",
-                    "href": "/artifacts",
-                  },
-                ],
-                "pageTitle": "Model 1 details",
-              },
-            ],
-            Array [
-              Object {
-                "pageTitle": "test model (version: v1)",
-              },
-            ],
-          ],
-          "results": Array [
-            Object {
-              "type": "return",
-              "value": undefined,
-            },
-            Object {
-              "type": "return",
-              "value": undefined,
-            },
-          ],
-        }
-      }
-    >
+    <LineageView>
       <div
         className="page LineageExplorer"
         style={
