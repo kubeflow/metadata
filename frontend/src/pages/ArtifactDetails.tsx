@@ -32,13 +32,11 @@ import LineageView from './LineageView';
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
   LINEAGE_EXPLORER = 1,
-  DEPLOYMENTS = 2
 }
 
 const tabs = {
   [ArtifactDetailsTab.OVERVIEW]: {name: 'Overview'},
   [ArtifactDetailsTab.LINEAGE_EXPLORER]: {name: 'Lineage Explorer'},
-  [ArtifactDetailsTab.DEPLOYMENTS]: {name: 'Deployments'}
 };
 
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
