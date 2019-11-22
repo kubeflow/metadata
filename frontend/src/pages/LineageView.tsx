@@ -143,9 +143,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   // Updates the view and action bar when the target is set from a lineage card.
   private setTargetFromLineageCard(target: Artifact) {
     const actionBarRefObject = this.actionBarRef as RefObject<LineageActionBar>;
-    if (!actionBarRefObject.current) {
-      return
-    }
+    if (!actionBarRefObject.current) return;
 
     actionBarRefObject.current.pushHistory(target);
     this.target = target;

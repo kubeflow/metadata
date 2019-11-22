@@ -59,8 +59,7 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
   }
 
   private handleClick() {
-    if (this.props.setLineageViewTarget) {
-      this.props.setLineageViewTarget(this.artifact);
-    }
+    if (!this.props.setLineageViewTarget) return;
+    this.props.setLineageViewTarget(this.artifact);
   }
 }
