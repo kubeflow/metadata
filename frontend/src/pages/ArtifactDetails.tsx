@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import {Page, PageProps} from './Page';
+import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Api, ArtifactProperties} from '../lib/Api';
@@ -27,26 +27,19 @@ import {ResourceInfo} from "../components/ResourceInfo";
 import MD2Tabs from '../atoms/MD2Tabs';
 import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
-import LineageView, {LineageViewProps} from './LineageView';
+import LineageView from './LineageView';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
   LINEAGE_EXPLORER = 1,
-  DEPLOYMENTS = 2
 }
 
 const tabs = {
   [ArtifactDetailsTab.OVERVIEW]: {name: 'Overview'},
   [ArtifactDetailsTab.LINEAGE_EXPLORER]: {name: 'Lineage Explorer'},
-  [ArtifactDetailsTab.DEPLOYMENTS]: {name: 'Deployments'}
 };
 
 const tabNames = Object.values(tabs).map(tabConfig => tabConfig.name);
-
-const createLineageView = (pageProps: PageProps, artifact?: Artifact): JSX.Element => {
-  const props: LineageViewProps = Object.assign({}, pageProps, {target: artifact});
-  return React.createElement<LineageViewProps>(LineageView, props);
-};
 
 interface ArtifactDetailsState {
   artifact?: Artifact;
@@ -100,7 +93,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-          createLineageView(this.props, this.state.artifact)
+            <LineageView />
         )}
       </div>
     );

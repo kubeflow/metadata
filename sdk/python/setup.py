@@ -19,6 +19,7 @@ VERSION = '0.3.0'
 
 REQUIRES = [
     'ml-metadata==0.15.0',
+    'retrying'
 ]
 
 setup(

@@ -16,11 +16,9 @@
 // tslint:disable: object-literal-sort-keys
 
 import * as React from 'react';
-import {Page} from './Page';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
 import {ArtifactProperties, ListRequest} from '../lib/Api';
-import {ToolbarProps} from '../components/Toolbar';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from "../components/LineageActionBar";
 import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
@@ -37,7 +35,7 @@ interface LineageViewState {
   target?: Artifact;
 }
 
-class LineageView extends Page<LineageViewProps, LineageViewState> {
+class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   private readonly actionBarRef: React.Ref<LineageActionBar>;
 
   constructor(props: any) {
@@ -51,14 +49,6 @@ class LineageView extends Page<LineageViewProps, LineageViewState> {
     this.reload = this.reload.bind(this);
     this.setTargetFromActionBar = this.setTargetFromActionBar.bind(this);
     this.setTargetFromLineageCard = this.setTargetFromLineageCard.bind(this);
-  }
-
-  public getInitialToolbarState(): ToolbarProps {
-    return {
-      actions: [],
-      breadcrumbs: [],
-      pageTitle: 'Artifacts',
-    };
   }
 
   public render(): JSX.Element {
