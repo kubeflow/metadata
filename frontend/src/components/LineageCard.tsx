@@ -2,6 +2,7 @@ import * as React from 'react';
 import './LineageCard.css';
 import {LineageCardRow} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 
 interface LineageCardProps {
   title: string;
@@ -9,13 +10,14 @@ interface LineageCardProps {
   rows: LineageRow[];
   addSpacer: boolean;
   isTarget?: boolean;
+  setLineageViewTarget?(artifact: Artifact): void
 }
 
 export class LineageCard extends React.Component<LineageCardProps> {
   public render(): JSX.Element {
-    const {title, type, rows, addSpacer, isTarget} = this.props;
+    const {title, type, rows, addSpacer, isTarget, setLineageViewTarget} = this.props;
 
-    const listCardRows = () => rows.map((r, i) => 
+    const listCardRows = () => rows.map((r, i) =>
       <LineageCardRow
         key={i}
         title={r.title}
@@ -24,6 +26,7 @@ export class LineageCard extends React.Component<LineageCardProps> {
         rightAffordance={!!r.next}
         isLastRow={i === rows.length-1}
         hideRadio={type === 'execution' || !!isTarget}
+        setLineageViewTarget={setLineageViewTarget}
       />
     );
 

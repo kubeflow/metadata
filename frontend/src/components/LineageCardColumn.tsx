@@ -4,6 +4,7 @@ import {LineageCardType, LineageRow} from './LineageTypes';
 import {LineageCard} from './LineageCard';
 import {EdgeCanvas} from './EdgeCanvas';
 import './LineageCardColumn.css';
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 
 // Todo: Replace this with the actual interface / class used by the APIs
 export interface CardDetails {
@@ -16,6 +17,7 @@ export interface LineageCardColumnProps {
   title: string;
   cards: CardDetails[];
   reverseBindings?: boolean;
+  setLineageViewTarget?(artifact: Artifact): void
 }
 
 export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
@@ -36,11 +38,14 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
   private jsxFromCardDetails(det: CardDetails, i: number): JSX.Element {
     const isNotFirstEl = i > 0;
     return <LineageCard
+      key={i}
       title={det.title}
       type={this.props.type}
       addSpacer={isNotFirstEl}
       rows={det.elements}
-      isTarget={/Target/i.test(this.props.title)} />;
+      isTarget={/Target/i.test(this.props.title)}
+      setLineageViewTarget={this.props.setLineageViewTarget}
+    />;
   }
   private drawColumnContent(): JSX.Element {
     const {type, cards} = this.props;

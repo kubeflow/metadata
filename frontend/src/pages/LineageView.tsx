@@ -18,23 +18,37 @@
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {ListRequest} from '../lib/Api';
+import {ArtifactProperties, ListRequest} from '../lib/Api';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
+import {LineageActionBar} from "../components/LineageActionBar";
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import {getResourceProperty} from "../lib/Utils";
+import {RefObject} from "react";
 
+export interface LineageViewProps {
+  target?: Artifact
+}
 
 interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
+  target?: Artifact;
 }
 
-class LineageView extends React.Component<{}, LineageViewState> {
+class LineageView extends React.Component<LineageViewProps, LineageViewState> {
+  private readonly actionBarRef: React.Ref<LineageActionBar>;
+
   constructor(props: any) {
     super(props);
+    this.actionBarRef = React.createRef<LineageActionBar>();
     this.state = {
       columnNames: ['Input Artifact', '', 'Target', '', 'Output Artifact'],
       columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
+      target: props.target
     };
     this.reload = this.reload.bind(this);
+    this.setTargetFromActionBar = this.setTargetFromActionBar.bind(this);
+    this.setTargetFromLineageCard = this.setTargetFromLineageCard.bind(this);
   }
 
   public render(): JSX.Element {
@@ -64,29 +78,39 @@ class LineageView extends React.Component<{}, LineageViewState> {
         {title: 'Some Process', desc: '13,201 Examples', prev: true, next: true}
       ]},
     ] as CardDetails[];
+    const targetTitle = this.state.target ? getResourceProperty(this.state.target, ArtifactProperties.NAME) : '';
+    const mockTarget = [...mockExec];
+    mockTarget[0].elements[0].title = targetTitle ? targetTitle as string : '';
     return (
-      <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
-        <LineageCardColumn
-          type='artifact'
-          cards={mockInputArtifacts}
-          title={`${columnNames[0]}`} />
-        <LineageCardColumn
-          type='execution'
-          cards={mockExec}
-          title={`${columnNames[1]}`} />
-        <LineageCardColumn
-          type='artifact'
-          cards={[Object.assign({}, mockExec[0], {title: 'Target'})]}
-          title={`${columnNames[2]}`} />
-        <LineageCardColumn
-          type='execution'
-          cards={mockExec}
-          title={`${columnNames[3]}`} />
-        <LineageCardColumn
-          type='artifact'
-          cards={mockOutputArtifacts}
-          reverseBindings={true}
-          title={`${columnNames[4]}`} />
+      <div className={classes(commonCss.page)}>
+        <LineageActionBar ref={this.actionBarRef} initialTarget={this.props.target} setLineageViewTarget={this.setTargetFromActionBar} />
+        <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
+          <LineageCardColumn
+            type='artifact'
+            cards={mockInputArtifacts}
+            title={`${columnNames[0]}`}
+            setLineageViewTarget={this.setTargetFromLineageCard}
+          />
+          <LineageCardColumn
+            type='execution'
+            cards={mockExec}
+            title={`${columnNames[1]}`} />
+          <LineageCardColumn
+            type='artifact'
+            cards={mockTarget}
+            title={`${columnNames[2]}`} />
+          <LineageCardColumn
+            type='execution'
+            cards={mockExec}
+            title={`${columnNames[3]}`} />
+          <LineageCardColumn
+            type='artifact'
+            cards={mockOutputArtifacts}
+            reverseBindings={true}
+            title={`${columnNames[4]}`}
+            setLineageViewTarget={this.setTargetFromLineageCard}
+          />
+        </div>
       </div>
     );
   }
@@ -114,6 +138,26 @@ class LineageView extends React.Component<{}, LineageViewState> {
     //   rows: this.getRowsFromArtifacts(request),
     // });
     return '';
+  }
+
+  // Updates the view and action bar when the target is set from a lineage card.
+  private setTargetFromLineageCard(target: Artifact) {
+    const actionBarRefObject = this.actionBarRef as RefObject<LineageActionBar>;
+    if (!actionBarRefObject.current) return;
+
+    actionBarRefObject.current.pushHistory(target);
+    this.target = target;
+  }
+
+  // Updates the view when the target is changed from the action bar.
+  private setTargetFromActionBar(target: Artifact) {
+    this.target = target;
+  }
+
+  private set target(target: Artifact) {
+    this.setState({
+      target,
+    });
   }
 }
 
