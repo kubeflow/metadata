@@ -24,7 +24,7 @@ const css = stylesheet({
     marginTop: px(74),
     overflow: 'visible',
     position: 'absolute',
-    width: `${edgeWidth}px`,
+    width: px(edgeWidth),
     zIndex: -1,
     '$nest': {
       svg: {
