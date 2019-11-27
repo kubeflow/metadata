@@ -666,12 +666,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="edgeCanvas kWKfgJ"
-                    style={
-                      Object {
-                        "width": "200px",
-                      }
-                    }
+                    className="edgeCanvas"
                   >
                     <LineChart
                       areaVisible={false}
@@ -2723,12 +2718,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="execution"
                 >
                   <div
-                    className="edgeCanvas kWKfgJ"
-                    style={
-                      Object {
-                        "width": "200px",
-                      }
-                    }
+                    className="edgeCanvas"
                   >
                     <LineChart
                       areaVisible={false}
@@ -3287,12 +3277,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="edgeCanvas kWKfgJ"
-                    style={
-                      Object {
-                        "width": "200px",
-                      }
-                    }
+                    className="edgeCanvas"
                   >
                     <LineChart
                       areaVisible={false}
@@ -3849,12 +3834,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="execution"
                 >
                   <div
-                    className="edgeCanvas kWKfgJ"
-                    style={
-                      Object {
-                        "width": "200px",
-                      }
-                    }
+                    className="edgeCanvas"
                   >
                     <LineChart
                       areaVisible={false}
@@ -4437,12 +4417,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="edgeCanvas kWKfgJ reverse"
-                    style={
-                      Object {
-                        "width": "200px",
-                      }
-                    }
+                    className="edgeCanvas edgeCanvasReverse"
                   >
                     <LineChart
                       areaVisible={false}
