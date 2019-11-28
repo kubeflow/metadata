@@ -24,8 +24,8 @@ import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow, getResourcePropert
 import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
 import { RoutePage, RouteParams } from '../components/Router';
 import { Link } from 'react-router-dom';
-import {ArtifactType, Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
-import {GetArtifactsRequest, GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {ArtifactType, Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import {GetArtifactsRequest, GetArtifactTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 interface ArtifactListState {
   artifacts: Artifact[];
@@ -38,36 +38,22 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private tableRef = React.createRef<CustomTable>();
   private api = Api.getInstance();
   private artifactTypes: Map<number, ArtifactType>;
-  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
-    (props: CustomRendererProps<string>) => {
-      const [artifactType, artifactId] = props.id.split(':');
-      const link = RoutePage.ARTIFACT_DETAILS
-        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
-        .replace(`:${RouteParams.ID}`, artifactId);
-      return (
-        <Link onClick={(e) => e.stopPropagation()}
-          className={commonCss.link}
-          to={link}>
-          {props.value}
-        </Link>
-      );
-  }
-
+  
   constructor(props: any) {
     super(props);
     this.state = {
       artifacts: [],
       columns: [
         {
-          label: 'Pipeline/Workspace',
-          flex: 2,
           customRenderer: this.nameCustomRenderer,
+          flex: 2,
+          label: 'Pipeline/Workspace',
           sortKey: 'pipelineName'
         },
         {
-          label: 'Name',
-          flex: 1,
           customRenderer: this.nameCustomRenderer,
+          flex: 1,
+          label: 'Name',
           sortKey: 'name',
         },
         {label: 'ID', flex: 1, sortKey: 'id'},
@@ -76,8 +62,8 @@ class ArtifactList extends Page<{}, ArtifactListState> {
         // TODO: Get timestamp from the event that created this artifact.
         // {label: 'Created at', flex: 1, sortKey: 'created_at'},
       ],
-      rows: [],
       expandedRows: new Map(),
+      rows: [],
     };
     this.reload = this.reload.bind(this);
     this.toggleRowExpand = this.toggleRowExpand.bind(this);
@@ -115,6 +101,21 @@ class ArtifactList extends Page<{}, ArtifactListState> {
     if (this.tableRef.current) {
       await this.tableRef.current.reload();
     }
+  }
+
+  private nameCustomRenderer: React.FC<CustomRendererProps<string>> =
+    (props: CustomRendererProps<string>) => {
+      const [artifactType, artifactId] = props.id.split(':');
+      const link = RoutePage.ARTIFACT_DETAILS
+        .replace(`:${RouteParams.ARTIFACT_TYPE}+`, artifactType)
+        .replace(`:${RouteParams.ID}`, artifactId);
+      return (
+        <Link onClick={(e) => e.stopPropagation()}
+          className={commonCss.link}
+          to={link}>
+          {props.value}
+        </Link>
+      );
   }
 
   private async reload(request: ListRequest): Promise<string> {
@@ -156,7 +157,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
 
     if (!response) {
       this.showPageError('Unable to retrieve Artifacts.');
-      return []
+      return [];
     }
 
     return response!.getArtifactsList() || [];
