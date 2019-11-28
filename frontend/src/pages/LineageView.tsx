@@ -20,13 +20,13 @@ import {classes} from 'typestyle';
 import {commonCss} from '../Css';
 import {ArtifactProperties, ListRequest} from '../lib/Api';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
-import {LineageActionBar} from "../components/LineageActionBar";
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
-import {getResourceProperty} from "../lib/Utils";
-import {RefObject} from "react";
+import {LineageActionBar} from '../components/LineageActionBar';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import {getResourceProperty} from '../lib/Utils';
+import {RefObject} from 'react';
 
 export interface LineageViewProps {
-  target?: Artifact
+  target?: Artifact;
 }
 
 interface LineageViewState {
@@ -141,16 +141,16 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   // Updates the view and action bar when the target is set from a lineage card.
-  private setTargetFromLineageCard(target: Artifact) {
+  private setTargetFromLineageCard(target: Artifact): void {
     const actionBarRefObject = this.actionBarRef as RefObject<LineageActionBar>;
-    if (!actionBarRefObject.current) return;
+    if (!actionBarRefObject.current) {return;}
 
     actionBarRefObject.current.pushHistory(target);
     this.target = target;
   }
 
   // Updates the view when the target is changed from the action bar.
-  private setTargetFromActionBar(target: Artifact) {
+  private setTargetFromActionBar(target: Artifact): void {
     this.target = target;
   }
 
