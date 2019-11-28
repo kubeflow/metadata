@@ -31,6 +31,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "enzyme-to-json": "^3.3.5",
+    "eslint-plugin-import": "^2.18.2",
     "license-checker": "^25.0.1",
     "react-router-test-context": "^0.1.0",
     "ts-protoc-gen": "^0.12.0",
