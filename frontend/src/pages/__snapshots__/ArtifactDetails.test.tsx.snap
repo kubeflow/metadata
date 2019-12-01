@@ -391,11 +391,586 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
         </div>
       </MD2Tabs>
     </div>
-    <LineageView>
+    <LineageView
+      target={
+        Object {
+          "array": Array [
+            1,
+            1,
+            "gs://my-bucket/mnist",
+            Array [
+              Array [
+                "__ALL_META__",
+                Array [
+                  undefined,
+                  undefined,
+                  "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                ],
+              ],
+              Array [
+                "create_time",
+                Array [
+                  undefined,
+                  undefined,
+                  "2019-06-12T01:21:48.259263Z",
+                ],
+              ],
+              Array [
+                "description",
+                Array [
+                  undefined,
+                  undefined,
+                  "A really great model",
+                ],
+              ],
+              Array [
+                "name",
+                Array [
+                  undefined,
+                  undefined,
+                  "test model",
+                ],
+              ],
+              Array [
+                "version",
+                Array [
+                  undefined,
+                  undefined,
+                  "v1",
+                ],
+              ],
+            ],
+            Array [
+              Array [
+                "__kf_run__",
+                Array [
+                  undefined,
+                  undefined,
+                  "1",
+                ],
+              ],
+              Array [
+                "__kf_workspace__",
+                Array [
+                  undefined,
+                  undefined,
+                  "workspace-1",
+                ],
+              ],
+            ],
+          ],
+          "arrayIndexOffset_": -1,
+          "convertedPrimitiveFields_": Object {},
+          "messageId_": undefined,
+          "pivot_": 1.7976931348623157e+308,
+          "wrappers_": Object {
+            "4": Object {
+              "arrClean": true,
+              "arr_": Array [
+                Array [
+                  "__ALL_META__",
+                  Array [
+                    undefined,
+                    undefined,
+                    "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                  ],
+                ],
+                Array [
+                  "create_time",
+                  Array [
+                    undefined,
+                    undefined,
+                    "2019-06-12T01:21:48.259263Z",
+                  ],
+                ],
+                Array [
+                  "description",
+                  Array [
+                    undefined,
+                    undefined,
+                    "A really great model",
+                  ],
+                ],
+                Array [
+                  "name",
+                  Array [
+                    undefined,
+                    undefined,
+                    "test model",
+                  ],
+                ],
+                Array [
+                  "version",
+                  Array [
+                    undefined,
+                    undefined,
+                    "v1",
+                  ],
+                ],
+              ],
+              "map_": Object {
+                "__ALL_META__": Object {
+                  "key": "__ALL_META__",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+                "create_time": Object {
+                  "key": "create_time",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "2019-06-12T01:21:48.259263Z",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "2019-06-12T01:21:48.259263Z",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+                "description": Object {
+                  "key": "description",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "A really great model",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "A really great model",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+                "name": Object {
+                  "key": "name",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "test model",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "test model",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+                "version": Object {
+                  "key": "version",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "v1",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "v1",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+              },
+              "valueCtor_": [Function],
+            },
+            "5": Object {
+              "arrClean": true,
+              "arr_": Array [
+                Array [
+                  "__kf_run__",
+                  Array [
+                    undefined,
+                    undefined,
+                    "1",
+                  ],
+                ],
+                Array [
+                  "__kf_workspace__",
+                  Array [
+                    undefined,
+                    undefined,
+                    "workspace-1",
+                  ],
+                ],
+              ],
+              "map_": Object {
+                "__kf_run__": Object {
+                  "key": "__kf_run__",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "1",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "1",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+                "__kf_workspace__": Object {
+                  "key": "__kf_workspace__",
+                  "value": Array [
+                    undefined,
+                    undefined,
+                    "workspace-1",
+                  ],
+                  "valueWrapper": Object {
+                    "array": Array [
+                      undefined,
+                      undefined,
+                      "workspace-1",
+                    ],
+                    "arrayIndexOffset_": -1,
+                    "convertedPrimitiveFields_": Object {},
+                    "messageId_": undefined,
+                    "pivot_": 1.7976931348623157e+308,
+                    "wrappers_": null,
+                  },
+                },
+              },
+              "valueCtor_": [Function],
+            },
+          },
+        }
+      }
+    >
       <div
         className="page"
       >
         <LineageActionBar
+          initialTarget={
+            Object {
+              "array": Array [
+                1,
+                1,
+                "gs://my-bucket/mnist",
+                Array [
+                  Array [
+                    "__ALL_META__",
+                    Array [
+                      undefined,
+                      undefined,
+                      "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                    ],
+                  ],
+                  Array [
+                    "create_time",
+                    Array [
+                      undefined,
+                      undefined,
+                      "2019-06-12T01:21:48.259263Z",
+                    ],
+                  ],
+                  Array [
+                    "description",
+                    Array [
+                      undefined,
+                      undefined,
+                      "A really great model",
+                    ],
+                  ],
+                  Array [
+                    "name",
+                    Array [
+                      undefined,
+                      undefined,
+                      "test model",
+                    ],
+                  ],
+                  Array [
+                    "version",
+                    Array [
+                      undefined,
+                      undefined,
+                      "v1",
+                    ],
+                  ],
+                ],
+                Array [
+                  Array [
+                    "__kf_run__",
+                    Array [
+                      undefined,
+                      undefined,
+                      "1",
+                    ],
+                  ],
+                  Array [
+                    "__kf_workspace__",
+                    Array [
+                      undefined,
+                      undefined,
+                      "workspace-1",
+                    ],
+                  ],
+                ],
+              ],
+              "arrayIndexOffset_": -1,
+              "convertedPrimitiveFields_": Object {},
+              "messageId_": undefined,
+              "pivot_": 1.7976931348623157e+308,
+              "wrappers_": Object {
+                "4": Object {
+                  "arrClean": true,
+                  "arr_": Array [
+                    Array [
+                      "__ALL_META__",
+                      Array [
+                        undefined,
+                        undefined,
+                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                      ],
+                    ],
+                    Array [
+                      "create_time",
+                      Array [
+                        undefined,
+                        undefined,
+                        "2019-06-12T01:21:48.259263Z",
+                      ],
+                    ],
+                    Array [
+                      "description",
+                      Array [
+                        undefined,
+                        undefined,
+                        "A really great model",
+                      ],
+                    ],
+                    Array [
+                      "name",
+                      Array [
+                        undefined,
+                        undefined,
+                        "test model",
+                      ],
+                    ],
+                    Array [
+                      "version",
+                      Array [
+                        undefined,
+                        undefined,
+                        "v1",
+                      ],
+                    ],
+                  ],
+                  "map_": Object {
+                    "__ALL_META__": Object {
+                      "key": "__ALL_META__",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                    "create_time": Object {
+                      "key": "create_time",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "2019-06-12T01:21:48.259263Z",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "2019-06-12T01:21:48.259263Z",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                    "description": Object {
+                      "key": "description",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "A really great model",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "A really great model",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                    "name": Object {
+                      "key": "name",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "test model",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "test model",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                    "version": Object {
+                      "key": "version",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "v1",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "v1",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                  },
+                  "valueCtor_": [Function],
+                },
+                "5": Object {
+                  "arrClean": true,
+                  "arr_": Array [
+                    Array [
+                      "__kf_run__",
+                      Array [
+                        undefined,
+                        undefined,
+                        "1",
+                      ],
+                    ],
+                    Array [
+                      "__kf_workspace__",
+                      Array [
+                        undefined,
+                        undefined,
+                        "workspace-1",
+                      ],
+                    ],
+                  ],
+                  "map_": Object {
+                    "__kf_run__": Object {
+                      "key": "__kf_run__",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "1",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "1",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                    "__kf_workspace__": Object {
+                      "key": "__kf_workspace__",
+                      "value": Array [
+                        undefined,
+                        undefined,
+                        "workspace-1",
+                      ],
+                      "valueWrapper": Object {
+                        "array": Array [
+                          undefined,
+                          undefined,
+                          "workspace-1",
+                        ],
+                        "arrayIndexOffset_": -1,
+                        "convertedPrimitiveFields_": Object {},
+                        "messageId_": undefined,
+                        "pivot_": 1.7976931348623157e+308,
+                        "wrappers_": null,
+                      },
+                    },
+                  },
+                  "valueCtor_": [Function],
+                },
+              },
+            }
+          }
           setLineageViewTarget={[Function]}
         >
           <div
@@ -403,7 +978,16 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           >
             <div
               className="flex"
-            />
+            >
+              <button
+                className="breadcrumbActive"
+                disabled={true}
+                key="breadcrumb-0"
+                onClick={[Function]}
+              >
+                test model
+              </button>
+            </div>
             <div>
               <WithStyles(Button)
                 className="actionButton"
@@ -2687,7 +3271,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       "desc": "13,201 Examples",
                       "next": true,
                       "prev": true,
-                      "title": "",
+                      "title": "test model",
                     },
                   ],
                   "title": "Execution",
@@ -3174,7 +3758,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         "desc": "13,201 Examples",
                         "next": true,
                         "prev": true,
-                        "title": "",
+                        "title": "test model",
                       },
                     ]
                   }
@@ -3201,7 +3785,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         key="0"
                         leftAffordance={true}
                         rightAffordance={true}
-                        title=""
+                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -3212,7 +3796,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           <footer>
                             <p
                               className="rowTitle"
-                            />
+                            >
+                              test model
+                            </p>
                             <p
                               className="rowDesc"
                             >
@@ -3244,7 +3830,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       "desc": "13,201 Examples",
                       "next": true,
                       "prev": true,
-                      "title": "",
+                      "title": "test model",
                     },
                   ],
                   "title": "Execution",
@@ -3733,7 +4319,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         "desc": "13,201 Examples",
                         "next": true,
                         "prev": true,
-                        "title": "",
+                        "title": "test model",
                       },
                     ]
                   }
@@ -3760,7 +4346,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         key="0"
                         leftAffordance={true}
                         rightAffordance={true}
-                        title=""
+                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -3771,7 +4357,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           <footer>
                             <p
                               className="rowTitle"
-                            />
+                            >
+                              test model
+                            </p>
                             <p
                               className="rowDesc"
                             >
@@ -3803,7 +4391,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       "desc": "13,201 Examples",
                       "next": true,
                       "prev": true,
-                      "title": "",
+                      "title": "test model",
                     },
                   ],
                   "title": "Execution",
@@ -4290,7 +4878,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         "desc": "13,201 Examples",
                         "next": true,
                         "prev": true,
-                        "title": "",
+                        "title": "test model",
                       },
                     ]
                   }
@@ -4317,7 +4905,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         key="0"
                         leftAffordance={true}
                         rightAffordance={true}
-                        title=""
+                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -4328,7 +4916,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           <footer>
                             <p
                               className="rowTitle"
-                            />
+                            >
+                              test model
+                            </p>
                             <p
                               className="rowDesc"
                             >
