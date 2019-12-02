@@ -2,6 +2,7 @@ import unittest
 import uuid
 from unittest.mock import patch
 
+import pytest
 import ml_metadata
 from ml_metadata.proto import metadata_store_pb2 as mlpb
 
@@ -15,8 +16,9 @@ class TestMetedata(unittest.TestCase):
 
   def test_log_metadata_successfully(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
+    ws_name = "test_log_metadata_successfully_ws_" + str(uuid.uuid4())
     ws1 = metadata.Workspace(store=store,
-                             name="test_log_metadata_successfully_ws",
+                             name=ws_name,
                              description="a workspace for testing",
                              labels={"n1": "v1"})
 
@@ -58,6 +60,7 @@ class TestMetedata(unittest.TestCase):
             labels={"mylabel": "l1"}))
     self.assertIsNotNone(metrics.id)
     self.assertIsNotNone(repr(metrics))
+    print(repr(metrics))
 
     model_version = str(uuid.uuid4())
     model = trainer.log_output(
@@ -95,10 +98,10 @@ class TestMetedata(unittest.TestCase):
     serving_application.log_input(served_model)
 
     # Test listing artifacts in a workspace
-    self.assertTrue(len(ws1.list()) > 0)
-    self.assertTrue(len(ws1.list(metadata.Model.ARTIFACT_TYPE_NAME)) > 0)
-    self.assertTrue(len(ws1.list(metadata.Metrics.ARTIFACT_TYPE_NAME)) > 0)
-    self.assertTrue(len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0)
+    assert len(ws1.list()) > 0
+    assert len(ws1.list(metadata.Model.ARTIFACT_TYPE_NAME)) > 0
+    #assert len(ws1.list(metadata.Metrics.ARTIFACT_TYPE_NAME)) > 0
+    assert len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0
 
     # Test lineage tracking.
     model_events = ws1.store.get_events_by_artifact_ids([model.id])
@@ -108,6 +111,16 @@ class TestMetedata(unittest.TestCase):
     trainer_events = ws1.store.get_events_by_execution_ids([trainer.id])
     artifact_ids = set(e.artifact_id for e in trainer_events)
     assert artifact_ids == set([model.id, metrics.id, data_set.id])
+
+    # Test context, attributions, associations creation.
+    ctx = ws1._get_existing_context()
+    assert ctx.id is not None
+    artifacts = ws1.store.get_artifacts_by_context(ctx.id)
+    assert set(a.id for a in artifacts) == set(
+        [model.id, metrics.id, data_set.id])
+    executions = ws1.store.get_executions_by_context(ctx.id)
+    assert set(e.id for e in executions) == set(
+        [serving_application.id, trainer.id])
 
   def test_log_invalid_artifacts_should_fail(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
@@ -174,6 +187,20 @@ class TestMetedata(unittest.TestCase):
                                name="ws_1",
                                description="a workspace for testing",
                                labels={"n1": "v1"})
+
+  def test_creating_workspace_with_existing_name(self):
+    store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
+    ws_name = "non_unique_ws_" + str(uuid.uuid4())
+    ws1 = metadata.Workspace(store=store,
+                             name=ws_name,
+                             description="a workspace for testing",
+                             labels={"n1": "v1"})
+
+    ws2 = metadata.Workspace(store, ws_name)
+    assert ws1.context_id == ws2.context_id
+
+    with pytest.raises(ValueError, match=r".*exists with id.*"):
+      metadata.Workspace(store, ws_name, reuse_workspace_if_exists=False)
 
   def test_init_store_with_ssl_config(self):
     # TODO: There is a type error in underlying ml_metadate library:
