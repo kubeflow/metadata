@@ -113,9 +113,9 @@ class Workspace(object):
         workspace of the same name should be reused.
       backend_url_prefix: Deprecated. Please use 'store' parameter.
 
-    Throws:
-      ValueError if a workspace of the same name already exists and
-      reuse_workspace_if_exists is set to False.
+    Raises:
+      ValueError: If a workspace of the same name already exists and
+      `reuse_workspace_if_exists` is set to False.
     """
     if backend_url_prefix:
       raise ValueError(
