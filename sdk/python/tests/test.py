@@ -2,11 +2,10 @@ import unittest
 import uuid
 from unittest.mock import patch
 
-import pytest
 import ml_metadata
-from ml_metadata.proto import metadata_store_pb2 as mlpb
-
+import pytest
 from kubeflow.metadata import metadata
+from ml_metadata.proto import metadata_store_pb2 as mlpb
 
 GRPC_HOST = "127.0.0.1"
 GRPC_PORT = 8081

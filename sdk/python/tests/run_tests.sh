@@ -27,4 +27,8 @@ python3 -m pip install pytest pytest-cov
 # install local kubeflow.metadata package
 python3 -m pip install -e .
 python3 -m pytest tests/*test.py
+# Run integration tests multiple times should get the same result. This checks
+# the idenpotence of the tests.
+echo "Run tests the second time:"
+python3 -m pytest tests/*test.py
 rm -rf .testing-env
