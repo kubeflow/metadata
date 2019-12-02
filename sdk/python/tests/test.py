@@ -99,7 +99,7 @@ class TestMetedata(unittest.TestCase):
     # Test listing artifacts in a workspace
     assert len(ws1.list()) > 0
     assert len(ws1.list(metadata.Model.ARTIFACT_TYPE_NAME)) > 0
-    #assert len(ws1.list(metadata.Metrics.ARTIFACT_TYPE_NAME)) > 0
+    assert len(ws1.list(metadata.Metrics.ARTIFACT_TYPE_NAME)) > 0
     assert len(ws1.list(metadata.DataSet.ARTIFACT_TYPE_NAME)) > 0
 
     # Test lineage tracking.
