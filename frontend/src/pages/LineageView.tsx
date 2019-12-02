@@ -26,7 +26,7 @@ import {getResourceProperty} from '../lib/Utils';
 import {RefObject} from 'react';
 
 export interface LineageViewProps {
-  target?: Artifact;
+  target: Artifact;
 }
 
 interface LineageViewState {
