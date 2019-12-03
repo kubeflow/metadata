@@ -39,6 +39,11 @@ echo "CLUSTER_NAME: ${CLUSTER_NAME}"
 echo "ZONE: ${GCP_ZONE}"
 echo "PROJECT: ${GCP_PROJECT}"
 
+apt-get update
+apt-get -y install software-properties-common python-software-properties
+add-apt-repository ppa:jonathonf/python-3.6
+apt-get -y install python3.6 python3-venv
+
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
 kubectl config set-context $(kubectl config current-context) --namespace=default
@@ -131,7 +136,6 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 
 cd "${SRC_DIR}/sdk/python"
 
-apt-get install python3.6 python3-venv
 rm -rf .testing-env
 python3.6 -m venv .testing-env
 source .testing-env/bin/activate
