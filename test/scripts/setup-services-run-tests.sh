@@ -28,6 +28,7 @@ REGISTRY="${GCP_REGISTRY}"
 NAMESPACE="${DEPLOY_NAMESPACE}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
+VERSION=750464 ### DELETE ###
 
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
@@ -127,13 +128,25 @@ done
 
 # Run CURL tests
 cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
+
+cd "${SRC_DIR}/sdk/python"
+
+apt-get install python3.6 python3-venv
+rm -rf .testing-env
+python3.6 -m venv .testing-env
+source .testing-env/bin/activate
+python3 -V
+# Run Python tests
+bash tests/run_tests.sh
+
 # Test demo notebook
-pip install jupyterlab
-pip install nbconvert
-pip install pandas
-cd "${SRC_DIR}/sdk/python" && \
-  sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
+pip3 install jupyterlab
+pip3 install nbconvert
+pip3 install pandas
+sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
   python3 -m nbconvert --to notebook --execute demo.ipynb
+
+cd "${SRC_DIR}"
 
 # Test resource watcher
 # Port forwarding
@@ -142,10 +155,6 @@ echo "kubectl port-forward from $TARGET_GRPC_POD"
 kubectl -n $NAMESPACE port-forward $TARGET_GRPC_POD 8081:8080 &
 # Stream server logs.
 kubectl -n $NAMESPACE logs -f $TARGET_GRPC_POD &
-
-# Run Python tests
-pip install ml-metadata==0.15.0
-cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
 
 cd "${SRC_DIR}/watcher" && \
   go build -o main/main main/main.go && \

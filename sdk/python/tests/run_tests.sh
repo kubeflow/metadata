@@ -19,16 +19,13 @@ set -o pipefail
 set -o xtrace
 
 cd $(dirname $0)/..
-rm -rf .testing-env
-python3 -m venv .testing-env && \
-source .testing-env/bin/activate && \
 python3 -m pip install -U pip
 python3 -m pip install pytest pytest-cov
 # install local kubeflow.metadata package
 python3 -m pip install -e .
-python3 -m pytest tests/*test.py
+python3 -m pytest ./tests
 # Run integration tests multiple times should get the same result. This checks
 # the idenpotence of the tests.
 echo "Run tests the second time:"
-python3 -m pytest tests/*test.py
-rm -rf .testing-env
+python3 -m pytest ./tests
+
