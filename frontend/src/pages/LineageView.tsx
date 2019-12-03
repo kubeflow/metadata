@@ -18,12 +18,28 @@
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {ArtifactProperties, ListRequest} from '../lib/Api';
+import {Api, ArtifactProperties, ExecutionProperties} from '../lib/Api';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from '../components/LineageActionBar';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import {
+  Artifact, Event, Execution
+} from '../generated/src/apis/metadata/metadata_store_pb';
 import {getResourceProperty} from '../lib/Utils';
 import {RefObject} from 'react';
+import {
+  GetArtifactsByIDRequest,
+  GetEventsByArtifactIDsRequest, GetEventsByExecutionIDsRequest,
+  GetExecutionsByIDRequest
+} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {MetadataStoreServicePromiseClient} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
+
+// https://github.com/google/ml-metadata/blob/master/ml_metadata/proto/metadata_store.proto#L108
+// 1 = ml_metadata.Event.DECLARED_OUTPUT
+// 2 = ml_metadata.Event.DECLARED_INPUT
+// 3 = ml_metadata.Event.INPUT
+// 4 = ml_metadata.Event.OUTPUT
+const isInputEvent = (event: Event) => [2, 3].includes(event.getType());
+const isOutputEvent = (event: Event) => [1, 4].includes(event.getType());
 
 export interface LineageViewProps {
   target: Artifact;
@@ -32,80 +48,67 @@ export interface LineageViewProps {
 interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
-  target?: Artifact;
+  // TODO: This will draw all input and output artifacts as coming out of "every
+  //  Execution". Since there is only one right now (for the data I've seen),
+  //  this is enough to get the RPCs hooked up with, but not enough to really
+  //  build the correct data structure.
+  inputArtifacts: Artifact[]
+  inputExecutions: Execution[]
+  target: Artifact;
+  outputExecutions: Execution[]
+  outputArtifacts: Artifact[]
 }
 
 class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   private readonly actionBarRef: React.Ref<LineageActionBar>;
+  private readonly metadataStoreService: MetadataStoreServicePromiseClient;
 
   constructor(props: any) {
     super(props);
+    this.metadataStoreService = Api.getInstance().metadataStoreService;
     this.actionBarRef = React.createRef<LineageActionBar>();
     this.state = {
       columnNames: ['Input Artifact', '', 'Target', '', 'Output Artifact'],
       columnTypes: ['ipa', 'ipx', 'target', 'opx', 'opa'],
-      target: props.target
+      target: props.target,
+      inputArtifacts: [],
+      inputExecutions: [],
+      outputExecutions: [],
+      outputArtifacts: [],
     };
-    this.reload = this.reload.bind(this);
+    this.loadData = this.loadData.bind(this);
     this.setTargetFromActionBar = this.setTargetFromActionBar.bind(this);
     this.setTargetFromLineageCard = this.setTargetFromLineageCard.bind(this);
+    this.loadData(this.props.target.getId());
   }
 
   public render(): JSX.Element {
     const {columnNames} = this.state;
-    const mockInputArtifacts = [
-      {title: 'Notebook', elements: [
-        {title: 'Artifact 1', desc: 'This is really cool', next: true},
-        {title: 'Artifact 2', desc: 'This is also kinda cool', next: true},
-      ]},
-      {title: 'Datasets', elements: [
-        {title: 'Artifact w/o desc', prev: true, next: true},
-        {title: 'Artifact that should have overflowing text', desc: 'Lorem ipsum', next: true},
-      ]},
-    ] as CardDetails[];
-    const mockOutputArtifacts = [
-      {title: 'Hyperparameters', elements: [
-        {title: 'Lol', desc: 'Maybe does something', prev: true},
-        {title: 'Skip factor', desc: 'How fast should I descent the gradient', prev: true, next: true},
-      ]},
-      {title: 'Deployments', elements: [
-        {title: 'AWS Webserver', desc: 'http://foo.bar/x34s', prev: true, next: true},
-        {title: 'Product API', desc: 'Hosted via GCP', prev: true},
-      ]},
-    ] as CardDetails[];
-    const mockExec = [
-      {title: 'Execution', elements: [
-        {title: 'Some Process', desc: '13,201 Examples', prev: true, next: true}
-      ]},
-    ] as CardDetails[];
-    const targetTitle = this.state.target ? getResourceProperty(this.state.target, ArtifactProperties.NAME) : '';
-    const mockTarget = [...mockExec];
-    mockTarget[0].elements[0].title = targetTitle ? targetTitle as string : '';
     return (
       <div className={classes(commonCss.page)}>
         <LineageActionBar ref={this.actionBarRef} initialTarget={this.props.target} setLineageViewTarget={this.setTargetFromActionBar} />
         <div className={classes(commonCss.page, 'LineageExplorer')} style={{flexFlow: 'row', overflow: 'auto', width: '100%', position: 'relative', background: '#f3f2f4', zIndex: 0}}>
           <LineageCardColumn
             type='artifact'
-            cards={mockInputArtifacts}
+            cards={this.buildArtifactCards(this.state.inputArtifacts)}
             title={`${columnNames[0]}`}
             setLineageViewTarget={this.setTargetFromLineageCard}
           />
           <LineageCardColumn
             type='execution'
-            cards={mockExec}
+            cards={this.buildExecutionCards(this.state.inputExecutions)}
             title={`${columnNames[1]}`} />
           <LineageCardColumn
             type='artifact'
-            cards={mockTarget}
+            cards={this.buildArtifactCards([this.state.target])}
             title={`${columnNames[2]}`} />
           <LineageCardColumn
             type='execution'
-            cards={mockExec}
+            cards={this.buildExecutionCards(this.state.outputExecutions)}
             title={`${columnNames[3]}`} />
           <LineageCardColumn
             type='artifact'
-            cards={mockOutputArtifacts}
+            cards={this.buildArtifactCards(this.state.outputArtifacts)}
             reverseBindings={true}
             title={`${columnNames[4]}`}
             setLineageViewTarget={this.setTargetFromLineageCard}
@@ -115,29 +118,110 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     );
   }
 
-  public async refresh(): Promise<void> {
-    // Todo: Implement this!
+  private buildArtifactCards(artifacts: Artifact[]): CardDetails[] {
+    return [
+      {
+        title: 'Artifact',
+        elements: artifacts.map((artifact) => ({
+            title: getResourceProperty(artifact, ArtifactProperties.NAME),
+            desc: getResourceProperty(artifact, ArtifactProperties.DESCRIPTION),
+            prev: true,
+            next: true
+          })
+        )
+      }
+    ] as CardDetails[];
   }
 
-  private async reload(request: ListRequest): Promise<string> {
-    // TODO: Consider making an Api method for returning and caching types
-    // if (!this.artifactTypes || !this.artifactTypes.size) {
-    //   this.artifactTypes = await this.getArtifactTypes();
-    // }
-    // const {artifacts} = this.state;
-    // if (!artifacts.length) {
-    //   try {
-    //     const response = await this.api.metadataService.listArtifacts2();
-    //     this.setState({artifacts: (response && response.artifacts) || []});
-    //     this.clearBanner();
-    //   } catch (err) {
-    //     this.showPageError('Unable to retrieve Artifacts.', err);
-    //   }
-    // }
-    // this.setState({
-    //   rows: this.getRowsFromArtifacts(request),
+  private buildExecutionCards(executions: Execution[]): CardDetails[] {
+    return [
+      {
+        title: 'Execution',
+        elements: executions.map((execution) => ({
+          title: getResourceProperty(execution, ExecutionProperties.NAME),
+          // desc: getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME),
+          desc: String(execution.getId()),
+          prev: true,
+          next: true
+          })
+        )
+      }
+    ] as CardDetails[];
+  }
+
+  // @ts-ignore
+  private static logProto(proto: any): void {
+    console.log(JSON.stringify(proto.toObject(), null, 2))
+  }
+
+  private async loadData(id: number): Promise<string> {
+    console.log(`Fetching data for ${id}`);
+
+    const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
+    getEventsByArtifactIDsRequest.addArtifactIds(id);
+
+    const getEventsByArtifactIDsResponse =
+      await this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest);
+
+    const events = getEventsByArtifactIDsResponse.getEventsList();
+
+    // // Sanity logging
+    // console.log(`Found ${events.length} event`);
+    // events.forEach((event) => {
+    //   console.log("EVENT");
+    //   console.log(JSON.stringify(event.toObject(), null, 2));
+    //   console.log(isOutputEvent(event) ? "OUTPUT" : "INPUT");
     // });
-    return '';
+
+    const outputExecutionIds =
+      events.filter(isOutputEvent)
+        .map((event) => (event.getExecutionId()));
+
+    const inputExecutionIds =
+      events.filter(isInputEvent)
+        .map((event) => (event.getExecutionId()));
+
+    const outputExecutions = await this.getExecutions(outputExecutionIds);
+    const inputExecutions = await this.getExecutions(inputExecutionIds);
+
+    // Build the list of input execution events.
+    // The list of input executions is the list of events in which the target
+    // artifact was an output artifact.
+    const getInputExecutionEvents = new GetEventsByExecutionIDsRequest();
+    getInputExecutionEvents.setExecutionIdsList(outputExecutionIds);
+    const getInputExecutionEventsResponse =
+      await this.metadataStoreService.getEventsByExecutionIDs(getInputExecutionEvents);
+
+    // Build the list of input artifacts for the input execution
+    const inputExecutionInputArtifactIds =
+      getInputExecutionEventsResponse
+        .getEventsList()
+        .filter(isInputEvent)
+        .map((event) => event.getArtifactId());
+    const inputArtifacts = await this.getArtifacts(inputExecutionInputArtifactIds);
+
+    // Build the list of output execution artifacts.
+    // The list of output executions is the list of events in which the target
+    // artifact was an input artifact.
+    const getOutputExecutionEventsRequest = new GetEventsByExecutionIDsRequest();
+    getOutputExecutionEventsRequest.setExecutionIdsList(inputExecutionIds);
+    const getOutputExecutionEventsResponse =
+      await this.metadataStoreService.getEventsByExecutionIDs(getOutputExecutionEventsRequest);
+
+    const outputExecutionOutputArtifactIds =
+      getOutputExecutionEventsResponse
+        .getEventsList()
+        .filter(isOutputEvent)
+        .map((event) => event.getArtifactId());
+    const outputArtifacts = await this.getArtifacts(outputExecutionOutputArtifactIds);
+
+    this.setState({
+      inputArtifacts: inputArtifacts,
+      inputExecutions: outputExecutions,
+      outputExecutions: inputExecutions,
+      outputArtifacts: outputArtifacts,
+    });
+    return ''
   }
 
   // Updates the view and action bar when the target is set from a lineage card.
@@ -146,6 +230,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     if (!actionBarRefObject.current) {return;}
 
     actionBarRefObject.current.pushHistory(target);
+    // TODO: This is being called with id === 0
     this.target = target;
   }
 
@@ -158,6 +243,23 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     this.setState({
       target,
     });
+    this.loadData(target.getId())
+  }
+
+  private async getExecutions(executionIds: number[]): Promise<Execution[]> {
+    const request = new GetExecutionsByIDRequest();
+    request.setExecutionIdsList(executionIds);
+
+    const response = await this.metadataStoreService.getExecutionsByID(request);
+    return response.getExecutionsList();
+  }
+
+  private async getArtifacts(artifactIds: number[]): Promise<Artifact[]> {
+    const request = new GetArtifactsByIDRequest();
+    request.setArtifactIdsList(artifactIds);
+
+    const response = await this.metadataStoreService.getArtifactsByID(request);
+    return response.getArtifactsList();
   }
 }
 

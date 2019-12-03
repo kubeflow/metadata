@@ -8642,3 +8642,131 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
   </div>
 </ArtifactDetails>
 `;
+
+exports[`ArtifactDetails Shows error when returned Artifact is empty 1`] = `
+<ArtifactDetails
+  history={
+    Object {
+      "push": [MockFunction],
+    }
+  }
+  location={Object {}}
+  match={
+    Object {
+      "params": Object {
+        "artifactType": "kubeflow.org/alpha/model",
+        "id": "1",
+      },
+    }
+  }
+  toolbarProps={
+    Object {
+      "actions": Array [],
+      "breadcrumbs": Array [
+        Object {
+          "displayName": "Artifacts",
+          "href": "/artifacts",
+        },
+      ],
+      "pageTitle": "Model 1 details",
+    }
+  }
+  updateBanner={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "additionalInfo": undefined,
+            "message": "No kubeflow.org/alpha/model identified by id: 1",
+            "mode": "error",
+            "refresh": [Function],
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+  updateDialog={[MockFunction]}
+  updateSnackbar={[MockFunction]}
+  updateToolbar={
+    [MockFunction] {
+      "calls": Array [
+        Array [
+          Object {
+            "actions": Array [],
+            "breadcrumbs": Array [
+              Object {
+                "displayName": "Artifacts",
+                "href": "/artifacts",
+              },
+            ],
+            "pageTitle": "Model 1 details",
+          },
+        ],
+      ],
+      "results": Array [
+        Object {
+          "type": "return",
+          "value": undefined,
+        },
+      ],
+    }
+  }
+>
+  <WithStyles(CircularProgress)>
+    <CircularProgress
+      classes={
+        Object {
+          "circle": "MuiCircularProgress-circle-62",
+          "circleDisableShrink": "MuiCircularProgress-circleDisableShrink-65",
+          "circleIndeterminate": "MuiCircularProgress-circleIndeterminate-64",
+          "circleStatic": "MuiCircularProgress-circleStatic-63",
+          "colorPrimary": "MuiCircularProgress-colorPrimary-59",
+          "colorSecondary": "MuiCircularProgress-colorSecondary-60",
+          "indeterminate": "MuiCircularProgress-indeterminate-58",
+          "root": "MuiCircularProgress-root-56",
+          "static": "MuiCircularProgress-static-57",
+          "svg": "MuiCircularProgress-svg-61",
+        }
+      }
+      color="primary"
+      disableShrink={false}
+      size={40}
+      thickness={3.6}
+      value={0}
+      variant="indeterminate"
+    >
+      <div
+        className="MuiCircularProgress-root-56 MuiCircularProgress-colorPrimary-59 MuiCircularProgress-indeterminate-58"
+        role="progressbar"
+        style={
+          Object {
+            "height": 40,
+            "width": 40,
+          }
+        }
+      >
+        <svg
+          className="MuiCircularProgress-svg-61"
+          viewBox="22 22 44 44"
+        >
+          <circle
+            className="MuiCircularProgress-circle-62 MuiCircularProgress-circleIndeterminate-64"
+            cx={44}
+            cy={44}
+            fill="none"
+            r={20.2}
+            strokeWidth={3.6}
+            style={Object {}}
+          />
+        </svg>
+      </div>
+    </CircularProgress>
+  </WithStyles(CircularProgress)>
+</ArtifactDetails>
+`;
