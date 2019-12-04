@@ -42,6 +42,7 @@ echo "PROJECT: ${GCP_PROJECT}"
 apt-get update
 apt-get -y install software-properties-common python-software-properties
 add-apt-repository ppa:jonathonf/python-3.6
+apt-get update
 apt-get -y install python3.6 python3-venv
 
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
@@ -147,8 +148,10 @@ bash tests/run_tests.sh
 pip3 install jupyterlab
 pip3 install nbconvert
 pip3 install pandas
-sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
-  python3 -m nbconvert --to notebook --execute demo.ipynb
+sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
+sed -i -e "s@grpc_port=8080@grpc_port=8081@" sample/demo.ipynb && \
+sed -i -e "s@pip install kubeflow-metadata --user@pip install -e .@" sample/demo.ipynb && \
+  python3 -m nbconvert --to notebook --execute sample/demo.ipynb
 
 cd "${SRC_DIR}"
 
