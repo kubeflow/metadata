@@ -150,7 +150,7 @@ pip3 install nbconvert
 pip3 install pandas
 sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
 sed -i -e "s@grpc_port=8080@grpc_port=8081@" sample/demo.ipynb && \
-sed -i -e "s@pip install kubeflow-metadata --user@pip install -e .@" sample/demo.ipynb && \
+sed -i -e "s@pip install kubeflow-metadata --user@pip install -e ${SRC_DIR}/sdk/python@" sample/demo.ipynb && \
   python3 -m nbconvert --to notebook --execute sample/demo.ipynb
 
 cd "${SRC_DIR}"
