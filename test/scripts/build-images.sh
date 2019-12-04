@@ -28,8 +28,6 @@ REGISTRY="${GCP_REGISTRY}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
 
-VERSION=750464 ### DELETE ###
-exit 0 ### DELETE ###
 echo "REGISTRY ${REGISTRY}"
 echo "REPO_NAME ${REPO_NAME}"
 echo "VERSION ${VERSION}"

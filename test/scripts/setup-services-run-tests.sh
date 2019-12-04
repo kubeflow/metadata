@@ -28,7 +28,6 @@ REGISTRY="${GCP_REGISTRY}"
 NAMESPACE="${DEPLOY_NAMESPACE}"
 VERSION=$(git describe --tags --always --dirty)
 VERSION=${VERSION/%?/}
-VERSION=750464 ### DELETE ###
 
 echo "Activating service-account"
 gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}

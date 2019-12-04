@@ -26,9 +26,10 @@ setup(
     name=NAME,
     version=VERSION,
     description='KubeFlow Metadata SDK',
+    long_description='Please visit the document page: https://github.com/kubeflow/metadata/tree/master/sdk/python',
     author='Kubeflow Authors',
-    license="Apache License Version 2.0",
-    url="https://github.com/kubeflow/metadata",
+    license='Apache License Version 2.0',
+    url='https://github.com/kubeflow/metadata',
     install_requires=REQUIRES,
     packages=find_packages(),
     classifiers=[

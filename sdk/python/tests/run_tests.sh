@@ -20,7 +20,7 @@ set -o xtrace
 
 cd $(dirname $0)/..
 python3 -m pip install -U pip
-python3 -m pip install pytest pytest-cov
+python3 -m pip install pytest
 # install local kubeflow.metadata package
 python3 -m pip install -e .
 python3 -m pytest ./tests
