@@ -138,7 +138,7 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 cd "${SRC_DIR}/sdk/python"
 
 rm -rf .testing-env
-python3.6 -m venv .testing-env
+virtualenv .testing-env -p /usr/bin/python3.6
 source .testing-env/bin/activate
 python3 -V
 # Run Python tests
