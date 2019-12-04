@@ -43,7 +43,7 @@ apt-get update
 apt-get -y install software-properties-common python-software-properties
 add-apt-repository ppa:jonathonf/python-3.6
 apt-get update
-apt-get -y install python3.6 python3-venv
+apt-get -y install python3.6
 
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
@@ -148,6 +148,7 @@ bash tests/run_tests.sh
 pip3 install jupyterlab
 pip3 install nbconvert
 pip3 install pandas
+# Use local server and package.
 sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
 sed -i -e "s@grpc_port=8080@grpc_port=8081@" sample/demo.ipynb && \
 sed -i -e "s@pip install kubeflow-metadata --user@pip install -e ${SRC_DIR}/sdk/python@" sample/demo.ipynb && \
