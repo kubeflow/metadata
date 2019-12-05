@@ -33,6 +33,7 @@ import {
 } from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {MetadataStoreServicePromiseClient} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
 
+// TODO: I was having trouble getting these enum values to work so I made this hack.
 // https://github.com/google/ml-metadata/blob/master/ml_metadata/proto/metadata_store.proto#L108
 // 1 = ml_metadata.Event.DECLARED_OUTPUT
 // 2 = ml_metadata.Event.DECLARED_INPUT
@@ -156,8 +157,6 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private async loadData(id: number): Promise<string> {
-    console.log(`Fetching data for ${id}`);
-
     const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
     getEventsByArtifactIDsRequest.addArtifactIds(id);
 
@@ -167,12 +166,9 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const events = getEventsByArtifactIDsResponse.getEventsList();
 
     const outputExecutionIds =
-      events.filter(isOutputEvent)
-        .map((event) => (event.getExecutionId()));
-
+      events.filter(isOutputEvent).map((event) => (event.getExecutionId()));
     const inputExecutionIds =
-      events.filter(isInputEvent)
-        .map((event) => (event.getExecutionId()));
+      events.filter(isInputEvent).map((event) => (event.getExecutionId()));
 
     const outputExecutions = await this.getExecutions(outputExecutionIds);
     const inputExecutions = await this.getExecutions(inputExecutionIds);
@@ -223,7 +219,6 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     if (!actionBarRefObject.current) {return;}
 
     actionBarRefObject.current.pushHistory(target);
-    // TODO: This is being called with id === 0
     this.target = target;
   }
 

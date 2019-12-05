@@ -9,6 +9,7 @@ import {testModel} from '../TestUtils';
 import {
   GetArtifactsByIDResponse,
   GetEventsByArtifactIDsResponse,
+  GetEventsByExecutionIDsResponse,
   GetExecutionsByIDResponse,
   GetExecutionsResponse
 } from '../generated/src/apis/metadata/metadata_store_service_pb';
@@ -25,6 +26,8 @@ describe('ArtifactDetails', () => {
     jest.spyOn(Api.getInstance().metadataStoreService, 'getExecutions');
   const mockGetExecutionsByID =
     jest.spyOn(Api.getInstance().metadataStoreService, 'getExecutionsByID');
+  const mockGetEventsByExecutionIDs =
+    jest.spyOn(Api.getInstance().metadataStoreService, 'getEventsByExecutionIDs');
 
   const fakeGetArtifactByIDResponse = new GetArtifactsByIDResponse();
   fakeGetArtifactByIDResponse.addArtifacts(testModel);
@@ -32,6 +35,7 @@ describe('ArtifactDetails', () => {
   const fakeGetEventsByArtifactIDsResponse = new GetEventsByArtifactIDsResponse();
   const fakeGetExecutions = new GetExecutionsResponse();
   const fakeGetExecutionsByIDResponse = new GetExecutionsByIDResponse();
+  const fakeGetEventsByExecutionIDsResponse = new GetEventsByExecutionIDsResponse();
 
   const MODEL_TYPE = 'kubeflow.org/alpha/model';
   const FAKE_MODEL_ID = '1';
@@ -67,10 +71,10 @@ describe('ArtifactDetails', () => {
 
   it('Renders with a Model Artifact and updates the page title', async () => {
     mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
-    mockGetEventsByArtifactIDs.mockResolvedValue(
-      fakeGetEventsByArtifactIDsResponse);
+    mockGetEventsByArtifactIDs.mockResolvedValue(fakeGetEventsByArtifactIDsResponse);
     mockGetExecutions.mockResolvedValue(fakeGetExecutions);
-    mockGetExecutionsByID.mockResolvedValue(fakeGetExecutionsByIDResponse);
+    mockGetExecutionsByID.mockResolvedValue(fakeGetExecutionsByIDResponse)
+    mockGetEventsByExecutionIDs.mockResolvedValue(fakeGetEventsByExecutionIDsResponse);
 
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
