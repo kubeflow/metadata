@@ -1,15 +1,19 @@
 import * as React from 'react';
 import './LineageCardRow.css';
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import {
+  Artifact,
+} from "../generated/src/apis/metadata/metadata_store_pb";
+import {LineageResource} from "./LineageTypes";
+import {
+ getResourceDescription, getResourceName,
+} from "../lib/Utils";
 
 interface LineageCardRowProps {
-  title: string;
-  description?: string;
   leftAffordance: boolean;
   rightAffordance: boolean;
   hideRadio: boolean;
   isLastRow: boolean;
-  artifact?: Artifact;
+  resource: LineageResource
   setLineageViewTarget?(artifact: Artifact): void
 }
 
@@ -25,14 +29,16 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
     this.props.rightAffordance && affItems.push(<div className='edgeRight' key={'edgeRight'} />);
     return affItems;
   }
+
   public render(): JSX.Element {
-    const {title, description, isLastRow} = this.props;
+    const {isLastRow} = this.props;
+
     return (
       <div className={`cardRow ${isLastRow?'lastRow':''}`}>
         {this.checkRadio()}
         <footer>
-          <p className='rowTitle'>{title}</p>
-          <p className='rowDesc'>{description}</p>
+          <p className='rowTitle'>{getResourceName(this.props.resource)}</p>
+          <p className='rowDesc'>{getResourceDescription(this.props.resource)}</p>
         </footer>
         {this.checkEdgeAffordances()}
       </div>
@@ -47,7 +53,7 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
   }
 
   private handleClick() {
-    if (!this.props.setLineageViewTarget || !this.props.artifact) return;
-    this.props.setLineageViewTarget(this.props.artifact);
+    if (!this.props.setLineageViewTarget || !(this.props.resource instanceof Artifact)) return;
+    this.props.setLineageViewTarget(this.props.resource);
   }
 }

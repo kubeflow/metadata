@@ -1193,7 +1193,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -1478,10 +1480,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -1968,7 +1966,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -2253,10 +2253,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -2278,7 +2274,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={false}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -2565,14 +2565,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={false}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -2595,7 +2589,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div
@@ -2682,7 +2676,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -2967,10 +2963,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -3456,7 +3448,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -3741,10 +3735,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -3765,7 +3755,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={true}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -4052,13 +4046,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={true}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -4075,7 +4063,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div
@@ -4162,7 +4150,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -4447,10 +4437,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -4938,7 +4924,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -5223,10 +5211,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -5248,7 +5232,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={false}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -5535,14 +5523,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={false}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -5565,7 +5547,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div
@@ -7586,7 +7568,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -7871,10 +7855,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -8361,7 +8341,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -8646,10 +8628,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -8671,7 +8649,11 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={false}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -8958,14 +8940,8 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={false}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -8988,7 +8964,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div
@@ -9075,7 +9051,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -9360,10 +9338,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -9849,7 +9823,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -10134,10 +10110,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -10158,7 +10130,11 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={true}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -10445,13 +10421,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={true}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -10468,7 +10438,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div
@@ -10555,7 +10525,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                 Object {
                   "elements": Array [
                     Object {
-                      "artifact": Object {
+                      "next": true,
+                      "prev": true,
+                      "resource": Object {
                         "array": Array [
                           1,
                           1,
@@ -10840,10 +10812,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                           },
                         },
                       },
-                      "desc": "A really great model",
-                      "next": true,
-                      "prev": true,
-                      "title": "test model",
                     },
                   ],
                   "title": "Artifact",
@@ -11331,7 +11299,9 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   rows={
                     Array [
                       Object {
-                        "artifact": Object {
+                        "next": true,
+                        "prev": true,
+                        "resource": Object {
                           "array": Array [
                             1,
                             1,
@@ -11616,10 +11586,6 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           },
                         },
-                        "desc": "A really great model",
-                        "next": true,
-                        "prev": true,
-                        "title": "test model",
                       },
                     ]
                   }
@@ -11641,7 +11607,11 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                       className="cardBody"
                     >
                       <LineageCardRow
-                        artifact={
+                        hideRadio={false}
+                        isLastRow={true}
+                        key="0"
+                        leftAffordance={true}
+                        resource={
                           Object {
                             "array": Array [
                               1,
@@ -11928,14 +11898,8 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             },
                           }
                         }
-                        description="A really great model"
-                        hideRadio={false}
-                        isLastRow={true}
-                        key="0"
-                        leftAffordance={true}
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
-                        title="test model"
                       >
                         <div
                           className="cardRow lastRow"
@@ -11958,7 +11922,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                             <p
                               className="rowDesc"
                             >
-                              A really great model
+                              workspace-1
                             </p>
                           </footer>
                           <div

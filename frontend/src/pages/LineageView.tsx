@@ -18,29 +18,25 @@
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {Api, ArtifactProperties, ExecutionProperties} from '../lib/Api';
+import {Api} from '../lib/Api';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from '../components/LineageActionBar';
-import {
-  Artifact, Event, Execution
-} from '../generated/src/apis/metadata/metadata_store_pb';
-import {getResourceProperty} from '../lib/Utils';
+import {Artifact, Event, Execution} from '../generated/src/apis/metadata/metadata_store_pb';
 import {RefObject} from 'react';
 import {
   GetArtifactsByIDRequest,
-  GetEventsByArtifactIDsRequest, GetEventsByExecutionIDsRequest,
+  GetEventsByArtifactIDsRequest,
+  GetEventsByExecutionIDsRequest,
   GetExecutionsByIDRequest
 } from '../generated/src/apis/metadata/metadata_store_service_pb';
-import {MetadataStoreServicePromiseClient} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
+import {
+  MetadataStoreServicePromiseClient
+} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
 
-// TODO: I was having trouble getting these enum values to work so I made this hack.
-// https://github.com/google/ml-metadata/blob/master/ml_metadata/proto/metadata_store.proto#L108
-// 1 = ml_metadata.Event.DECLARED_OUTPUT
-// 2 = ml_metadata.Event.DECLARED_INPUT
-// 3 = ml_metadata.Event.INPUT
-// 4 = ml_metadata.Event.OUTPUT
-const isInputEvent = (event: Event) => [2, 3].includes(event.getType());
-const isOutputEvent = (event: Event) => [1, 4].includes(event.getType());
+const isInputEvent = (event: Event) =>
+  [Event.Type.INPUT.valueOf(), Event.Type.DECLARED_INPUT.valueOf()].includes(event.getType());
+const isOutputEvent = (event: Event) =>
+  [Event.Type.OUTPUT.valueOf(), Event.Type.DECLARED_OUTPUT.valueOf()].includes(event.getType());
 
 export interface LineageViewProps {
   target: Artifact;
@@ -124,15 +120,13 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       {
         title: 'Artifact',
         elements: artifacts.map((artifact) => ({
-            artifact,
-            title: getResourceProperty(artifact, ArtifactProperties.NAME),
-            desc: getResourceProperty(artifact, ArtifactProperties.DESCRIPTION),
+            resource: artifact,
             prev: true,
             next: true
           })
         )
       }
-    ] as CardDetails[];
+    ];
   }
 
   private buildExecutionCards(executions: Execution[]): CardDetails[] {
@@ -140,20 +134,13 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       {
         title: 'Execution',
         elements: executions.map((execution) => ({
-          title: getResourceProperty(execution, ExecutionProperties.NAME),
-          // desc: getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME),
-          desc: String(execution.getId()),
-          prev: true,
-          next: true
+            resource: execution,
+            prev: true,
+            next: true
           })
         )
       }
-    ] as CardDetails[];
-  }
-
-  // @ts-ignore
-  private static logProto(proto: any): void {
-    console.log(JSON.stringify(proto.toObject(), null, 2))
+    ];
   }
 
   private async loadData(id: number): Promise<string> {
