@@ -1,10 +1,6 @@
 import * as React from 'react';
 import './LineageCardRow.css';
-import {
-  Artifact,
-  Value
-} from "../generated/src/apis/metadata/metadata_store_pb";
-import {ArtifactProperties} from "../lib/Api";
+import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 
 interface LineageCardRowProps {
   title: string;
@@ -13,6 +9,7 @@ interface LineageCardRowProps {
   rightAffordance: boolean;
   hideRadio: boolean;
   isLastRow: boolean;
+  artifact?: Artifact;
   setLineageViewTarget?(artifact: Artifact): void
 }
 
@@ -49,17 +46,8 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
     return <div className='noRadio' />;
   }
 
-  private get artifact(): Artifact {
-    // TODO: Return this.props.artifact once available.
-    const mockArtifact = new Artifact();
-    const nameValue = new Value();
-    nameValue.setStringValue(this.props.title);
-    mockArtifact.getPropertiesMap().set(ArtifactProperties.NAME, nameValue);
-    return mockArtifact
-  }
-
   private handleClick() {
-    if (!this.props.setLineageViewTarget) return;
-    this.props.setLineageViewTarget(this.artifact);
+    if (!this.props.setLineageViewTarget || !this.props.artifact) return;
+    this.props.setLineageViewTarget(this.props.artifact);
   }
 }

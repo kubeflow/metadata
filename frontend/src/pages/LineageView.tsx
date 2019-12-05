@@ -123,6 +123,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       {
         title: 'Artifact',
         elements: artifacts.map((artifact) => ({
+            artifact,
             title: getResourceProperty(artifact, ArtifactProperties.NAME),
             desc: getResourceProperty(artifact, ArtifactProperties.DESCRIPTION),
             prev: true,
@@ -164,14 +165,6 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       await this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest);
 
     const events = getEventsByArtifactIDsResponse.getEventsList();
-
-    // // Sanity logging
-    // console.log(`Found ${events.length} event`);
-    // events.forEach((event) => {
-    //   console.log("EVENT");
-    //   console.log(JSON.stringify(event.toObject(), null, 2));
-    //   console.log(isOutputEvent(event) ? "OUTPUT" : "INPUT");
-    // });
 
     const outputExecutionIds =
       events.filter(isOutputEvent)

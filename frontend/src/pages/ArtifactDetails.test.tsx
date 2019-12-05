@@ -6,7 +6,12 @@ import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
 import {testModel} from '../TestUtils';
-import {GetArtifactsByIDResponse} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {
+  GetArtifactsByIDResponse,
+  GetEventsByArtifactIDsResponse,
+  GetExecutionsByIDResponse,
+  GetExecutionsResponse
+} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
@@ -14,8 +19,19 @@ describe('ArtifactDetails', () => {
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
   const mockGetArtifact = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactsByID');
+  const mockGetEventsByArtifactIDs =
+    jest.spyOn(Api.getInstance().metadataStoreService, 'getEventsByArtifactIDs');
+  const mockGetExecutions =
+    jest.spyOn(Api.getInstance().metadataStoreService, 'getExecutions');
+  const mockGetExecutionsByID =
+    jest.spyOn(Api.getInstance().metadataStoreService, 'getExecutionsByID');
+
   const fakeGetArtifactByIDResponse = new GetArtifactsByIDResponse();
   fakeGetArtifactByIDResponse.addArtifacts(testModel);
+
+  const fakeGetEventsByArtifactIDsResponse = new GetEventsByArtifactIDsResponse();
+  const fakeGetExecutions = new GetExecutionsResponse();
+  const fakeGetExecutionsByIDResponse = new GetExecutionsByIDResponse();
 
   const MODEL_TYPE = 'kubeflow.org/alpha/model';
   const FAKE_MODEL_ID = '1';
@@ -51,6 +67,11 @@ describe('ArtifactDetails', () => {
 
   it('Renders with a Model Artifact and updates the page title', async () => {
     mockGetArtifact.mockResolvedValue(fakeGetArtifactByIDResponse);
+    mockGetEventsByArtifactIDs.mockResolvedValue(
+      fakeGetEventsByArtifactIDsResponse);
+    mockGetExecutions.mockResolvedValue(fakeGetExecutions);
+    mockGetExecutionsByID.mockResolvedValue(fakeGetExecutionsByIDResponse);
+
     tree = TestUtils.mountWithRouter(<ArtifactDetails {...generateProps()} />);
 
     await mockGetArtifact;
