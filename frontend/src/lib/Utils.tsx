@@ -214,9 +214,8 @@ function getExecutionName(execution: Execution): string {
 export function getResourceName(resource: LineageResource): string {
   if (resource instanceof Artifact) {
     return getArtifactName(resource);
-  } else {
-    return getExecutionName(resource);
   }
+  return getExecutionName(resource);
 }
 
 export function getResourceDescription(resource: LineageResource): string {

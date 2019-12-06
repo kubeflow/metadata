@@ -45,15 +45,11 @@ export interface LineageViewProps {
 interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
-  // TODO: This will draw all input and output artifacts as coming out of "every
-  //  Execution". Since there is only one right now (for the data I've seen),
-  //  this is enough to get the RPCs hooked up with, but not enough to really
-  //  build the correct data structure.
-  inputArtifacts: Artifact[]
-  inputExecutions: Execution[]
+  inputArtifacts: Artifact[];
+  inputExecutions: Execution[];
   target: Artifact;
-  outputExecutions: Execution[]
-  outputArtifacts: Artifact[]
+  outputExecutions: Execution[];
+  outputArtifacts: Artifact[];
 }
 
 class LineageView extends React.Component<LineageViewProps, LineageViewState> {
@@ -143,29 +139,38 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     ];
   }
 
-  private async loadData(id: number): Promise<string> {
-    // TODO: Optimize async calls with Promise.all()
+  private async loadData(targetId: number): Promise<string> {
     const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
-    getEventsByArtifactIDsRequest.addArtifactIds(id);
+    getEventsByArtifactIDsRequest.addArtifactIds(targetId);
 
     const getEventsByArtifactIDsResponse =
       await this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest);
 
-    const events = getEventsByArtifactIDsResponse.getEventsList();
+    const outputExecutionIds: number[] = [];
+    const inputExecutionIds: number[] = [];
 
-    const outputExecutionIds =
-      events.filter(isOutputEvent).map((event) => (event.getExecutionId()));
-    const inputExecutionIds =
-      events.filter(isInputEvent).map((event) => (event.getExecutionId()));
+    for (const event of getEventsByArtifactIDsResponse.getEventsList()) {
+      const executionId = event.getExecutionId();
 
-    const outputExecutions = await this.getExecutions(outputExecutionIds);
-    const inputExecutions = await this.getExecutions(inputExecutionIds);
+      if (isOutputEvent(event)) {
+        // The input executions column will show executions where the target
+        // was an output of the execution.
+        inputExecutionIds.push(executionId)
+      } else if (isInputEvent(event)) {
+        // The output executions column will show executions where the target
+        // was an input for the execution.
+        outputExecutionIds.push(executionId)
+      }
+    }
+
+    const [outputExecutions, inputExecutions] = await Promise.all([
+      this.getExecutions(outputExecutionIds),
+      this.getExecutions(inputExecutionIds),
+    ]);
 
     // Build the list of input execution events.
-    // The list of input executions is the list of events in which the target
-    // artifact was an output artifact.
     const getInputExecutionEvents = new GetEventsByExecutionIDsRequest();
-    getInputExecutionEvents.setExecutionIdsList(outputExecutionIds);
+    getInputExecutionEvents.setExecutionIdsList(inputExecutionIds);
     const getInputExecutionEventsResponse =
       await this.metadataStoreService.getEventsByExecutionIDs(getInputExecutionEvents);
 
@@ -178,13 +183,12 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const inputArtifacts = await this.getArtifacts(inputExecutionInputArtifactIds);
 
     // Build the list of output execution artifacts.
-    // The list of output executions is the list of events in which the target
-    // artifact was an input artifact.
     const getOutputExecutionEventsRequest = new GetEventsByExecutionIDsRequest();
-    getOutputExecutionEventsRequest.setExecutionIdsList(inputExecutionIds);
+    getOutputExecutionEventsRequest.setExecutionIdsList(outputExecutionIds);
     const getOutputExecutionEventsResponse =
       await this.metadataStoreService.getEventsByExecutionIDs(getOutputExecutionEventsRequest);
 
+    // Build the list of output artifacts for the output execution
     const outputExecutionOutputArtifactIds =
       getOutputExecutionEventsResponse
         .getEventsList()
@@ -193,10 +197,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const outputArtifacts = await this.getArtifacts(outputExecutionOutputArtifactIds);
 
     this.setState({
-      inputArtifacts: inputArtifacts,
-      inputExecutions: outputExecutions,
-      outputExecutions: inputExecutions,
-      outputArtifacts: outputArtifacts,
+      inputArtifacts, inputExecutions, outputArtifacts, outputExecutions,
     });
     return ''
   }
