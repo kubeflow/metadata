@@ -144,6 +144,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private async loadData(id: number): Promise<string> {
+    // TODO: Optimize async calls with Promise.all()
     const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
     getEventsByArtifactIDsRequest.addArtifactIds(id);
 
