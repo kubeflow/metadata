@@ -7,7 +7,7 @@ WORKDIR /frontend
 
 COPY . .
 
-RUN npm install && \
+RUN npm install && npm rebuild node-sass && \
   npm run postinstall && \
   CI=true npm run test:coverage && \
   npm run build
