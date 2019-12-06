@@ -18,9 +18,16 @@ import * as React from 'react';
 import {isFunction} from 'lodash';
 import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
 import {classes} from 'typestyle';
-import {ListRequest} from './Api';
+import {
+  ArtifactCustomProperties,
+  ArtifactProperties,
+  ExecutionCustomProperties,
+  ExecutionProperties,
+  ListRequest
+} from './Api';
 import {padding} from '../Css';
 import {Artifact, Execution, Value} from "../generated/src/apis/metadata/metadata_store_pb";
+import {LineageResource} from "../components/LineageTypes";
 
 export const logger = {
   error: (...args: any[]) => {
@@ -194,4 +201,31 @@ export function getExpandedRow(expandedRows: Map<number, Row[]>, columns: Column
       </div>
     );
   }
+}
+
+function getArtifactName(artifact: Artifact): string {
+  return String(getResourceProperty(artifact, ArtifactProperties.NAME))
+}
+
+function getExecutionName(execution: Execution): string {
+  return String(getResourceProperty(execution, ExecutionProperties.NAME))
+}
+
+export function getResourceName(resource: LineageResource): string {
+  if (resource instanceof Artifact) {
+    return getArtifactName(resource);
+  }
+  return getExecutionName(resource);
+}
+
+export function getResourceDescription(resource: LineageResource): string {
+  let description;
+  if (resource instanceof Artifact) {
+    description = getResourceProperty(resource, ArtifactProperties.PIPELINE_NAME)
+      || getResourceProperty(resource, ArtifactCustomProperties.WORKSPACE, true);
+  } else {
+    description = getResourceProperty(resource, ExecutionProperties.PIPELINE_NAME)
+      || getResourceProperty(resource, ExecutionCustomProperties.WORKSPACE, true);
+  }
+  return String(description) || '';
 }

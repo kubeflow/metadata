@@ -20,8 +20,7 @@ export class LineageCard extends React.Component<LineageCardProps> {
     const listCardRows = () => rows.map((r, i) =>
       <LineageCardRow
         key={i}
-        title={r.title}
-        description={r.desc}
+        resource={r.resource}
         leftAffordance={!!r.prev}
         rightAffordance={!!r.next}
         isLastRow={i === rows.length-1}
