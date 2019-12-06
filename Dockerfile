@@ -24,7 +24,7 @@ RUN bazel build -c opt --define=grpc_no_ares=true //... ${EXTRA_BAZEL_ARGS}
 RUN cp bazel-bin/server/${OUTPUT_DIR}/server server/server
 
 # Copy Licenses
-RUN wget https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt -O GRPC-GATEWAY-LICENSE.txt
+RUN cd third_party_licenses && python3 concatenate_license.py && mv license.txt ../license.txt
 
 CMD ["./server/server"]
 
