@@ -1,5 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+/**
+ * Docker build cross platform script for KF Metadata
+ * This will calculate your current hash, and build date and use them
+ * to build the docker image in the format:
+ * 
+ * gcr.io/kubeflow-images-public/metadata-frontend:${COMMIT_HASH}
+ */
 const {exec, spawn} = require('child_process')
 const runCmd = cmd => new Promise((res, rej) => exec(cmd, (e, out, err) => e?rej(e):res({out, err})))
 
