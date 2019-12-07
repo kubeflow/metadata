@@ -3,42 +3,12 @@ import LineChart from 'react-svg-line-chart';
 import {classes, stylesheet} from 'typestyle';
 import {LineageCardType} from './LineageTypes';
 import './LineChart.d.ts';
-
-const px = (number: number): string => `${number}px`;
-
-const edgeWidth = 200;
-const cardBodyHeight = 67;
-const cardBodyWidth = 260;
-
-const cardContainerSpacerHeight = 24;
-const cardTitleHeight = 41;
-const cardTitleBorders = 2;
-const cardOffset = cardContainerSpacerHeight + cardTitleHeight + cardTitleBorders;
-
-const css = stylesheet({
-  edgeCanvas: {
-    border: 0,
-    display: 'block',
-    height: px(440),
-    marginLeft: px(cardBodyWidth),
-    marginTop: px(74),
-    overflow: 'visible',
-    position: 'absolute',
-    width: px(edgeWidth),
-    zIndex: -1,
-    '$nest': {
-      svg: {
-        display: 'block',
-        overflow: 'visible',
-        position: 'absolute',
-      }
-    }
-  },
-  edgeCanvasReverse: {
-    marginLeft: 0,
-    transform: 'translateX(-100%)',
-  },
-});
+import {px} from '../Css';
+import {
+  COLUMN_BODY_WIDTH,
+  COLUMN_MIN_WIDTH,
+  COLUMN_PADDING
+} from "./LineageCardColumn";
 
 interface EdgeCanvasProps {
   cardArray: number[];
@@ -48,6 +18,41 @@ interface EdgeCanvasProps {
 
 export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, reverseEdges}) => {
   let viewHeight = 1;
+
+  const edgeWidth = (COLUMN_MIN_WIDTH - COLUMN_BODY_WIDTH) + COLUMN_PADDING * 2;
+  const cardBodyHeight = 67;
+  // Keep in sync with ./LineageCard.css#.cardContainer.width
+  const cardBodyWidth = 260;
+
+  const cardContainerSpacerHeight = 24;
+  const cardTitleHeight = 41;
+  const cardTitleBorders = 2;
+  const cardOffset = cardContainerSpacerHeight + cardTitleHeight + cardTitleBorders;
+
+  const css = stylesheet({
+    edgeCanvas: {
+      border: 0,
+      display: 'block',
+      height: px(440),
+      marginLeft: px(cardBodyWidth),
+      marginTop: px(74),
+      overflow: 'visible',
+      position: 'absolute',
+      width: px(edgeWidth),
+      zIndex: -1,
+      '$nest': {
+        svg: {
+          display: 'block',
+          overflow: 'visible',
+          position: 'absolute',
+        }
+      }
+    },
+    edgeCanvasReverse: {
+      marginLeft: 0,
+      transform: 'translateX(-100%)',
+    },
+  });
 
   const lastNode = reverseEdges ? 'y1' : 'y4';
   const lastNodePositions = {

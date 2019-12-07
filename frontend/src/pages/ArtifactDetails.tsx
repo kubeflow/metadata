@@ -52,7 +52,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      selectedTab: ArtifactDetailsTab.OVERVIEW
+      selectedTab: ArtifactDetailsTab.LINEAGE_EXPLORER
     };
     this.load = this.load.bind(this);
   }

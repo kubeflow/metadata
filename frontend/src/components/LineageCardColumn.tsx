@@ -1,10 +1,46 @@
 import React from 'react';
-import {LineageCardType, LineageRow} from './LineageTypes';
-
+import {classes, stylesheet} from 'typestyle';
+import {px} from '../Css';
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import {LineageCard} from './LineageCard';
+import {LineageCardType, LineageRow} from './LineageTypes';
 import {EdgeCanvas} from './EdgeCanvas';
-import './LineageCardColumn.css';
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import grey from '@material-ui/core/colors/grey';
+
+export const COLUMN_PADDING = 40;
+// Keep in sync with ./LineageCard.css#.cardContainer.width
+export const COLUMN_BODY_WIDTH = 260;
+export const COLUMN_MIN_WIDTH = 300;
+
+const css = stylesheet({
+  mainColumn: {
+    minHeight: '100%',
+    minWidth: px(COLUMN_MIN_WIDTH),
+    display: 'inline-block',
+    justifyContent: 'center',
+    padding: `0 ${COLUMN_PADDING}px`,
+    $nest: {
+      h2: {
+        color: grey[600],
+        fontSize: '12px',
+        fontFamily: 'PublicSans-Regular',
+        letterSpacing: '0.5px',
+        textAlign: 'left',
+        lineHeight: '40px',
+        textTransform: 'capitalize'
+      }
+    }
+  },
+  columnBody: {
+    width: px(COLUMN_BODY_WIDTH),
+  },
+  columnHeader: {
+    height: '40px',
+    margin: '10px 0px',
+    textAlign: 'left',
+    width: px(COLUMN_BODY_WIDTH),
+  }
+});
 
 // Todo: Replace this with the actual interface / class used by the APIs
 export interface CardDetails {
@@ -25,11 +61,11 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
     const {type, title} = this.props;
 
     return (
-      <div className={`mainColumn ${type}`}>
-        <div className='columnHeader'>
+      <div className={classes(css.mainColumn, type)}>
+        <div className={classes(css.columnHeader)}>
           <h2>{title}</h2>
         </div>
-        <div className='columnBody'>
+        <div className={classes(css.columnBody)}>
           {this.drawColumnContent()}
         </div>
       </div>
