@@ -24,7 +24,8 @@ RUN bazel build -c opt --define=grpc_no_ares=true //... ${EXTRA_BAZEL_ARGS}
 RUN cp bazel-bin/server/${OUTPUT_DIR}/server server/server
 
 # Copy Licenses
-RUN cd third_party_licenses && python3 concatenate_license.py && mv license.txt ../license.txt
+RUN mkdir -p thrid_party/library
+RUN cd third_party_licenses && python3 concatenate_license.py && mv license.txt ../thrid_party/library/license.txt
 
 CMD ["./server/server"]
 

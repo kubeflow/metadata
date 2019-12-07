@@ -1,6 +1,6 @@
 This folder contains a list of license file locations and types in `license_info.csv`  for all dependencies and transitive dependencies of the metadata docker image.
 
-The actual license contents of all dependencies shall be generated and put into the docker image via the following command:
+The actual license contents of all dependencies shall be generated via the following command and put into the docker image:
 ```
 $ python concatenate_license.py
 ```
@@ -96,4 +96,5 @@ Thanks to [kfp-license-tools](https://github.com/kubeflow/pipelines/tree/master/
     $  python patch_additional_license_info.py
     ```
 
-
+## Dependency source code
+We have to mirror source code in the image under `third_party` for code with MPL, EPL, GPL or CDDL licenses. We don't have the such dependencies right now.
