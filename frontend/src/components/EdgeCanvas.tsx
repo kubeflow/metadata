@@ -4,11 +4,7 @@ import {classes, stylesheet} from 'typestyle';
 import {LineageCardType} from './LineageTypes';
 import './LineChart.d.ts';
 import {px} from '../Css';
-import {
-  COLUMN_BODY_WIDTH,
-  COLUMN_MIN_WIDTH,
-  COLUMN_PADDING
-} from "./LineageCardColumn";
+import {CARD_WIDTH, EDGE_WIDTH} from "./LineageCss";
 
 interface EdgeCanvasProps {
   cardArray: number[];
@@ -19,11 +15,7 @@ interface EdgeCanvasProps {
 export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, reverseEdges}) => {
   let viewHeight = 1;
 
-  const edgeWidth = (COLUMN_MIN_WIDTH - COLUMN_BODY_WIDTH) + COLUMN_PADDING * 2;
   const cardBodyHeight = 67;
-  // Keep in sync with ./LineageCard.css#.cardContainer.width
-  const cardBodyWidth = 260;
-
   const cardContainerSpacerHeight = 24;
   const cardTitleHeight = 41;
   const cardTitleBorders = 2;
@@ -34,11 +26,11 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, reverseEdges})
       border: 0,
       display: 'block',
       height: px(440),
-      marginLeft: px(cardBodyWidth),
+      marginLeft: px(CARD_WIDTH),
       marginTop: px(74),
       overflow: 'visible',
       position: 'absolute',
-      width: px(edgeWidth),
+      width: EDGE_WIDTH,
       zIndex: -1,
       '$nest': {
         svg: {
@@ -70,8 +62,8 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, reverseEdges})
           data={[
             {x: 0, y: y1},
             {x: 30, y: y1},
-            {x: edgeWidth - 30, y: y4},
-            {x: edgeWidth, y: y4},
+            {x: EDGE_WIDTH - 30, y: y4},
+            {x: EDGE_WIDTH, y: y4},
           ]}
           areaVisible={false}
           axisVisible={false}
@@ -83,7 +75,7 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, reverseEdges})
           pathOpacity={1}
           pointsVisible={false}
           viewBoxHeight={viewHeight}
-          viewBoxWidth={edgeWidth}
+          viewBoxWidth={EDGE_WIDTH}
           pathSmoothing={0}
         />
       );

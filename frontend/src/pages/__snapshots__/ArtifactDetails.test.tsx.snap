@@ -2261,7 +2261,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact"
+                    className="cardContainer"
                   >
                     <div
                       className="cardTitle"
@@ -2656,7 +2656,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     className="cardContainer execution"
                   >
                     <div
-                      className="cardTitle"
+                      className="executionCardTitle"
                     >
                       <h3>
                         Execution
@@ -3742,7 +3742,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact target"
+                    className="cardContainer target"
                   >
                     <div
                       className="cardTitle"
@@ -4130,7 +4130,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     className="cardContainer execution"
                   >
                     <div
-                      className="cardTitle"
+                      className="executionCardTitle"
                     >
                       <h3>
                         Execution
@@ -5219,7 +5219,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact"
+                    className="cardContainer"
                   >
                     <div
                       className="cardTitle"
@@ -8636,7 +8636,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact"
+                    className="cardContainer"
                   >
                     <div
                       className="cardTitle"
@@ -9031,7 +9031,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                     className="cardContainer execution"
                   >
                     <div
-                      className="cardTitle"
+                      className="executionCardTitle"
                     >
                       <h3>
                         Execution
@@ -10117,7 +10117,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact target"
+                    className="cardContainer target"
                   >
                     <div
                       className="cardTitle"
@@ -10505,7 +10505,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                     className="cardContainer execution"
                   >
                     <div
-                      className="cardTitle"
+                      className="executionCardTitle"
                     >
                       <h3>
                         Execution
@@ -11594,7 +11594,7 @@ exports[`ArtifactDetails Renders with a Model Artifact and updates the page titl
                   type="artifact"
                 >
                   <div
-                    className="cardContainer artifact"
+                    className="cardContainer"
                   >
                     <div
                       className="cardTitle"

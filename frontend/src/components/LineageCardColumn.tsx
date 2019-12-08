@@ -6,19 +6,15 @@ import {LineageCard} from './LineageCard';
 import {LineageCardType, LineageRow} from './LineageTypes';
 import {EdgeCanvas} from './EdgeCanvas';
 import grey from '@material-ui/core/colors/grey';
-
-export const COLUMN_PADDING = 40;
-// Keep in sync with ./LineageCard.css#.cardContainer.width
-export const COLUMN_BODY_WIDTH = 260;
-export const COLUMN_MIN_WIDTH = 300;
+import {CARD_WIDTH, EDGE_WIDTH} from "./LineageCss";
 
 const css = stylesheet({
   mainColumn: {
     minHeight: '100%',
-    minWidth: px(COLUMN_MIN_WIDTH),
+    width: px(CARD_WIDTH),
     display: 'inline-block',
     justifyContent: 'center',
-    padding: `0 ${COLUMN_PADDING}px`,
+    padding: `0 ${EDGE_WIDTH  / 2}px`,
     $nest: {
       h2: {
         color: grey[600],
@@ -32,13 +28,13 @@ const css = stylesheet({
     }
   },
   columnBody: {
-    width: px(COLUMN_BODY_WIDTH),
+    width: px(CARD_WIDTH),
   },
   columnHeader: {
     height: '40px',
     margin: '10px 0px',
     textAlign: 'left',
-    width: px(COLUMN_BODY_WIDTH),
+    width: px(CARD_WIDTH),
   }
 });
 
