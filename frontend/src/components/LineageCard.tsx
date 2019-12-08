@@ -49,7 +49,7 @@ const css = stylesheet({
   },
   executionCardTitle: {
     ...cardTitleBase,
-    borderBottom: 0,
+    borderBottom: '1px solid transparent',
   },
   target: {
     border: `2px solid ${blue[500]}`,

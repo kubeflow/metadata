@@ -6,23 +6,23 @@ import {LineageCard} from './LineageCard';
 import {LineageCardType, LineageRow} from './LineageTypes';
 import {EdgeCanvas} from './EdgeCanvas';
 import grey from '@material-ui/core/colors/grey';
-import {CARD_WIDTH, EDGE_WIDTH} from "./LineageCss";
+import {CARD_WIDTH, EDGE_WIDTH} from './LineageCss';
 
 const css = stylesheet({
   mainColumn: {
-    minHeight: '100%',
-    width: px(CARD_WIDTH),
     display: 'inline-block',
     justifyContent: 'center',
+    minHeight: '100%',
     padding: `0 ${EDGE_WIDTH  / 2}px`,
+    width: px(CARD_WIDTH),
     $nest: {
       h2: {
         color: grey[600],
-        fontSize: '12px',
         fontFamily: 'PublicSans-Regular',
+        fontSize: '12px',
         letterSpacing: '0.5px',
-        textAlign: 'left',
         lineHeight: '40px',
+        textAlign: 'left',
         textTransform: 'capitalize'
       }
     }
