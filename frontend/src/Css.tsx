@@ -374,3 +374,5 @@ export function _paddingInternal(units?: number, directions?: string): NestedCSS
 export function padding(units?: number, directions?: string): string {
   return style(_paddingInternal(units, directions));
 }
+
+export const px = (number: number): string => `${number}px`;
