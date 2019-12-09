@@ -392,6 +392,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       </MD2Tabs>
     </div>
     <LineageView
+      cardWidth={260}
+      edgeWidth={120}
       target={
         Object {
           "array": Array [
@@ -1188,6 +1190,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           }
         >
           <LineageCardColumn
+            cardWidth={260}
             cards={
               Array [
                 Object {
@@ -1486,6 +1489,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
+            edgeWidth={120}
             setLineageViewTarget={[Function]}
             title="Input Artifact"
             type="artifact"
@@ -1509,6 +1513,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       1,
                     ]
                   }
+                  cardWidth={260}
+                  edgeWidth={120}
                   reverseEdges={false}
                   type="artifact"
                 >
@@ -1961,6 +1967,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
+                  cardWidth={260}
                   isTarget={false}
                   key="0"
                   rows={
@@ -2609,6 +2616,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
+            cardWidth={260}
             cards={
               Array [
                 Object {
@@ -2617,6 +2625,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
+            edgeWidth={120}
             title=""
             type="execution"
           >
@@ -2637,6 +2646,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       0,
                     ]
                   }
+                  cardWidth={260}
+                  edgeWidth={120}
                   reverseEdges={false}
                   type="execution"
                 >
@@ -2646,6 +2657,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
+                  cardWidth={260}
                   isTarget={false}
                   key="0"
                   rows={Array []}
@@ -2671,6 +2683,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
+            cardWidth={260}
             cards={
               Array [
                 Object {
@@ -2969,6 +2982,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
+            edgeWidth={120}
             title="Target"
             type="artifact"
           >
@@ -2991,6 +3005,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       1,
                     ]
                   }
+                  cardWidth={260}
+                  edgeWidth={120}
                   reverseEdges={false}
                   type="artifact"
                 >
@@ -3443,6 +3459,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
+                  cardWidth={260}
                   isTarget={true}
                   key="0"
                   rows={
@@ -4083,6 +4100,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
+            cardWidth={260}
             cards={
               Array [
                 Object {
@@ -4091,6 +4109,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
+            edgeWidth={120}
             title=""
             type="execution"
           >
@@ -4111,6 +4130,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       0,
                     ]
                   }
+                  cardWidth={260}
+                  edgeWidth={120}
                   reverseEdges={false}
                   type="execution"
                 >
@@ -4120,6 +4141,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
+                  cardWidth={260}
                   isTarget={false}
                   key="0"
                   rows={Array []}
@@ -4145,6 +4167,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
+            cardWidth={260}
             cards={
               Array [
                 Object {
@@ -4443,6 +4466,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
+            edgeWidth={120}
             reverseBindings={true}
             setLineageViewTarget={[Function]}
             title="Output Artifact"
@@ -4467,6 +4491,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       1,
                     ]
                   }
+                  cardWidth={260}
+                  edgeWidth={120}
                   reverseEdges={true}
                   type="artifact"
                 >
@@ -4919,6 +4945,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
+                  cardWidth={260}
                   isTarget={false}
                   key="0"
                   rows={

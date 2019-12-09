@@ -39,6 +39,8 @@ const isOutputEvent = (event: Event) =>
   [Event.Type.OUTPUT.valueOf(), Event.Type.DECLARED_OUTPUT.valueOf()].includes(event.getType());
 
 export interface LineageViewProps {
+  cardWidth: number;
+  edgeWidth: number;
   target: Artifact;
 }
 
@@ -77,6 +79,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
 
   public render(): JSX.Element {
     const {columnNames} = this.state;
+    const {cardWidth, edgeWidth} = this.props;
     return (
       <div className={classes(commonCss.page)}>
         <LineageActionBar ref={this.actionBarRef} initialTarget={this.props.target} setLineageViewTarget={this.setTargetFromActionBar} />
@@ -85,24 +88,34 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
             type='artifact'
             cards={this.buildArtifactCards(this.state.inputArtifacts)}
             title={`${columnNames[0]}`}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
             setLineageViewTarget={this.setTargetFromLineageCard}
           />
           <LineageCardColumn
             type='execution'
             cards={this.buildExecutionCards(this.state.inputExecutions)}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
             title={`${columnNames[1]}`} />
           <LineageCardColumn
             type='artifact'
             cards={this.buildArtifactCards([this.state.target])}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
             title={`${columnNames[2]}`} />
           <LineageCardColumn
             type='execution'
             cards={this.buildExecutionCards(this.state.outputExecutions)}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
             title={`${columnNames[3]}`} />
           <LineageCardColumn
             type='artifact'
             cards={this.buildArtifactCards(this.state.outputArtifacts)}
             reverseBindings={true}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
             title={`${columnNames[4]}`}
             setLineageViewTarget={this.setTargetFromLineageCard}
           />

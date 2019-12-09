@@ -29,6 +29,10 @@ import {GetArtifactsByIDRequest} from '../generated/src/apis/metadata/metadata_s
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import LineageView from './LineageView';
 
+// Sizing constants for the LineageView
+const CARD_WIDTH = 260;
+const EDGE_WIDTH = 120;
+
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,
   LINEAGE_EXPLORER = 1,
@@ -93,7 +97,11 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
           </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            <LineageView target={this.state.artifact}/>
+            <LineageView
+              cardWidth={CARD_WIDTH}
+              edgeWidth={EDGE_WIDTH}
+              target={this.state.artifact}
+            />
         )}
       </div>
     );
