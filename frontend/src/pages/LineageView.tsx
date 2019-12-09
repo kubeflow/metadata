@@ -31,17 +31,23 @@ import {
 } from '../generated/src/apis/metadata/metadata_store_service_pb';
 import {
   MetadataStoreServicePromiseClient
-} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
+} from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
 
 const isInputEvent = (event: Event) =>
   [Event.Type.INPUT.valueOf(), Event.Type.DECLARED_INPUT.valueOf()].includes(event.getType());
 const isOutputEvent = (event: Event) =>
   [Event.Type.OUTPUT.valueOf(), Event.Type.DECLARED_OUTPUT.valueOf()].includes(event.getType());
 
+/** Default size used when cardWidth prop is unset. */
+const DEFAULT_CARD_WIDTH = 260;
+
+/** Default size used when edgeWidth prop is unset. */
+const DEFAULT_EDGE_WIDTH = 120;
+
 export interface LineageViewProps {
-  cardWidth: number;
-  edgeWidth: number;
   target: Artifact;
+  cardWidth?: number;
+  edgeWidth?: number;
 }
 
 interface LineageViewState {
@@ -79,7 +85,8 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
 
   public render(): JSX.Element {
     const {columnNames} = this.state;
-    const {cardWidth, edgeWidth} = this.props;
+    const cardWidth = this.props.cardWidth || DEFAULT_CARD_WIDTH;
+    const edgeWidth = this.props.edgeWidth || DEFAULT_EDGE_WIDTH;
     return (
       <div className={classes(commonCss.page)}>
         <LineageActionBar ref={this.actionBarRef} initialTarget={this.props.target} setLineageViewTarget={this.setTargetFromActionBar} />
