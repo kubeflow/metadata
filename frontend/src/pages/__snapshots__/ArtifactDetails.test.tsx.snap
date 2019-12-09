@@ -392,8 +392,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       </MD2Tabs>
     </div>
     <LineageView
-      cardWidth={260}
-      edgeWidth={120}
       target={
         Object {
           "array": Array [
