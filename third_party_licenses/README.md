@@ -1,8 +1,8 @@
 This folder contains a list of license file locations and types in `license_info.csv`  for all dependencies and transitive dependencies of the metadata docker image.
 
-The actual license contents of all dependencies shall be generated via the following command and put into the docker image:
+The actual license contents of all dependencies, `third_party/library/license.txt` shall be generated via the following command:
 ```
-$ python concatenate_license.py
+$ python concatenate_license.py --output=../third_party/library/license.txt
 ```
 
 Whenever there is a dependency change of the metadata docker image, `license_info.csv` should be updated in the following steps.
