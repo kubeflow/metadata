@@ -38,6 +38,12 @@ echo "CLUSTER_NAME: ${CLUSTER_NAME}"
 echo "ZONE: ${GCP_ZONE}"
 echo "PROJECT: ${GCP_PROJECT}"
 
+apt-get update
+apt-get -y install software-properties-common python-software-properties
+add-apt-repository ppa:jonathonf/python-3.6
+apt-get update
+apt-get -y install python3.6
+
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
 kubectl config set-context $(kubectl config current-context) --namespace=default
@@ -125,28 +131,37 @@ until curl -H "ContentType: application/json" localhost:8080/api/v1alpha1/artifa
     TIMEOUT=$(( TIMEOUT - 1 ))
 done
 
-# Run CURL tests
-cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
-# Test demo notebook
-pip install jupyterlab
-pip install nbconvert
-pip install pandas
-cd "${SRC_DIR}/sdk/python" && \
-  sed -i -e "s@metadata-service.kubeflow:8080@127.0.0.1:8080@" demo.ipynb && \
-  python3 -m nbconvert --to notebook --execute demo.ipynb
-
-# Test resource watcher
-# Port forwarding
+# Port forwarding gRPC server.
 TARGET_GRPC_POD=$(kubectl -n $NAMESPACE get pod -o=name | grep metadata-grpc-deployment | head -1)
 echo "kubectl port-forward from $TARGET_GRPC_POD"
 kubectl -n $NAMESPACE port-forward $TARGET_GRPC_POD 8081:8080 &
 # Stream server logs.
 kubectl -n $NAMESPACE logs -f $TARGET_GRPC_POD &
 
-# Run Python tests
-pip install ml-metadata==0.15.0
-cd "${SRC_DIR}/sdk/python" && bash tests/run_tests.sh
+# Run CURL tests
+cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 
+# Run Python tests
+cd "${SRC_DIR}/sdk/python"
+rm -rf .testing-env
+virtualenv .testing-env -p /usr/bin/python3.6
+source .testing-env/bin/activate
+python3 -V
+bash tests/run_tests.sh
+
+# TODO(zhenghuiwang): Test demo notebook output with papermill instead of nbconvert.
+pip3 install jupyterlab
+pip3 install nbconvert
+pip3 install pandas
+# Use local server and package.
+sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
+sed -i -e "s@grpc_port=8080@grpc_port=8081@" sample/demo.ipynb && \
+sed -i -e "s@pip install kubeflow-metadata --user@pip install -e ${SRC_DIR}/sdk/python@" sample/demo.ipynb && \
+  python3 -m nbconvert --to notebook --execute sample/demo.ipynb
+
+cd "${SRC_DIR}"
+
+# Test resource watcher
 cd "${SRC_DIR}/watcher" && \
   go build -o main/main main/main.go && \
   timeout --preserve-status 30 ./main/main -kubeconfig=${HOME}/.kube/config -metadata_service=localhost:8081 -resourcelist=dockerfiles/resource_list.json
