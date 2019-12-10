@@ -26,7 +26,7 @@ setup(
     name=NAME,
     version=VERSION,
     description='KubeFlow Metadata SDK',
-    long_description='Please visit the document page: https://github.com/kubeflow/metadata/tree/master/sdk/python',
+    long_description='Please visit the document page: https://kubeflow-metadata.readthedocs.io/en/latest/',
     author='Kubeflow Authors',
     license='Apache License Version 2.0',
     url='https://github.com/kubeflow/metadata',

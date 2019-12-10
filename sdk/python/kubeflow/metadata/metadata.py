@@ -191,8 +191,9 @@ class Workspace(object):
       if reuse_workspace_if_exists:
         return ctx.id
       else:
-        raise ValueError('workspace name {} already exists with id {}'.format(
-            self.name, ctx.id))
+        raise ValueError(
+            'Workspace name {} already exists with id {}. You can initialize workspace with reuse_workspace_if_exists=True if want to reuse it'
+            .format(self.name, ctx.id))
     # Create new context type or get the existing type id.
     ctx_type = mlpb.ContextType(name=self.CONTEXT_TYPE_NAME,
                                 properties={

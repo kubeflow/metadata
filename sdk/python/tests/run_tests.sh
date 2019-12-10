@@ -24,8 +24,7 @@ python3 -m pip install pytest
 # install local kubeflow.metadata package
 python3 -m pip install -e .
 python3 -m pytest ./tests
-# Run integration tests multiple times should get the same result. This checks
-# the idenpotence of the tests.
+# Run integration tests multiple times should get the same result.
 echo "Run tests the second time:"
 python3 -m pytest ./tests
 
