@@ -149,7 +149,7 @@ source .testing-env/bin/activate
 python3 -V
 bash tests/run_tests.sh
 
-# Test demo notebook
+# TODO(zhenghuiwang): Test demo notebook output with papermill instead of nbconvert.
 pip3 install jupyterlab
 pip3 install nbconvert
 pip3 install pandas
