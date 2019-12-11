@@ -1506,7 +1506,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardArray={
+                  cardSkeleton={
                     Array [
                       1,
                     ]
@@ -2639,7 +2639,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardArray={
+                  cardSkeleton={
                     Array [
                       0,
                     ]
@@ -2998,7 +2998,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardArray={
+                  cardSkeleton={
                     Array [
                       1,
                     ]
@@ -4123,7 +4123,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardArray={
+                  cardSkeleton={
                     Array [
                       0,
                     ]
@@ -4484,7 +4484,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardArray={
+                  cardSkeleton={
                     Array [
                       1,
                     ]

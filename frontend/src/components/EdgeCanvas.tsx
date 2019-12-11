@@ -1,34 +1,44 @@
 import * as React from 'react';
 import LineChart from 'react-svg-line-chart';
 import {classes, stylesheet} from 'typestyle';
-import {px} from './LineageCss';
-import {LineageCardType} from './LineageTypes';
+import {CARD_SPACER_HEIGHT, px} from './LineageCss';
 import './LineChart.d.ts';
+import {CARD_TITLE_HEIGHT} from "./LineageCard";
 
 interface EdgeCanvasProps {
-  cardArray: number[];
+  // An array describing the shape of the column of cards, where each number represents a card, and
+  // its represents the number of rows in the card.
+  cardSkeleton: number[];
+
+  // If true edges are drawn from right to left.
   reverseEdges: boolean;
-  type: LineageCardType;
+
   cardWidth: number;
   edgeWidth: number;
 }
 
-export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, cardWidth, edgeWidth, reverseEdges}) => {
+/**
+ * Canvas that draws the lines connecting the edges of a list of vertically stacked cards in one
+ * <LineageCardColumn /> to the topmost <LineageCard /> in an adjacent <LineageCardColumn />.
+ *
+ * The adjacent column is assumed to be to right of the connecting cards unless `reverseEdges`
+ * is set to true.
+ */
+export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
+  const {cardSkeleton, cardWidth, edgeWidth, reverseEdges} = props;
+
   let viewHeight = 1;
 
-  const cardBodyHeight = 67;
-  const cardContainerSpacerHeight = 24;
-  const cardTitleHeight = 41;
-  const cardTitleBorders = 2;
-  const cardOffset = cardContainerSpacerHeight + cardTitleHeight + cardTitleBorders;
+  const cardBodyHeight = 66;
+  const cardContainerBorders = 2;
+  const cardOffset = CARD_SPACER_HEIGHT + CARD_TITLE_HEIGHT + cardContainerBorders;
 
   const css = stylesheet({
     edgeCanvas: {
       border: 0,
       display: 'block',
-      height: px(440),
       marginLeft: px(cardWidth),
-      marginTop: px(74),
+      marginTop: px(CARD_TITLE_HEIGHT + cardBodyHeight / 2),
       overflow: 'visible',
       position: 'absolute',
       width: edgeWidth,
@@ -54,7 +64,7 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = ({cardArray, cardWidth, edg
   };
 
   const edgeLines: JSX.Element[] = [];
-  cardArray.forEach((rows, i) => {
+  cardSkeleton.forEach((rows, i) => {
     for (let j = 0; j < rows; j++) {
       const {y1, y4} = lastNodePositions;
       edgeLines.push(
