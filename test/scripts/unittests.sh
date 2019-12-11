@@ -34,9 +34,11 @@ go list -m all | cut -d ' ' -f 1 > /tmp/generated_dep.txt
 
 if ! diff /tmp/generated_dep.txt third_party_licenses/dep.txt; then
     echo "Please follow third_party_licenses/README.md to update the license file for changed dependencies."
+    exit 1
 fi
 
 (cd third_party_licenses && python3 concatenate_license.py --output=/tmp/generated_license.txt)
 if ! diff /tmp/generated_license.txt third_party/library/license.txt; then
     echo "Please follow third_party_licenses/README.md to regenerate third_party/library/license.txt."
+    exit 1
 fi
