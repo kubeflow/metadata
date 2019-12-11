@@ -116,6 +116,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
             cards={this.buildExecutionCards(this.state.outputExecutions)}
             cardWidth={cardWidth}
             edgeWidth={edgeWidth}
+            skipEdgeCanvas={true /* Edges are drawn by reverse EdgeCanvas on the next column. */}
             title={`${columnNames[3]}`} />
           <LineageCardColumn
             type='artifact'
