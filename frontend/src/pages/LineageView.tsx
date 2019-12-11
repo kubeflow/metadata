@@ -21,7 +21,12 @@ import {commonCss} from '../Css';
 import {Api} from '../lib/Api';
 import {LineageCardColumn, CardDetails} from '../components/LineageCardColumn';
 import {LineageActionBar} from '../components/LineageActionBar';
-import {Artifact, Event, Execution} from '../generated/src/apis/metadata/metadata_store_pb';
+import {
+  Artifact,
+  ArtifactType,
+  Event,
+  Execution
+} from '../generated/src/apis/metadata/metadata_store_pb';
 import {RefObject} from 'react';
 import {
   GetArtifactsByIDRequest,
@@ -32,6 +37,9 @@ import {
 import {
   MetadataStoreServicePromiseClient
 } from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
+import {getArtifactTypes} from '../components/LineageApi';
+import {getTypeName} from '../components/LineageUtils';
+import * as _ from 'lodash';
 
 const isInputEvent = (event: Event) =>
   [Event.Type.INPUT.valueOf(), Event.Type.DECLARED_INPUT.valueOf()].includes(event.getType());
@@ -53,6 +61,7 @@ export interface LineageViewProps {
 interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
+  artifactTypes?: Map<number, ArtifactType>;
   inputArtifacts: Artifact[];
   inputExecutions: Execution[];
   target: Artifact;
@@ -63,6 +72,7 @@ interface LineageViewState {
 class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   private readonly actionBarRef: React.Ref<LineageActionBar>;
   private readonly metadataStoreService: MetadataStoreServicePromiseClient;
+  private artifactTypes: Map<number, ArtifactType>;
 
   constructor(props: any) {
     super(props);
@@ -83,7 +93,11 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     this.loadData(this.props.target.getId());
   }
 
-  public render(): JSX.Element {
+  public render(): JSX.Element | null {
+    if (!this.artifactTypes) {
+      return null;
+    }
+
     const {columnNames} = this.state;
     const cardWidth = this.props.cardWidth || DEFAULT_CARD_WIDTH;
     const edgeWidth = this.props.edgeWidth || DEFAULT_EDGE_WIDTH;
@@ -133,17 +147,21 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private buildArtifactCards(artifacts: Artifact[]): CardDetails[] {
-    return [
-      {
-        title: 'Artifact',
-        elements: artifacts.map((artifact) => ({
-            resource: artifact,
-            prev: true,
-            next: true
-          })
-        )
-      }
-    ];
+    const artifactsByTypeId = _.groupBy(artifacts, (artifact) => (artifact.getTypeId()));
+    return Object.keys(artifactsByTypeId).map((typeId) => {
+      const title = getTypeName(Number(typeId), this.artifactTypes);
+      const artifacts = artifactsByTypeId[typeId];
+      return ({
+          title,
+          elements: artifacts.map((artifact) => ({
+              resource: artifact,
+              prev: true,
+              next: true
+            })
+          )
+        }
+      );
+    });
   }
 
   private buildExecutionCards(executions: Execution[]): CardDetails[] {
@@ -164,8 +182,12 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
     getEventsByArtifactIDsRequest.addArtifactIds(targetId);
 
-    const getEventsByArtifactIDsResponse =
-      await this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest);
+    const [getEventsByArtifactIDsResponse, artifactTypes] = await Promise.all([
+      this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest),
+      getArtifactTypes(this.metadataStoreService)
+    ]);
+
+    this.artifactTypes = artifactTypes;
 
     const outputExecutionIds: number[] = [];
     const inputExecutionIds: number[] = [];
