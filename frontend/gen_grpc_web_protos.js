@@ -9,6 +9,7 @@ if (!fs.existsSync(OUT_DIR)) {
     recursive: true
   });
 }
+console.log(`Generating PROTOS in: ${OUT_DIR}`)
 
 // Expects protoc to be on your PATH.
 // From npm/google-protobuf:
@@ -18,7 +19,7 @@ const protocProcess = spawn(
     'protoc', [
       `--js_out="import_style=commonjs,binary:${OUT_DIR}"`,
       `--grpc-web_out="import_style=commonjs+dts,mode=grpcweb:${OUT_DIR}"`,
-      'src/apis/**/*.proto'
+      'src/apis/metadata/*.proto'
     ], {
       // Allow wildcards in glob to be interpreted
       shell: true
@@ -27,8 +28,7 @@ const protocProcess = spawn(
 protocProcess.stdout.on('data', buffer => console.log(buffer.toString()));
 protocProcess.stderr.on('data', buffer => console.error(buffer.toString()));
 protocProcess.on('close', code => {
-  if (!code) {
-    console.log(`Protos succesfully generated.`)
-  }
+  if (code) return
+  console.log(`Protos succesfully generated.`)
 });
 

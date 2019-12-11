@@ -2,17 +2,18 @@ import * as React from 'react';
 import './LineageCardRow.css';
 import {
   Artifact,
-  Value
 } from "../generated/src/apis/metadata/metadata_store_pb";
-import {ArtifactProperties} from "../lib/Api";
+import {LineageResource} from "./LineageTypes";
+import {
+ getResourceDescription, getResourceName,
+} from "../lib/Utils";
 
 interface LineageCardRowProps {
-  title: string;
-  description?: string;
   leftAffordance: boolean;
   rightAffordance: boolean;
   hideRadio: boolean;
   isLastRow: boolean;
+  resource: LineageResource
   setLineageViewTarget?(artifact: Artifact): void
 }
 
@@ -28,14 +29,16 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
     this.props.rightAffordance && affItems.push(<div className='edgeRight' key={'edgeRight'} />);
     return affItems;
   }
+
   public render(): JSX.Element {
-    const {title, description, isLastRow} = this.props;
+    const {isLastRow} = this.props;
+
     return (
       <div className={`cardRow ${isLastRow?'lastRow':''}`}>
         {this.checkRadio()}
         <footer>
-          <p className='rowTitle'>{title}</p>
-          <p className='rowDesc'>{description}</p>
+          <p className='rowTitle'>{getResourceName(this.props.resource)}</p>
+          <p className='rowDesc'>{getResourceDescription(this.props.resource)}</p>
         </footer>
         {this.checkEdgeAffordances()}
       </div>
@@ -49,17 +52,8 @@ export class LineageCardRow extends React.Component<LineageCardRowProps> {
     return <div className='noRadio' />;
   }
 
-  private get artifact(): Artifact {
-    // TODO: Return this.props.artifact once available.
-    const mockArtifact = new Artifact();
-    const nameValue = new Value();
-    nameValue.setStringValue(this.props.title);
-    mockArtifact.getPropertiesMap().set(ArtifactProperties.NAME, nameValue);
-    return mockArtifact
-  }
-
   private handleClick() {
-    if (!this.props.setLineageViewTarget) return;
-    this.props.setLineageViewTarget(this.artifact);
+    if (!this.props.setLineageViewTarget || !(this.props.resource instanceof Artifact)) return;
+    this.props.setLineageViewTarget(this.props.resource);
   }
 }

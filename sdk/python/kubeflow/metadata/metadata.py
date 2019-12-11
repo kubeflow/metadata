@@ -53,7 +53,7 @@ class Artifact(ABC):
     Returns:
       True or False for duplication.
     '''
-    return NotImplemented
+    return False
 
 
 class Store(object):
@@ -94,12 +94,14 @@ class Workspace(object):
   """Groups a set of runs of pipelines, notebooks and their related artifacts
   and executions.
   """
+  CONTEXT_TYPE_NAME = "kubeflow.org/alpha/workspace"
 
   def __init__(self,
                store: Store = None,
                name: str = None,
                description: Optional[str] = None,
                labels: Optional[Mapping[str, str]] = None,
+               reuse_workspace_if_exists: Optional[bool] = True,
                backend_url_prefix: Optional[str] = None):
     """
     Args:
@@ -107,7 +109,13 @@ class Workspace(object):
       name: Required name for the workspace.
       description: Optional string for description of the workspace.
       labels: Optional key/value string pairs to label the workspace.
+      reuse_workspace_if_exists: Optional boolean value to indicate whether a
+        workspace of the same name should be reused.
       backend_url_prefix: Deprecated. Please use 'store' parameter.
+
+    Raises:
+      ValueError: If a workspace of the same name already exists and
+      `reuse_workspace_if_exists` is set to False.
     """
     if backend_url_prefix:
       raise ValueError(
@@ -121,6 +129,7 @@ class Workspace(object):
     self.name = name
     self.description = description
     self.labels = labels
+    self.context_id = self._get_context_id(reuse_workspace_if_exists)
 
   def list(self, artifact_type_name: str = None) -> List[Artifact]:
     """List all artifacts of a given type.
@@ -175,6 +184,45 @@ class Workspace(object):
       if not k in result:
         result[k] = v
     return result
+
+  def _get_context_id(self, reuse_workspace_if_exists):
+    ctx = self._get_existing_context()
+    if ctx is not None:
+      if reuse_workspace_if_exists:
+        return ctx.id
+      else:
+        raise ValueError(
+            'Workspace name {} already exists with id {}. You can initialize workspace with reuse_workspace_if_exists=True if want to reuse it'
+            .format(self.name, ctx.id))
+    # Create new context type or get the existing type id.
+    ctx_type = mlpb.ContextType(name=self.CONTEXT_TYPE_NAME,
+                                properties={
+                                    "description": mlpb.STRING,
+                                    "labels": mlpb.STRING
+                                })
+    ctx_type_id = _retry(lambda: self.store.put_context_type(ctx_type))
+
+    # Add new context for workspace.
+    prop = {}
+    if self.description is not None:
+      prop["description"] = mlpb.Value(string_value=self.description)
+    if self.labels is not None:
+      prop["labels"] = mlpb.Value(string_value=json.dumps(self.labels))
+    ctx = mlpb.Context(
+        type_id=ctx_type_id,
+        name=self.name,
+        properties=prop,
+    )
+    ctx_id = _retry(lambda: self.store.put_contexts([ctx])[0])
+    return ctx_id
+
+  def _get_existing_context(self):
+    contexts = _retry(
+        lambda: self.store.get_contexts_by_type(self.CONTEXT_TYPE_NAME))
+    for ctx in contexts:
+      if ctx.name == self.name:
+        return ctx
+    return None
 
 
 class Run(object):
@@ -236,9 +284,12 @@ class Execution(object):
     self.create_time = _get_rfc3339_time()
     self._type_id = _retry(lambda: self.workspace.store.get_execution_type(
         Execution.EXECUTION_TYPE_NAME).id)
-    response = _retry(
-        lambda: self.workspace.store.put_executions([self.serialized()]))
-    self.id = response[0]
+    self.id = _retry(
+        lambda: self.workspace.store.put_executions([self.serialized()])[0])
+    _retry(lambda: self.workspace.store.put_attributions_and_associations([], [
+        mlpb.Association(context_id=self.workspace.context_id,
+                         execution_id=self.id)
+    ]))
 
   def __repr__(self):
     field_names = self.__dict__.keys()
@@ -343,6 +394,10 @@ class Execution(object):
         return artifact
 
     artifact.id = _retry(lambda: self.workspace.store.put_artifacts([ser])[0])
+    _retry(lambda: self.workspace.store.put_attributions_and_associations([
+        mlpb.Attribution(context_id=self.workspace.context_id,
+                         artifact_id=artifact.id)
+    ], []))
     return artifact
 
   def _check_artifact_id(self, aid):
@@ -454,10 +509,11 @@ class DataSet(Artifact):
   def is_duplicated(a, b):
     ap = a.properties
     bp = b.properties
-    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
-        "name"] and ap["version"] == bp["version"] and a.custom_properties[
-            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
-                _WORKSPACE_PROPERTY_NAME]
+    aws = a.custom_properties.get(_WORKSPACE_PROPERTY_NAME)
+    bws = b.custom_properties.get(_WORKSPACE_PROPERTY_NAME)
+    return a.type_id == b.type_id and a.uri == b.uri and ap.get(
+        "name") == bp.get("name") and ap.get("version") == bp.get(
+            "version") and aws == bws
 
 
 class Model(Artifact):
@@ -574,10 +630,11 @@ class Model(Artifact):
   def is_duplicated(a, b):
     ap = a.properties
     bp = b.properties
-    return a.type_id == b.type_id and a.uri == b.uri and ap["name"] == bp[
-        "name"] and ap["version"] == bp["version"] and a.custom_properties[
-            _WORKSPACE_PROPERTY_NAME] == b.custom_properties[
-                _WORKSPACE_PROPERTY_NAME]
+    aws = a.custom_properties.get(_WORKSPACE_PROPERTY_NAME)
+    bws = b.custom_properties.get(_WORKSPACE_PROPERTY_NAME)
+    return a.type_id == b.type_id and a.uri == b.uri and ap.get(
+        "name") == bp.get("name") and ap.get("version") == bp.get(
+            "version") and aws == bws
 
 
 class Metrics(Artifact):
@@ -705,7 +762,7 @@ def _get_rfc3339_time():
 
 
 def _del_none_properties(dict):
-  keys = [k for k in dict.keys()]
+  keys = list(dict.keys())
   for k in keys:
     if not any((dict[k].string_value, dict[k].int_value, dict[k].double_value)):
       del dict[k]

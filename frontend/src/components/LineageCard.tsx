@@ -1,10 +1,22 @@
+import {blue, grey} from '@material-ui/core/colors';
 import * as React from 'react';
-import './LineageCard.css';
+import {classes, stylesheet} from 'typestyle';
+import {CSSProperties} from 'typestyle/lib/types';
 import {LineageCardRow} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
+import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
+import {px} from './LineageCss';
+
+const CARD_RADIUS = 6;
+
+const cardTitleBase: CSSProperties = {
+  borderTopLeftRadius: '4px',
+  borderTopRightRadius: '4px',
+  height: '40px',
+};
 
 interface LineageCardProps {
+  cardWidth: number,
   title: string;
   type: LineageCardType;
   rows: LineageRow[];
@@ -15,24 +27,72 @@ interface LineageCardProps {
 
 export class LineageCard extends React.Component<LineageCardProps> {
   public render(): JSX.Element {
-    const {title, type, rows, addSpacer, isTarget, setLineageViewTarget} = this.props;
+    const {cardWidth, title, type, rows, addSpacer, isTarget, setLineageViewTarget} = this.props;
+    const isExecution = type === 'execution';
+
+    const css = stylesheet({
+      addSpacer: {
+        marginTop: '24px',
+      },
+      cardContainer: {
+        background: 'white',
+        border: `1px solid ${grey[300]}`,
+        borderRadius: px(CARD_RADIUS),
+        width: px(cardWidth),
+        $nest: {
+          h3: {
+            color: blue[600],
+            fontFamily: 'PublicSans-Medium',
+            fontSize: '10px',
+            letterSpacing: '0.8px',
+            lineHeight: '42px',
+            paddingLeft: '20px',
+            textAlign: 'left',
+            textTransform: 'uppercase',
+          }
+        }
+      },
+      cardTitle: {
+        ...cardTitleBase,
+        borderBottom: `1px solid ${grey[200]}`,
+      },
+      execution: {
+        borderRadius: px(CARD_RADIUS),
+        background: '#F8FBFF',
+        border: '1px solid #CCE4FF',
+      },
+      executionCardTitle: {
+        ...cardTitleBase,
+        borderBottom: '1px solid transparent',
+      },
+      target: {
+        border: `2px solid ${blue[500]}`,
+      }
+    });
 
     const listCardRows = () => rows.map((r, i) =>
       <LineageCardRow
         key={i}
-        title={r.title}
-        description={r.desc}
+        resource={r.resource}
         leftAffordance={!!r.prev}
         rightAffordance={!!r.next}
         isLastRow={i === rows.length-1}
-        hideRadio={type === 'execution' || !!isTarget}
+        hideRadio={isExecution || !!isTarget}
         setLineageViewTarget={setLineageViewTarget}
       />
     );
 
+    const cardContainerClasses =
+      classes(
+        css.cardContainer,
+        css[type], // css.execution
+        addSpacer ? css.addSpacer : '',
+        isTarget ? css.target : ''
+      );
+
     return (
-      <div className={`cardContainer ${type}${addSpacer ? ' addSpacer' : ''}${isTarget ? ' target':''}`}>
-        <div className='cardTitle'>
+      <div className={cardContainerClasses}>
+        <div className={classes(isExecution ? css.executionCardTitle : css.cardTitle)}>
           <h3>{title}</h3>
         </div>
         <div className='cardBody'>{listCardRows()}</div>
