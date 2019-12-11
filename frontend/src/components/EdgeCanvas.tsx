@@ -4,11 +4,12 @@ import {classes, stylesheet} from 'typestyle';
 import {CARD_SPACER_HEIGHT, px} from './LineageCss';
 import './LineChart.d.ts';
 import {CARD_TITLE_HEIGHT} from "./LineageCard";
+import {CardDetails} from "./LineageCardColumn";
 
 interface EdgeCanvasProps {
   // An array describing the shape of the column of cards, where each number represents a card, and
   // its represents the number of rows in the card.
-  cardSkeleton: number[];
+  cards: CardDetails[];
 
   // If true edges are drawn from right to left.
   reverseEdges: boolean;
@@ -25,7 +26,7 @@ interface EdgeCanvasProps {
  * is set to true.
  */
 export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
-  const {cardSkeleton, cardWidth, edgeWidth, reverseEdges} = props;
+  const {cards, cardWidth, edgeWidth, reverseEdges} = props;
 
   let viewHeight = 1;
 
@@ -64,8 +65,12 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
   };
 
   const edgeLines: JSX.Element[] = [];
-  cardSkeleton.forEach((rows, i) => {
-    for (let j = 0; j < rows; j++) {
+  cards.forEach((card, i) => {
+    for (let j = 0; j < card.elements.length; j++) {
+      const element = card.elements[j];
+      if (!element.next) {
+        continue;
+      }
       const {y1, y4} = lastNodePositions;
       edgeLines.push(
         <LineChart

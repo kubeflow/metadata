@@ -121,7 +121,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
             title={`${columnNames[1]}`} />
           <LineageCardColumn
             type='artifact'
-            cards={this.buildArtifactCards([this.state.target])}
+            cards={this.buildArtifactCards([this.state.target], /* isTarget= */ true)}
             cardWidth={cardWidth}
             edgeWidth={edgeWidth}
             title={`${columnNames[2]}`} />
@@ -146,7 +146,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     );
   }
 
-  private buildArtifactCards(artifacts: Artifact[]): CardDetails[] {
+  private buildArtifactCards(artifacts: Artifact[], isTarget: boolean = false): CardDetails[] {
     const artifactsByTypeId = _.groupBy(artifacts, (artifact) => (artifact.getTypeId()));
     return Object.keys(artifactsByTypeId).map((typeId) => {
       const title = getTypeName(Number(typeId), this.artifactTypes);
@@ -155,8 +155,8 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
           title,
           elements: artifacts.map((artifact) => ({
               resource: artifact,
-              prev: true,
-              next: true
+              prev: !isTarget || this.state.inputExecutions.length > 0,
+              next: !isTarget || this.state.outputExecutions.length > 0
             })
           )
         }
@@ -165,17 +165,16 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private buildExecutionCards(executions: Execution[]): CardDetails[] {
-    return [
-      {
-        title: 'Execution',
-        elements: executions.map((execution) => ({
-            resource: execution,
-            prev: true,
-            next: true
-          })
-        )
-      }
-    ];
+    return executions.map((execution) => ({
+      title: 'Execution',
+      elements: [
+        {
+          resource: execution,
+          prev: true,
+          next: true,
+        }
+      ]
+    }))
   }
 
   private async loadData(targetId: number): Promise<string> {

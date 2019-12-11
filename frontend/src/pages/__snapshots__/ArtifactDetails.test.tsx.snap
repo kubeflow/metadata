@@ -1506,12 +1506,305 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardSkeleton={
+                  cardWidth={260}
+                  cards={
                     Array [
-                      1,
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "next": true,
+                            "prev": true,
+                            "resource": Object {
+                              "array": Array [
+                                1,
+                                1,
+                                "gs://my-bucket/mnist",
+                                Array [
+                                  Array [
+                                    "__ALL_META__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                    ],
+                                  ],
+                                  Array [
+                                    "create_time",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "2019-06-12T01:21:48.259263Z",
+                                    ],
+                                  ],
+                                  Array [
+                                    "description",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "A really great model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "name",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "test model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "version",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "v1",
+                                    ],
+                                  ],
+                                ],
+                                Array [
+                                  Array [
+                                    "__kf_run__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "1",
+                                    ],
+                                  ],
+                                  Array [
+                                    "__kf_workspace__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "workspace-1",
+                                    ],
+                                  ],
+                                ],
+                              ],
+                              "arrayIndexOffset_": -1,
+                              "convertedPrimitiveFields_": Object {},
+                              "messageId_": undefined,
+                              "pivot_": 1.7976931348623157e+308,
+                              "wrappers_": Object {
+                                "4": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__ALL_META__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                    ],
+                                    Array [
+                                      "create_time",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                    ],
+                                    Array [
+                                      "description",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "name",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "version",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__ALL_META__": Object {
+                                      "key": "__ALL_META__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "create_time": Object {
+                                      "key": "create_time",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "2019-06-12T01:21:48.259263Z",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "description": Object {
+                                      "key": "description",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "A really great model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "name": Object {
+                                      "key": "name",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "test model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "version": Object {
+                                      "key": "version",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "v1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                                "5": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__kf_run__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                    ],
+                                    Array [
+                                      "__kf_workspace__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__kf_run__": Object {
+                                      "key": "__kf_run__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "__kf_workspace__": Object {
+                                      "key": "__kf_workspace__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "workspace-1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                              },
+                            },
+                          },
+                        ],
+                        "title": "1",
+                      },
                     ]
                   }
-                  cardWidth={260}
                   edgeWidth={120}
                   reverseEdges={false}
                 >
@@ -2614,14 +2907,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           </LineageCardColumn>
           <LineageCardColumn
             cardWidth={260}
-            cards={
-              Array [
-                Object {
-                  "elements": Array [],
-                  "title": "Execution",
-                },
-              ]
-            }
+            cards={Array []}
             edgeWidth={120}
             title=""
             type="execution"
@@ -2638,12 +2924,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardSkeleton={
-                    Array [
-                      0,
-                    ]
-                  }
                   cardWidth={260}
+                  cards={Array []}
                   edgeWidth={120}
                   reverseEdges={false}
                 >
@@ -2651,30 +2933,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     className="edgeCanvas"
                   />
                 </EdgeCanvas>
-                <LineageCard
-                  addSpacer={false}
-                  cardWidth={260}
-                  isTarget={false}
-                  key="0"
-                  rows={Array []}
-                  title="Execution"
-                  type="execution"
-                >
-                  <div
-                    className="cardContainer execution"
-                  >
-                    <div
-                      className="executionCardTitle"
-                    >
-                      <h3>
-                        Execution
-                      </h3>
-                    </div>
-                    <div
-                      className="cardBody"
-                    />
-                  </div>
-                </LineageCard>
               </div>
             </div>
           </LineageCardColumn>
@@ -2685,8 +2943,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 Object {
                   "elements": Array [
                     Object {
-                      "next": true,
-                      "prev": true,
+                      "next": false,
+                      "prev": false,
                       "resource": Object {
                         "array": Array [
                           1,
@@ -2996,461 +3254,311 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardSkeleton={
+                  cardWidth={260}
+                  cards={
                     Array [
-                      1,
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "next": false,
+                            "prev": false,
+                            "resource": Object {
+                              "array": Array [
+                                1,
+                                1,
+                                "gs://my-bucket/mnist",
+                                Array [
+                                  Array [
+                                    "__ALL_META__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                    ],
+                                  ],
+                                  Array [
+                                    "create_time",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "2019-06-12T01:21:48.259263Z",
+                                    ],
+                                  ],
+                                  Array [
+                                    "description",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "A really great model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "name",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "test model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "version",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "v1",
+                                    ],
+                                  ],
+                                ],
+                                Array [
+                                  Array [
+                                    "__kf_run__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "1",
+                                    ],
+                                  ],
+                                  Array [
+                                    "__kf_workspace__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "workspace-1",
+                                    ],
+                                  ],
+                                ],
+                              ],
+                              "arrayIndexOffset_": -1,
+                              "convertedPrimitiveFields_": Object {},
+                              "messageId_": undefined,
+                              "pivot_": 1.7976931348623157e+308,
+                              "wrappers_": Object {
+                                "4": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__ALL_META__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                    ],
+                                    Array [
+                                      "create_time",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                    ],
+                                    Array [
+                                      "description",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "name",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "version",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__ALL_META__": Object {
+                                      "key": "__ALL_META__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "create_time": Object {
+                                      "key": "create_time",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "2019-06-12T01:21:48.259263Z",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "description": Object {
+                                      "key": "description",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "A really great model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "name": Object {
+                                      "key": "name",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "test model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "version": Object {
+                                      "key": "version",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "v1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                                "5": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__kf_run__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                    ],
+                                    Array [
+                                      "__kf_workspace__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__kf_run__": Object {
+                                      "key": "__kf_run__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "__kf_workspace__": Object {
+                                      "key": "__kf_workspace__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "workspace-1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                              },
+                            },
+                          },
+                        ],
+                        "title": "1",
+                      },
                     ]
                   }
-                  cardWidth={260}
                   edgeWidth={120}
                   reverseEdges={false}
                 >
                   <div
                     className="edgeCanvas"
-                  >
-                    <LineChart
-                      areaVisible={false}
-                      axisColor="#34495e"
-                      axisOpacity={0.3}
-                      axisVisible={false}
-                      axisWidth={1}
-                      data={
-                        Array [
-                          Object {
-                            "x": 0,
-                            "y": 0,
-                          },
-                          Object {
-                            "x": 30,
-                            "y": 0,
-                          },
-                          Object {
-                            "x": 90,
-                            "y": 0,
-                          },
-                          Object {
-                            "x": 120,
-                            "y": 0,
-                          },
-                        ]
-                      }
-                      getX={[Function]}
-                      getY={[Function]}
-                      gridColor="#34495e"
-                      gridOpacity={0.2}
-                      gridVisible={false}
-                      gridWidth={1}
-                      key="0-0"
-                      labelsCharacterWidth={10}
-                      labelsColor="#bdc3c7"
-                      labelsCountY={5}
-                      labelsFormatX={[Function]}
-                      labelsFormatY={[Function]}
-                      labelsHeightX={12}
-                      labelsOffsetX={15}
-                      labelsOffsetY={15}
-                      labelsStepX={2}
-                      labelsVisible={false}
-                      pathColor="#BDC1C6"
-                      pathOpacity={1}
-                      pathSmoothing={0}
-                      pathVisible={true}
-                      pathWidth={1}
-                      pointsColor="#fff"
-                      pointsIsHoverOnZone={false}
-                      pointsOnHover={[Function]}
-                      pointsRadius={4}
-                      pointsStrokeColor="#34495e"
-                      pointsStrokeWidth={2}
-                      pointsVisible={false}
-                      viewBoxHeight={1}
-                      viewBoxWidth={120}
-                    >
-                      <styled.svg
-                        viewBox="0 0 120 1"
-                      >
-                        <svg
-                          className="sc-gzVnrw kWKfgJ"
-                          viewBox="0 0 120 1"
-                        >
-                          <g
-                            transform="translate(0, 0)"
-                          >
-                            <Grid
-                              areaVisible={false}
-                              axisColor="#34495e"
-                              axisOpacity={0.3}
-                              axisVisible={false}
-                              axisWidth={1}
-                              data={
-                                Array [
-                                  Object {
-                                    "x": 0,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 30,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 90,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 120,
-                                    "y": 0,
-                                  },
-                                ]
-                              }
-                              getX={[Function]}
-                              getY={[Function]}
-                              gridColor="#34495e"
-                              gridOpacity={0.2}
-                              gridVisible={false}
-                              gridWidth={1}
-                              labelsCharacterWidth={10}
-                              labelsColor="#bdc3c7"
-                              labelsCountY={5}
-                              labelsFormatX={[Function]}
-                              labelsFormatY={[Function]}
-                              labelsHeightX={12}
-                              labelsOffsetX={15}
-                              labelsOffsetY={15}
-                              labelsStepX={2}
-                              labelsVisible={false}
-                              maxX={120}
-                              maxY={5}
-                              minX={0}
-                              minY={0}
-                              pathColor="#BDC1C6"
-                              pathOpacity={1}
-                              pathSmoothing={0}
-                              pathVisible={true}
-                              pathWidth={1}
-                              pointsColor="#fff"
-                              pointsIsHoverOnZone={false}
-                              pointsOnHover={[Function]}
-                              pointsRadius={4}
-                              pointsStrokeColor="#34495e"
-                              pointsStrokeWidth={2}
-                              pointsVisible={false}
-                            />
-                            <Path
-                              areaColor="#34495e"
-                              areaOpacity={0.5}
-                              areaVisible={false}
-                              axisColor="#34495e"
-                              axisOpacity={0.3}
-                              axisVisible={false}
-                              axisWidth={1}
-                              data={
-                                Array [
-                                  Object {
-                                    "x": 0,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 30,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 90,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 120,
-                                    "y": 0,
-                                  },
-                                ]
-                              }
-                              getX={[Function]}
-                              getY={[Function]}
-                              gridColor="#34495e"
-                              gridOpacity={0.2}
-                              gridVisible={false}
-                              gridWidth={1}
-                              labelsCharacterWidth={10}
-                              labelsColor="#bdc3c7"
-                              labelsCountY={5}
-                              labelsFormatX={[Function]}
-                              labelsFormatY={[Function]}
-                              labelsHeightX={12}
-                              labelsOffsetX={15}
-                              labelsOffsetY={15}
-                              labelsStepX={2}
-                              labelsVisible={false}
-                              maxX={120}
-                              maxY={5}
-                              minX={0}
-                              minY={0}
-                              pathColor="#BDC1C6"
-                              pathOpacity={1}
-                              pathSmoothing={0}
-                              pathVisible={true}
-                              pathWidth={1}
-                              pointsColor="#fff"
-                              pointsIsHoverOnZone={false}
-                              pointsOnHover={[Function]}
-                              pointsRadius={4}
-                              pointsStrokeColor="#34495e"
-                              pointsStrokeWidth={2}
-                              pointsVisible={false}
-                            >
-                              <g>
-                                <styled.path
-                                  color="#BDC1C6"
-                                  d="M 0 1  C
-      0
-      1
-      0
-      1
-      5
-      1
-      C
-      10
-      1
-      20
-      1
-      35
-      1
-      C
-      50
-      1
-      70
-      1
-      85
-      1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
-                                  opacity={1}
-                                  width={1}
-                                >
-                                  <path
-                                    className="sc-htpNat emMQTt"
-                                    color="#BDC1C6"
-                                    d="M 0 1  C
-      0
-      1
-      0
-      1
-      5
-      1
-      C
-      10
-      1
-      20
-      1
-      35
-      1
-      C
-      50
-      1
-      70
-      1
-      85
-      1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
-                                    opacity={1}
-                                    width={1}
-                                  />
-                                </styled.path>
-                              </g>
-                            </Path>
-                            <Axis
-                              areaVisible={false}
-                              axisColor="#34495e"
-                              axisOpacity={0.3}
-                              axisVisible={false}
-                              axisWidth={1}
-                              data={
-                                Array [
-                                  Object {
-                                    "x": 0,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 30,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 90,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 120,
-                                    "y": 0,
-                                  },
-                                ]
-                              }
-                              getX={[Function]}
-                              getY={[Function]}
-                              gridColor="#34495e"
-                              gridOpacity={0.2}
-                              gridVisible={false}
-                              gridWidth={1}
-                              labelsCharacterWidth={10}
-                              labelsColor="#bdc3c7"
-                              labelsCountY={5}
-                              labelsFormatX={[Function]}
-                              labelsFormatY={[Function]}
-                              labelsHeightX={12}
-                              labelsOffsetX={15}
-                              labelsOffsetY={15}
-                              labelsStepX={2}
-                              labelsVisible={false}
-                              maxX={120}
-                              maxY={5}
-                              minX={0}
-                              minY={0}
-                              pathColor="#BDC1C6"
-                              pathOpacity={1}
-                              pathSmoothing={0}
-                              pathVisible={true}
-                              pathWidth={1}
-                              pointsColor="#fff"
-                              pointsIsHoverOnZone={false}
-                              pointsOnHover={[Function]}
-                              pointsRadius={4}
-                              pointsStrokeColor="#34495e"
-                              pointsStrokeWidth={2}
-                              pointsVisible={false}
-                            />
-                            <Points
-                              areaVisible={false}
-                              axisColor="#34495e"
-                              axisOpacity={0.3}
-                              axisVisible={false}
-                              axisWidth={1}
-                              data={
-                                Array [
-                                  Object {
-                                    "x": 0,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 30,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 90,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 120,
-                                    "y": 0,
-                                  },
-                                ]
-                              }
-                              getX={[Function]}
-                              getY={[Function]}
-                              gridColor="#34495e"
-                              gridOpacity={0.2}
-                              gridVisible={false}
-                              gridWidth={1}
-                              labelsCharacterWidth={10}
-                              labelsColor="#bdc3c7"
-                              labelsCountY={5}
-                              labelsFormatX={[Function]}
-                              labelsFormatY={[Function]}
-                              labelsHeightX={12}
-                              labelsOffsetX={15}
-                              labelsOffsetY={15}
-                              labelsStepX={2}
-                              labelsVisible={false}
-                              maxX={120}
-                              maxY={5}
-                              minX={0}
-                              minY={0}
-                              pathColor="#BDC1C6"
-                              pathOpacity={1}
-                              pathSmoothing={0}
-                              pathVisible={true}
-                              pathWidth={1}
-                              pointsColor="#fff"
-                              pointsIsHoverOnZone={false}
-                              pointsOnHover={[Function]}
-                              pointsRadius={4}
-                              pointsStrokeColor="#34495e"
-                              pointsStrokeWidth={2}
-                              pointsVisible={false}
-                            />
-                            <Labels
-                              areaVisible={false}
-                              axisColor="#34495e"
-                              axisOpacity={0.3}
-                              axisVisible={false}
-                              axisWidth={1}
-                              data={
-                                Array [
-                                  Object {
-                                    "x": 0,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 30,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 90,
-                                    "y": 0,
-                                  },
-                                  Object {
-                                    "x": 120,
-                                    "y": 0,
-                                  },
-                                ]
-                              }
-                              getX={[Function]}
-                              getY={[Function]}
-                              gridColor="#34495e"
-                              gridOpacity={0.2}
-                              gridVisible={false}
-                              gridWidth={1}
-                              labelsCharacterWidth={10}
-                              labelsColor="#bdc3c7"
-                              labelsCountY={5}
-                              labelsFormatX={[Function]}
-                              labelsFormatY={[Function]}
-                              labelsHeightX={12}
-                              labelsOffsetX={15}
-                              labelsOffsetY={15}
-                              labelsStepX={2}
-                              labelsVisible={false}
-                              maxX={120}
-                              maxY={5}
-                              minX={0}
-                              minY={0}
-                              pathColor="#BDC1C6"
-                              pathOpacity={1}
-                              pathSmoothing={0}
-                              pathVisible={true}
-                              pathWidth={1}
-                              pointsColor="#fff"
-                              pointsIsHoverOnZone={false}
-                              pointsOnHover={[Function]}
-                              pointsRadius={4}
-                              pointsStrokeColor="#34495e"
-                              pointsStrokeWidth={2}
-                              pointsVisible={false}
-                            />
-                          </g>
-                        </svg>
-                      </styled.svg>
-                    </LineChart>
-                  </div>
+                  />
                 </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
@@ -3460,8 +3568,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   rows={
                     Array [
                       Object {
-                        "next": true,
-                        "prev": true,
+                        "next": false,
+                        "prev": false,
                         "resource": Object {
                           "array": Array [
                             1,
@@ -3770,7 +3878,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         hideRadio={true}
                         isLastRow={true}
                         key="0"
-                        leftAffordance={true}
+                        leftAffordance={false}
                         resource={
                           Object {
                             "array": Array [
@@ -4058,7 +4166,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
-                        rightAffordance={true}
+                        rightAffordance={false}
                       >
                         <div
                           className="cardRow lastRow"
@@ -4078,14 +4186,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               workspace-1
                             </p>
                           </footer>
-                          <div
-                            className="edgeLeft"
-                            key="edgeLeft"
-                          />
-                          <div
-                            className="edgeRight"
-                            key="edgeRight"
-                          />
                         </div>
                       </LineageCardRow>
                     </div>
@@ -4096,14 +4196,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           </LineageCardColumn>
           <LineageCardColumn
             cardWidth={260}
-            cards={
-              Array [
-                Object {
-                  "elements": Array [],
-                  "title": "Execution",
-                },
-              ]
-            }
+            cards={Array []}
             edgeWidth={120}
             skipEdgeCanvas={true}
             title=""
@@ -4119,32 +4212,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               </div>
               <div
                 className="columnBody"
-              >
-                <LineageCard
-                  addSpacer={false}
-                  cardWidth={260}
-                  isTarget={false}
-                  key="0"
-                  rows={Array []}
-                  title="Execution"
-                  type="execution"
-                >
-                  <div
-                    className="cardContainer execution"
-                  >
-                    <div
-                      className="executionCardTitle"
-                    >
-                      <h3>
-                        Execution
-                      </h3>
-                    </div>
-                    <div
-                      className="cardBody"
-                    />
-                  </div>
-                </LineageCard>
-              </div>
+              />
             </div>
           </LineageCardColumn>
           <LineageCardColumn
@@ -4467,12 +4535,305 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 className="columnBody"
               >
                 <EdgeCanvas
-                  cardSkeleton={
+                  cardWidth={260}
+                  cards={
                     Array [
-                      1,
+                      Object {
+                        "elements": Array [
+                          Object {
+                            "next": true,
+                            "prev": true,
+                            "resource": Object {
+                              "array": Array [
+                                1,
+                                1,
+                                "gs://my-bucket/mnist",
+                                Array [
+                                  Array [
+                                    "__ALL_META__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                    ],
+                                  ],
+                                  Array [
+                                    "create_time",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "2019-06-12T01:21:48.259263Z",
+                                    ],
+                                  ],
+                                  Array [
+                                    "description",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "A really great model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "name",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "test model",
+                                    ],
+                                  ],
+                                  Array [
+                                    "version",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "v1",
+                                    ],
+                                  ],
+                                ],
+                                Array [
+                                  Array [
+                                    "__kf_run__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "1",
+                                    ],
+                                  ],
+                                  Array [
+                                    "__kf_workspace__",
+                                    Array [
+                                      undefined,
+                                      undefined,
+                                      "workspace-1",
+                                    ],
+                                  ],
+                                ],
+                              ],
+                              "arrayIndexOffset_": -1,
+                              "convertedPrimitiveFields_": Object {},
+                              "messageId_": undefined,
+                              "pivot_": 1.7976931348623157e+308,
+                              "wrappers_": Object {
+                                "4": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__ALL_META__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                    ],
+                                    Array [
+                                      "create_time",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                    ],
+                                    Array [
+                                      "description",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "name",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                    ],
+                                    Array [
+                                      "version",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__ALL_META__": Object {
+                                      "key": "__ALL_META__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "{\\"hyperparameters\\": {\\"early_stop\\": true, \\"layers\\": [10, 3, 1], \\"learning_rate\\": 0.5}, \\"model_type\\": \\"neural network\\", \\"training_framework\\": {\\"name\\": \\"tensorflow\\", \\"version\\": \\"v1.0\\"}}",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "create_time": Object {
+                                      "key": "create_time",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "2019-06-12T01:21:48.259263Z",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "2019-06-12T01:21:48.259263Z",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "description": Object {
+                                      "key": "description",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "A really great model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "A really great model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "name": Object {
+                                      "key": "name",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "test model",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "test model",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "version": Object {
+                                      "key": "version",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "v1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "v1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                                "5": Object {
+                                  "arrClean": true,
+                                  "arr_": Array [
+                                    Array [
+                                      "__kf_run__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                    ],
+                                    Array [
+                                      "__kf_workspace__",
+                                      Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                    ],
+                                  ],
+                                  "map_": Object {
+                                    "__kf_run__": Object {
+                                      "key": "__kf_run__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                    "__kf_workspace__": Object {
+                                      "key": "__kf_workspace__",
+                                      "value": Array [
+                                        undefined,
+                                        undefined,
+                                        "workspace-1",
+                                      ],
+                                      "valueWrapper": Object {
+                                        "array": Array [
+                                          undefined,
+                                          undefined,
+                                          "workspace-1",
+                                        ],
+                                        "arrayIndexOffset_": -1,
+                                        "convertedPrimitiveFields_": Object {},
+                                        "messageId_": undefined,
+                                        "pivot_": 1.7976931348623157e+308,
+                                        "wrappers_": null,
+                                      },
+                                    },
+                                  },
+                                  "valueCtor_": [Function],
+                                },
+                              },
+                            },
+                          },
+                        ],
+                        "title": "1",
+                      },
                     ]
                   }
-                  cardWidth={260}
                   edgeWidth={120}
                   reverseEdges={true}
                 >

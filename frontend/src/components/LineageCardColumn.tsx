@@ -84,13 +84,12 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
   }
   private drawColumnContent(): JSX.Element {
     const {cards, cardWidth, edgeWidth, skipEdgeCanvas} = this.props;
-    const cardSkeleton = cards.map(c => c.elements.length);
 
     return <React.Fragment>
       {
         skipEdgeCanvas ? null :
           <EdgeCanvas
-            cardSkeleton={cardSkeleton}
+            cards={cards}
             cardWidth={cardWidth}
             edgeWidth={edgeWidth}
             reverseEdges={!!this.props.reverseBindings}
