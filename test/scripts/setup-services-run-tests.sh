@@ -149,9 +149,8 @@ source .testing-env/bin/activate
 python3 -V
 bash tests/run_tests.sh
 
-# TODO(zhenghuiwang): Test demo notebook output with papermill instead of nbconvert.
-pip3 install jupyterlab
-pip3 install nbconvert
+# Test Notebook
+pip3 install papermill
 pip3 install pandas
 # Use local server and package.
 sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
