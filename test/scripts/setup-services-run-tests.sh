@@ -40,7 +40,7 @@ echo "PROJECT: ${GCP_PROJECT}"
 
 apt-get update
 apt-get -y install software-properties-common python-software-properties
-add-apt-repository ppa:jonathonf/python-3.6
+add-apt-repository ppa:deadsnakes/ppa
 apt-get update
 apt-get -y install python3.6
 
