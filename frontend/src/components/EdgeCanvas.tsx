@@ -7,8 +7,6 @@ import {CARD_TITLE_HEIGHT} from "./LineageCard";
 import {CardDetails} from "./LineageCardColumn";
 
 interface EdgeCanvasProps {
-  // An array describing the shape of the column of cards, where each number represents a card, and
-  // its represents the number of rows in the card.
   cards: CardDetails[];
 
   // If true edges are drawn from right to left.
@@ -71,6 +69,7 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
       if (!element.next) {
         continue;
       }
+
       const {y1, y4} = lastNodePositions;
       edgeLines.push(
         <LineChart

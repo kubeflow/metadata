@@ -7,7 +7,6 @@ import {px} from './LineageCss';
 import {LineageCardType, LineageRow} from './LineageTypes';
 import {EdgeCanvas} from './EdgeCanvas';
 
-// Todo: Replace this with the actual interface / class used by the APIs
 export interface CardDetails {
   title: string;
   elements: LineageRow[];
