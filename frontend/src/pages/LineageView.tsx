@@ -15,6 +15,7 @@
  */
 // tslint:disable: object-literal-sort-keys
 
+import groupBy from 'lodash.groupby';
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
@@ -39,7 +40,6 @@ import {
 } from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
 import {getArtifactTypes} from '../components/LineageApi';
 import {getTypeName} from '../components/LineageUtils';
-import * as _ from 'lodash';
 
 const isInputEvent = (event: Event) =>
   [Event.Type.INPUT.valueOf(), Event.Type.DECLARED_INPUT.valueOf()].includes(event.getType());
@@ -147,20 +147,19 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private buildArtifactCards(artifacts: Artifact[], isTarget: boolean = false): CardDetails[] {
-    const artifactsByTypeId = _.groupBy(artifacts, (artifact) => (artifact.getTypeId()));
+    const artifactsByTypeId = groupBy(artifacts, (artifact) => (artifact.getTypeId()));
     return Object.keys(artifactsByTypeId).map((typeId) => {
       const title = getTypeName(Number(typeId), this.artifactTypes);
       const artifacts = artifactsByTypeId[typeId];
-      return ({
-          title,
-          elements: artifacts.map((artifact) => ({
-              resource: artifact,
-              prev: !isTarget || this.state.inputExecutions.length > 0,
-              next: !isTarget || this.state.outputExecutions.length > 0
-            })
-          )
-        }
-      );
+      return {
+        title,
+        elements: artifacts.map((artifact) => ({
+            resource: artifact,
+            prev: !isTarget || this.state.inputExecutions.length > 0,
+            next: !isTarget || this.state.outputExecutions.length > 0
+          })
+        )
+      };
     });
   }
 
