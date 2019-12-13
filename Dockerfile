@@ -23,8 +23,5 @@ RUN bazel build -c opt --define=grpc_no_ares=true //... ${EXTRA_BAZEL_ARGS}
 
 RUN cp bazel-bin/server/${OUTPUT_DIR}/server server/server
 
-# Copy Licenses
-RUN wget https://github.com/grpc-ecosystem/grpc-gateway/blob/master/LICENSE.txt -O GRPC-GATEWAY-LICENSE.txt
-
 CMD ["./server/server"]
 
