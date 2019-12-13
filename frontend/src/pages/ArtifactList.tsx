@@ -25,7 +25,9 @@ import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '..
 import { RoutePage, RouteParams } from '../components/Router';
 import { Link } from 'react-router-dom';
 import {ArtifactType, Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
-import {GetArtifactsRequest, GetArtifactTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {GetArtifactsRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import {getArtifactTypes} from "../components/LineageApi";
+import {getTypeName} from "../components/LineageUtils";
 
 interface ArtifactListState {
   artifacts: Artifact[];
@@ -121,7 +123,8 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private async reload(request: ListRequest): Promise<string> {
     // TODO: Consider making an Api method for returning and caching types
     if (!this.artifactTypes || !this.artifactTypes.size) {
-      this.artifactTypes = await this.getArtifactTypes();
+      this.artifactTypes =
+        await getArtifactTypes(this.api.metadataStoreService, this.showPageError.bind(this));
     }
     if (!this.state.artifacts!.length) {
       const artifacts = await this.getArtifacts();
@@ -132,24 +135,6 @@ class ArtifactList extends Page<{}, ArtifactListState> {
       rows: this.getRowsFromArtifacts(request),
     });
     return '';
-  }
-
-  private async getArtifactTypes(): Promise<Map<number, ArtifactType>> {
-    const response =
-        await this.api.metadataStoreService.getArtifactTypes(new GetArtifactTypesRequest());
-
-    if (!response) {
-      this.showPageError('Unable to retrieve Artifact Types, some features may not work.');
-      return new Map();
-    }
-
-    const artifactTypesMap = new Map<number, ArtifactType>();
-
-    (response!.getArtifactTypesList() || []).forEach((artifactType) => {
-      artifactTypesMap.set(artifactType.getId()!, artifactType);
-    });
-
-    return artifactTypesMap;
   }
 
   private async getArtifacts(): Promise<Artifact[]> {
@@ -172,9 +157,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
   private getRowsFromArtifacts(request: ListRequest): Row[] {
     const collapsedAndExpandedRows = groupRows(this.state.artifacts
       .map((a) => { // Flattens
-        const typeId = a.getTypeId();
-        const type = this.artifactTypes && this.artifactTypes.get(typeId!) ?
-          this.artifactTypes.get(typeId!)!.getName() : typeId;
+        const type = getTypeName(a.getTypeId(), this.artifactTypes);
         return {
           id: `${type}:${a.getId()}`, // Join with colon so we can build the link
           otherFields: [

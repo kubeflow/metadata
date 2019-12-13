@@ -7,7 +7,6 @@ import {px} from './LineageCss';
 import {LineageCardType, LineageRow} from './LineageTypes';
 import {EdgeCanvas} from './EdgeCanvas';
 
-// Todo: Replace this with the actual interface / class used by the APIs
 export interface CardDetails {
   title: string;
   elements: LineageRow[];
@@ -20,6 +19,7 @@ export interface LineageCardColumnProps {
   cardWidth: number;
   edgeWidth: number;
   reverseBindings?: boolean;
+  skipEdgeCanvas?: boolean;
   setLineageViewTarget?(artifact: Artifact): void
 }
 
@@ -82,16 +82,18 @@ export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
     />;
   }
   private drawColumnContent(): JSX.Element {
-    const {type, cards, cardWidth, edgeWidth} = this.props;
-    const cardSkeleton = cards.map(c => c.elements.length);
+    const {cards, cardWidth, edgeWidth, skipEdgeCanvas} = this.props;
 
     return <React.Fragment>
-      <EdgeCanvas
-        type={type}
-        cardArray={cardSkeleton}
-        cardWidth={cardWidth}
-        edgeWidth={edgeWidth}
-        reverseEdges={!!this.props.reverseBindings} />
+      {
+        skipEdgeCanvas ? null :
+          <EdgeCanvas
+            cards={cards}
+            cardWidth={cardWidth}
+            edgeWidth={edgeWidth}
+            reverseEdges={!!this.props.reverseBindings}
+          />
+      }
       {cards.map(this.jsxFromCardDetails.bind(this))}
     </React.Fragment>;
   }

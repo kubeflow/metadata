@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import debounce from 'lodash.debounce';
 import * as React from 'react';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import Checkbox, {CheckboxProps} from '@material-ui/core/Checkbox';
@@ -34,7 +35,6 @@ import {ListRequest} from '../lib/Api';
 import {classes, stylesheet} from 'typestyle';
 import {fonts, fontsize, dimension, commonCss, color, padding, zIndex} from '../Css';
 import {logger} from '../lib/Utils';
-import {debounce} from 'lodash';
 import {InputAdornment} from '@material-ui/core';
 
 export enum ExpandState {
