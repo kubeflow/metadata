@@ -40,9 +40,9 @@ echo "PROJECT: ${GCP_PROJECT}"
 
 apt-get update
 apt-get -y install software-properties-common python-software-properties
-add-apt-repository ppa:deadsnakes/ppa
+add-apt-repository -y ppa:fkrull/deadsnakes
 apt-get update
-apt-get -y install python3.6
+apt-get -y install python3.7
 
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
