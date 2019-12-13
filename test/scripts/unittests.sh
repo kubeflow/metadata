@@ -20,10 +20,25 @@
 set -o errexit
 set -o nounset
 set -o pipefail
+set -o xtrace
 
 export PATH="$PATH:$HOME/bin"
 
-make swagger-py-client
-
 bazel build -c opt --define=grpc_no_ares=true //...
 bazel test -c opt --define=grpc_no_ares=true //...
+
+# Check licenses
+rm -f /tmp/generated_license.txt /tmp/generated_dep.txt
+
+go list -m all | cut -d ' ' -f 1 > /tmp/generated_dep.txt
+
+if ! diff /tmp/generated_dep.txt third_party_licenses/dep.txt; then
+    echo "Please follow third_party_licenses/README.md to update the license file for changed dependencies."
+    exit 1
+fi
+
+(cd third_party_licenses && python3 concatenate_license.py --output=/tmp/generated_license.txt)
+if ! diff /tmp/generated_license.txt third_party/library/license.txt; then
+    echo "Please follow third_party_licenses/README.md to regenerate third_party/library/license.txt."
+    exit 1
+fi
