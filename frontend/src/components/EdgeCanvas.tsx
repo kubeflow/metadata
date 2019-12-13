@@ -64,10 +64,9 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
 
   const edgeLines: JSX.Element[] = [];
   cards.forEach((card, i) => {
-    for (let j = 0; j < card.elements.length; j++) {
-      const element = card.elements[j];
+    card.elements.forEach((element, j) => {
       if (!element.next) {
-        continue;
+        return;
       }
 
       const {y1, y4} = lastNodePositions;
@@ -96,7 +95,7 @@ export const EdgeCanvas: React.FC<EdgeCanvasProps> = (props) => {
       );
       viewHeight += cardBodyHeight;
       lastNodePositions[lastNode] += cardBodyHeight;
-    }
+    });
     viewHeight += cardOffset;
     lastNodePositions[lastNode] += cardOffset;
   });
