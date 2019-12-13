@@ -148,20 +148,6 @@ virtualenv .testing-env -p /usr/bin/python3.6
 source .testing-env/bin/activate
 python3 -V
 bash tests/run_tests.sh
-
-# Test Notebook
-pip3 install papermill
-pip3 install pandas
-papermill -p METADATA_STORE_HOST "127.0.0.1" -p METADATA_STORE_PORT 8081 sample/demo.ipynb sample/demo_output.json
-# Check note book success
-NUM_EXEC=$(grep "cell_type" sample/demo_output.json | wc -l)
-NUM_SUCCESS=$(grep "\"status\": \"completed\"" sample/demo_output.json | wc -l)
-if [ $((NUM_SUCCESS)) -ne $((NUM_EXEC)) ]
-then
-    cat sample/demo_output.json
-    printf "Failed to execute demo.ipynb: ${NUM_SUCCESS} out of ${NUM_EXEC} cells succeeded.\n"
-    exit 1
-fi
 cd "${SRC_DIR}"
 
 # Test resource watcher
