@@ -6,7 +6,10 @@ import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import CustomTable, {ExpandState} from '../components/CustomTable';
-import {GetArtifactsResponse, GetArtifactTypesResponse} from "../generated/src/apis/metadata/metadata_store_service_pb";
+import {
+  GetArtifactsResponse,
+  GetArtifactTypesResponse
+} from "../generated/src/apis/metadata/metadata_store_service_pb";
 import {Artifact, ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
 import {stringValue} from '../TestUtils';
 
@@ -15,8 +18,7 @@ describe('ArtifactList', () => {
   const updateBannerSpy = jest.fn();
   const updateToolbarSpy = jest.fn();
   const historyPushSpy = jest.fn();
-  const mockGetArtifactTypes =
-      jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
+  const mockGetArtifactTypes = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifactTypes');
   const mockGetArtifacts = jest.spyOn(Api.getInstance().metadataStoreService, 'getArtifacts');
 
   const fakeGetArtifactTypesResponse = new GetArtifactTypesResponse();

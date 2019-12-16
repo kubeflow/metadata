@@ -5,14 +5,17 @@ import {CSSProperties} from 'typestyle/lib/types';
 import {LineageCardRow} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
 import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
-import {px} from './LineageCss';
+import {CARD_SPACER_HEIGHT, px} from './LineageCss';
 
 const CARD_RADIUS = 6;
+const CARD_TITLE_BASE_HEIGHT = 40;
+const CARD_TITLE_BORDER_BOTTOM_HEIGHT = 1;
+export const CARD_TITLE_HEIGHT = CARD_TITLE_BASE_HEIGHT + CARD_TITLE_BORDER_BOTTOM_HEIGHT;
 
 const cardTitleBase: CSSProperties = {
   borderTopLeftRadius: '4px',
   borderTopRightRadius: '4px',
-  height: '40px',
+  height: px(CARD_TITLE_BASE_HEIGHT),
 };
 
 interface LineageCardProps {
@@ -32,7 +35,7 @@ export class LineageCard extends React.Component<LineageCardProps> {
 
     const css = stylesheet({
       addSpacer: {
-        marginTop: '24px',
+        marginTop: px(CARD_SPACER_HEIGHT),
       },
       cardContainer: {
         background: 'white',
@@ -54,7 +57,7 @@ export class LineageCard extends React.Component<LineageCardProps> {
       },
       cardTitle: {
         ...cardTitleBase,
-        borderBottom: `1px solid ${grey[200]}`,
+        borderBottom: `${px(CARD_TITLE_BORDER_BOTTOM_HEIGHT)} solid ${grey[200]}`,
       },
       execution: {
         borderRadius: px(CARD_RADIUS),
@@ -63,7 +66,7 @@ export class LineageCard extends React.Component<LineageCardProps> {
       },
       executionCardTitle: {
         ...cardTitleBase,
-        borderBottom: '1px solid transparent',
+        borderBottom: `${px(CARD_TITLE_BORDER_BOTTOM_HEIGHT)} solid transparent`,
       },
       target: {
         border: `2px solid ${blue[500]}`,
