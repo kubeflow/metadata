@@ -177,11 +177,8 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private async loadData(targetId: number): Promise<string> {
-    const getEventsByArtifactIDsRequest = new GetEventsByArtifactIDsRequest();
-    getEventsByArtifactIDsRequest.addArtifactIds(targetId);
-
-    const [getEventsByArtifactIDsResponse, artifactTypes] = await Promise.all([
-      this.metadataStoreService.getEventsByArtifactIDs(getEventsByArtifactIDsRequest),
+    const [targetArtifactEvents, artifactTypes] = await Promise.all([
+      this.getArtifactEvents([targetId]),
       getArtifactTypes(this.metadataStoreService)
     ]);
 
@@ -190,7 +187,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const outputExecutionIds: number[] = [];
     const inputExecutionIds: number[] = [];
 
-    for (const event of getEventsByArtifactIDsResponse.getEventsList()) {
+    for (const event of targetArtifactEvents) {
       const executionId = event.getExecutionId();
 
       if (isOutputEvent(event)) {
@@ -209,33 +206,33 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       this.getExecutions(inputExecutionIds),
     ]);
 
-    // Build the list of input execution events.
-    const getInputExecutionEvents = new GetEventsByExecutionIDsRequest();
-    getInputExecutionEvents.setExecutionIdsList(inputExecutionIds);
-    const getInputExecutionEventsResponse =
-      await this.metadataStoreService.getEventsByExecutionIDs(getInputExecutionEvents);
+    const [inputExecutionEvents, outputExecutionEvents] = await Promise.all([
+      this.getExecutionEvents(inputExecutionIds), this.getExecutionEvents(outputExecutionIds)
+    ]);
 
     // Build the list of input artifacts for the input execution
-    const inputExecutionInputArtifactIds =
-      getInputExecutionEventsResponse
-        .getEventsList()
-        .filter(isInputEvent)
-        .map((event) => event.getArtifactId());
-    const inputArtifacts = await this.getArtifacts(inputExecutionInputArtifactIds);
+    const inputExecutionInputArtifactIds: number[] = [];
+    inputExecutionEvents.forEach((event) => {
+      if (!isInputEvent(event)) {
+        return;
+      }
 
-    // Build the list of output execution artifacts.
-    const getOutputExecutionEventsRequest = new GetEventsByExecutionIDsRequest();
-    getOutputExecutionEventsRequest.setExecutionIdsList(outputExecutionIds);
-    const getOutputExecutionEventsResponse =
-      await this.metadataStoreService.getEventsByExecutionIDs(getOutputExecutionEventsRequest);
+      inputExecutionInputArtifactIds.push(event.getArtifactId());
+    });
 
-    // Build the list of output artifacts for the output execution
-    const outputExecutionOutputArtifactIds =
-      getOutputExecutionEventsResponse
-        .getEventsList()
-        .filter(isOutputEvent)
-        .map((event) => event.getArtifactId());
-    const outputArtifacts = await this.getArtifacts(outputExecutionOutputArtifactIds);
+    const outputExecutionOutputArtifactIds: number[] = [];
+    outputExecutionEvents.forEach((event) => {
+      if (!isOutputEvent(event)) {
+        return;
+      }
+
+      outputExecutionOutputArtifactIds.push(event.getArtifactId());
+    });
+
+    const [inputArtifacts, outputArtifacts] = await Promise.all([
+      this.getArtifacts(inputExecutionInputArtifactIds),
+      this.getArtifacts(outputExecutionOutputArtifactIds)
+    ]);
 
     this.setState({
       inputArtifacts, inputExecutions, outputArtifacts, outputExecutions,
@@ -272,6 +269,14 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     return response.getExecutionsList();
   }
 
+  private async getExecutionEvents(executionIds: number[]): Promise<Event[]> {
+    const request = new GetEventsByExecutionIDsRequest();
+    request.setExecutionIdsList(executionIds);
+
+    const response = await this.metadataStoreService.getEventsByExecutionIDs(request);
+    return response.getEventsList();
+  }
+
   private async getArtifacts(artifactIds: number[]): Promise<Artifact[]> {
     const request = new GetArtifactsByIDRequest();
     request.setArtifactIdsList(artifactIds);
@@ -279,6 +284,15 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     const response = await this.metadataStoreService.getArtifactsByID(request);
     return response.getArtifactsList();
   }
+
+  private async getArtifactEvents(artifactIds: number[]): Promise<Event[]> {
+    const request = new GetEventsByArtifactIDsRequest();
+    request.setArtifactIdsList(artifactIds);
+
+    const response = await this.metadataStoreService.getEventsByArtifactIDs(request);
+    return response.getEventsList();
+  }
 }
 
 export default LineageView;
+
