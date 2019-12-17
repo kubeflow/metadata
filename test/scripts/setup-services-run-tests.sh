@@ -71,14 +71,10 @@ echo "VERSION ${VERSION}"
 
 cd "${MANIFESTS_DIR}"
 
-sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
-sed -i -e "s@--mysql_service_host=metadata-db.kubeflow@--mysql_service_host=metadata-db.${NAMESPACE}@" metadata/base/metadata-deployment.yaml
+sed -i -e "s@newName: gcr.io\/kubeflow-images-public\/metadata@newName: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata@" metadata/base/kustomization.yaml
+sed -i -e "s@newTag: v0\.1\.1.*@newTag: latest@" metadata/base/kustomization.yaml
 
-cat metadata/base/metadata-deployment.yaml
-
-cd metadata/base
-
-kustomize build . | kubectl apply -n $NAMESPACE -f -
+kustomize build metadata/overlays/db | kubectl apply -n $NAMESPACE -f -
 
 TIMEOUT=120
 PODNUM=$(kubectl get deployment metadata-deployment -n $NAMESPACE -o jsonpath={.spec.replicas})
