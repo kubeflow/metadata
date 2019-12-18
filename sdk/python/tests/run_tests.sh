@@ -19,12 +19,10 @@ set -o pipefail
 set -o xtrace
 
 cd $(dirname $0)/..
-python3 -m pip install -U pip
-python3 -m pip install pytest
+python3 -m pip install -U pip setuptools pytest papermill pandas jupyterlab
 # install local kubeflow.metadata package
 python3 -m pip install -e .
 python3 -m pytest ./tests
 # Run integration tests multiple times should get the same result.
 echo "Run tests the second time:"
 python3 -m pytest ./tests
-

@@ -38,11 +38,11 @@ echo "CLUSTER_NAME: ${CLUSTER_NAME}"
 echo "ZONE: ${GCP_ZONE}"
 echo "PROJECT: ${GCP_PROJECT}"
 
-apt-get update
-apt-get -y install software-properties-common python-software-properties
-add-apt-repository ppa:deadsnakes/ppa
-apt-get update
-apt-get -y install python3.6
+apt-get update && \
+apt-get -y install software-properties-common python-software-properties && \
+add-apt-repository -y ppa:deadsnakes/ppa && \
+apt-get update && \
+apt-get -y install python3.7
 
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
@@ -71,14 +71,10 @@ echo "VERSION ${VERSION}"
 
 cd "${MANIFESTS_DIR}"
 
-sed -i -e "s@image: gcr.io\/kubeflow-images-public\/metadata:.*@image: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata:${VERSION}@" metadata/base/metadata-deployment.yaml
-sed -i -e "s@--mysql_service_host=metadata-db.kubeflow@--mysql_service_host=metadata-db.${NAMESPACE}@" metadata/base/metadata-deployment.yaml
+sed -i -e "s@newName: gcr.io\/kubeflow-images-public\/metadata@newName: ${GCP_REGISTRY}\/${REPO_NAME}\/metadata@" metadata/base/kustomization.yaml
+sed -i -e "s@newTag: v0\.1\.1.*@newTag: latest@" metadata/base/kustomization.yaml
 
-cat metadata/base/metadata-deployment.yaml
-
-cd metadata/base
-
-kustomize build . | kubectl apply -n $NAMESPACE -f -
+kustomize build metadata/overlays/db | kubectl apply -n $NAMESPACE -f -
 
 TIMEOUT=120
 PODNUM=$(kubectl get deployment metadata-deployment -n $NAMESPACE -o jsonpath={.spec.replicas})
@@ -144,21 +140,10 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 # Run Python tests
 cd "${SRC_DIR}/sdk/python"
 rm -rf .testing-env
-virtualenv .testing-env -p /usr/bin/python3.6
+virtualenv .testing-env -p /usr/bin/python3.7
 source .testing-env/bin/activate
 python3 -V
 bash tests/run_tests.sh
-
-# TODO(zhenghuiwang): Test demo notebook output with papermill instead of nbconvert.
-pip3 install jupyterlab
-pip3 install nbconvert
-pip3 install pandas
-# Use local server and package.
-sed -i -e "s@metadata-grpc-service.kubeflow@127.0.0.1@" sample/demo.ipynb && \
-sed -i -e "s@grpc_port=8080@grpc_port=8081@" sample/demo.ipynb && \
-sed -i -e "s@pip install kubeflow-metadata --user@pip install -e ${SRC_DIR}/sdk/python@" sample/demo.ipynb && \
-  python3 -m nbconvert --to notebook --execute sample/demo.ipynb
-
 cd "${SRC_DIR}"
 
 # Test resource watcher
