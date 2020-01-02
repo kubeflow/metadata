@@ -1,7 +1,7 @@
+import {Artifact} from 'frontend';
 import * as React from 'react';
 import {ResourceInfo} from './ResourceInfo';
 import {shallow, ShallowWrapper} from 'enzyme';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import {ArtifactCustomProperties, ArtifactProperties} from '../lib/Api';
 import {stringValue, testModel} from '../TestUtils';
 

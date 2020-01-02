@@ -26,18 +26,14 @@ import {
   Artifact,
   ArtifactType,
   Event,
-  Execution
-} from '../generated/src/apis/metadata/metadata_store_pb';
-import {RefObject} from 'react';
-import {
+  Execution,
   GetArtifactsByIDRequest,
   GetEventsByArtifactIDsRequest,
   GetEventsByExecutionIDsRequest,
-  GetExecutionsByIDRequest
-} from '../generated/src/apis/metadata/metadata_store_service_pb';
-import {
+  GetExecutionsByIDRequest,
   MetadataStoreServicePromiseClient
-} from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
+} from 'frontend';
+import {RefObject} from 'react';
 import {getArtifactTypes} from '../components/LineageApi';
 import {getTypeName} from '../components/LineageUtils';
 

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {Execution, ExecutionType, GetExecutionsRequest, GetExecutionTypesRequest} from 'frontend';
 import * as React from 'react';
 import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
 import { Page } from './Page';
@@ -24,8 +25,6 @@ import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedR
 import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
 import { Link } from 'react-router-dom';
 import { RoutePage, RouteParams } from '../components/Router';
-import {Execution, ExecutionType} from '../generated/src/apis/metadata/metadata_store_pb';
-import {GetExecutionsRequest, GetExecutionTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 interface ExecutionListState {
   executions: Execution[];

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {Artifact, Execution, Value} from "frontend";
 import * as React from 'react';
 import isFunction from 'lodash.isfunction';
 import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
@@ -26,7 +27,6 @@ import {
   ListRequest
 } from './Api';
 import {padding} from '../Css';
-import {Artifact, Execution, Value} from "../generated/src/apis/metadata/metadata_store_pb";
 import {LineageResource} from "../components/LineageTypes";
 
 export const logger = {

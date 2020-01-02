@@ -1,10 +1,7 @@
 /**
  * This file provides common types used by the Lineage Explorer components
  */
-import {
-    Artifact,
-    Execution
-} from "../generated/src/apis/metadata/metadata_store_pb";
+import {Artifact, Execution} from "frontend";
 
 export type LineageCardType = 'artifact' | 'execution';
 export interface LineageRow {

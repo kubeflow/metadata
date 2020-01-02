@@ -1,3 +1,4 @@
+import {Artifact} from "frontend";
 import * as React from 'react';
 import {mount, ReactWrapper, shallow, ShallowWrapper} from 'enzyme';
 import {
@@ -6,7 +7,6 @@ import {
   LineageActionBarState
 } from "./LineageActionBar";
 import {buildTestModel, testModel} from "../TestUtils";
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 
 describe('LineageActionBar', () => {
   let tree: ShallowWrapper;

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {Artifact, Value} from 'frontend';
 import {
   logger,
   formatDateString,
@@ -25,7 +26,6 @@ import {
   groupRows,
 } from './Utils';
 import { Column, Row, ExpandState } from '../components/CustomTable';
-import {Artifact, Value} from '../generated/src/apis/metadata/metadata_store_pb';
 import {doubleValue, intValue, stringValue} from '../TestUtils';
 
 describe('Utils', () => {

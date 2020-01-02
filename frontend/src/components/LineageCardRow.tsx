@@ -1,8 +1,6 @@
+import {Artifact} from "frontend";
 import * as React from 'react';
 import './LineageCardRow.css';
-import {
-  Artifact,
-} from "../generated/src/apis/metadata/metadata_store_pb";
 import {LineageResource} from "./LineageTypes";
 import {
  getResourceDescription, getResourceName,

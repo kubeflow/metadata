@@ -1,3 +1,4 @@
+import {Artifact} from "frontend";
 import * as React from 'react';
 import grey from '@material-ui/core/colors/grey';
 import Button from "@material-ui/core/Button";
@@ -6,7 +7,6 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import {classes, stylesheet} from "typestyle";
 import {color, commonCss, fonts, padding} from "../Css";
 import {CSSProperties} from "typestyle/lib/types";
-import {Artifact} from "../generated/src/apis/metadata/metadata_store_pb";
 import {getResourceProperty} from "../lib/Utils";
 import {ArtifactProperties} from "../lib/Api";
 

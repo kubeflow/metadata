@@ -1,5 +1,5 @@
+import {MetadataStoreServicePromiseClient} from 'frontend';
 import {MetadataServiceApi} from '../apis/service';
-import {MetadataStoreServicePromiseClient} from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
 
 /** Known Artifact properties */
 export enum ArtifactProperties {

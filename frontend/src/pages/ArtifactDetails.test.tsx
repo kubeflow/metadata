@@ -1,3 +1,10 @@
+import {
+  GetArtifactsByIDResponse,
+  GetEventsByArtifactIDsResponse,
+  GetEventsByExecutionIDsResponse,
+  GetExecutionsByIDResponse,
+  GetExecutionsResponse
+} from 'frontend';
 import * as React from 'react';
 import ArtifactDetails, {ArtifactDetailsTab} from './ArtifactDetails';
 import {PageProps} from './Page';
@@ -6,13 +13,6 @@ import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
 import {testModel} from '../TestUtils';
-import {
-  GetArtifactsByIDResponse,
-  GetEventsByArtifactIDsResponse,
-  GetEventsByExecutionIDsResponse,
-  GetExecutionsByIDResponse,
-  GetExecutionsResponse
-} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;

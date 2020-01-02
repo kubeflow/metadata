@@ -1,6 +1,4 @@
-import {ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
-import {GetArtifactTypesRequest} from "../generated/src/apis/metadata/metadata_store_service_pb";
-import {MetadataStoreServicePromiseClient} from "../generated/src/apis/metadata/metadata_store_service_grpc_web_pb";
+import {ArtifactType, GetArtifactTypesRequest, MetadataStoreServicePromiseClient} from "frontend";
 
 export type ArtifactTypeMap = Map<number, ArtifactType>;
 

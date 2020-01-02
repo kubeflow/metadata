@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import {Execution, GetExecutionsByIDRequest} from 'frontend';
 import * as React from 'react';
 import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
@@ -24,8 +25,6 @@ import { commonCss, padding } from '../Css';
 import { CircularProgress } from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
 import { ResourceInfo } from '../components/ResourceInfo';
-import {Execution} from '../generated/src/apis/metadata/metadata_store_pb';
-import {GetExecutionsByIDRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
 
 interface ExecutionDetailsState {
   execution?: Execution;

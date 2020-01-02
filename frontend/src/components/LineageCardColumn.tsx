@@ -1,7 +1,7 @@
+import {Artifact} from 'frontend';
 import grey from '@material-ui/core/colors/grey';
 import React from 'react';
 import {classes, stylesheet} from 'typestyle';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import {LineageCard} from './LineageCard';
 import {px} from './LineageCss';
 import {LineageCardType, LineageRow} from './LineageTypes';

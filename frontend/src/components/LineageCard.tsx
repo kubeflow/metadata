@@ -1,10 +1,10 @@
+import {Artifact} from 'frontend';
 import {blue, grey} from '@material-ui/core/colors';
 import * as React from 'react';
 import {classes, stylesheet} from 'typestyle';
 import {CSSProperties} from 'typestyle/lib/types';
 import {LineageCardRow} from './LineageCardRow';
 import {LineageRow, LineageCardType} from './LineageTypes';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 import {CARD_SPACER_HEIGHT, px} from './LineageCss';
 
 const CARD_RADIUS = 6;
