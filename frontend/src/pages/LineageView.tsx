@@ -47,10 +47,10 @@ const isOutputEvent = (event: Event) =>
   [Event.Type.OUTPUT.valueOf(), Event.Type.DECLARED_OUTPUT.valueOf()].includes(event.getType());
 
 /** Default size used when cardWidth prop is unset. */
-const DEFAULT_CARD_WIDTH = 260;
+const DEFAULT_CARD_WIDTH = 210;
 
 /** Default size used when edgeWidth prop is unset. */
-const DEFAULT_EDGE_WIDTH = 120;
+const DEFAULT_EDGE_WIDTH = 80;
 
 export interface LineageViewProps {
   target: Artifact;
