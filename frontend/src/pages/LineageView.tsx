@@ -26,7 +26,8 @@ import {
   Artifact,
   ArtifactType,
   Event,
-  Execution
+  Execution,
+  ExecutionType,
 } from '../generated/src/apis/metadata/metadata_store_pb';
 import {RefObject} from 'react';
 import {
@@ -38,7 +39,7 @@ import {
 import {
   MetadataStoreServicePromiseClient
 } from '../generated/src/apis/metadata/metadata_store_service_grpc_web_pb';
-import {getArtifactTypes} from '../components/LineageApi';
+import {getArtifactTypes, getExecutionTypes} from '../components/LineageApi';
 import {getTypeName} from '../components/LineageUtils';
 
 const isInputEvent = (event: Event) =>
@@ -62,6 +63,7 @@ interface LineageViewState {
   columnNames: string[];
   columnTypes: string[];
   artifactTypes?: Map<number, ArtifactType>;
+  executionTypes?: Map<number, ExecutionType>;
   inputArtifacts: Artifact[];
   inputExecutions: Execution[];
   target: Artifact;
@@ -73,6 +75,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   private readonly actionBarRef: React.Ref<LineageActionBar>;
   private readonly metadataStoreService: MetadataStoreServicePromiseClient;
   private artifactTypes: Map<number, ArtifactType>;
+  private executionTypes: Map<number, ExecutionType>;
 
   constructor(props: any) {
     super(props);
@@ -130,7 +133,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
             cards={this.buildExecutionCards(this.state.outputExecutions)}
             cardWidth={cardWidth}
             edgeWidth={edgeWidth}
-            skipEdgeCanvas={true /* Edges are drawn by reverse EdgeCanvas on the next column. */}
+            reverseBindings={true}
             title={`${columnNames[3]}`} />
           <LineageCardColumn
             type='artifact'
@@ -156,7 +159,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
         elements: artifacts.map((artifact) => ({
             resource: artifact,
             prev: !isTarget || this.state.inputExecutions.length > 0,
-            next: !isTarget || this.state.outputExecutions.length > 0
+            next: !isTarget || this.state.outputExecutions.length > 0,
           })
         )
       };
@@ -164,25 +167,40 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
   }
 
   private buildExecutionCards(executions: Execution[]): CardDetails[] {
-    return executions.map((execution) => ({
-      title: 'Execution',
-      elements: [
-        {
-          resource: execution,
-          prev: true,
-          next: true,
-        }
-      ]
-    }))
+    const executionsByTypeId = groupBy(executions, (execution) => (execution.getTypeId()));
+    return Object.keys(executionsByTypeId).map((typeId) => {
+      const title = getTypeName(Number(typeId), this.executionTypes);
+      const executions = executionsByTypeId[typeId];
+      return {
+        title,
+        elements: executions.map((execution) => ({
+            resource: execution,
+            prev: true,
+            next: true,
+          })
+        )
+      };
+    });
+    // return executions.map((execution) => ({
+    //   title: 'Execution',
+    //   elements: [
+    //     {
+    //       resource: execution,
+    //       prev: true,
+    //       next: true,
+    //     }
+    //   ]
+    // }))
   }
 
   private async loadData(targetId: number): Promise<string> {
-    const [targetArtifactEvents, artifactTypes] = await Promise.all([
+    const [targetArtifactEvents, executionTypes, artifactTypes] = await Promise.all([
       this.getArtifactEvents([targetId]),
-      getArtifactTypes(this.metadataStoreService)
+      getExecutionTypes(this.metadataStoreService),
+      getArtifactTypes(this.metadataStoreService),
     ]);
 
-    this.artifactTypes = artifactTypes;
+    Object.assign(this, {artifactTypes, executionTypes});
 
     const outputExecutionIds: number[] = [];
     const inputExecutionIds: number[] = [];
@@ -193,11 +211,11 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
       if (isOutputEvent(event)) {
         // The input executions column will show executions where the target
         // was an output of the execution.
-        inputExecutionIds.push(executionId)
+        inputExecutionIds.push(executionId);
       } else if (isInputEvent(event)) {
         // The output executions column will show executions where the target
         // was an input for the execution.
-        outputExecutionIds.push(executionId)
+        outputExecutionIds.push(executionId);
       }
     }
 
@@ -237,7 +255,7 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
     this.setState({
       inputArtifacts, inputExecutions, outputArtifacts, outputExecutions,
     });
-    return ''
+    return '';
   }
 
   // Updates the view and action bar when the target is set from a lineage card.

@@ -20,7 +20,7 @@ export interface LineageCardColumnProps {
   edgeWidth: number;
   reverseBindings?: boolean;
   skipEdgeCanvas?: boolean;
-  setLineageViewTarget?(artifact: Artifact): void
+  setLineageViewTarget?(artifact: Artifact): void;
 }
 
 export class LineageCardColumn extends React.Component<LineageCardColumnProps> {
