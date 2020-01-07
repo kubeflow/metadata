@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-import {Artifact, GetArtifactsByIDRequest} from 'frontend';
+import {
+  Api,
+  Artifact,
+  ArtifactProperties,
+  GetArtifactsByIDRequest,
+  LineageView,
+} from 'frontend';
 import * as React from 'react';
 import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
-import {Api, ArtifactProperties} from '../lib/Api';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {CircularProgress} from '@material-ui/core';
 import {titleCase, getResourceProperty} from '../lib/Utils';
 import {ResourceInfo} from "../components/ResourceInfo";
 import MD2Tabs from '../atoms/MD2Tabs';
-import LineageView from './LineageView';
 
 export enum ArtifactDetailsTab {
   OVERVIEW = 0,

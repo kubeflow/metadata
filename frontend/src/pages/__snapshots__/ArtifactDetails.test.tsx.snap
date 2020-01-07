@@ -1505,7 +1505,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
+                <Component
                   cardWidth={260}
                   cards={
                     Array [
@@ -2254,7 +2254,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
                   cardWidth={260}
@@ -2923,7 +2923,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
+                <Component
                   cardWidth={260}
                   cards={Array []}
                   edgeWidth={120}
@@ -2932,7 +2932,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   <div
                     className="edgeCanvas"
                   />
-                </EdgeCanvas>
+                </Component>
               </div>
             </div>
           </LineageCardColumn>
@@ -3253,7 +3253,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
+                <Component
                   cardWidth={260}
                   cards={
                     Array [
@@ -3559,7 +3559,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   <div
                     className="edgeCanvas"
                   />
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
                   cardWidth={260}
@@ -4534,7 +4534,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
+                <Component
                   cardWidth={260}
                   cards={
                     Array [
@@ -5283,7 +5283,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
                   cardWidth={260}

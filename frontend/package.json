@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
+    "frontend": "kwasi/frontend#27f8452",
     "grpc-web": "^1.0.7",
     "lodash.debounce": "^4.0.8",
     "lodash.isfunction": "^3.0.9",
