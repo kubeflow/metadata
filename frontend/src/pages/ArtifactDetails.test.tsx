@@ -12,7 +12,8 @@ import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
 import * as TestUtils from '../TestUtils'
 import {RouteParams} from '../components/Router';
-import {testModel} from '../TestUtils';
+
+const {testModel} = TestUtils;
 
 describe('ArtifactDetails', () => {
   let tree: ShallowWrapper | ReactWrapper;
