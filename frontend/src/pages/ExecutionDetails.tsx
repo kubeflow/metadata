@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-import {Execution, GetExecutionsByIDRequest} from 'frontend';
+import {Api, Execution, ExecutionProperties, GetExecutionsByIDRequest} from 'frontend';
 import * as React from 'react';
 import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';
 import { RoutePage, RouteParams } from '../components/Router';
-import { Api, ExecutionProperties } from '../lib/Api';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
 import { CircularProgress } from '@material-ui/core';

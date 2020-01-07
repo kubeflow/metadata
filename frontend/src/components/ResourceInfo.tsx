@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Artifact, Execution} from 'frontend';
+import {Artifact, Execution, getMetadataValue} from 'frontend';
 import * as React from 'react';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
-import {getMetadataValue} from '../lib/Utils';
 
 export const css = stylesheet({
   resourceInfo: {

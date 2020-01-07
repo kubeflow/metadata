@@ -31,7 +31,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TextField, {TextFieldProps} from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import WarningIcon from '@material-ui/icons/WarningRounded';
-import {ListRequest} from '../lib/Api';
+import {ListRequest} from '../lib/Common';
 import {classes, stylesheet} from 'typestyle';
 import {fonts, fontsize, dimension, commonCss, color, padding, zIndex} from '../Css';
 import {logger} from '../lib/Utils';

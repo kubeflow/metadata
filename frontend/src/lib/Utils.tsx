@@ -25,7 +25,7 @@ import {
   ExecutionCustomProperties,
   ExecutionProperties,
   ListRequest
-} from './Api';
+} from './Common';
 import {padding} from '../Css';
 
 export const logger = {
@@ -201,6 +201,8 @@ export function getExpandedRow(expandedRows: Map<number, Row[]>, columns: Column
     );
   }
 }
+
+// TODO: Move to LineageUtils
 
 function getArtifactName(artifact: Artifact): string {
   return String(getResourceProperty(artifact, ArtifactProperties.NAME))

@@ -1,8 +1,7 @@
-import {Artifact} from 'frontend';
+import {Artifact, ArtifactCustomProperties, ArtifactProperties} from 'frontend';
 import * as React from 'react';
 import {ResourceInfo} from './ResourceInfo';
 import {shallow, ShallowWrapper} from 'enzyme';
-import {ArtifactCustomProperties, ArtifactProperties} from '../lib/Api';
 import {stringValue, testModel} from '../TestUtils';
 
 describe('ResourceInfo', () => {
