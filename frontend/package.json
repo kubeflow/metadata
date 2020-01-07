@@ -5,10 +5,9 @@
   "dependencies": {
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
-    "frontend": "kwasi/frontend#3a83377",
+    "frontend": "kwasi/frontend#a9ad7ce",
     "lodash.debounce": "^4.0.8",
     "lodash.isfunction": "^3.0.9",
-    "portable-fetch": "^3.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^4.3.1",
@@ -36,9 +35,6 @@
     "typescript": "^3.4.5"
   },
   "scripts": {
-    "apis": "npm run apis:api && npm run apis:service",
-    "apis:api": "java -jar swagger-codegen-cli.jar generate -i ../api/api.swagger.json -l typescript-fetch -o ./src/apis/api -c ./swagger-config.json",
-    "apis:service": "java -jar swagger-codegen-cli.jar generate -i ../api/service.swagger.json -l typescript-fetch -o ./src/apis/service -c ./swagger-config.json",
     "build": "cross-env EXTEND_ESLINT=true react-scripts build",
     "docker": "node ./docker_build.js",
     "eject": "cross-env EXTEND_ESLINT=true react-scripts eject",
@@ -72,7 +68,6 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!src/__mocks__",
-      "!src/apis/**/*.{ts,tsx}",
       "!<rootDir>/node_modules/"
     ],
     "coverageReporters": [

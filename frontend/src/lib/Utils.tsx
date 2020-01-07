@@ -22,13 +22,13 @@ import {
   ExecutionCustomProperties,
   ExecutionProperties,
   LineageResource,
+  ListRequest,
   Value
 } from "frontend";
 import * as React from 'react';
 import isFunction from 'lodash.isfunction';
 import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
 import {classes} from 'typestyle';
-import {ListRequest} from './Common';
 import {padding} from '../Css';
 
 export const logger = {

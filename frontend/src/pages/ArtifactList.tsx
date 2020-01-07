@@ -14,7 +14,17 @@
  * limitations under the License.
  */
 
-import {Api, ArtifactType, ArtifactProperties, ArtifactCustomProperties, Artifact, GetArtifactsRequest, getArtifactTypes, getTypeName} from 'frontend';
+import {
+  Api,
+  ArtifactType,
+  ArtifactProperties,
+  ArtifactCustomProperties,
+  Artifact,
+  GetArtifactsRequest,
+  ListRequest,
+  getArtifactTypes,
+  getTypeName
+} from 'frontend';
 import * as React from 'react';
 import CustomTable, {Column, Row, ExpandState, CustomRendererProps} from '../components/CustomTable';
 import {Page} from './Page';
@@ -22,7 +32,6 @@ import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
 import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow, getResourceProperty} from '../lib/Utils';
-import {ListRequest} from '../lib/Common';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Link} from 'react-router-dom';
 

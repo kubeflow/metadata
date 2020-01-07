@@ -117,11 +117,6 @@ export const stringValue = (string: String) => {
   return value;
 };
 
-export const serviceError = {
-  code: 0,
-  message: '',
-};
-
 export const buildTestModel = () => {
   const model = new Artifact();
   model.setId(1);
