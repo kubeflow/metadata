@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Execution, ExecutionType, GetExecutionsRequest, GetExecutionTypesRequest} from 'frontend';
+import {Api, Execution, ExecutionCustomProperties, ExecutionProperties, ExecutionType, GetExecutionsRequest, GetExecutionTypesRequest} from 'frontend';
 import * as React from 'react';
 import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
 import { Page } from './Page';
@@ -22,7 +22,7 @@ import { ToolbarProps } from '../components/Toolbar';
 import { classes } from 'typestyle';
 import { commonCss, padding } from '../Css';
 import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
-import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Common';
+import {ListRequest} from '../lib/Common';
 import { Link } from 'react-router-dom';
 import { RoutePage, RouteParams } from '../components/Router';
 

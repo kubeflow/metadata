@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import {Artifact, Execution, LineageResource, Value} from "frontend";
+import {
+  Artifact,
+  ArtifactCustomProperties,
+  ArtifactProperties,
+  Execution,
+  ExecutionCustomProperties,
+  ExecutionProperties,
+  LineageResource,
+  Value
+} from "frontend";
 import * as React from 'react';
 import isFunction from 'lodash.isfunction';
 import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';
 import {classes} from 'typestyle';
-import {
-  ArtifactCustomProperties,
-  ArtifactProperties,
-  ExecutionCustomProperties,
-  ExecutionProperties,
-  ListRequest
-} from './Common';
+import {ListRequest} from './Common';
 import {padding} from '../Css';
 
 export const logger = {
