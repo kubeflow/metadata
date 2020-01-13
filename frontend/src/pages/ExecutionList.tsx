@@ -148,13 +148,13 @@ class ExecutionList extends Page<{}, ExecutionListState> {
       return new Map();
     }
 
-    const artifactTypesMap = new Map<number, ExecutionType>();
+    const executionTypesMap = new Map<number, ExecutionType>();
 
     (response!.getExecutionTypesList() || []).forEach((executionType) => {
-      artifactTypesMap.set(executionType.getId()!, executionType);
+      executionTypesMap.set(executionType.getId()!, executionType);
     });
 
-    return artifactTypesMap;
+    return executionTypesMap;
   }
 
   private async getExecutions(): Promise<Execution[]> {
@@ -184,7 +184,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
           otherFields: [
             getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
             || getResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
-            getResourceProperty(execution, ExecutionProperties.NAME),
+            getResourceProperty(execution, ExecutionProperties.COMPONENT_ID),
             getResourceProperty(execution, ExecutionProperties.STATE),
             execution.getId(),
             type,
