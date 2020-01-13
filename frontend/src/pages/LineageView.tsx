@@ -181,16 +181,6 @@ class LineageView extends React.Component<LineageViewProps, LineageViewState> {
         )
       };
     });
-    // return executions.map((execution) => ({
-    //   title: 'Execution',
-    //   elements: [
-    //     {
-    //       resource: execution,
-    //       prev: true,
-    //       next: true,
-    //     }
-    //   ]
-    // }))
   }
 
   private async loadData(targetId: number): Promise<string> {
