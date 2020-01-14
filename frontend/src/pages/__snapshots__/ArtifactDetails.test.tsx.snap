@@ -2864,6 +2864,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         }
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
@@ -4167,6 +4168,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           }
                         }
                         rightAffordance={false}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
@@ -5893,6 +5895,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         }
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
