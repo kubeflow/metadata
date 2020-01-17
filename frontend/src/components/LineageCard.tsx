@@ -19,7 +19,7 @@ const cardTitleBase: CSSProperties = {
 };
 
 interface LineageCardProps {
-  cardWidth: number,
+  cardWidth: number;
   title: string;
   type: LineageCardType;
   rows: LineageRow[];
