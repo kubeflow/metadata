@@ -998,32 +998,32 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   className="actionButton"
                   classes={
                     Object {
-                      "colorInherit": "MuiButton-colorInherit-144",
-                      "contained": "MuiButton-contained-134",
-                      "containedPrimary": "MuiButton-containedPrimary-135",
-                      "containedSecondary": "MuiButton-containedSecondary-136",
-                      "disabled": "MuiButton-disabled-143",
-                      "extendedFab": "MuiButton-extendedFab-141",
-                      "fab": "MuiButton-fab-140",
-                      "flat": "MuiButton-flat-128",
-                      "flatPrimary": "MuiButton-flatPrimary-129",
-                      "flatSecondary": "MuiButton-flatSecondary-130",
-                      "focusVisible": "MuiButton-focusVisible-142",
-                      "fullWidth": "MuiButton-fullWidth-148",
-                      "label": "MuiButton-label-124",
-                      "mini": "MuiButton-mini-145",
-                      "outlined": "MuiButton-outlined-131",
-                      "outlinedPrimary": "MuiButton-outlinedPrimary-132",
-                      "outlinedSecondary": "MuiButton-outlinedSecondary-133",
-                      "raised": "MuiButton-raised-137",
-                      "raisedPrimary": "MuiButton-raisedPrimary-138",
-                      "raisedSecondary": "MuiButton-raisedSecondary-139",
-                      "root": "MuiButton-root-123",
-                      "sizeLarge": "MuiButton-sizeLarge-147",
-                      "sizeSmall": "MuiButton-sizeSmall-146",
-                      "text": "MuiButton-text-125",
-                      "textPrimary": "MuiButton-textPrimary-126",
-                      "textSecondary": "MuiButton-textSecondary-127",
+                      "colorInherit": "MuiButton-colorInherit-180",
+                      "contained": "MuiButton-contained-170",
+                      "containedPrimary": "MuiButton-containedPrimary-171",
+                      "containedSecondary": "MuiButton-containedSecondary-172",
+                      "disabled": "MuiButton-disabled-179",
+                      "extendedFab": "MuiButton-extendedFab-177",
+                      "fab": "MuiButton-fab-176",
+                      "flat": "MuiButton-flat-164",
+                      "flatPrimary": "MuiButton-flatPrimary-165",
+                      "flatSecondary": "MuiButton-flatSecondary-166",
+                      "focusVisible": "MuiButton-focusVisible-178",
+                      "fullWidth": "MuiButton-fullWidth-184",
+                      "label": "MuiButton-label-160",
+                      "mini": "MuiButton-mini-181",
+                      "outlined": "MuiButton-outlined-167",
+                      "outlinedPrimary": "MuiButton-outlinedPrimary-168",
+                      "outlinedSecondary": "MuiButton-outlinedSecondary-169",
+                      "raised": "MuiButton-raised-173",
+                      "raisedPrimary": "MuiButton-raisedPrimary-174",
+                      "raisedSecondary": "MuiButton-raisedSecondary-175",
+                      "root": "MuiButton-root-159",
+                      "sizeLarge": "MuiButton-sizeLarge-183",
+                      "sizeSmall": "MuiButton-sizeSmall-182",
+                      "text": "MuiButton-text-161",
+                      "textPrimary": "MuiButton-textPrimary-162",
+                      "textSecondary": "MuiButton-textSecondary-163",
                     }
                   }
                   color="default"
@@ -1038,22 +1038,22 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                   variant="text"
                 >
                   <WithStyles(ButtonBase)
-                    className="MuiButton-root-123 MuiButton-text-125 MuiButton-flat-128 actionButton"
+                    className="MuiButton-root-159 MuiButton-text-161 MuiButton-flat-164 actionButton"
                     component="button"
                     disabled={false}
                     focusRipple={true}
-                    focusVisibleClassName="MuiButton-focusVisible-142"
+                    focusVisibleClassName="MuiButton-focusVisible-178"
                     onClick={[Function]}
                     type="button"
                   >
                     <ButtonBase
                       centerRipple={false}
-                      className="MuiButton-root-123 MuiButton-text-125 MuiButton-flat-128 actionButton"
+                      className="MuiButton-root-159 MuiButton-text-161 MuiButton-flat-164 actionButton"
                       classes={
                         Object {
-                          "disabled": "MuiButtonBase-disabled-150",
-                          "focusVisible": "MuiButtonBase-focusVisible-151",
-                          "root": "MuiButtonBase-root-149",
+                          "disabled": "MuiButtonBase-disabled-186",
+                          "focusVisible": "MuiButtonBase-focusVisible-187",
+                          "root": "MuiButtonBase-root-185",
                         }
                       }
                       component="button"
@@ -1061,13 +1061,13 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       disableTouchRipple={false}
                       disabled={false}
                       focusRipple={true}
-                      focusVisibleClassName="MuiButton-focusVisible-142"
+                      focusVisibleClassName="MuiButton-focusVisible-178"
                       onClick={[Function]}
                       tabIndex="0"
                       type="button"
                     >
                       <button
-                        className="MuiButtonBase-root-149 MuiButton-root-123 MuiButton-text-125 MuiButton-flat-128 actionButton"
+                        className="MuiButtonBase-root-185 MuiButton-root-159 MuiButton-text-161 MuiButton-flat-164 actionButton"
                         disabled={false}
                         onBlur={[Function]}
                         onClick={[Function]}
@@ -1085,7 +1085,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         type="button"
                       >
                         <span
-                          className="MuiButton-label-124"
+                          className="MuiButton-label-160"
                         >
                           <pure(ReplayIcon)>
                             <ReplayIcon>
@@ -1093,15 +1093,15 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 <SvgIcon
                                   classes={
                                     Object {
-                                      "colorAction": "MuiSvgIcon-colorAction-162",
-                                      "colorDisabled": "MuiSvgIcon-colorDisabled-164",
-                                      "colorError": "MuiSvgIcon-colorError-163",
-                                      "colorPrimary": "MuiSvgIcon-colorPrimary-160",
-                                      "colorSecondary": "MuiSvgIcon-colorSecondary-161",
-                                      "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-165",
-                                      "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-167",
-                                      "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-166",
-                                      "root": "MuiSvgIcon-root-159",
+                                      "colorAction": "MuiSvgIcon-colorAction-191",
+                                      "colorDisabled": "MuiSvgIcon-colorDisabled-193",
+                                      "colorError": "MuiSvgIcon-colorError-192",
+                                      "colorPrimary": "MuiSvgIcon-colorPrimary-189",
+                                      "colorSecondary": "MuiSvgIcon-colorSecondary-190",
+                                      "fontSizeInherit": "MuiSvgIcon-fontSizeInherit-194",
+                                      "fontSizeLarge": "MuiSvgIcon-fontSizeLarge-196",
+                                      "fontSizeSmall": "MuiSvgIcon-fontSizeSmall-195",
+                                      "root": "MuiSvgIcon-root-188",
                                     }
                                   }
                                   color="inherit"
@@ -1111,7 +1111,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 >
                                   <svg
                                     aria-hidden="true"
-                                    className="MuiSvgIcon-root-159"
+                                    className="MuiSvgIcon-root-188"
                                     focusable="false"
                                     role="presentation"
                                     viewBox="0 0 24 24"
@@ -1142,25 +1142,25 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               center={false}
                               classes={
                                 Object {
-                                  "child": "MuiTouchRipple-child-156",
-                                  "childLeaving": "MuiTouchRipple-childLeaving-157",
-                                  "childPulsate": "MuiTouchRipple-childPulsate-158",
-                                  "ripple": "MuiTouchRipple-ripple-153",
-                                  "ripplePulsate": "MuiTouchRipple-ripplePulsate-155",
-                                  "rippleVisible": "MuiTouchRipple-rippleVisible-154",
-                                  "root": "MuiTouchRipple-root-152",
+                                  "child": "MuiTouchRipple-child-201",
+                                  "childLeaving": "MuiTouchRipple-childLeaving-202",
+                                  "childPulsate": "MuiTouchRipple-childPulsate-203",
+                                  "ripple": "MuiTouchRipple-ripple-198",
+                                  "ripplePulsate": "MuiTouchRipple-ripplePulsate-200",
+                                  "rippleVisible": "MuiTouchRipple-rippleVisible-199",
+                                  "root": "MuiTouchRipple-root-197",
                                 }
                               }
                             >
                               <TransitionGroup
                                 childFactory={[Function]}
-                                className="MuiTouchRipple-root-152"
+                                className="MuiTouchRipple-root-197"
                                 component="span"
                                 enter={true}
                                 exit={true}
                               >
                                 <span
-                                  className="MuiTouchRipple-root-152"
+                                  className="MuiTouchRipple-root-197"
                                 />
                               </TransitionGroup>
                             </TouchRipple>

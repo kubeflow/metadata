@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Artifact, ArtifactProperties, getResourceProperty} from 'frontend';
+import {Artifact, ArtifactProperties, getResourceProperty, logger} from 'frontend';
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {logger} from '../lib/Utils';
 import {css} from './ResourceInfo';
 
 // Standard artifact properties and Model properties from

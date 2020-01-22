@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+import {logger} from 'frontend';
 import * as React from 'react';
 import MD2Tabs from './MD2Tabs';
 import toJson from 'enzyme-to-json';
-import { logger } from '../lib/Utils';
 import { shallow, mount } from 'enzyme';
 
 describe('Input', () => {
