@@ -23,6 +23,7 @@ import {
   GetArtifactsRequest,
   ListRequest,
   getArtifactTypes,
+  getResourceProperty,
   getTypeName
 } from 'frontend';
 import * as React from 'react';
@@ -31,7 +32,7 @@ import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow, getResourceProperty} from '../lib/Utils';
+import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
 import {RoutePage, RouteParams} from '../components/Router';
 import {Link} from 'react-router-dom';
 

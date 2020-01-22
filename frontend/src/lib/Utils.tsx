@@ -15,15 +15,7 @@
  */
 
 import {
-  Artifact,
-  ArtifactCustomProperties,
-  ArtifactProperties,
-  Execution,
-  ExecutionCustomProperties,
-  ExecutionProperties,
-  LineageResource,
   ListRequest,
-  Value
 } from "frontend";
 import * as React from 'react';
 import isFunction from 'lodash.isfunction';
@@ -67,33 +59,6 @@ export function titleCase(str: string): string {
   return str.split(/[\s_-]/)
     .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
     .join(' ');
-}
-
-export function getResourceProperty(resource: Artifact | Execution,
-    propertyName: string, fromCustomProperties = false): string | number | null {
-  const props = fromCustomProperties
-      ? resource.getCustomPropertiesMap()
-      : resource.getPropertiesMap();
-
-  return (props && props.get(propertyName) && getMetadataValue(props.get(propertyName)))
-      || null;
-}
-
-export function getMetadataValue(value?: Value): string | number {
-  if (!value) {
-    return '';
-  }
-
-  switch (value.getValueCase()) {
-    case Value.ValueCase.DOUBLE_VALUE:
-      return value.getDoubleValue();
-    case Value.ValueCase.INT_VALUE:
-      return value.getIntValue();
-    case Value.ValueCase.STRING_VALUE:
-      return value.getStringValue();
-    case Value.ValueCase.VALUE_NOT_SET:
-      return '';
-  }
 }
 
 /**
@@ -203,33 +168,4 @@ export function getExpandedRow(expandedRows: Map<number, Row[]>, columns: Column
       </div>
     );
   }
-}
-
-// TODO: Move to LineageUtils
-
-function getArtifactName(artifact: Artifact): string {
-  return String(getResourceProperty(artifact, ArtifactProperties.NAME))
-}
-
-function getExecutionName(execution: Execution): string {
-  return String(getResourceProperty(execution, ExecutionProperties.NAME))
-}
-
-export function getResourceName(resource: LineageResource): string {
-  if (resource instanceof Artifact) {
-    return getArtifactName(resource);
-  }
-  return getExecutionName(resource);
-}
-
-export function getResourceDescription(resource: LineageResource): string {
-  let description;
-  if (resource instanceof Artifact) {
-    description = getResourceProperty(resource, ArtifactProperties.PIPELINE_NAME)
-      || getResourceProperty(resource, ArtifactCustomProperties.WORKSPACE, true);
-  } else {
-    description = getResourceProperty(resource, ExecutionProperties.PIPELINE_NAME)
-      || getResourceProperty(resource, ExecutionCustomProperties.WORKSPACE, true);
-  }
-  return String(description) || '';
 }

@@ -23,6 +23,7 @@ import {
   GetExecutionsRequest,
   GetExecutionTypesRequest,
   ListRequest,
+  getResourceProperty,
 } from 'frontend';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -30,7 +31,7 @@ import { classes } from 'typestyle';
 import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
 import { ToolbarProps } from '../components/Toolbar';
 import { commonCss, padding } from '../Css';
-import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
+import { rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
 import { RoutePage, RouteParams } from '../components/Router';
 import { Page } from './Page';
 
