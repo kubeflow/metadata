@@ -392,6 +392,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       </MD2Tabs>
     </div>
     <LineageView
+      buildResourceDetailsPageRoute={[Function]}
       target={
         Object {
           "array": Array [
@@ -1481,6 +1482,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
@@ -1799,6 +1801,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
@@ -2550,6 +2553,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -2563,7 +2567,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -2862,6 +2868,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
                         type="artifact"
@@ -2879,11 +2886,19 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             />
                           </div>
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
@@ -3231,6 +3246,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
@@ -3548,6 +3564,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
@@ -3856,6 +3873,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -3868,7 +3886,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -4167,6 +4187,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={false}
                         type="artifact"
                       >
@@ -4177,11 +4198,19 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             className="noRadio"
                           />
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
@@ -4522,6 +4551,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
@@ -4841,6 +4871,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
@@ -5592,6 +5623,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -5605,7 +5637,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -5904,6 +5938,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
                         type="artifact"
@@ -5921,11 +5956,19 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             />
                           </div>
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
