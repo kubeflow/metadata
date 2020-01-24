@@ -15,6 +15,7 @@
  */
 
 import {mount, ReactWrapper} from 'enzyme';
+import {Artifact, ArtifactCustomProperties, ArtifactProperties, Value} from 'frontend';
 import {object} from 'prop-types';
 import * as React from 'react';
 import {match} from 'react-router';
@@ -22,8 +23,6 @@ import {match} from 'react-router';
 import createRouterContext from 'react-router-test-context';
 import {ToolbarActionConfig} from './components/Toolbar';
 import {Page, PageProps} from './pages/Page';
-import {Artifact, Value} from './generated/src/apis/metadata/metadata_store_pb';
-import {ArtifactCustomProperties, ArtifactProperties} from './lib/Api';
 
 
 /**
@@ -116,11 +115,6 @@ export const stringValue = (string: String) => {
   const value = new Value();
   value.setStringValue(String(string));
   return value;
-};
-
-export const serviceError = {
-  code: 0,
-  message: '',
 };
 
 export const buildTestModel = () => {

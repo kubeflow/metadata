@@ -1,1 +1,0 @@
-declare module 'react-svg-line-chart'

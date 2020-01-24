@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
+import {
+  Api,
+  ArtifactType,
+  ArtifactProperties,
+  ArtifactCustomProperties,
+  Artifact,
+  GetArtifactsRequest,
+  ListRequest,
+  getArtifactTypes,
+  getResourceProperty,
+  getTypeName
+} from 'frontend';
 import * as React from 'react';
 import CustomTable, {Column, Row, ExpandState, CustomRendererProps} from '../components/CustomTable';
 import {Page} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {classes} from 'typestyle';
 import {commonCss, padding} from '../Css';
-import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow, getResourceProperty} from '../lib/Utils';
-import {Api, ArtifactProperties, ArtifactCustomProperties, ListRequest} from '../lib/Api';
-import { RoutePage, RouteParams } from '../components/Router';
-import { Link } from 'react-router-dom';
-import {ArtifactType, Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
-import {GetArtifactsRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
-import {getArtifactTypes} from "../components/LineageApi";
-import {getTypeName} from "../components/LineageUtils";
+import {rowCompareFn, rowFilterFn, groupRows, getExpandedRow} from '../lib/Utils';
+import {RoutePage, RouteParams} from '../components/Router';
+import {Link} from 'react-router-dom';
 
 interface ArtifactListState {
   artifacts: Artifact[];

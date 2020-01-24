@@ -1188,7 +1188,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           }
         >
           <LineageCardColumn
-            cardWidth={260}
+            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -1487,7 +1487,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
-            edgeWidth={120}
+            edgeWidth={80}
             setLineageViewTarget={[Function]}
             title="Input Artifact"
             type="artifact"
@@ -1505,8 +1505,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
-                  cardWidth={260}
+                <Component
+                  cardWidth={210}
                   cards={
                     Array [
                       Object {
@@ -1805,7 +1805,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       },
                     ]
                   }
-                  edgeWidth={120}
+                  edgeWidth={80}
                   reverseEdges={false}
                 >
                   <div
@@ -1828,11 +1828,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             "y": 0,
                           },
                           Object {
-                            "x": 90,
+                            "x": 50,
                             "y": 0,
                           },
                           Object {
-                            "x": 120,
+                            "x": 80,
                             "y": 0,
                           },
                         ]
@@ -1867,14 +1867,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       pointsStrokeWidth={2}
                       pointsVisible={false}
                       viewBoxHeight={1}
-                      viewBoxWidth={120}
+                      viewBoxWidth={80}
                     >
                       <styled.svg
-                        viewBox="0 0 120 1"
+                        viewBox="0 0 80 1"
                       >
                         <svg
                           className="sc-gzVnrw kWKfgJ"
-                          viewBox="0 0 120 1"
+                          viewBox="0 0 80 1"
                         >
                           <g
                             transform="translate(0, 0)"
@@ -1896,11 +1896,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -1921,7 +1921,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -1957,11 +1957,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -1982,7 +1982,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -2014,23 +2014,23 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       1
       20
       1
-      35
+      28.33
       1
       C
-      50
+      36.67
+      1
+      43.33
+      1
+      51.67
+      1
+     C
+      60
       1
       70
       1
-      85
+      75
       1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
+    L 80 1 "
                                   opacity={1}
                                   width={1}
                                 >
@@ -2049,23 +2049,23 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       1
       20
       1
-      35
+      28.33
       1
       C
-      50
+      36.67
+      1
+      43.33
+      1
+      51.67
+      1
+     C
+      60
       1
       70
       1
-      85
+      75
       1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
+    L 80 1 "
                                     opacity={1}
                                     width={1}
                                   />
@@ -2089,11 +2089,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -2114,7 +2114,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -2148,11 +2148,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -2173,7 +2173,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -2207,11 +2207,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -2232,7 +2232,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -2254,10 +2254,10 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={260}
+                  cardWidth={210}
                   isTarget={false}
                   key="0"
                   rows={
@@ -2864,6 +2864,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         }
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
@@ -2906,9 +2907,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={260}
+            cardWidth={210}
             cards={Array []}
-            edgeWidth={120}
+            edgeWidth={80}
             title=""
             type="execution"
           >
@@ -2923,21 +2924,21 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
-                  cardWidth={260}
+                <Component
+                  cardWidth={210}
                   cards={Array []}
-                  edgeWidth={120}
+                  edgeWidth={80}
                   reverseEdges={false}
                 >
                   <div
                     className="edgeCanvas"
                   />
-                </EdgeCanvas>
+                </Component>
               </div>
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={260}
+            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -3236,7 +3237,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
-            edgeWidth={120}
+            edgeWidth={80}
             title="Target"
             type="artifact"
           >
@@ -3253,8 +3254,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
-                  cardWidth={260}
+                <Component
+                  cardWidth={210}
                   cards={
                     Array [
                       Object {
@@ -3553,16 +3554,16 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       },
                     ]
                   }
-                  edgeWidth={120}
+                  edgeWidth={80}
                   reverseEdges={false}
                 >
                   <div
                     className="edgeCanvas"
                   />
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={260}
+                  cardWidth={210}
                   isTarget={true}
                   key="0"
                   rows={
@@ -4167,6 +4168,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           }
                         }
                         rightAffordance={false}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
@@ -4195,10 +4197,10 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={260}
+            cardWidth={210}
             cards={Array []}
-            edgeWidth={120}
-            skipEdgeCanvas={true}
+            edgeWidth={80}
+            reverseBindings={true}
             title=""
             type="execution"
           >
@@ -4212,11 +4214,22 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               </div>
               <div
                 className="columnBody"
-              />
+              >
+                <Component
+                  cardWidth={210}
+                  cards={Array []}
+                  edgeWidth={80}
+                  reverseEdges={true}
+                >
+                  <div
+                    className="edgeCanvas edgeCanvasReverse"
+                  />
+                </Component>
+              </div>
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={260}
+            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -4515,7 +4528,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                 },
               ]
             }
-            edgeWidth={120}
+            edgeWidth={80}
             reverseBindings={true}
             setLineageViewTarget={[Function]}
             title="Output Artifact"
@@ -4534,8 +4547,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <EdgeCanvas
-                  cardWidth={260}
+                <Component
+                  cardWidth={210}
                   cards={
                     Array [
                       Object {
@@ -4834,7 +4847,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       },
                     ]
                   }
-                  edgeWidth={120}
+                  edgeWidth={80}
                   reverseEdges={true}
                 >
                   <div
@@ -4857,11 +4870,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             "y": 0,
                           },
                           Object {
-                            "x": 90,
+                            "x": 50,
                             "y": 0,
                           },
                           Object {
-                            "x": 120,
+                            "x": 80,
                             "y": 0,
                           },
                         ]
@@ -4896,14 +4909,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       pointsStrokeWidth={2}
                       pointsVisible={false}
                       viewBoxHeight={1}
-                      viewBoxWidth={120}
+                      viewBoxWidth={80}
                     >
                       <styled.svg
-                        viewBox="0 0 120 1"
+                        viewBox="0 0 80 1"
                       >
                         <svg
                           className="sc-gzVnrw kWKfgJ"
-                          viewBox="0 0 120 1"
+                          viewBox="0 0 80 1"
                         >
                           <g
                             transform="translate(0, 0)"
@@ -4925,11 +4938,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -4950,7 +4963,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -4986,11 +4999,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -5011,7 +5024,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -5043,23 +5056,23 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       1
       20
       1
-      35
+      28.33
       1
       C
-      50
+      36.67
+      1
+      43.33
+      1
+      51.67
+      1
+     C
+      60
       1
       70
       1
-      85
+      75
       1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
+    L 80 1 "
                                   opacity={1}
                                   width={1}
                                 >
@@ -5078,23 +5091,23 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       1
       20
       1
-      35
+      28.33
       1
       C
-      50
+      36.67
+      1
+      43.33
+      1
+      51.67
+      1
+     C
+      60
       1
       70
       1
-      85
+      75
       1
-     C
-      100
-      1
-      110
-      1
-      115
-      1
-    L 120 1 "
+    L 80 1 "
                                     opacity={1}
                                     width={1}
                                   />
@@ -5118,11 +5131,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -5143,7 +5156,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -5177,11 +5190,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -5202,7 +5215,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -5236,11 +5249,11 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 90,
+                                    "x": 50,
                                     "y": 0,
                                   },
                                   Object {
-                                    "x": 120,
+                                    "x": 80,
                                     "y": 0,
                                   },
                                 ]
@@ -5261,7 +5274,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                               labelsOffsetY={15}
                               labelsStepX={2}
                               labelsVisible={false}
-                              maxX={120}
+                              maxX={80}
                               maxY={5}
                               minX={0}
                               minY={0}
@@ -5283,10 +5296,10 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </EdgeCanvas>
+                </Component>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={260}
+                  cardWidth={210}
                   isTarget={false}
                   key="0"
                   rows={
@@ -5893,6 +5906,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         }
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
+                        type="artifact"
                       >
                         <div
                           className="cardRow lastRow"

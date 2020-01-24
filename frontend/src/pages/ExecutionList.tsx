@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
+import {
+  Api,
+  Execution,
+  ExecutionCustomProperties,
+  ExecutionProperties,
+  ExecutionType,
+  GetExecutionsRequest,
+  GetExecutionTypesRequest,
+  ListRequest,
+  getResourceProperty,
+} from 'frontend';
 import * as React from 'react';
-import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
-import { Page } from './Page';
-import { ToolbarProps } from '../components/Toolbar';
-import { classes } from 'typestyle';
-import { commonCss, padding } from '../Css';
-import { getResourceProperty, rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
-import { Api, ListRequest, ExecutionProperties, ExecutionCustomProperties } from '../lib/Api';
 import { Link } from 'react-router-dom';
+import { classes } from 'typestyle';
+import CustomTable, { Column, Row, ExpandState, CustomRendererProps } from '../components/CustomTable';
+import { ToolbarProps } from '../components/Toolbar';
+import { commonCss, padding } from '../Css';
+import { rowCompareFn, rowFilterFn, groupRows, getExpandedRow } from '../lib/Utils';
 import { RoutePage, RouteParams } from '../components/Router';
-import {Execution, ExecutionType} from '../generated/src/apis/metadata/metadata_store_pb';
-import {GetExecutionsRequest, GetExecutionTypesRequest} from '../generated/src/apis/metadata/metadata_store_service_pb';
+import { Page } from './Page';
 
 interface ExecutionListState {
   executions: Execution[];
@@ -141,13 +149,13 @@ class ExecutionList extends Page<{}, ExecutionListState> {
       return new Map();
     }
 
-    const artifactTypesMap = new Map<number, ExecutionType>();
+    const executionTypesMap = new Map<number, ExecutionType>();
 
     (response!.getExecutionTypesList() || []).forEach((executionType) => {
-      artifactTypesMap.set(executionType.getId()!, executionType);
+      executionTypesMap.set(executionType.getId()!, executionType);
     });
 
-    return artifactTypesMap;
+    return executionTypesMap;
   }
 
   private async getExecutions(): Promise<Execution[]> {
@@ -177,7 +185,7 @@ class ExecutionList extends Page<{}, ExecutionListState> {
           otherFields: [
             getResourceProperty(execution, ExecutionProperties.PIPELINE_NAME)
             || getResourceProperty(execution, ExecutionCustomProperties.WORKSPACE, true),
-            getResourceProperty(execution, ExecutionProperties.NAME),
+            getResourceProperty(execution, ExecutionProperties.COMPONENT_ID),
             getResourceProperty(execution, ExecutionProperties.STATE),
             execution.getId(),
             type,

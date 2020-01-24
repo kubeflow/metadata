@@ -1,16 +1,17 @@
+import {
+  Api,
+  Artifact,
+  ArtifactType,
+  GetArtifactsResponse,
+  GetArtifactTypesResponse
+} from "frontend";
 import * as React from 'react';
 import ArtifactList from './ArtifactList';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
-import {Api} from '../lib/Api';
 import * as TestUtils from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import CustomTable, {ExpandState} from '../components/CustomTable';
-import {
-  GetArtifactsResponse,
-  GetArtifactTypesResponse
-} from "../generated/src/apis/metadata/metadata_store_service_pb";
-import {Artifact, ArtifactType} from "../generated/src/apis/metadata/metadata_store_pb";
 import {stringValue} from '../TestUtils';
 
 describe('ArtifactList', () => {

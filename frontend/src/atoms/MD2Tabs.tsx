@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
+import {logger} from 'frontend';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Separator from './Separator';
 import { color, fontsize } from '../Css';
 import { classes, stylesheet } from 'typestyle';
-import { logger } from '../lib/Utils';
 
 interface MD2TabsProps {
   onSwitch?: (tab: number) => void;

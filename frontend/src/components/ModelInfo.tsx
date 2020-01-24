@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Artifact, ArtifactProperties, getResourceProperty, logger} from 'frontend';
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';
-import {getResourceProperty, logger} from '../lib/Utils';
 import {css} from './ResourceInfo';
-import {ArtifactProperties} from '../lib/Api';
-import {Artifact} from '../generated/src/apis/metadata/metadata_store_pb';
 
 // Standard artifact properties and Model properties from
 // https://github.com/kubeflow/metadata/blob/master/schema/alpha/artifacts/model.json
