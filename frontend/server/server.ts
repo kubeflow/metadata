@@ -92,19 +92,14 @@ app.all('/ml_metadata.*', proxy({
 
 app.all(`/${v1alpha1Prefix}/*`, proxy({
   changeOrigin: true,
-  onProxyReq: (proxyReq: any) => {
-    console.log('Proxied request:', proxyReq.path);
-  },
+  onProxyReq: (proxyReq: any) => console.log('Proxied request:', proxyReq.path),
   target: apiServerAddress,
 }));
 
 app.all(`${BASEPATH}/${v1alpha1Prefix}/*`, proxy({
   changeOrigin: true,
-  onProxyReq: (proxyReq: any) => {
-    console.log('Proxied request:', proxyReq.path);
-  },
-  pathRewrite: (pth: string) =>
-    pth.startsWith(BASEPATH) ? pth.substr(BASEPATH.length, pth.length) : pth,
+  onProxyReq: (proxyReq: any) => console.log('Proxied request:', proxyReq.path),
+  pathRewrite: (pth: string) => pth.startsWith(BASEPATH) ? pth.slice(BASEPATH.length) : pth,
   target: apiServerAddress,
 }));
 
