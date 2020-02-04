@@ -2575,7 +2575,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       <LineageCardRow
                         hideRadio={false}
                         isLastRow={true}
-                        isTarget={false}
                         key="0"
                         leftAffordance={true}
                         resource={
@@ -2871,27 +2870,13 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         type="artifact"
                       >
                         <div
-                          className="cardRow lastRow clickTarget"
-                          onClick={[Function]}
+                          className="cardRow lastRow"
                         >
-                          <div
-                            className="form-radio-container"
-                          >
+                          <div>
                             <input
-                              checked={false}
                               className="form-radio"
                               name=""
                               onClick={[Function]}
-                              readOnly={true}
-                              type="radio"
-                              value=""
-                            />
-                            <input
-                              checked={true}
-                              className="form-radio hover-hint"
-                              name=""
-                              onClick={[Function]}
-                              readOnly={true}
                               type="radio"
                               value=""
                             />
@@ -2899,8 +2884,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           <footer>
                             <Link
                               className="rowTitle"
-                              onMouseEnter={[Function]}
-                              onMouseLeave={[Function]}
                               replace={false}
                               to="/artifact_types/1/artifacts/1"
                             >
@@ -2908,8 +2891,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 className="rowTitle"
                                 href="/artifact_types/1/artifacts/1"
                                 onClick={[Function]}
-                                onMouseEnter={[Function]}
-                                onMouseLeave={[Function]}
                               >
                                 test model
                               </a>
@@ -3906,9 +3887,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       className="cardBody"
                     >
                       <LineageCardRow
-                        hideRadio={false}
+                        hideRadio={true}
                         isLastRow={true}
-                        isTarget={true}
                         key="0"
                         leftAffordance={false}
                         resource={
@@ -4204,35 +4184,13 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       >
                         <div
                           className="cardRow lastRow"
-                          onClick={[Function]}
                         >
                           <div
-                            className="form-radio-container"
-                          >
-                            <input
-                              checked={true}
-                              className="form-radio"
-                              name=""
-                              onClick={[Function]}
-                              readOnly={true}
-                              type="radio"
-                              value=""
-                            />
-                            <input
-                              checked={true}
-                              className="form-radio hover-hint"
-                              name=""
-                              onClick={[Function]}
-                              readOnly={true}
-                              type="radio"
-                              value=""
-                            />
-                          </div>
+                            className="noRadio"
+                          />
                           <footer>
                             <Link
                               className="rowTitle"
-                              onMouseEnter={[Function]}
-                              onMouseLeave={[Function]}
                               replace={false}
                               to="/artifact_types/1/artifacts/1"
                             >
@@ -4240,8 +4198,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 className="rowTitle"
                                 href="/artifact_types/1/artifacts/1"
                                 onClick={[Function]}
-                                onMouseEnter={[Function]}
-                                onMouseLeave={[Function]}
                               >
                                 test model
                               </a>
@@ -5679,7 +5635,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       <LineageCardRow
                         hideRadio={false}
                         isLastRow={true}
-                        isTarget={false}
                         key="0"
                         leftAffordance={true}
                         resource={
@@ -5975,27 +5930,13 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                         type="artifact"
                       >
                         <div
-                          className="cardRow lastRow clickTarget"
-                          onClick={[Function]}
+                          className="cardRow lastRow"
                         >
-                          <div
-                            className="form-radio-container"
-                          >
+                          <div>
                             <input
-                              checked={false}
                               className="form-radio"
                               name=""
                               onClick={[Function]}
-                              readOnly={true}
-                              type="radio"
-                              value=""
-                            />
-                            <input
-                              checked={true}
-                              className="form-radio hover-hint"
-                              name=""
-                              onClick={[Function]}
-                              readOnly={true}
                               type="radio"
                               value=""
                             />
@@ -6003,8 +5944,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           <footer>
                             <Link
                               className="rowTitle"
-                              onMouseEnter={[Function]}
-                              onMouseLeave={[Function]}
                               replace={false}
                               to="/artifact_types/1/artifacts/1"
                             >
@@ -6012,8 +5951,6 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 className="rowTitle"
                                 href="/artifact_types/1/artifacts/1"
                                 onClick={[Function]}
-                                onMouseEnter={[Function]}
-                                onMouseLeave={[Function]}
                               >
                                 test model
                               </a>

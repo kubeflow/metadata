@@ -5,7 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.7.1",
     "@material-ui/icons": "^3.0.1",
-    "frontend": "kwasi/frontend#9f7a6a2",
+    "frontend": "kubeflow/frontend#be07cdf",
     "lodash.debounce": "^4.0.8",
     "lodash.isfunction": "^3.0.9",
     "react": "^16.8.6",
