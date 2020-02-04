@@ -62,7 +62,10 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     this.load = this.load.bind(this);
   }
 
-  componentDidUpdate(prevProps: Readonly<{} & PageProps>, prevState: Readonly<ArtifactDetailsState>, snapshot?: any): void {
+  componentDidUpdate(
+    prevProps: Readonly<{} & PageProps>,
+    prevState: Readonly<ArtifactDetailsState>,
+    snapshot?: any): void {
     if (this.props.match.params[RouteParams.ID] === prevProps.match.params[RouteParams.ID]) return;
 
     this.setState({
