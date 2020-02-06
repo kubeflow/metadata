@@ -13,7 +13,8 @@
 // limitations under the License.
 // tslint:disable: no-console
 
-import express, {Request, Response, NextFunction, Application, static as StaticHandler} from 'express';
+import * as express from 'express'
+import {Request, Response, NextFunction, Application, static as StaticHandler} from 'express';
 import * as proxy from 'http-proxy-middleware';
 import fetch from 'node-fetch';
 import * as path from 'path';

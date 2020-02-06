@@ -22,9 +22,10 @@ import {
   LineageView,
   titleCase,
   getResourceProperty,
+  LineageResource,
 } from 'frontend';
 import * as React from 'react';
-import {Page} from './Page';
+import {Page, PageProps} from './Page';
 import {ToolbarProps} from '../components/Toolbar';
 import {RoutePage, RouteParams} from '../components/Router';
 import {classes} from 'typestyle';
@@ -61,6 +62,19 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
     this.load = this.load.bind(this);
   }
 
+  componentDidUpdate(
+    prevProps: Readonly<{} & PageProps>,
+    prevState: Readonly<ArtifactDetailsState>,
+    snapshot?: any): void {
+    if (this.props.match.params[RouteParams.ID] === prevProps.match.params[RouteParams.ID]) return;
+
+    this.setState({
+      artifact: undefined,
+      selectedTab: ArtifactDetailsTab.OVERVIEW,
+    });
+    this.load();
+  }
+
   private get fullTypeName(): string {
     return this.props.match.params[RouteParams.ARTIFACT_TYPE] || '';
   }
@@ -81,7 +95,7 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
   }
 
   public render(): JSX.Element {
-    if (!this.state.artifact) return <CircularProgress />;
+    if (!this.state.artifact) return <CircularProgress/>;
     return (
       <div className={classes(commonCss.page)}>
         <div className={classes(padding(20, 't'))}>
@@ -93,11 +107,14 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
         </div>
         {this.state.selectedTab === ArtifactDetailsTab.OVERVIEW && (
           <div className={classes(padding(20, 'lr'))}>
-            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact} />
+            <ResourceInfo typeName={this.properTypeName} resource={this.state.artifact}/>
           </div>
         )}
         {this.state.selectedTab === ArtifactDetailsTab.LINEAGE_EXPLORER && (
-            <LineageView target={this.state.artifact} />
+          <LineageView
+            target={this.state.artifact}
+            buildResourceDetailsPageRoute={ArtifactDetails.buildResourceDetailsPageRoute}
+          />
         )}
       </div>
     );
@@ -152,5 +169,13 @@ export default class ArtifactDetails extends Page<{}, ArtifactDetailsState> {
 
   private switchTab(selectedTab: number) {
     this.setState({selectedTab});
+  }
+
+  private static buildResourceDetailsPageRoute(
+    resource: LineageResource, typeName: string): string {
+    let route = resource instanceof Artifact ?
+      RoutePage.ARTIFACT_DETAILS.replace(`:${RouteParams.ARTIFACT_TYPE}+`, typeName) :
+      RoutePage.EXECUTION_DETAILS.replace(`:${RouteParams.EXECUTION_TYPE}+`, typeName);
+    return route.replace(`:${RouteParams.ID}`, String(resource.getId()));
   }
 }

@@ -392,6 +392,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
       </MD2Tabs>
     </div>
     <LineageView
+      buildResourceDetailsPageRoute={[Function]}
       target={
         Object {
           "array": Array [
@@ -979,6 +980,15 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             <div
               className="flex"
             >
+              <span
+                className="workspace"
+                key="workspace"
+              >
+                workspace-1
+              </span>
+              <aside
+                className="workspaceSep"
+              />
               <button
                 className="breadcrumbActive"
                 disabled={true}
@@ -1175,20 +1185,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
           </div>
         </LineageActionBar>
         <div
-          className="page LineageExplorer"
-          style={
-            Object {
-              "background": "#f3f2f4",
-              "flexFlow": "row",
-              "overflow": "auto",
-              "position": "relative",
-              "width": "100%",
-              "zIndex": 0,
-            }
-          }
+          className="page LineageExplorer LineageExplorer"
         >
           <LineageCardColumn
-            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -1481,13 +1480,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
                 },
               ]
             }
-            edgeWidth={80}
+            columnPadding={40}
             setLineageViewTarget={[Function]}
             title="Input Artifact"
             type="artifact"
@@ -1505,8 +1505,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <Component
-                  cardWidth={210}
+                <EdgeCanvas
                   cards={
                     Array [
                       Object {
@@ -1799,13 +1798,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
                       },
                     ]
                   }
-                  edgeWidth={80}
+                  columnPadding={40}
                   reverseEdges={false}
                 >
                   <div
@@ -2254,10 +2254,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </Component>
+                </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={210}
                   isTarget={false}
                   key="0"
                   rows={
@@ -2550,6 +2549,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -2563,7 +2563,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -2573,6 +2575,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       <LineageCardRow
                         hideRadio={false}
                         isLastRow={true}
+                        isTarget={false}
                         key="0"
                         leftAffordance={true}
                         resource={
@@ -2862,32 +2865,59 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
                         type="artifact"
                       >
                         <div
-                          className="cardRow lastRow"
+                          className="cardRow lastRow clickTarget"
+                          onClick={[Function]}
                         >
-                          <div>
+                          <div
+                            className="form-radio-container"
+                          >
                             <input
+                              checked={false}
                               className="form-radio"
                               name=""
                               onClick={[Function]}
+                              readOnly={true}
+                              type="radio"
+                              value=""
+                            />
+                            <input
+                              checked={true}
+                              className="form-radio hover-hint"
+                              name=""
+                              onClick={[Function]}
+                              readOnly={true}
                               type="radio"
                               value=""
                             />
                           </div>
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                                onMouseEnter={[Function]}
+                                onMouseLeave={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
-                              workspace-1
+                              1
                             </p>
                           </footer>
                           <div
@@ -2907,9 +2937,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={210}
             cards={Array []}
-            edgeWidth={80}
+            columnPadding={40}
             title=""
             type="execution"
           >
@@ -2924,21 +2953,19 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <Component
-                  cardWidth={210}
+                <EdgeCanvas
                   cards={Array []}
-                  edgeWidth={80}
+                  columnPadding={40}
                   reverseEdges={false}
                 >
                   <div
                     className="edgeCanvas"
                   />
-                </Component>
+                </EdgeCanvas>
               </div>
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -3231,13 +3258,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
                 },
               ]
             }
-            edgeWidth={80}
+            columnPadding={40}
             title="Target"
             type="artifact"
           >
@@ -3254,8 +3282,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <Component
-                  cardWidth={210}
+                <EdgeCanvas
                   cards={
                     Array [
                       Object {
@@ -3548,22 +3575,22 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
                       },
                     ]
                   }
-                  edgeWidth={80}
+                  columnPadding={40}
                   reverseEdges={false}
                 >
                   <div
                     className="edgeCanvas"
                   />
-                </Component>
+                </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={210}
                   isTarget={true}
                   key="0"
                   rows={
@@ -3856,6 +3883,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -3868,7 +3896,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -3876,8 +3906,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       className="cardBody"
                     >
                       <LineageCardRow
-                        hideRadio={true}
+                        hideRadio={false}
                         isLastRow={true}
+                        isTarget={true}
                         key="0"
                         leftAffordance={false}
                         resource={
@@ -4167,25 +4198,58 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={false}
                         type="artifact"
                       >
                         <div
                           className="cardRow lastRow"
+                          onClick={[Function]}
                         >
                           <div
-                            className="noRadio"
-                          />
+                            className="form-radio-container"
+                          >
+                            <input
+                              checked={true}
+                              className="form-radio"
+                              name=""
+                              onClick={[Function]}
+                              readOnly={true}
+                              type="radio"
+                              value=""
+                            />
+                            <input
+                              checked={true}
+                              className="form-radio hover-hint"
+                              name=""
+                              onClick={[Function]}
+                              readOnly={true}
+                              type="radio"
+                              value=""
+                            />
+                          </div>
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                                onMouseEnter={[Function]}
+                                onMouseLeave={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
-                              workspace-1
+                              1
                             </p>
                           </footer>
                         </div>
@@ -4197,9 +4261,8 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={210}
             cards={Array []}
-            edgeWidth={80}
+            columnPadding={40}
             reverseBindings={true}
             title=""
             type="execution"
@@ -4215,21 +4278,19 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <Component
-                  cardWidth={210}
+                <EdgeCanvas
                   cards={Array []}
-                  edgeWidth={80}
+                  columnPadding={40}
                   reverseEdges={true}
                 >
                   <div
                     className="edgeCanvas edgeCanvasReverse"
                   />
-                </Component>
+                </EdgeCanvas>
               </div>
             </div>
           </LineageCardColumn>
           <LineageCardColumn
-            cardWidth={210}
             cards={
               Array [
                 Object {
@@ -4522,13 +4583,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                           },
                         },
                       },
+                      "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                     },
                   ],
                   "title": "1",
                 },
               ]
             }
-            edgeWidth={80}
+            columnPadding={40}
             reverseBindings={true}
             setLineageViewTarget={[Function]}
             title="Output Artifact"
@@ -4547,8 +4609,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
               <div
                 className="columnBody"
               >
-                <Component
-                  cardWidth={210}
+                <EdgeCanvas
                   cards={
                     Array [
                       Object {
@@ -4841,13 +4902,14 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                                 },
                               },
                             },
+                            "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                           },
                         ],
                         "title": "1",
                       },
                     ]
                   }
-                  edgeWidth={80}
+                  columnPadding={40}
                   reverseEdges={true}
                 >
                   <div
@@ -5296,10 +5358,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       </styled.svg>
                     </LineChart>
                   </div>
-                </Component>
+                </EdgeCanvas>
                 <LineageCard
                   addSpacer={false}
-                  cardWidth={210}
                   isTarget={false}
                   key="0"
                   rows={
@@ -5592,6 +5653,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           },
                         },
+                        "resourceDetailsPageRoute": "/artifact_types/1/artifacts/1",
                       },
                     ]
                   }
@@ -5605,7 +5667,9 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                     <div
                       className="cardTitle"
                     >
-                      <h3>
+                      <h3
+                        title="1"
+                      >
                         1
                       </h3>
                     </div>
@@ -5615,6 +5679,7 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                       <LineageCardRow
                         hideRadio={false}
                         isLastRow={true}
+                        isTarget={false}
                         key="0"
                         leftAffordance={true}
                         resource={
@@ -5904,32 +5969,59 @@ exports[`ArtifactDetails Renders the Lineage Explorer tab for an artifact 1`] = 
                             },
                           }
                         }
+                        resourceDetailsRoute="/artifact_types/1/artifacts/1"
                         rightAffordance={true}
                         setLineageViewTarget={[Function]}
                         type="artifact"
                       >
                         <div
-                          className="cardRow lastRow"
+                          className="cardRow lastRow clickTarget"
+                          onClick={[Function]}
                         >
-                          <div>
+                          <div
+                            className="form-radio-container"
+                          >
                             <input
+                              checked={false}
                               className="form-radio"
                               name=""
                               onClick={[Function]}
+                              readOnly={true}
+                              type="radio"
+                              value=""
+                            />
+                            <input
+                              checked={true}
+                              className="form-radio hover-hint"
+                              name=""
+                              onClick={[Function]}
+                              readOnly={true}
                               type="radio"
                               value=""
                             />
                           </div>
                           <footer>
-                            <p
+                            <Link
                               className="rowTitle"
+                              onMouseEnter={[Function]}
+                              onMouseLeave={[Function]}
+                              replace={false}
+                              to="/artifact_types/1/artifacts/1"
                             >
-                              test model
-                            </p>
+                              <a
+                                className="rowTitle"
+                                href="/artifact_types/1/artifacts/1"
+                                onClick={[Function]}
+                                onMouseEnter={[Function]}
+                                onMouseLeave={[Function]}
+                              >
+                                test model
+                              </a>
+                            </Link>
                             <p
                               className="rowDesc"
                             >
-                              workspace-1
+                              1
                             </p>
                           </footer>
                           <div
