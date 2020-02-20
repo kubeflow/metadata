@@ -201,6 +201,24 @@ class TestMetedata(unittest.TestCase):
     with pytest.raises(ValueError, match=r".*exists with id.*"):
       metadata.Workspace(store, ws_name, reuse_workspace_if_exists=False)
 
+  def test_init_store_with_ssl_config(self):
+    # TODO: There is a type error in underlying ml_metadate library:
+    #   TypeError: expected certificate to be bytes, got <class 'str'>
+    # Fix this unit test once this bug is fixed.
+    with self.assertRaises(TypeError):
+      metadata.Store(grpc_host=GRPC_HOST,
+                     grpc_port=GRPC_PORT,
+                     root_certificates=b"cert",
+                     private_key=b"private_key",
+                     certificate_chain=b"chain")
+    with patch('ml_metadata.metadata_store.metadata_store.MetadataStore',
+               new=CheckMetadataStore) as m:
+      metadata.Store(grpc_host=GRPC_HOST,
+                     grpc_port=GRPC_PORT,
+                     root_certificates=b"cert",
+                     private_key=b"private_key",
+                     certificate_chain=b"chain")
+
   def test_artifact_deduplication(self):
     store = metadata.Store(grpc_host=GRPC_HOST, grpc_port=GRPC_PORT)
     ws1 = metadata.Workspace(store=store, name="workspace_one")
@@ -241,6 +259,16 @@ class TestMetedata(unittest.TestCase):
       self.assertFalse(cls.is_duplicated(m, m5))
       m6 = mlpb_artifact(2, "gcs://123", "ws1", "name1", "v1")
       self.assertFalse(cls.is_duplicated(m, m6))
+
+
+class CheckMetadataStore(object):
+
+  def __init__(self, config, disable_upgrade_migration=None):
+    assert disable_upgrade_migration is not None
+    assert config.ssl_config is not None
+    assert config.ssl_config.custom_ca is not None
+    assert config.ssl_config.client_key is not None
+    assert config.ssl_config.server_cert is not None
 
 
 class ArtifactFixture(object):
