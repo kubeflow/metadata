@@ -86,8 +86,7 @@ class Store(object):
     if certificate_chain:
       config.ssl_config.server_cert = certificate_chain
 
-    self.store = metadata_store.MetadataStore(config,
-                                              disable_upgrade_migration=False)
+    self.store = metadata_store.MetadataStore(config)
 
 
 class Workspace(object):

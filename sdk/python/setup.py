@@ -15,10 +15,10 @@
 from setuptools import setup, find_packages
 
 NAME = 'kubeflow-metadata'
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 
 REQUIRES = [
-    'ml-metadata==0.15.0',
+    'ml-metadata==0.21.1',
     'retrying'
 ]
 
