@@ -10,7 +10,7 @@ pip install kubeflow.metadata
 ```
 
 ## Releases
-- 0.3.0 to be released with Kubeflow v1.0. ([doc](https://master.kubeflow.org/docs/components/misc/metadata/), [tutorial](https://github.com/kubeflow/metadata/blob/master/sdk/python/sample/demo.ipynb), [SDK Reference](https://kubeflow-metadata.readthedocs.io/en/latest/))
+- 0.3.0 to be released with Kubeflow v1.0. ([doc](https://master.kubeflow.org/docs/components/metadata/), [tutorial](https://github.com/kubeflow/metadata/blob/master/sdk/python/sample/demo.ipynb), [SDK Reference](https://kubeflow-metadata.readthedocs.io/en/latest/))
 
 - 0.2.0 released with Kubeflow v0.6. ([doc](https://v0-6.kubeflow.org/docs/components/misc/metadata/), [tutorial](https://github.com/kubeflow/metadata/blob/v0.1.0/sdk/python/demo.ipynb))
 
