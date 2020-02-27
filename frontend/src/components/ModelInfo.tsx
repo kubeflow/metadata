@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Artifact, ArtifactProperties, getResourceProperty, logger} from 'frontend';
+import {Artifact, ArtifactProperties, getResourceProperty, logger} from '@kubeflow/frontend';
 import * as React from 'react';
 import {classes} from 'typestyle';
 import {commonCss} from '../Css';

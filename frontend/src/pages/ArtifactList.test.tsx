@@ -4,7 +4,7 @@ import {
   ArtifactType,
   GetArtifactsResponse,
   GetArtifactTypesResponse
-} from "frontend";
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import ArtifactList from './ArtifactList';
 import {PageProps} from './Page';

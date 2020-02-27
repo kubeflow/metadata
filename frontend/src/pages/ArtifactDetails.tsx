@@ -23,7 +23,7 @@ import {
   titleCase,
   getResourceProperty,
   LineageResource,
-} from 'frontend';
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import {Page, PageProps} from './Page';
 import {ToolbarProps} from '../components/Toolbar';

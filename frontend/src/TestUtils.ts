@@ -15,7 +15,7 @@
  */
 
 import {mount, ReactWrapper} from 'enzyme';
-import {Artifact, ArtifactCustomProperties, ArtifactProperties, Value} from 'frontend';
+import {Artifact, ArtifactCustomProperties, ArtifactProperties, Value} from '@kubeflow/frontend';
 import {object} from 'prop-types';
 import * as React from 'react';
 import {match} from 'react-router';

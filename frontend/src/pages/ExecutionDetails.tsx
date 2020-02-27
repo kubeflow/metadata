@@ -21,7 +21,7 @@ import {
   GetExecutionsByIDRequest,
   getResourceProperty,
   titleCase
-} from 'frontend';
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import { Page } from './Page';
 import { ToolbarProps } from '../components/Toolbar';

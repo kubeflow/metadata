@@ -25,7 +25,7 @@ import {
   getArtifactTypes,
   getResourceProperty,
   getTypeName
-} from 'frontend';
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import CustomTable, {Column, Row, ExpandState, CustomRendererProps} from '../components/CustomTable';
 import {Page} from './Page';

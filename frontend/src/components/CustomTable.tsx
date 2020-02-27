@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ListRequest, logger} from 'frontend';
+import {ListRequest, logger} from '@kubeflow/frontend';
 import debounce from 'lodash.debounce';
 import * as React from 'react';
 import ArrowRight from '@material-ui/icons/ArrowRight';
