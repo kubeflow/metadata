@@ -5,7 +5,7 @@ import {
   GetEventsByExecutionIDsResponse,
   GetExecutionsByIDResponse,
   GetExecutionsResponse
-} from 'frontend';
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import ArtifactDetails, {ArtifactDetailsTab} from './ArtifactDetails';
 import {PageProps} from './Page';

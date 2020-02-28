@@ -16,7 +16,7 @@
 
 import {
   ListRequest,
-} from "frontend";
+} from '@kubeflow/frontend';
 import * as React from 'react';
 import isFunction from 'lodash.isfunction';
 import {Column, css as customTableCss, CustomTableRow, ExpandState, Row} from '../components/CustomTable';

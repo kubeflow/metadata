@@ -1,4 +1,4 @@
-import {Artifact, ArtifactCustomProperties, ArtifactProperties} from 'frontend';
+import {Artifact, ArtifactCustomProperties, ArtifactProperties} from '@kubeflow/frontend';
 import * as React from 'react';
 import {ResourceInfo} from './ResourceInfo';
 import {shallow, ShallowWrapper} from 'enzyme';
