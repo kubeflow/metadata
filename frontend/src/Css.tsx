@@ -15,8 +15,8 @@
  */
 
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
-import {NestedCSSProperties} from 'typestyle/lib/types';
 import {style, stylesheet} from 'typestyle';
+import {NestedCSSProperties} from 'typestyle/lib/types';
 
 export const color = {
   activeBg: '#eaf1fd',
@@ -72,6 +72,7 @@ export const fontsize = {
   medium: 16,
   large: 18,
   title: 18,
+  pageTitle: 24,
 };
 // tslint:enable:object-literal-sort-keys
 
@@ -122,7 +123,7 @@ export const theme = createMuiTheme({
         },
         color: color.theme,
         marginRight: 10,
-        padding: '0 8px'
+        padding: '0 8px',
       },
     },
     MuiDialogActions: {
@@ -162,7 +163,7 @@ export const theme = createMuiTheme({
     },
     MuiInput: {
       input: { padding: 0 },
-      root: { padding: 0 }
+      root: { padding: 0 },
     },
     MuiInputAdornment: {
       positionEnd: {
@@ -175,13 +176,13 @@ export const theme = createMuiTheme({
         backgroundColor: '#666',
         color: '#f1f1f1',
         fontSize: 12,
-      }
+      },
     },
   },
   palette,
   typography: {
     fontFamily: fonts.main,
-    fontSize: fontsize.base + ' !important' as any,
+    fontSize: (fontsize.base + ' !important') as any,
     useNextVariants: true,
   },
 });
@@ -219,15 +220,6 @@ export const commonCss = stylesheet({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
-  fit: {
-    bottom: 0,
-    height: '100%',
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    width: '100%',
-  },
   flex: {
     alignItems: 'center !important',
     display: 'flex !important',
@@ -256,7 +248,7 @@ export const commonCss = stylesheet({
   infoIcon: {
     color: color.lowContrast,
     height: 16,
-    width: 16
+    width: 16,
   },
   link: {
     $nest: {
@@ -289,8 +281,7 @@ export const commonCss = stylesheet({
     whiteSpace: 'pre-wrap',
   },
   scrollContainer: {
-    background:
-      `linear-gradient(white 30%, rgba(255,255,255,0)),
+    background: `linear-gradient(white 30%, rgba(255,255,255,0)),
        linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
        radial-gradient(farthest-corner at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
        radial-gradient(farthest-corner at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%`,

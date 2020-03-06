@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-import * as React from 'react';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import BusyButton from '../atoms/BusyButton';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import { History } from 'history';
-import { Link } from 'react-router-dom';
-import { classes, stylesheet } from 'typestyle';
-import { spacing, fonts, fontsize, color, dimension, commonCss } from '../Css';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import {History} from 'history';
+import * as React from 'react';
+import {CSSProperties} from 'react';
+import {Link} from 'react-router-dom';
+import {classes, stylesheet} from 'typestyle';
+import BusyButton from '../atoms/BusyButton';
+import {color, commonCss, dimension, fonts, fontsize, spacing} from '../Css';
+
+export interface ToolbarActionMap {
+  [key: string]: ToolbarActionConfig;
+}
 
 export interface ToolbarActionConfig {
   action: () => void;
@@ -34,6 +39,7 @@ export interface ToolbarActionConfig {
   id?: string;
   outlined?: boolean;
   primary?: boolean;
+  style?: CSSProperties;
   title: string;
   tooltip: string;
 }
@@ -79,15 +85,15 @@ const css = stylesheet({
     $nest: {
       '&:hover': {
         background: color.lightGrey,
-      }
+      },
     },
     borderRadius: 3,
     padding: 3,
   },
   pageName: {
     color: color.strong,
-    fontSize: fontsize.title,
-    lineHeight: `${backIconHeight}px`,
+    fontSize: fontsize.pageTitle,
+    lineHeight: '28px',
   },
   root: {
     alignItems: 'center',
@@ -104,7 +110,7 @@ const css = stylesheet({
 });
 
 export interface ToolbarProps {
-  actions: ToolbarActionConfig[];
+  actions: ToolbarActionMap;
   breadcrumbs: Breadcrumb[];
   history?: History;
   pageTitle: string | JSX.Element;
@@ -113,25 +119,27 @@ export interface ToolbarProps {
 }
 
 class Toolbar extends React.Component<ToolbarProps> {
-
   public render(): JSX.Element | null {
-    const { breadcrumbs, pageTitle, pageTitleTooltip } = { ...this.props };
+    const { actions, breadcrumbs, pageTitle, pageTitleTooltip } = { ...this.props };
 
-    if (!this.props.actions.length && !this.props.breadcrumbs.length && !this.props.pageTitle) {
+    if (!actions.length && !breadcrumbs.length && !pageTitle) {
       return null;
     }
 
     return (
-      <div className={
-        classes(css.root, (this.props.topLevelToolbar !== false) && css.topLevelToolbar)}>
-        <div style={{ minWidth: 100 }}>
+      <div
+        className={classes(css.root, this.props.topLevelToolbar !== false && css.topLevelToolbar)}
+      >
+        <div style={{minWidth: 100}}>
           {/* Breadcrumb */}
           <div className={classes(css.breadcrumbs, commonCss.flex)}>
             {breadcrumbs.map((crumb, i) => (
               <span className={commonCss.flex} key={i} title={crumb.displayName}>
                 {i !== 0 && <ChevronRightIcon className={css.chevron} />}
-                <Link className={classes(commonCss.unstyled, commonCss.ellipsis, css.link)}
-                  to={crumb.href}>
+                <Link
+                  className={classes(commonCss.unstyled, commonCss.ellipsis, css.link)}
+                  to={crumb.href}
+                >
                   {crumb.displayName}
                 </Link>
               </span>
@@ -139,36 +147,65 @@ class Toolbar extends React.Component<ToolbarProps> {
           </div>
           <div className={commonCss.flex}>
             {/* Back Arrow */}
-            {breadcrumbs.length > 0 &&
+            {breadcrumbs.length > 0 && (
               <Tooltip title={'Back'} enterDelay={300}>
-                <div> {/* Div needed because we sometimes disable a button within a tooltip */}
-                  <IconButton className={css.backLink}
+                <div>
+                  {' '}
+                  {/* Div needed because we sometimes disable a button within a tooltip */}
+                  <IconButton
+                    className={css.backLink}
                     disabled={this.props.history!.length < 2}
-                    onClick={this.props.history!.goBack}>
-                    <ArrowBackIcon className={
-                      classes(css.backIcon, this.props.history!.length < 2 ? css.disabled : css.enabled)} />
+                    onClick={this.props.history!.goBack}
+                  >
+                    <ArrowBackIcon
+                      className={classes(
+                        css.backIcon,
+                        this.props.history!.length < 2 ? css.disabled : css.enabled,
+                      )}
+                    />
                   </IconButton>
                 </div>
-              </Tooltip>}
+              </Tooltip>
+            )}
             {/* Resource Name */}
-            <span className={classes(css.pageName, commonCss.ellipsis)} title={pageTitleTooltip}>
+            <span
+              className={classes(css.pageName, commonCss.ellipsis)}
+              title={pageTitleTooltip}
+              data-testid='page-title' // TODO: use a proper h1 tag for page titles and let tests query this by h1.
+            >
               {pageTitle}
             </span>
           </div>
         </div>
         {/* Actions / Buttons */}
         <div className={css.actions}>
-          {this.props.actions.map((b, i) => (
-            <Tooltip title={(b.disabled && b.disabledTitle) ? b.disabledTitle : b.tooltip}
-              enterDelay={300} key={i}>
-              <div>{/* Extra level needed by tooltip when child is disabled */}
-                <BusyButton id={b.id} color='secondary' onClick={b.action} disabled={b.disabled}
-                  title={b.title} icon={b.icon} busy={b.busy || false}
-                  outlined={(b.outlined && !b.primary) || false}
-                  className={b.primary ? commonCss.buttonAction : ''} />
-              </div>
-            </Tooltip>
-          ))}
+          {Object.keys(actions).map((buttonKey, i) => {
+            const button = actions[buttonKey];
+            return (
+              <Tooltip
+                title={
+                  button.disabled && button.disabledTitle ? button.disabledTitle : button.tooltip
+                }
+                enterDelay={300}
+                key={i}
+              >
+                <div style={button.style}>
+                  {/* Extra level needed by tooltip when child is disabled */}
+                  <BusyButton
+                    id={button.id}
+                    color='secondary'
+                    onClick={button.action}
+                    disabled={button.disabled}
+                    title={button.title}
+                    icon={button.icon}
+                    busy={button.busy || false}
+                    outlined={(button.outlined && !button.primary) || false}
+                    className={button.primary ? commonCss.buttonAction : ''}
+                  />
+                </div>
+              </Tooltip>
+            );
+          })}
         </div>
       </div>
     );

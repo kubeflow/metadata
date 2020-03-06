@@ -19,8 +19,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import Router from './components/Router';
-import { cssRule } from 'typestyle';
-import { theme, fonts } from './Css';
+import {cssRule} from 'typestyle';
+import {theme, fonts} from './Css';
 
 // TODO: license headers
 

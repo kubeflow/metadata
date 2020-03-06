@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Artifact, Execution, getMetadataValue} from '@kubeflow/frontend';
 import * as React from 'react';
+import {Artifact, Execution, getMetadataValue} from '@kubeflow/frontend';
 import {stylesheet} from 'typestyle';
 import {color, commonCss} from '../Css';
+import {ArtifactLink} from './ArtifactLink';
 
 export const css = stylesheet({
+  field: {
+    flexBasis: '300px',
+    marginBottom: '32px',
+  },
   resourceInfo: {
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  field: {
-    flexBasis: '300px',
-    marginBottom: '32px',
   },
   term: {
     color: color.grey,
@@ -39,17 +40,29 @@ export const css = stylesheet({
     fontSize: '14px',
     letterSpacing: '0.2px',
     lineHeight: '20px',
-  }
+  },
 });
 
-export interface ResourceInfoProps {
-  resource: Artifact | Execution;
-  // TODO: Pass in ResourceType and render <GcsLink /> for Artifacts
+export enum ResourceType {
+  ARTIFACT = 'ARTIFACT',
+  EXECUTION = 'EXECUTION',
+}
+
+interface ArtifactProps {
+  resourceType: ResourceType.ARTIFACT;
+  resource: Artifact;
   typeName: string;
 }
 
-export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
+interface ExecutionProps {
+  resourceType: ResourceType.EXECUTION;
+  resource: Execution;
+  typeName: string;
+}
 
+export type ResourceInfoProps = ArtifactProps | ExecutionProps;
+
+export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
   public render(): JSX.Element {
     const { resource } = this.props;
     const propertyMap = resource.getPropertiesMap();
@@ -57,34 +70,61 @@ export class ResourceInfo extends React.Component<ResourceInfoProps, {}> {
     return (
       <section>
         <h1 className={commonCss.header}>Type: {this.props.typeName}</h1>
+        {(() => {
+          if (this.props.resourceType === ResourceType.ARTIFACT) {
+            return (
+              <>
+                <dt className={css.term}>URI</dt>
+                <dd className={css.value}>
+                  <ArtifactLink artifactUri={this.props.resource.getUri()} />
+                </dd>
+              </>
+            );
+          }
+          return null;
+        })()}
         <h2 className={commonCss.header2}>Properties</h2>
         <dl className={css.resourceInfo}>
-          {propertyMap.getEntryList()
+          {propertyMap
+            .getEntryList()
             // TODO: __ALL_META__ is something of a hack, is redundant, and can be ignored
-            .filter((k:any) => k[0] !== '__ALL_META__')
-            // @ts-ignore
-            .map((k: any) =>
+            .filter((k: string) => k[0] !== '__ALL_META__')
+            .map((k: string) => (
               <div className={css.field} key={k[0]}>
                 <dt className={css.term}>{k[0]}</dt>
                 <dd className={css.value}>
-                  {propertyMap && getMetadataValue(propertyMap.get(k[0]))}
+                  {propertyMap && prettyPrintJsonValue(getMetadataValue(propertyMap.get(k[0])))}
                 </dd>
               </div>
-            )
-          }
+            ))}
         </dl>
         <h2 className={commonCss.header2}>Custom Properties</h2>
         <dl className={css.resourceInfo}>
-          {customPropertyMap.getEntryList().map((k: any) =>
+          {customPropertyMap.getEntryList().map((k: any) => (
             <div className={css.field} key={k[0]}>
               <dt className={css.term}>{k[0]}</dt>
               <dd className={css.value}>
-                {customPropertyMap && getMetadataValue(customPropertyMap.get(k[0]))}
+                {customPropertyMap &&
+                  prettyPrintJsonValue(getMetadataValue(customPropertyMap.get(k[0])))}
               </dd>
             </div>
-          )}
+          ))}
         </dl>
       </section>
     );
+  }
+}
+
+function prettyPrintJsonValue(value: string | number): JSX.Element | number | string {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  try {
+    const jsonValue = JSON.parse(value);
+    return <pre>{JSON.stringify(jsonValue, null, 2)}</pre>;
+  } catch {
+    // not JSON, return directly
+    return value;
   }
 }
