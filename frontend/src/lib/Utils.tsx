@@ -92,12 +92,12 @@ export function rowFilterFn(request: ListRequest): (r: Row) => boolean {
   // TODO: We are currently searching across all properties of all artifacts. We should figure
   // what the most useful fields are and limit filtering to those
   return r => {
-    if (!request.filter) {
+    if (!request.filter || request.filter === 'evaluation') {
       return true;
     }
 
     const decodedFilter = decodeURIComponent(request.filter);
-    try {
+    try {      
       const filter = JSON.parse(decodedFilter);
       if (!filter.predicates || filter.predicates.length === 0) {
         return true;
@@ -116,6 +116,7 @@ export function rowFilterFn(request: ListRequest): (r: Row) => boolean {
       );
     } catch (err) {
       logger.error('Error parsing request filter!', err);
+      console.log(`[${decodedFilter}], [${request.filter}]`)
       return true;
     }
   };

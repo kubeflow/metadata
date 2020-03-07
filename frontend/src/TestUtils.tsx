@@ -15,18 +15,26 @@
  */
 
 /* eslint-disable */
+// tslint:disable: object-literal-sort-keys
+
 // Because this is test utils.
 
 import * as React from 'react';
 // @ts-ignore
 import createRouterContext from 'react-router-test-context';
-import { PageProps, Page } from './pages/Page';
-import { ToolbarActionConfig } from './components/Toolbar';
-import { match } from 'react-router';
-import { mount, ReactWrapper } from 'enzyme';
-import { object } from 'prop-types';
-import { format } from 'prettier';
+import {PageProps, Page} from './pages/Page';
+import {ToolbarActionConfig} from './components/Toolbar';
+import {match} from 'react-router';
+import {mount, ReactWrapper} from 'enzyme';
+import {object} from 'prop-types';
+import {format} from 'prettier';
 import snapshotDiff from 'snapshot-diff';
+import {
+  Artifact,
+  ArtifactProperties,
+  ArtifactCustomProperties,
+  Value,
+} from '@kubeflow/frontend';
 
 export default class TestUtils {
   /**
@@ -152,3 +160,82 @@ export function diff({
 function formatHTML(html: string): string {
   return format(html, { parser: 'html' });
 }
+
+/**	
+ * Generates a customizable PageProps object that can be passed to initialize	
+ * Page components, taking care of setting ToolbarProps properly, which have	
+ * to be set after component initialization.	
+ */	
+// tslint:disable-next-line:variable-name	
+export function generatePageProps(	
+  // tslint:disable-next-line: variable-name
+  PageElement: new (_: PageProps) => Page<any, any>, location: Location,	
+  matchValue: match, historyPushSpy: jest.SpyInstance | null,	
+  updateBannerSpy: jest.SpyInstance | null,	
+  updateDialogSpy: jest.SpyInstance | null,	
+  updateToolbarSpy: jest.SpyInstance | null,	
+  updateSnackbarSpy: jest.SpyInstance | null): PageProps {	
+  const pageProps = {	
+    history: {push: historyPushSpy} as any,	
+    location: location as any,	
+    match: matchValue,	
+    toolbarProps: {actions: [], breadcrumbs: [], pageTitle: ''},	
+    updateBanner: updateBannerSpy as any,	
+    updateDialog: updateDialogSpy as any,	
+    updateSnackbar: updateSnackbarSpy as any,	
+    updateToolbar: updateToolbarSpy as any,	
+  } as unknown as PageProps;	
+  pageProps.toolbarProps = new PageElement(pageProps).getInitialToolbarState();	
+  // The toolbar spy gets called in the getInitialToolbarState method, reset	
+  // it in order to simplify tests	
+  if (updateToolbarSpy) {	
+    updateToolbarSpy.mockReset();	
+  }	
+  return pageProps;	
+}	
+
+export function getToolbarButton(	
+  updateToolbarSpy: jest.SpyInstance, title: string): ToolbarActionConfig {	
+  const lastCallIdx = updateToolbarSpy.mock.calls.length - 1;	
+  const lastCall = updateToolbarSpy.mock.calls[lastCallIdx][0];	
+  return lastCall.actions.find((b: any) => b.title === title);	
+}	
+
+export const doubleValue = (number: number) => {	
+  const value = new Value();	
+  value.setDoubleValue(number);	
+  return value;	
+};	
+
+export const intValue = (number: number) => {	
+  const value = new Value();	
+  value.setIntValue(number);	
+  return value;	
+};	
+
+export const stringValue = (string: String) => {	
+  const value = new Value();	
+  value.setStringValue(String(string));	
+  return value;	
+};	
+
+export const buildTestModel = () => {	
+  const model = new Artifact();	
+  model.setId(1);	
+  model.setTypeId(1);	
+  model.setUri('gs://my-bucket/mnist');	
+  model.getPropertiesMap().set(ArtifactProperties.NAME, stringValue('test model'));	
+  model.getPropertiesMap().set(ArtifactProperties.DESCRIPTION, stringValue('A really great model'));	
+  model.getPropertiesMap().set(ArtifactProperties.VERSION, stringValue('v1'));	
+  model.getPropertiesMap().set(ArtifactProperties.CREATE_TIME, stringValue('2019-06-12T01:21:48.259263Z'));	
+  model.getPropertiesMap().set(ArtifactProperties.ALL_META, stringValue(	
+      '{"hyperparameters": {"early_stop": true, ' +	
+      '"layers": [10, 3, 1], "learning_rate": 0.5}, ' +	
+      '"model_type": "neural network", ' +	
+      '"training_framework": {"name": "tensorflow", "version": "v1.0"}}'));	
+  model.getCustomPropertiesMap().set(ArtifactCustomProperties.WORKSPACE, stringValue('workspace-1'));	
+  model.getCustomPropertiesMap().set(ArtifactCustomProperties.RUN, stringValue('1'));	
+  return model	
+};	
+
+export const testModel = buildTestModel();

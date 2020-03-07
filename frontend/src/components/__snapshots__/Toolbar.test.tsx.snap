@@ -66,6 +66,7 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       />
     </div>
   </div>
@@ -84,19 +85,7 @@ exports[`Toolbar disables the back button when there is no browser history 1`] =
           color="secondary"
           icon={[Function]}
           id="test id"
-          onClick={
-            [MockFunction] {
-              "calls": Array [
-                Array [],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            }
-          }
+          onClick={[MockFunction]}
           outlined={false}
           title="test title"
         />
@@ -193,6 +182,7 @@ exports[`Toolbar renders outlined action buttons 1`] = `
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       />
     </div>
   </div>
@@ -202,17 +192,17 @@ exports[`Toolbar renders outlined action buttons 1`] = `
     <WithStyles(Tooltip)
       enterDelay={300}
       key="0"
-      title="test tooltip"
+      title="test outlined tooltip"
     >
       <div>
         <BusyButton
           busy={false}
           className=""
           color="secondary"
-          id="test id"
+          id="test outlined id"
           onClick={[MockFunction]}
           outlined={true}
-          title="test title"
+          title="test outlined title"
         />
       </div>
     </WithStyles(Tooltip)>
@@ -286,6 +276,7 @@ exports[`Toolbar renders primary action buttons 1`] = `
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       />
     </div>
   </div>
@@ -295,17 +286,17 @@ exports[`Toolbar renders primary action buttons 1`] = `
     <WithStyles(Tooltip)
       enterDelay={300}
       key="0"
-      title="test tooltip"
+      title="test primary tooltip"
     >
       <div>
         <BusyButton
           busy={false}
           className="buttonAction"
           color="secondary"
-          id="test id"
+          id="test primary id"
           onClick={[MockFunction]}
           outlined={false}
-          title="test title"
+          title="test primary title"
         />
       </div>
     </WithStyles(Tooltip)>
@@ -379,6 +370,7 @@ exports[`Toolbar renders primary action buttons without outline, even if outline
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       />
     </div>
   </div>
@@ -472,6 +464,7 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       />
     </div>
   </div>
@@ -490,19 +483,7 @@ exports[`Toolbar renders with two breadcrumbs and two actions 1`] = `
           color="secondary"
           icon={[Function]}
           id="test id"
-          onClick={
-            [MockFunction] {
-              "calls": Array [
-                Array [],
-              ],
-              "results": Array [
-                Object {
-                  "type": "return",
-                  "value": undefined,
-                },
-              ],
-            }
-          }
+          onClick={[MockFunction]}
           outlined={false}
           title="test title"
         />
@@ -581,7 +562,10 @@ exports[`Toolbar renders without actions and one breadcrumb 1`] = `
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
-      />
+        data-testid="page-title"
+      >
+        test page title
+      </span>
     </div>
   </div>
   <div
@@ -640,6 +624,7 @@ exports[`Toolbar renders without actions, one breadcrumb, and a page name 1`] = 
       </WithStyles(Tooltip)>
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       >
         test page title
       </span>
@@ -670,6 +655,7 @@ exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
     >
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       >
         <div
           id="myComponent"
@@ -700,6 +686,25 @@ exports[`Toolbar renders without breadcrumbs and a component page title 1`] = `
         />
       </div>
     </WithStyles(Tooltip)>
+    <WithStyles(Tooltip)
+      enterDelay={300}
+      key="1"
+      title="test disabled title2"
+    >
+      <div>
+        <BusyButton
+          busy={false}
+          className=""
+          color="secondary"
+          disabled={true}
+          icon={[Function]}
+          id="test id2"
+          onClick={[MockFunction]}
+          outlined={false}
+          title="test title2"
+        />
+      </div>
+    </WithStyles(Tooltip)>
   </div>
 </div>
 `;
@@ -723,6 +728,7 @@ exports[`Toolbar renders without breadcrumbs and a string page title 1`] = `
     >
       <span
         className="pageName ellipsis"
+        data-testid="page-title"
       >
         test page title
       </span>
@@ -749,6 +755,25 @@ exports[`Toolbar renders without breadcrumbs and a string page title 1`] = `
         />
       </div>
     </WithStyles(Tooltip)>
+    <WithStyles(Tooltip)
+      enterDelay={300}
+      key="1"
+      title="test disabled title2"
+    >
+      <div>
+        <BusyButton
+          busy={false}
+          className=""
+          color="secondary"
+          disabled={true}
+          icon={[Function]}
+          id="test id2"
+          onClick={[MockFunction]}
+          outlined={false}
+          title="test title2"
+        />
+      </div>
+    </WithStyles(Tooltip)>
   </div>
 </div>
 `;
@@ -772,7 +797,10 @@ exports[`Toolbar renders without breadcrumbs and one action 1`] = `
     >
       <span
         className="pageName ellipsis"
-      />
+        data-testid="page-title"
+      >
+        test page title
+      </span>
     </div>
   </div>
   <div
@@ -819,7 +847,10 @@ exports[`Toolbar renders without breadcrumbs and two actions 1`] = `
     >
       <span
         className="pageName ellipsis"
-      />
+        data-testid="page-title"
+      >
+        test page title
+      </span>
     </div>
   </div>
   <div

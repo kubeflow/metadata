@@ -719,7 +719,6 @@ describe('CustomTable', () => {
         predicates: [
           {
             key: 'name',
-            op: PredicateOp.ISSUBSTRING,
             string_value: 'test filter',
           },
         ],

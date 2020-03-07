@@ -3,16 +3,15 @@ import {
   Artifact,
   ArtifactType,
   GetArtifactsResponse,
-  GetArtifactTypesResponse
+  GetArtifactTypesResponse,
 } from '@kubeflow/frontend';
 import * as React from 'react';
 import ArtifactList from './ArtifactList';
 import {PageProps} from './Page';
 import {shallow, ShallowWrapper, ReactWrapper} from 'enzyme';
-import * as TestUtils from '../TestUtils';
+import TestUtils, {stringValue} from '../TestUtils';
 import {RoutePage} from '../components/Router';
 import CustomTable, {ExpandState} from '../components/CustomTable';
-import {stringValue} from '../TestUtils';
 
 describe('ArtifactList', () => {
   let tree: ShallowWrapper | ReactWrapper;
