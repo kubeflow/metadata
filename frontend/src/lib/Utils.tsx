@@ -92,7 +92,7 @@ export function rowFilterFn(request: ListRequest): (r: Row) => boolean {
   // TODO: We are currently searching across all properties of all artifacts. We should figure
   // what the most useful fields are and limit filtering to those
   return r => {
-    if (!request.filter || request.filter === 'evaluation') {
+    if (!request.filter || /^[a-z]+$/.test(request.filter)) {
       return true;
     }
 
