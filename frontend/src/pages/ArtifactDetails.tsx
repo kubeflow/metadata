@@ -213,4 +213,6 @@ const EnhancedArtifactDetails = (props: PageProps) => {
   return <ArtifactDetails {...props} key={props.match.params[RouteParams.ID]} />;
 };
 
+// tslint:disable-next-line: variable-name
+export const ArtifactDetailsUnmodded = ArtifactDetails;
 export default EnhancedArtifactDetails;
