@@ -32,7 +32,7 @@
     "enzyme-to-json": "^3.3.5",
     "eslint-plugin-import": "^2.18.2",
     "license-checker": "^25.0.1",
-    "prettier": "^1.19.1",
+    "prettier": "1.19.1",
     "react-router-test-context": "^0.1.0",
     "snapshot-diff": "^0.7.0",
     "typescript": "^3.4.5"
