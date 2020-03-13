@@ -6,7 +6,7 @@
 Welcome to Kubeflow Metadata SDK API reference
 ==============================================
 
-Main documentation: https://www.kubeflow.org/docs/components/misc/metadata/
+Main documentation: https://www.kubeflow.org/docs/components/metadata/
 
 Source code: https://github.com/kubeflow/metadata/tree/master/sdk/python
 
