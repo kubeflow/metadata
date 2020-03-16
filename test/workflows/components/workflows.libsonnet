@@ -57,7 +57,7 @@
       local srcDir = srcRootDir + "/kubeflow/metadata";
       // The directory containing the kubeflow/manifests repo;
       local manifestsDir = srcRootDir + "/kubeflow/manifests";
-      local testWorkerImage = "gcr.io/kubeflow-ci/test-worker";
+      local testWorkerImage = "gcr.io/kubeflow-ci/test-worker-py3";
       local golangImage = "golang:1.9.4-stretch";
       local pythonImage = "python:3.6-jessie";
       // The name of the NFS volume claim to use for test files.
@@ -221,12 +221,6 @@
                   {
                     name: "unit-test",
                     template: "unit-test",
-                  },
-                ],
-                [
-                  {
-                    name: "build-images",
-                    template: "build-images",
                   },
                 ],
                 [
