@@ -138,6 +138,8 @@ apt-get install python3.8-venv
 python3.8 -m venv .testing-env
 source .testing-env/bin/activate
 python3 -V
+python3 -m pip uninstall ml-metadata || true
+python3 -m pip uninstall kubeflow-metadata || true
 bash tests/run_tests.sh
 cd "${SRC_DIR}"
 
