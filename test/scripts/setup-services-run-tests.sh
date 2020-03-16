@@ -134,8 +134,8 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 # Run Python tests
 cd "${SRC_DIR}/sdk/python"
 rm -rf .testing-env
-apt-get install python3.8-venv
-python3.8 -m venv .testing-env
+apt-get install -y python3-venv
+python3.6 -m venv .testing-env
 source .testing-env/bin/activate
 python3 -V
 python3 -m pip uninstall ml-metadata || true
