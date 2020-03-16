@@ -57,7 +57,8 @@
       local srcDir = srcRootDir + "/kubeflow/metadata";
       // The directory containing the kubeflow/manifests repo;
       local manifestsDir = srcRootDir + "/kubeflow/manifests";
-      local testWorkerImage = "gcr.io/kubeflow-ci/test-worker-py3";
+      local testWorkerImage = "gcr.io/kubeflow-ci/test-worker";
+      local testWorkerImagePy3 = "gcr.io/kubeflow-ci/test-worker-py3";
       local golangImage = "golang:1.9.4-stretch";
       local pythonImage = "python:3.6-jessie";
       // The name of the NFS volume claim to use for test files.
@@ -287,7 +288,7 @@
               "copy_artifacts",
               "--bucket=" + bucket,
             ]),  // copy-artifacts
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImage, [
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImagePy3, [
               "test/scripts/unittests.sh",
             ]),  // unit test
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-cluster",testWorkerImage, [
@@ -296,12 +297,9 @@
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("teardown-cluster",testWorkerImage, [
               "test/scripts/tear-down-cluster.sh",
             ]),  // teardown cluster
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("build-images",testWorkerImage, [
-              "test/scripts/build-images.sh",
-            ]),  // teardown cluster
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services-run-tests",testWorkerImage, [
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("setup-services-run-tests",testWorkerImagePy3, [
               "test/scripts/setup-services-run-tests.sh",
-            ]),  // teardown cluster
+            ]),  // setup k8s services and run integration tests
           ],  // templates
         },
       },  // e2e
