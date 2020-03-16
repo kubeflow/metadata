@@ -38,12 +38,6 @@ echo "CLUSTER_NAME: ${CLUSTER_NAME}"
 echo "ZONE: ${GCP_ZONE}"
 echo "PROJECT: ${GCP_PROJECT}"
 
-apt-get update && \
-apt-get -y install software-properties-common python-software-properties && \
-add-apt-repository -y ppa:deadsnakes/ppa && \
-apt-get update && \
-apt-get -y install python3.7
-
 gcloud --project ${PROJECT} container clusters get-credentials ${CLUSTER_NAME} \
   --zone ${ZONE}
 kubectl config set-context $(kubectl config current-context) --namespace=default
@@ -140,9 +134,12 @@ cd "${SRC_DIR}/test/e2e" && bash make_requests.sh
 # Run Python tests
 cd "${SRC_DIR}/sdk/python"
 rm -rf .testing-env
-virtualenv .testing-env -p /usr/bin/python3.7
+apt-get install -y python3-venv
+python3.6 -m venv .testing-env
 source .testing-env/bin/activate
 python3 -V
+python3 -m pip uninstall ml-metadata || true
+python3 -m pip uninstall kubeflow-metadata || true
 bash tests/run_tests.sh
 cd "${SRC_DIR}"
 
