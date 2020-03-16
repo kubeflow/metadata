@@ -288,7 +288,7 @@
               "copy_artifacts",
               "--bucket=" + bucket,
             ]),  // copy-artifacts
-            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImagePy3, [
+            $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("unit-test", testWorkerImage, [
               "test/scripts/unittests.sh",
             ]),  // unit test
             $.parts(namespace, name, overrides).e2e(prow_env, bucket).buildTemplate("create-cluster",testWorkerImage, [
