@@ -519,11 +519,11 @@ class Model(Artifact):
   """Captures a machine learning model.
 
   Attributes:
-      uri: Required uri of the metrics.
-      name: Required name of the metrics.
+      uri: Required uri of the model artifact, e.g. "gcs://path/to/model.h5".
+      name: Required name of the model.
       workspace: Optional name of the workspace.
-      description: Optional description of the metrics.
-      owner: Optional owner of the metrics.
+      description: Optional description of the model.
+      owner: Optional owner of the model.
       model_type: Optional type of the model.
       training_framework: Optional framework used to train the model.
       hyperparameters: Optional map from hyper param name to its value.
