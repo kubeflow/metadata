@@ -9,7 +9,9 @@ COPY . .
 
 RUN npm install && npm rebuild node-sass && \
   npm run postinstall && \
-  CI=true npm run test:coverage && \
+  if [ "$(uname -m)" = "x86_64" ]; then \
+      CI=true npm run test:coverage; \
+  fi && \
   npm run build
 
 # Write commit and build date files and generate the dependency licenses files
