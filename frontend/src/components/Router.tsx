@@ -15,6 +15,8 @@
  */
 
 import * as React from 'react';
+import ArtifactList from '../pages/ArtifactList';
+import ArtifactDetails from '../pages/ArtifactDetails';
 import Banner, {BannerProps} from '../components/Banner';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -22,16 +24,23 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Page404 from '../pages/404';
+import ExecutionList from '../pages/ExecutionList';
+import SideNav from '../pages/SideNav';
+import ExecutionDetails from '../pages/ExecutionDetails';
 import Snackbar, {SnackbarProps} from '@material-ui/core/Snackbar';
 import Toolbar, {ToolbarProps} from './Toolbar';
 import {Route, Switch, Redirect, HashRouter} from 'react-router-dom';
 import {classes, stylesheet} from 'typestyle';
 import {commonCss} from '../Css';
-import ArtifactList from '../pages/ArtifactList';
-import ArtifactDetails from '../pages/ArtifactDetails';
-import ExecutionList from '../pages/ExecutionList';
-import SideNav from '../pages/SideNav';
-import ExecutionDetails from '../pages/ExecutionDetails';
+
+
+// tslint:disable: variable-name
+export type RouteConfig = {
+  path: string;
+  Component: React.ComponentType<any>;
+  view?: any;
+  notExact?: boolean;
+};
 
 const css = stylesheet({
   dialog: {
@@ -42,8 +51,14 @@ const css = stylesheet({
 export enum RouteParams {
   ARTIFACT_TYPE = 'artifactType',
   EXECUTION_TYPE = 'executionType',
+  // TODO: create one of these for artifact and execution?
   ID = 'id',
 }
+
+export const RoutePrefix = {
+  ARTIFACT: '/artifact',
+  EXECUTION: '/execution',
+};
 
 export const RoutePage = {
   ARTIFACTS: '/artifacts',
@@ -52,19 +67,28 @@ export const RoutePage = {
   EXECUTION_DETAILS: `/execution_types/:${RouteParams.EXECUTION_TYPE}+/executions/:${RouteParams.ID}`,
 };
 
+export const RoutePageFactory = {
+  artifactDetails: (artifactType: string, artifactId: number) => {
+    return RoutePage.ARTIFACT_DETAILS.replace(
+      `:${RouteParams.ARTIFACT_TYPE}+`,
+      artifactType,
+    ).replace(`:${RouteParams.ID}`, '' + artifactId);
+  },
+};
+
+export const ExternalLinks = {
+  AI_HUB: 'https://aihub.cloud.google.com/u/0/s?category=pipeline',
+  DOCUMENTATION: 'https://www.kubeflow.org/docs/pipelines/',
+  GITHUB: 'https://github.com/kubeflow/pipelines',
+};
+
 export interface DialogProps {
-  buttons?: Array<{onClick?: () => any, text: string}>;
+  buttons?: Array<{onClick?: () => any; text: string}>;
   // TODO: This should be generalized to any react component.
   content?: string;
   onClose?: () => any;
   open?: boolean;
   title?: string;
-}
-
-interface RouteConfig {
-  path: string,
-  Component: React.ComponentClass,
-  view?: any
 }
 
 interface RouteComponentState {
@@ -74,15 +98,59 @@ interface RouteComponentState {
   toolbarProps: ToolbarProps;
 }
 
-class Router extends React.Component<{}, RouteComponentState> {
+export interface RouterProps {
+  configs?: RouteConfig[]; // only used in tests
+}
 
-  private routes: RouteConfig[] = [
+const DEFAULT_ROUTE = RoutePage.ARTIFACTS;
+
+// This component is made as a wrapper to separate toolbar state for different pages.
+const Router: React.FC<RouterProps> = ({configs}) => {
+  const routes: RouteConfig[] = configs || [
     {path: RoutePage.ARTIFACTS, Component: ArtifactList},
-    {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails},
+    {path: RoutePage.ARTIFACT_DETAILS, Component: ArtifactDetails, notExact: true},
     {path: RoutePage.EXECUTIONS, Component: ExecutionList},
     {path: RoutePage.EXECUTION_DETAILS, Component: ExecutionDetails},
   ];
 
+  return (
+    // There will be only one instance of SideNav, throughout UI usage.
+    <SideNavLayout>
+      <Switch>
+        <Route
+          exact={true}
+          path={'/'}
+          render={({ ...props }) => <Redirect to={DEFAULT_ROUTE} {...props} />}
+        />
+
+        {/* Normal routes */}
+        {routes.map((route, i) => {
+          const { path } = { ...route };
+          return (
+            // Setting a key here, so that two different routes are considered two instances from
+            // react. Therefore, they don't share toolbar state. This avoids many bugs like dangling
+            // network response handlers.
+            <Route
+              key={i}
+              exact={!route.notExact}
+              path={path}
+              render={props => <RoutedPage key={props.location.key} route={route} />}
+            />
+          );
+        })}
+
+        {/* 404 */}
+        {
+          <Route>
+            <RoutedPage />
+          </Route>
+        }
+      </Switch>
+    </SideNavLayout>
+  );
+};
+
+class RoutedPage extends React.Component<{route?: RouteConfig}, RouteComponentState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -101,65 +169,75 @@ class Router extends React.Component<{}, RouteComponentState> {
       updateSnackbar: this._updateSnackbar.bind(this),
       updateToolbar: this._updateToolbar.bind(this),
     };
+    const route = this.props.route;
+
     return (
-      <HashRouter>
-        <div className={commonCss.page}>
-          <div className={commonCss.flexGrow}>
-          <Route render={({ ...props }) => (<SideNav page={props.location.pathname} {...props} />)} />
-            <div className={classes(commonCss.page)}>
-              <Route render={({...props}) => (<Toolbar {...this.state.toolbarProps} {...props} />)} />
-              {this.state.bannerProps.message
-                && <Banner
-                  message={this.state.bannerProps.message}
-                  mode={this.state.bannerProps.mode}
-                  additionalInfo={this.state.bannerProps.additionalInfo}
-                  refresh={this.state.bannerProps.refresh} />}
-              <Switch>
-                <Route exact={true} path={'/'} render={({...props}) => (
-                  <Redirect to={RoutePage.ARTIFACTS} {...props} />
-                )} />
-                {this.routes.map((route, i) => {
-                  const {path, Component, ...otherProps} = {...route};
-                  return <Route key={i} exact={true} path={path} render={({...props}) => (
+      <div className={classes(commonCss.page)}>
+        <Route render={({...props}) => <Toolbar {...this.state.toolbarProps} {...props} />} />
+        {this.state.bannerProps.message && (
+          <Banner
+            message={this.state.bannerProps.message}
+            mode={this.state.bannerProps.mode}
+            additionalInfo={this.state.bannerProps.additionalInfo}
+            refresh={this.state.bannerProps.refresh}
+          />
+        )}
+        <Switch>
+          {route &&
+            (() => {
+              const { path, Component, ...otherProps } = { ...route };
+              return (
+                <Route
+                  exact={!route.notExact}
+                  path={path}
+                  render={({ ...props }) => (
                     <Component {...props} {...childProps} {...otherProps} />
-                  )} />;
-                })}
+                  )}
+                />
+              );
+            })()}
 
-                {/* 404 */}
-                {<Route render={({...props}) => <Page404 {...props} {...childProps} />} />}
-              </Switch>
+          {/* 404 */}
+          {!!route && <Route render={({...props}) => <Page404 {...props} {...childProps} />} />}
+        </Switch>
 
-              <Snackbar
-                autoHideDuration={this.state.snackbarProps.autoHideDuration}
-                message={this.state.snackbarProps.message}
-                open={this.state.snackbarProps.open}
-                onClose={this._handleSnackbarClose.bind(this)}
-              />
-            </div>
-          </div>
+        <Snackbar
+          autoHideDuration={this.state.snackbarProps.autoHideDuration}
+          message={this.state.snackbarProps.message}
+          open={this.state.snackbarProps.open}
+          onClose={this._handleSnackbarClose.bind(this)}
+        />
 
-          <Dialog open={this.state.dialogProps.open !== false} classes={{paper: css.dialog}}
-            className='dialog' onClose={() => this._handleDialogClosed()}>
-            {this.state.dialogProps.title && (
-              <DialogTitle> {this.state.dialogProps.title}</DialogTitle>
-            )}
-            {this.state.dialogProps.content && (
-              <DialogContent className={commonCss.prewrap}>
-                {this.state.dialogProps.content}
-              </DialogContent>
-            )}
-            {this.state.dialogProps.buttons && (
-              <DialogActions>
-                {this.state.dialogProps.buttons.map((b, i) =>
-                  <Button key={i} onClick={() => this._handleDialogClosed(b.onClick)}
-                    className='dialogButton' color='secondary'>
-                    {b.text}
-                  </Button>)}
-              </DialogActions>
-            )}
-          </Dialog>
-        </div>
-      </HashRouter>
+        <Dialog
+          open={this.state.dialogProps.open !== false}
+          classes={{paper: css.dialog}}
+          className='dialog'
+          onClose={() => this._handleDialogClosed()}
+        >
+          {this.state.dialogProps.title && (
+            <DialogTitle> {this.state.dialogProps.title}</DialogTitle>
+          )}
+          {this.state.dialogProps.content && (
+            <DialogContent className={commonCss.prewrap}>
+              {this.state.dialogProps.content}
+            </DialogContent>
+          )}
+          {this.state.dialogProps.buttons && (
+            <DialogActions>
+              {this.state.dialogProps.buttons.map((b, i) => (
+                <Button
+                  key={i}
+                  onClick={() => this._handleDialogClosed(b.onClick)}
+                  className='dialogButton'
+                  color='secondary'
+                >
+                  {b.text}
+                </Button>
+              ))}
+            </DialogActions>
+          )}
+        </Dialog>
+      </div>
     );
   }
 
@@ -204,3 +282,14 @@ class Router extends React.Component<{}, RouteComponentState> {
 // TODO: loading/error experience until backend is reachable
 
 export default Router;
+
+const SideNavLayout: React.FC<{}> = ({children}) => (
+  <HashRouter>
+    <div className={commonCss.page}>
+      <div className={commonCss.flexGrow}>
+        <Route render={({...props}) => <SideNav page={props.location.pathname} {...props} />} />
+        {children}
+      </div>
+    </div>
+  </HashRouter>
+);

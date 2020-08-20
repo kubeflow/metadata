@@ -81,7 +81,7 @@ class ArtifactList extends Page<{}, ArtifactListState> {
 
   public getInitialToolbarState(): ToolbarProps {
     return {
-      actions: [],
+      actions: {},
       breadcrumbs: [],
       pageTitle: 'Artifacts',
     };

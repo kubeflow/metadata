@@ -22,6 +22,7 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.isfunction": "^3.0.6",
     "@types/node": "^12.0.2",
+    "@types/prettier": "^1.19.0",
     "@types/react": "^16.8.18",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^4.3.1",
@@ -31,7 +32,9 @@
     "enzyme-to-json": "^3.3.5",
     "eslint-plugin-import": "^2.18.2",
     "license-checker": "^25.0.1",
+    "prettier": "1.19.1",
     "react-router-test-context": "^0.1.0",
+    "snapshot-diff": "^0.7.0",
     "typescript": "^3.4.5"
   },
   "scripts": {
