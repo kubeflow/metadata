@@ -1,0 +1,11 @@
+# Simple example of some YAML spec describing an artifact
+# This is intended to be attached as an annotation to the job.
+#
+# To convert this to json to attach as an annotation to the job
+# yq r ./examples/dataset.yaml --tojson
+apiVersion: metadata.kubeflow.org/v1alpha1
+kind: Dataset
+metadata:
+  name: fakedata1
+spec:
+  prop1: fakevalue

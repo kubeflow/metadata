@@ -1,0 +1,13 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: 
+  - build
+  - --tag=${_FULLIMAGE}
+  - -f
+  - ./watcher/dockerfiles/Dockerfile
+  # context
+  - .
+images:
+  - ${_FULLIMAGE}
+substitutions:
+  _FULLIMAGE: gcr.io/${PROJECT_ID}/tff-fake:latest

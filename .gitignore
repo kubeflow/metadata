@@ -1,6 +1,8 @@
 # Bazel output artifacts
 bazel-*
 
+**/*.build
+
 # IDE related
 .idea/
 .vscode/

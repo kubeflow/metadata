@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kubeflow
+resources:
+- role.yaml
+- rolebinding.yaml
+- watcher.yaml
+images:
+- digest: sha256:10bfb2618efcefe97fd7b1a7775c3f958ad761c6e620a3fc433c9df01e03eae3
+  name: watcher
+  newName: gcr.io/kubeflow-images-public/metadata-watcher:python-sdk-0.3.1-9-g6083e6e

@@ -1,10 +1,7 @@
 [
     {
+        "Group": "batch",
         "Version": "v1",
-        "Kind":    "Service"
-    },
-    {
-        "Version": "v1",
-        "Kind":    "Pod"
+        "Kind":    "Job"
     }
 ]

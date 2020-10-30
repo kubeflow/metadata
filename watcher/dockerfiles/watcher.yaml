@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metadata-watcher
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: container
-        image: gcr.io/kubeflow-images-public/metadata/watcher:v0.1.0
+        image: watcher
         command: ["./watcher/watcher",
                   "-metadata_service=metadata-grpc-service.kubeflow:8080",
                   "-resourcelist=watcher/dockerfiles/resource_list.json"]

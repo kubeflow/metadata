@@ -1,0 +1,22 @@
+# A simple batch job to illustrate logging data with the
+# watcher.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: watcher-job-
+  annotations:
+    "metadata.kubeflow.org/input": |
+      {"apiVersion":"metadata.kubeflow.org/v1alpha1","kind":"Dataset","metadata":{"name":"fakeInput"},"spec":{"prop1":"fakevalue"}}
+    "metadata.kubeflow.org/output": |
+      {"apiVersion":"metadata.kubeflow.org/v1alpha1","kind":"Dataset","metadata":{"name":"fakeOutput"},"spec":{"prop1":"fakeoutput"}}
+spec:
+  template:
+    spec:
+      containers:
+      - name: echo
+        image: ubuntu:latest
+        command:
+        - echo
+        - "hello world"
+      restartPolicy: Never
+  backoffLimit: 4

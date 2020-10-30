@@ -12,11 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// TODO(jlewi): Use logr and structured loggers
+// TODO(jlewi): Use cobra to do CLI processing
+
 package main
 
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"os"
 	"os/signal"
@@ -42,13 +47,37 @@ var (
 	resourcelist       string
 )
 
+func initLogger() {
+	// TODO(jlewi): Make the verbosity level configurable.
+
+	// Start with a production logger config.
+	config := zap.NewProductionConfig()
+
+	// TODO(jlewi): In development mode we should use the console encoder as opposed to json formatted logs.
+
+	// Increment the logging level.
+	// TODO(jlewi): Make this a flag.
+	config.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+
+	zapLog, err := config.Build()
+	if err != nil {
+		panic(fmt.Sprintf("Could not create zap instance (%v)?", err))
+	}
+	zap.ReplaceGlobals(zapLog)
+}
+
 func main() {
+	initLogger()
 	klog.InitFlags(nil)
 	flag.Parse()
 
 	cfg, err := clientcmd.BuildConfigFromFlags(masterURL, kubeconfig)
 	if err != nil {
 		klog.Fatalf("Error building kubeconfig: %s", err.Error())
+	}
+
+	if resourcelist == "" {
+		klog.Fatalf("--resourcelist must be provided")
 	}
 	gvks, err := readGVKsFromFile(resourcelist)
 	if err != nil {

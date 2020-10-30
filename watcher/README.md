@@ -7,7 +7,10 @@ A metadata watcher extracts metadata from some type of Kubernetes API objects an
 ### Generic watcher
 Current watcher can watch the creation of any Kubernetes resouce object and extract basic information. Only `pod` and `service` resource are watched by default. You can add more resource definition or even customized resource definition to watch in [this config](https://github.com/kubeflow/metadata/blob/master/watcher/dockerfiles/resource_list.json).
 
-After you deploy the watcher, you can see the metadata about the `pod` and `service` from the Artifact Store page in Kubeflow Central Dashboard.
+After you deploy the watcher, you can see the metadata about the watched resources by 
+
+  1. Going to the pipelines UI
+  1. Selecting the Executions tab
 
 <img src="watcher_example.png" width=350>
 
