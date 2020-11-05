@@ -1,0 +1,33 @@
+# Pipelinerun for go unittests
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: go-test-
+  namespace: kf-ci
+  labels:
+    pipeline: go-test
+    repo: metadata
+spec:
+  params:
+  # When running under prow this value will automatically be replaced 
+  # by the appropriate GCS location for the test.
+  # So the value here only matters for manual runs.
+  - name: artifacts-gcs
+    value: "gs://CHANGE/TO/YOUR/BUCKET"
+  serviceAccountName: kf-ci
+  resources:
+  - name: source-repo
+    resourceSpec:
+      type: git
+      params:
+      # The URL must match the repo under test in prow otherwise you well get the
+      # error "Couldn't find repo under test"
+      - name: url
+        value: https://github.com/kubeflow/metadata.git
+      # When running under prow revision automatically be replaced 
+      # by the appropriate GCS location for the test.
+      # So the value here only matters for manual runs.
+      - name: revision
+        value: master
+  pipelineRef:
+    name: go-tests
