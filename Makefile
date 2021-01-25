@@ -43,3 +43,6 @@ swagger-py-client:
     rm -rf sdk/python/kubeflow/metadata/swagger_client && \
     cp -r /tmp/swagger/kubeflow/metadata/openapi_client sdk/python/kubeflow/metadata && \
     rm -rf /tmp/swagger
+
+build-dependabot:
+	python3 hack/create_dependabot.py

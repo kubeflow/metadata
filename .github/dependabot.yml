@@ -1,0 +1,122 @@
+updates:
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: .
+  open-pull-requests-limit: 10
+  package-ecosystem: docker
+  schedule:
+    interval: daily
+- assignees:
+  - Bobgy
+  - prodonjs
+  - avdaredevil
+  - kwasi
+  directory: frontend
+  open-pull-requests-limit: 10
+  package-ecosystem: docker
+  reviewers:
+  - Bobgy
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: watcher
+  open-pull-requests-limit: 10
+  package-ecosystem: docker
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: watcher/dockerfiles
+  open-pull-requests-limit: 10
+  package-ecosystem: docker
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: dockerfiles
+  open-pull-requests-limit: 10
+  package-ecosystem: docker
+  schedule:
+    interval: daily
+- assignees:
+  - Bobgy
+  - prodonjs
+  - avdaredevil
+  - kwasi
+  directory: frontend
+  open-pull-requests-limit: 10
+  package-ecosystem: npm
+  reviewers:
+  - Bobgy
+  schedule:
+    interval: daily
+- assignees:
+  - Bobgy
+  - prodonjs
+  - avdaredevil
+  - kwasi
+  directory: frontend/server
+  open-pull-requests-limit: 10
+  package-ecosystem: npm
+  reviewers:
+  - Bobgy
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: docs
+  open-pull-requests-limit: 10
+  package-ecosystem: pip
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: .
+  open-pull-requests-limit: 10
+  package-ecosystem: gomod
+  schedule:
+    interval: daily
+- assignees:
+  - avdaredevil
+  - bobgy
+  - jeffwan
+  - jlewi
+  - kwasi
+  - neuromage
+  directory: third_party/ml_metadata
+  open-pull-requests-limit: 10
+  package-ecosystem: gomod
+  schedule:
+    interval: daily
+version: 2
