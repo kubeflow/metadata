@@ -1,6 +1,6 @@
 ## :warning: **kubeflow/metadata is not maintained**
 
-This repository has been deprecated, and will be archived soon (Nov 30th, 2021). If you want to use Metadata in Kubeflow, please refer to [google/ml-metadata](https://github.com/google/ml-metadata).
+This repository has been deprecated, and will be [archived](https://github.com/kubeflow/community/issues/479) soon (Nov 30th, 2021). If you want to use Metadata in Kubeflow, please refer to [google/ml-metadata](https://github.com/google/ml-metadata). 
 
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/metadata)](https://goreportcard.com/report/github.com/kubeflow/metadata)
