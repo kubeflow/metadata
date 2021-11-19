@@ -6,7 +6,7 @@ This repository has been deprecated, and will be [archived](https://github.com/k
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubeflow/metadata)](https://goreportcard.com/report/github.com/kubeflow/metadata)
 
 # Metadata
-Tracking and managing metadata of machine learning workflows in Kubeflow. For more information, see our previous documentation [here](https://v1-2-branch.kubeflow.org/docs/components/metadata/).
+Tracking and managing metadata of machine learning workflows in Kubeflow. For more information, see our [previous documentation](https://v1-2-branch.kubeflow.org/docs/components/metadata/).
 
 ## Building & Testing
 **Make sure to use the [Bazel 0.24.1](https://github.com/bazelbuild/bazel/releases/tag/0.24.1) version. If not,
